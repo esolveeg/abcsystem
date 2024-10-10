@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 
+	"github.com/darwishdev/devkit-api/app/accounts/repo"
 	"github.com/darwishdev/devkit-api/gen/db"
 	apiv1 "github.com/darwishdev/devkit-api/gen/pb/proto/devkit/v1"
 )
@@ -13,10 +14,12 @@ type AccountsUsecaseInterface interface {
 
 type AccountsUsecase struct {
 	store db.Store
+	repo  repo.AccountsRepoInterface
 }
 
 func NewAccountsUsecase(store db.Store) AccountsUsecaseInterface {
 	return &AccountsUsecase{
 		store: store,
+		repo:  repo.NewAccountsRepo(store),
 	}
 }

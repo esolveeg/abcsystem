@@ -9,7 +9,8 @@ import (
 
 func (u *AccountsUsecase) RoleCreate(ctx context.Context, req *apiv1.RoleCreateRequest) (*apiv1.RoleCreateResponse, error) {
 	roleCreateParams := db.RoleCreateParams{RoleName: req.GetRoleName(), RoleDescription: pgtype.Text{String: req.GetRoleDescription(), Valid: true}}
-	role, err := u.store.RoleCreate(ctx, roleCreateParams)
+	role, err := u.repo.RoleCreate(ctx, roleCreateParams)
+
 	if err != nil {
 		return nil, err
 	}
