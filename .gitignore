@@ -1,0 +1,7 @@
+
+
+config/*.env
+/gin
+/tmp
+/bin
+go.sum
