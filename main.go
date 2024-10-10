@@ -3,12 +3,11 @@ package main
 import (
 	"net/http"
 
-	"context"
-	"fmt"
-
 	"connectrpc.com/connect"
 	"connectrpc.com/grpchealth"
 	"connectrpc.com/grpcreflect"
+	"context"
+	"fmt"
 	"github.com/darwishdev/devkit-api/config"
 	"github.com/darwishdev/devkit-api/gen/db"
 	apiv1 "github.com/darwishdev/devkit-api/gen/proto/devkit/v1"
@@ -20,6 +19,9 @@ import (
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 	"os"
+	"os/signal"
+	"sync"
+	"syscall"
 	"time"
 )
 
@@ -60,6 +62,57 @@ func NewApi() devkitv1connect.DevkitServiceHandler {
 }
 func (api *Api) HelloWorld(ctx context.Context, req *connect.Request[apiv1.HelloWorldRequest]) (*connect.Response[apiv1.HelloWorldResponse], error) {
 	return connect.NewResponse(&apiv1.HelloWorldResponse{Greet: "hello " + req.Msg.GetName()}), nil
+}
+
+// operation is a clean up function on shutting down
+type operation func(ctx context.Context) error
+
+// gracefulShutdown waits for termination syscalls and doing clean up operations after received it
+func gracefulShutdown(ctx context.Context, timeout time.Duration, ops map[string]operation) <-chan struct{} {
+	wait := make(chan struct{})
+	go func() {
+		s := make(chan os.Signal, 1)
+
+		// add any other syscalls that you want to be notified with
+		signal.Notify(s, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
+		<-s
+
+		log.Info().Msg("shutting down")
+
+		// set timeout for the ops to be done to prevent system hang
+		timeoutFunc := time.AfterFunc(timeout, func() {
+			log.Printf("timeout %d ms has been elapsed, force exit", timeout.Milliseconds())
+			os.Exit(0)
+		})
+
+		defer timeoutFunc.Stop()
+
+		var wg sync.WaitGroup
+
+		// Do the operations asynchronously to save time
+		for key, op := range ops {
+			wg.Add(1)
+			innerOp := op
+			innerKey := key
+			go func() {
+				defer wg.Done()
+
+				log.Printf("cleaning up: %s", innerKey)
+				if err := innerOp(ctx); err != nil {
+					log.Printf("%s: clean up failed: %s", innerKey, err.Error())
+					return
+				}
+
+				log.Printf("%s was shutdown gracefully", innerKey)
+			}()
+		}
+
+		wg.Wait()
+
+		close(wait)
+	}()
+
+	return wait
 }
 func main() {
 	// first we need to simply create our grpc server
@@ -120,9 +173,18 @@ func main() {
 		Handler: h2c.NewHandler(cors.Handler(mux), &http2.Server{}),
 	}
 
-	err = server.ListenAndServe()
-	if err != nil {
-		log.Fatal().Err(err).Msg("can't start the server")
-	}
+	signals := make(chan os.Signal, 1)
+	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)
+	wait := gracefulShutdown(ctx, 3*time.Second, map[string]operation{
+		"database": func(ctx context.Context) error {
+			connPool.Close()
+			return nil
+		},
+		"http-server": func(ctx context.Context) error {
+			return server.Shutdown(ctx)
+		},
+		// Add other cleanup operations here
+	})
 
+	<-wait
 }
