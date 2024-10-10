@@ -2,7 +2,9 @@ syntax = "proto3";
 
 package devkit.v1;
 
+import "proto/devkit/v1/accounts_role.proto";
 import "proto/devkit/v1/hello_world.proto";
 service DevkitService {
     rpc HelloWorld(HelloWorldRequest) returns (HelloWorldResponse) {}
+    rpc RoleCreate(RoleCreateRequest) returns (RoleCreateResponse) {}
 }

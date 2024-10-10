@@ -3,26 +3,29 @@ package main
 import (
 	"net/http"
 
+	"context"
+	"errors"
+	"fmt"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
+	"time"
+
 	"connectrpc.com/connect"
 	"connectrpc.com/grpchealth"
 	"connectrpc.com/grpcreflect"
-	"context"
-	"fmt"
 	"github.com/darwishdev/devkit-api/config"
 	"github.com/darwishdev/devkit-api/gen/db"
-	apiv1 "github.com/darwishdev/devkit-api/gen/proto/devkit/v1"
-	"github.com/darwishdev/devkit-api/gen/proto/devkit/v1/devkitv1connect"
+	apiv1 "github.com/darwishdev/devkit-api/gen/pb/proto/devkit/v1"
+	"github.com/darwishdev/devkit-api/gen/pb/proto/devkit/v1/devkitv1connect"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
-	"os"
-	"os/signal"
-	"sync"
-	"syscall"
-	"time"
 )
 
 func GrpcLogger() connect.UnaryInterceptorFunc {
@@ -54,14 +57,32 @@ func GrpcLogger() connect.UnaryInterceptorFunc {
 
 type Api struct {
 	devkitv1connect.UnimplementedDevkitServiceHandler
+	store db.Store
 }
 
-func NewApi() devkitv1connect.DevkitServiceHandler {
-	return &Api{}
+func NewApi(store db.Store) devkitv1connect.DevkitServiceHandler {
+	return &Api{
+		store: store,
+	}
 
 }
 func (api *Api) HelloWorld(ctx context.Context, req *connect.Request[apiv1.HelloWorldRequest]) (*connect.Response[apiv1.HelloWorldResponse], error) {
 	return connect.NewResponse(&apiv1.HelloWorldResponse{Greet: "hello " + req.Msg.GetName()}), nil
+}
+func (api *Api) RoleCreate(ctx context.Context, req *connect.Request[apiv1.RoleCreateRequest]) (*connect.Response[apiv1.RoleCreateResponse], error) {
+	roleCreateParams := db.RoleCreateParams{RoleName: req.Msg.GetRoleName(), RoleDescription: pgtype.Text{String: req.Msg.GetRoleDescription(), Valid: true}}
+	role, err := api.store.RoleCreate(ctx, roleCreateParams)
+	if err != nil {
+		return nil, err
+	}
+	response := apiv1.RoleCreateResponse{Role: &apiv1.AccountsSchemaRole{
+		RoleId:          role.RoleID,
+		RoleName:        role.RoleName,
+		RoleDescription: role.RoleDescription.String,
+		CreatedAt:       role.CreatedAt.Time.Format("2024-10-01"),
+		DeletedAt:       role.CreatedAt.Time.Format("2024-10-01"),
+	}}
+	return connect.NewResponse(&response), nil
 }
 
 // operation is a clean up function on shutting down
@@ -148,7 +169,8 @@ func main() {
 	// here we can find examples of diffrent compression method 	https://connectrpc.com/docs/go/serialization-and-compression/#compression
 	compress1KB := connect.WithCompressMinBytes(1024)
 	interceptors := connect.WithInterceptors(GrpcLogger())
-	api := NewApi()
+	api := NewApi(store)
+
 	mux.Handle(devkitv1connect.NewDevkitServiceHandler(
 		api,
 		interceptors,
@@ -172,6 +194,13 @@ func main() {
 		Addr:    config.GRPCServerAddress,
 		Handler: h2c.NewHandler(cors.Handler(mux), &http2.Server{}),
 	}
+	// Start the server in a goroutine
+	go func() {
+		log.Info().Str("server address", config.GRPCServerAddress).Msg("GRPC server start")
+		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatal().Err(err).Msg("HTTP listen and serve failed")
+		}
+	}()
 
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)

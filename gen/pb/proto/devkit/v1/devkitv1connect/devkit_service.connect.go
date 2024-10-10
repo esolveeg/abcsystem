@@ -8,7 +8,7 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	v1 "github.com/darwishdev/devkit-api/gen/proto/devkit/v1"
+	v1 "github.com/darwishdev/devkit-api/gen/pb/proto/devkit/v1"
 	http "net/http"
 	strings "strings"
 )
@@ -36,17 +36,22 @@ const (
 	// DevkitServiceHelloWorldProcedure is the fully-qualified name of the DevkitService's HelloWorld
 	// RPC.
 	DevkitServiceHelloWorldProcedure = "/devkit.v1.DevkitService/HelloWorld"
+	// DevkitServiceRoleCreateProcedure is the fully-qualified name of the DevkitService's RoleCreate
+	// RPC.
+	DevkitServiceRoleCreateProcedure = "/devkit.v1.DevkitService/RoleCreate"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
 	devkitServiceServiceDescriptor          = v1.File_proto_devkit_v1_devkit_service_proto.Services().ByName("DevkitService")
 	devkitServiceHelloWorldMethodDescriptor = devkitServiceServiceDescriptor.Methods().ByName("HelloWorld")
+	devkitServiceRoleCreateMethodDescriptor = devkitServiceServiceDescriptor.Methods().ByName("RoleCreate")
 )
 
 // DevkitServiceClient is a client for the devkit.v1.DevkitService service.
 type DevkitServiceClient interface {
 	HelloWorld(context.Context, *connect.Request[v1.HelloWorldRequest]) (*connect.Response[v1.HelloWorldResponse], error)
+	RoleCreate(context.Context, *connect.Request[v1.RoleCreateRequest]) (*connect.Response[v1.RoleCreateResponse], error)
 }
 
 // NewDevkitServiceClient constructs a client for the devkit.v1.DevkitService service. By default,
@@ -65,12 +70,19 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(devkitServiceHelloWorldMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		roleCreate: connect.NewClient[v1.RoleCreateRequest, v1.RoleCreateResponse](
+			httpClient,
+			baseURL+DevkitServiceRoleCreateProcedure,
+			connect.WithSchema(devkitServiceRoleCreateMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // devkitServiceClient implements DevkitServiceClient.
 type devkitServiceClient struct {
 	helloWorld *connect.Client[v1.HelloWorldRequest, v1.HelloWorldResponse]
+	roleCreate *connect.Client[v1.RoleCreateRequest, v1.RoleCreateResponse]
 }
 
 // HelloWorld calls devkit.v1.DevkitService.HelloWorld.
@@ -78,9 +90,15 @@ func (c *devkitServiceClient) HelloWorld(ctx context.Context, req *connect.Reque
 	return c.helloWorld.CallUnary(ctx, req)
 }
 
+// RoleCreate calls devkit.v1.DevkitService.RoleCreate.
+func (c *devkitServiceClient) RoleCreate(ctx context.Context, req *connect.Request[v1.RoleCreateRequest]) (*connect.Response[v1.RoleCreateResponse], error) {
+	return c.roleCreate.CallUnary(ctx, req)
+}
+
 // DevkitServiceHandler is an implementation of the devkit.v1.DevkitService service.
 type DevkitServiceHandler interface {
 	HelloWorld(context.Context, *connect.Request[v1.HelloWorldRequest]) (*connect.Response[v1.HelloWorldResponse], error)
+	RoleCreate(context.Context, *connect.Request[v1.RoleCreateRequest]) (*connect.Response[v1.RoleCreateResponse], error)
 }
 
 // NewDevkitServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -95,10 +113,18 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(devkitServiceHelloWorldMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	devkitServiceRoleCreateHandler := connect.NewUnaryHandler(
+		DevkitServiceRoleCreateProcedure,
+		svc.RoleCreate,
+		connect.WithSchema(devkitServiceRoleCreateMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/devkit.v1.DevkitService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case DevkitServiceHelloWorldProcedure:
 			devkitServiceHelloWorldHandler.ServeHTTP(w, r)
+		case DevkitServiceRoleCreateProcedure:
+			devkitServiceRoleCreateHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -110,4 +136,8 @@ type UnimplementedDevkitServiceHandler struct{}
 
 func (UnimplementedDevkitServiceHandler) HelloWorld(context.Context, *connect.Request[v1.HelloWorldRequest]) (*connect.Response[v1.HelloWorldResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.HelloWorld is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) RoleCreate(context.Context, *connect.Request[v1.RoleCreateRequest]) (*connect.Response[v1.RoleCreateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleCreate is not implemented"))
 }

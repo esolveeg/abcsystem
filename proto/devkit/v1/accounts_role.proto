@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package devkit.v1;
+
+message RoleCreateRequest {
+    string role_name = 1;
+    string role_description = 2;
+}
+message AccountsSchemaRole {
+  int32 role_id = 1;
+  string role_name = 2; // Unique
+  string role_description = 3;
+  string created_at = 4;
+  string updated_at = 5;
+  string deleted_at = 6;
+}
+message RoleCreateResponse{
+    AccountsSchemaRole role = 1;
+}

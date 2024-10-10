@@ -1,4 +1,4 @@
 run:
 	go run main.go
-buf:
-	buf generate
+generate:
+	buf generate && sqlc generate
