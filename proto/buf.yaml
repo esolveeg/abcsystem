@@ -1,0 +1,14 @@
+version: v2
+modules:
+  - path: proto
+    name: buf.build/ahmeddarwish/devkit
+
+deps:
+  - buf.build/bufbuild/protovalidate
+
+lint:
+  use:
+    - DEFAULT
+breaking:
+  use:
+    - FILE
