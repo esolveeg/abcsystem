@@ -3,7 +3,6 @@ package adapter
 import (
 	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/proto/devkit/v1"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 func (a *AccountsAdapter) RoleEntityGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.AccountsSchemaRole {
@@ -14,13 +13,12 @@ func (a *AccountsAdapter) RoleEntityGrpcFromSql(resp *db.AccountsSchemaRole) *de
 		CreatedAt:       resp.CreatedAt.Time.Format(a.dateFormat),
 		DeletedAt:       resp.DeletedAt.Time.Format(a.dateFormat),
 	}
-
 }
 
 func (a *AccountsAdapter) RoleCreateSqlFromGrpc(req *devkitv1.RoleCreateRequest) *db.RoleCreateParams {
 	return &db.RoleCreateParams{
 		RoleName:        req.RoleName,
-		RoleDescription: pgtype.Text{String: req.RoleDescription, Valid: true},
+		RoleDescription: db.StringToPgtext(req.RoleDescription),
 	}
 }
 func (a *AccountsAdapter) RoleCreateGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.RoleCreateResponse {
