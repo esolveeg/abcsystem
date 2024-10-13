@@ -3,8 +3,8 @@ package api
 import (
 	accountsUsecase "github.com/darwishdev/devkit-api/app/accounts/usecase"
 	"github.com/darwishdev/devkit-api/config"
-	"github.com/darwishdev/devkit-api/gen/db"
-	"github.com/darwishdev/devkit-api/gen/pb/proto/devkit/v1/devkitv1connect"
+	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/proto_gen/proto/devkit/v1/devkitv1connect"
 )
 
 type Api struct {

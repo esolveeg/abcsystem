@@ -3,7 +3,7 @@ package repo
 import (
 	"context"
 
-	"github.com/darwishdev/devkit-api/gen/db"
+	"github.com/darwishdev/devkit-api/db"
 )
 
 type AccountsRepoInterface interface {

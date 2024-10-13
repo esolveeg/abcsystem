@@ -5,8 +5,8 @@ import (
 
 	"github.com/darwishdev/devkit-api/app/accounts/adapter"
 	"github.com/darwishdev/devkit-api/app/accounts/repo"
-	"github.com/darwishdev/devkit-api/gen/db"
-	apiv1 "github.com/darwishdev/devkit-api/gen/pb/proto/devkit/v1"
+	"github.com/darwishdev/devkit-api/db"
+	apiv1 "github.com/darwishdev/devkit-api/proto_gen/proto/devkit/v1"
 )
 
 type AccountsUsecaseInterface interface {

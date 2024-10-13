@@ -1,8 +1,8 @@
 package adapter
 
 import (
-	"github.com/darwishdev/devkit-api/gen/db"
-	devkitv1 "github.com/darwishdev/devkit-api/gen/pb/proto/devkit/v1"
+	"github.com/darwishdev/devkit-api/db"
+	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/proto/devkit/v1"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 

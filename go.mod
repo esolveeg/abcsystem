@@ -6,6 +6,7 @@ require (
 	connectrpc.com/connect v1.17.0
 	connectrpc.com/grpchealth v1.3.0
 	connectrpc.com/grpcreflect v1.2.0
+	github.com/bufbuild/connect-go v1.10.0
 	github.com/jackc/pgx/v5 v5.7.1
 	github.com/rs/cors v1.11.1
 	github.com/rs/zerolog v1.33.0
