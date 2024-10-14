@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgtype"
-	"github.com/rs/zerolog/log"
 )
 
 func StringToPgtext(str string) pgtype.Text {
@@ -29,19 +28,6 @@ func StringToPgdate(strDate string) pgtype.Date {
 		Valid: true,
 	}
 	return pgDate
-}
-
-func StringToPgTimestamp(dateString string) pgtype.Timestamp {
-	// Step 1: Parse the string into a time.Time
-	parsedTime, err := time.Parse("1/2/2006, 3:04:05 PM", dateString)
-	if err != nil {
-		log.Err(err).Msg("error parsing the date db/global_adapter")
-		return pgtype.Timestamp{Valid: false}
-	}
-
-	// Step 2: Create a pgtype.Timestamp using the parsed time
-	pgTimestamp := pgtype.Timestamp{Time: parsedTime, Valid: true}
-	return pgTimestamp
 }
 
 func ToPgBool(value bool) pgtype.Bool {
