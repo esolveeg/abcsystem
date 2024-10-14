@@ -83,7 +83,10 @@ func main() {
 	if err != nil {
 		log.Fatal().Str("DBSource", config.DBSource).Err(err).Msg("db failed to connect")
 	}
-	server := api.NewServer(config, store) // Start the server in a goroutine
+	server, err := api.NewServer(config, store) // Start the server in a goroutine
+	if err != nil {
+		log.Fatal().Err(err).Msg("server initialization failed")
+	}
 	httpServer := server.NewGrpcHttpServer()
 	go func() {
 		log.Info().Str("server address", config.GRPCServerAddress).Msg("GRPC server start")

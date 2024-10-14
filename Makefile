@@ -1,7 +1,7 @@
 run:
 	go run main.go
 buf:
-	buf generate 
+	cd proto && buf generate 
 sqlc:
 	sqlc generate	
 gen:

@@ -8,7 +8,7 @@ import (
 	"connectrpc.com/grpcreflect"
 	"github.com/darwishdev/devkit-api/config"
 	"github.com/darwishdev/devkit-api/db"
-	"github.com/darwishdev/devkit-api/proto_gen/proto/devkit/v1/devkitv1connect"
+	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1/devkitv1connect"
 	"github.com/rs/cors"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
@@ -21,12 +21,17 @@ type Server struct {
 	api    devkitv1connect.DevkitServiceHandler
 }
 
-func NewServer(config config.Config, store db.Store) *Server {
+func NewServer(config config.Config, store db.Store) (*Server, error) {
+	api, err := NewApi(config, store)
+
+	if err != nil {
+		return nil, err
+	}
 	return &Server{
 		config: config,
 		store:  store,
-		api:    NewApi(config, store),
-	}
+		api:    api,
+	}, nil
 }
 
 func (s Server) NewGrpcHttpServer() *http.Server {
