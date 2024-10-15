@@ -6,16 +6,14 @@ import (
 )
 
 type AccountsAdapterInterface interface {
-	RoleCreateGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.RoleCreateResponse
-	RoleCreateSqlFromGrpc(req *devkitv1.RoleCreateRequest) *db.RoleCreateParams
+	RoleEntityGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.AccountsSchemaRole
+	RoleCreateUpdateSqlFromGrpc(req *devkitv1.RoleCreateUpdateRequest) *db.RoleCreateUpdateParams
+	RoleCreateUpdateGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.RoleCreateUpdateResponse
 }
 
 type AccountsAdapter struct {
-	dateFormat string
 }
 
 func NewAccountsAdapter() AccountsAdapterInterface {
-	return &AccountsAdapter{
-		dateFormat: "2006-01-02 15:04:05",
-	}
+	return &AccountsAdapter{}
 }

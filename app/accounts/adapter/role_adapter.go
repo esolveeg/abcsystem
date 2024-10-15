@@ -11,13 +11,14 @@ func (a *AccountsAdapter) RoleEntityGrpcFromSql(resp *db.AccountsSchemaRole) *de
 		RoleId:          int32(resp.RoleID),
 		RoleName:        resp.RoleName,
 		RoleDescription: resp.RoleDescription.String,
-		CreatedAt:       resp.CreatedAt.Time.Format(a.dateFormat),
-		DeletedAt:       resp.DeletedAt.Time.Format(a.dateFormat),
+		CreatedAt:       db.TimeToString(resp.CreatedAt.Time),
+		DeletedAt:       db.TimeToString(resp.DeletedAt.Time),
 	}
 }
 
-func (a *AccountsAdapter) RoleCreateSqlFromGrpc(req *devkitv1.RoleCreateRequest) *db.RoleCreateParams {
-	resp := &db.RoleCreateParams{
+func (a *AccountsAdapter) RoleCreateUpdateSqlFromGrpc(req *devkitv1.RoleCreateUpdateRequest) *db.RoleCreateUpdateParams {
+	resp := &db.RoleCreateUpdateParams{
+		RoleID:          req.RoleId,
 		RoleName:        req.RoleName,
 		RoleDescription: req.RoleDescription,
 		Permissions:     req.Permissions,
@@ -26,8 +27,8 @@ func (a *AccountsAdapter) RoleCreateSqlFromGrpc(req *devkitv1.RoleCreateRequest)
 	log.Debug().Interface("adapter here", resp).Msg("test adapter")
 	return resp
 }
-func (a *AccountsAdapter) RoleCreateGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.RoleCreateResponse {
-	return &devkitv1.RoleCreateResponse{
+func (a *AccountsAdapter) RoleCreateUpdateGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.RoleCreateUpdateResponse {
+	return &devkitv1.RoleCreateUpdateResponse{
 		Role: a.RoleEntityGrpcFromSql(resp),
 	}
 }

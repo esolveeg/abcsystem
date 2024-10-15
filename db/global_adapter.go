@@ -10,13 +10,16 @@ func StringToPgtext(str string) pgtype.Text {
 	return pgtype.Text{String: str, Valid: str != ""}
 }
 
-func PgtimToString(pgTime pgtype.Time) string {
+func PgtimeToString(pgTime pgtype.Time) string {
 	duration := time.Duration(pgTime.Microseconds) * time.Microsecond
 	// Convert duration to time.Time
 	timeValue := time.Date(0, 1, 1, 0, 0, 0, 0, time.UTC).Add(duration)
 
 	// Format time as "15:04" (24-hour clock format)
 	return timeValue.Format("15:04")
+}
+func TimeToString(time time.Time) string {
+	return time.Format("2006-01-02 15:04:05")
 }
 
 func StringToPgdate(strDate string) pgtype.Date {

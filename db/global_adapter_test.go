@@ -24,7 +24,7 @@ func TestStringToPgtext(t *testing.T) {
 	}
 }
 
-func TestPgtimToString(t *testing.T) {
+func TestPgtimeToString(t *testing.T) {
 	tests := []struct {
 		input    pgtype.Time
 		expected string
@@ -34,9 +34,9 @@ func TestPgtimToString(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		result := PgtimToString(tt.input)
+		result := PgtimeToString(tt.input)
 		if result != tt.expected {
-			t.Errorf("PgtimToString(%v) got %v, want %v", tt.input, result, tt.expected)
+			t.Errorf("PgtimeToString(%v) got %v, want %v", tt.input, result, tt.expected)
 		}
 	}
 }

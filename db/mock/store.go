@@ -35,17 +35,17 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
 }
 
-// RoleCreate mocks base method.
-func (m *MockStore) RoleCreate(arg0 context.Context, arg1 db.RoleCreateParams) (db.AccountsSchemaRole, error) {
+// RoleCreateUpdate mocks base method.
+func (m *MockStore) RoleCreateUpdate(arg0 context.Context, arg1 db.RoleCreateUpdateParams) (db.AccountsSchemaRole, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RoleCreate", arg0, arg1)
+	ret := m.ctrl.Call(m, "RoleCreateUpdate", arg0, arg1)
 	ret0, _ := ret[0].(db.AccountsSchemaRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// RoleCreate indicates an expected call of RoleCreate.
-func (mr *MockStoreMockRecorder) RoleCreate(arg0, arg1 interface{}) *gomock.Call {
+// RoleCreateUpdate indicates an expected call of RoleCreateUpdate.
+func (mr *MockStoreMockRecorder) RoleCreateUpdate(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RoleCreate", reflect.TypeOf((*MockStore)(nil).RoleCreate), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RoleCreateUpdate", reflect.TypeOf((*MockStore)(nil).RoleCreateUpdate), arg0, arg1)
 }

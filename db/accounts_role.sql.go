@@ -9,29 +9,36 @@ import (
 	"context"
 )
 
-const roleCreate = `-- name: RoleCreate :one
+const roleCreateUpdate = `-- name: RoleCreateUpdate :one
 select  
 	role_id ,
 	role_name ,
 	role_description ,
 	created_at ,
 	updated_at ,
-	deleted_at from accounts_schema.role_create(
+	deleted_at from accounts_schema.role_create_update(
 
-in_role_name => $1,
-in_role_description => $2,
-in_permissions => $3::int[]
+in_role_id => $1,
+in_role_name => $2,
+in_role_description => $3,
+in_permissions => $4::int[]
 )
 `
 
-type RoleCreateParams struct {
+type RoleCreateUpdateParams struct {
+	RoleID          int32   `json:"role_id"`
 	RoleName        string  `json:"role_name"`
 	RoleDescription string  `json:"role_description"`
 	Permissions     []int32 `json:"permissions"`
 }
 
-func (q *Queries) RoleCreate(ctx context.Context, arg RoleCreateParams) (AccountsSchemaRole, error) {
-	row := q.db.QueryRow(ctx, roleCreate, arg.RoleName, arg.RoleDescription, arg.Permissions)
+func (q *Queries) RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdateParams) (AccountsSchemaRole, error) {
+	row := q.db.QueryRow(ctx, roleCreateUpdate,
+		arg.RoleID,
+		arg.RoleName,
+		arg.RoleDescription,
+		arg.Permissions,
+	)
 	var i AccountsSchemaRole
 	err := row.Scan(
 		&i.RoleID,

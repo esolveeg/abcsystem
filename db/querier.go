@@ -9,7 +9,7 @@ import (
 )
 
 type Querier interface {
-	RoleCreate(ctx context.Context, arg RoleCreateParams) (AccountsSchemaRole, error)
+	RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdateParams) (AccountsSchemaRole, error)
 }
 
 var _ Querier = (*Queries)(nil)

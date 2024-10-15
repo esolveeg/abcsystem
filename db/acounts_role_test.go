@@ -8,18 +8,18 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestRoleCreate(t *testing.T) {
+func TestRoleCreateUpdate(t *testing.T) {
 	// Define test input parameters.
 	validName := random.RandomName()
 	testcases := []struct {
 		name             string
-		params           *RoleCreateParams
+		params           *RoleCreateUpdateParams
 		expectedErrorMsg string
 		expectErr        bool
 	}{
 		{
 			name: "ValidRole",
-			params: &RoleCreateParams{
+			params: &RoleCreateUpdateParams{
 				RoleName:        validName,
 				RoleDescription: random.RandomString(50),
 				Permissions:     []int32{1, 2, 3},
@@ -27,8 +27,18 @@ func TestRoleCreate(t *testing.T) {
 			expectErr: false,
 		},
 		{
+			name: "ValidRoleUpdate",
+			params: &RoleCreateUpdateParams{
+				RoleID:          1,
+				RoleName:        random.RandomName(),
+				RoleDescription: random.RandomString(50),
+				Permissions:     []int32{1, 2, 3},
+			},
+			expectErr: false,
+		},
+		{
 			name: "DuplicatedRoleName",
-			params: &RoleCreateParams{
+			params: &RoleCreateUpdateParams{
 				RoleName:        validName,
 				RoleDescription: random.RandomString(50),
 				Permissions:     []int32{1, 2, 3},
@@ -37,7 +47,7 @@ func TestRoleCreate(t *testing.T) {
 		},
 		{
 			name: "RoleNameRequired",
-			params: &RoleCreateParams{
+			params: &RoleCreateUpdateParams{
 				RoleName:        "", // Empty role name
 				RoleDescription: random.RandomString(50),
 				Permissions:     []int32{1, 2, 3},
@@ -46,7 +56,7 @@ func TestRoleCreate(t *testing.T) {
 		},
 		{
 			name: "RoleNameTooLong",
-			params: &RoleCreateParams{
+			params: &RoleCreateUpdateParams{
 				RoleName:        random.RandomString(220), // Exceeds max length
 				RoleDescription: random.RandomString(50),
 				Permissions:     []int32{1, 2, 3},
@@ -56,8 +66,8 @@ func TestRoleCreate(t *testing.T) {
 	}
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
-			// Call the RoleCreate function with the test parameters
-			role, err := store.RoleCreate(context.Background(), *tc.params)
+			// Call the RoleCreateUpdate function with the test parameters
+			role, err := store.RoleCreateUpdate(context.Background(), *tc.params)
 
 			if tc.expectErr {
 				require.Error(t, err)

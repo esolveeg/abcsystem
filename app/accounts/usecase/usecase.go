@@ -10,7 +10,7 @@ import (
 )
 
 type AccountsUsecaseInterface interface {
-	RoleCreate(ctx context.Context, req *apiv1.RoleCreateRequest) (*apiv1.RoleCreateResponse, error)
+	RoleCreateUpdate(ctx context.Context, req *apiv1.RoleCreateUpdateRequest) (*apiv1.RoleCreateUpdateResponse, error)
 }
 
 type AccountsUsecase struct {

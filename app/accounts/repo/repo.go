@@ -7,7 +7,7 @@ import (
 )
 
 type AccountsRepoInterface interface {
-	RoleCreate(ctx context.Context, req db.RoleCreateParams) (*db.AccountsSchemaRole, error)
+	RoleCreateUpdate(ctx context.Context, req db.RoleCreateUpdateParams) (*db.AccountsSchemaRole, error)
 }
 
 type AccountsRepo struct {
