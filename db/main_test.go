@@ -2,11 +2,12 @@ package db
 
 import (
 	"context"
-	"fmt"
-	"github.com/darwishdev/devkit-api/config"
-	"github.com/jackc/pgx/v5/pgxpool"
 	"os"
 	"testing"
+
+	"github.com/darwishdev/devkit-api/config"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/rs/zerolog/log"
 )
 
 var store Store
@@ -30,27 +31,13 @@ func TestMain(m *testing.M) {
 	config, err := config.LoadConfig("../config", "test")
 
 	if err != nil {
-		fmt.Println("cannot load config")
-		panic(err)
+		log.Fatal().Err(err).Msg("failed load config")
 	}
-	dbTracer := NewDbTracer()
-	dbConfig, err := pgxpool.ParseConfig(config.DBSource)
-	if err != nil {
-		panic(err)
-	}
+	store, _, err = InitDB(ctx, config.DBSource)
 
-	dbConfig.ConnConfig.Tracer = dbTracer
-	connPool, err = pgxpool.NewWithConfig(ctx, dbConfig)
 	if err != nil {
-		panic(err)
+		log.Fatal().Str("DBSource", config.DBSource).Err(err).Msg("db failed to connect")
 	}
-	// Attempt to ping the database to ensure the connection is working.
-	if err := connPool.Ping(ctx); err != nil {
-		connPool.Close()
-		panic(err)
-	}
-
-	store = NewStore(connPool)
 
 	os.Exit(m.Run())
 }

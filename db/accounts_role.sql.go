@@ -7,24 +7,31 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const roleCreate = `-- name: RoleCreate :one
-INSERT INTO accounts_schema.roles(role_name, role_description)
-    VALUES ($1, $2)
-RETURNING
-    role_id, role_name, role_description, created_at, updated_at, deleted_at
+select  
+	role_id ,
+	role_name ,
+	role_description ,
+	created_at ,
+	updated_at ,
+	deleted_at from accounts_schema.role_create(
+
+in_role_name => $1,
+in_role_description => $2,
+in_permissions => $3::int[]
+)
 `
 
 type RoleCreateParams struct {
-	RoleName        string      `json:"role_name"`
-	RoleDescription pgtype.Text `json:"role_description"`
+	RoleName        string  `json:"role_name"`
+	RoleDescription string  `json:"role_description"`
+	Permissions     []int32 `json:"permissions"`
 }
 
 func (q *Queries) RoleCreate(ctx context.Context, arg RoleCreateParams) (AccountsSchemaRole, error) {
-	row := q.db.QueryRow(ctx, roleCreate, arg.RoleName, arg.RoleDescription)
+	row := q.db.QueryRow(ctx, roleCreate, arg.RoleName, arg.RoleDescription, arg.Permissions)
 	var i AccountsSchemaRole
 	err := row.Scan(
 		&i.RoleID,

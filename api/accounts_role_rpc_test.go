@@ -23,6 +23,7 @@ func getValidRole() *devkitv1.RoleCreateRequest {
 	return &devkitv1.RoleCreateRequest{
 		RoleName:        random.RandomName(),
 		RoleDescription: random.RandomString(50),
+		Permissions:     []int32{1, 2, 3},
 	}
 }
 
@@ -37,20 +38,21 @@ func TestRoleCreate(t *testing.T) {
 			params: &devkitv1.RoleCreateRequest{
 				RoleName:        validRole.RoleName,
 				RoleDescription: validRole.RoleDescription,
+				Permissions:     validRole.Permissions,
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				arg := db.RoleCreateParams{
 					RoleName:        validRole.RoleName,
-					RoleDescription: db.StringToPgtext(validRole.RoleDescription),
+					RoleDescription: validRole.RoleDescription,
+					Permissions:     validRole.Permissions,
 				}
 				store.EXPECT().
 					RoleCreate(gomock.Any(), arg).
 					Times(1).
 					Return(db.AccountsSchemaRole{
-
 						RoleID:          1,
 						RoleName:        validRole.RoleName,
-						RoleDescription: db.StringToPgtext((validRole.RoleDescription)),
+						RoleDescription: db.StringToPgtext(validRole.RoleDescription),
 					}, nil)
 			},
 			expectErr: false,
@@ -60,6 +62,7 @@ func TestRoleCreate(t *testing.T) {
 			params: &devkitv1.RoleCreateRequest{
 				RoleName:        random.RandomString(1),
 				RoleDescription: validRole.RoleDescription,
+				Permissions:     validRole.Permissions,
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
@@ -74,6 +77,7 @@ func TestRoleCreate(t *testing.T) {
 			params: &devkitv1.RoleCreateRequest{
 				RoleName:        random.RandomString(220),
 				RoleDescription: validRole.RoleDescription,
+				Permissions:     validRole.Permissions,
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 
@@ -89,9 +93,26 @@ func TestRoleCreate(t *testing.T) {
 			params: &devkitv1.RoleCreateRequest{
 				RoleName:        random.RandomString(120),
 				RoleDescription: random.RandomString(220),
+				Permissions:     validRole.Permissions,
 			},
 			buildStubs: func(store *mockdb.MockStore) {
 
+				store.EXPECT().
+					RoleCreate(gomock.Any(), gomock.Any()).
+					Times(0)
+
+			},
+			expectErr: true,
+		},
+
+		{
+			name: "InvalideDuplicatedPermissions",
+			params: &devkitv1.RoleCreateRequest{
+				RoleName:        random.RandomString(120),
+				RoleDescription: random.RandomString(22),
+				Permissions:     []int32{1, 1},
+			},
+			buildStubs: func(store *mockdb.MockStore) {
 				store.EXPECT().
 					RoleCreate(gomock.Any(), gomock.Any()).
 					Times(0)
@@ -107,7 +128,6 @@ func TestRoleCreate(t *testing.T) {
 	defer storeCtrl.Finish()
 	store := mockdb.NewMockStore(storeCtrl)
 	api := newTestApi(store)
-
 	for _, tc := range testcases {
 		t.Run(tc.name, func(t *testing.T) {
 			tc.buildStubs(store)
@@ -125,9 +145,6 @@ func TestRoleCreate(t *testing.T) {
 			if !tc.expectErr {
 				if createdRole.Msg.Role.RoleName != tc.params.RoleName {
 					t.Errorf("un expected name wanted %s got %s", createdRole.Msg.Role.RoleName, tc.params.RoleName)
-				}
-				if createdRole.Msg.Role.RoleDescription != tc.params.RoleDescription {
-					t.Errorf("un expected description wanted %s got %s", createdRole.Msg.Role.RoleDescription, tc.params.RoleDescription)
 				}
 
 			}

@@ -15,9 +15,21 @@ include config/shared.env
 
 
 
+mign : 
+	supabase migration new $(name)
+testdb:
+	go test ./db/... -v
+
+testapi:
+	go test ./api/... -v
+
+
 test:
 	go test ./... -v
 
+			
+rdb:
+	supabase db reset
 run:
 	go run main.go
 buf:

@@ -14,6 +14,10 @@ message RoleCreateRequest {
     (buf.validate.field).string.max_len = 200
   ];
 
+  repeated int32 permissions = 3 [(buf.validate.field).repeated = {
+    unique: true,
+    max_items: 500,
+  }];
 }
 message AccountsSchemaRole {
   int32 role_id = 1;
