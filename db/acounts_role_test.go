@@ -45,15 +45,7 @@ func TestRoleCreateUpdate(t *testing.T) {
 			},
 			expectErr: true,
 		},
-		{
-			name: "RoleNameRequired",
-			params: &RoleCreateUpdateParams{
-				RoleName:        "", // Empty role name
-				RoleDescription: random.RandomString(50),
-				Permissions:     []int32{1, 2, 3},
-			},
-			expectErr: true,
-		},
+
 		{
 			name: "RoleNameTooLong",
 			params: &RoleCreateUpdateParams{

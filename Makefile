@@ -24,9 +24,6 @@ testapi:
 	go test ./api/... -v
 
 
-test:
-	go test ./... -v
-
 			
 rdb:
 	supabase db reset
@@ -41,3 +38,7 @@ gen:
 
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/darwishdev/devkit-api/db Store
+test:
+	make mock && go test ./... -v
+
+
