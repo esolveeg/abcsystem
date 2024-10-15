@@ -20,3 +20,10 @@ func (repo *AccountsRepo) RoleCreateUpdate(ctx context.Context, req db.RoleCreat
 	}
 	return &resp, nil
 }
+func (repo *AccountsRepo) RolesDeleteRestore(ctx context.Context, req []int32) error {
+	err := repo.store.RolesDeleteRestore(context.Background(), req)
+	if err != nil {
+		return err
+	}
+	return nil
+}

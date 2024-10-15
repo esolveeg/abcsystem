@@ -10,6 +10,7 @@ import (
 
 type Querier interface {
 	RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdateParams) (AccountsSchemaRole, error)
+	RolesDeleteRestore(ctx context.Context, records []int32) error
 	RolesList(ctx context.Context) ([]AccountsSchemaRole, error)
 }
 

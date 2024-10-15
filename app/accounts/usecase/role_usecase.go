@@ -5,6 +5,13 @@ import (
 	apiv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
+func (u *AccountsUsecase) RolesDeleteRestore(ctx context.Context, req *apiv1.DeleteRestoreRequest) error {
+	err := u.repo.RolesDeleteRestore(ctx, req.Records)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func (u *AccountsUsecase) RolesList(ctx context.Context) (*apiv1.RolesListResponse, error) {
 	roles, err := u.repo.RolesList(ctx)
 	if err != nil {

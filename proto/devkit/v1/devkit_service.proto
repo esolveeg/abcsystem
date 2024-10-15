@@ -6,7 +6,11 @@ import "devkit/v1/accounts_role.proto";
 
 message Empty {}
 
+message DeleteRestoreRequest{
+    repeated int32 records = 1;
+}
 service DevkitService {
     rpc RolesList(Empty) returns (RolesListResponse) {}
     rpc RoleCreateUpdate(RoleCreateUpdateRequest) returns (RoleCreateUpdateResponse) {}
+    rpc RolesDeleteRestore(DeleteRestoreRequest) returns (Empty) {}
 }

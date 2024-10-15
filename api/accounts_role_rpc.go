@@ -29,3 +29,11 @@ func (api *Api) RoleCreateUpdate(ctx context.Context, req *connect.Request[apiv1
 	}
 	return connect.NewResponse(response), nil
 }
+
+func (api *Api) RolesDeleteRestore(ctx context.Context, req *connect.Request[apiv1.DeleteRestoreRequest]) (*connect.Response[apiv1.Empty], error) {
+	err := api.accountsUscase.RolesDeleteRestore(ctx, req.Msg)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(&apiv1.Empty{}), nil
+}

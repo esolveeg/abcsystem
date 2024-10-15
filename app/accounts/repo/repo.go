@@ -9,6 +9,7 @@ import (
 type AccountsRepoInterface interface {
 	RolesList(ctx context.Context) ([]db.AccountsSchemaRole, error)
 	RoleCreateUpdate(ctx context.Context, req db.RoleCreateUpdateParams) (*db.AccountsSchemaRole, error)
+	RolesDeleteRestore(ctx context.Context, req []int32) error
 }
 
 type AccountsRepo struct {

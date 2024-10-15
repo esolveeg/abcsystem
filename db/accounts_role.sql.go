@@ -51,6 +51,20 @@ func (q *Queries) RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdatePara
 	return i, err
 }
 
+const rolesDeleteRestore = `-- name: RolesDeleteRestore :exec
+UPDATE
+    accounts_schema.roles
+SET
+    deleted_at = IIF(deleted_at IS NULL, now(), NULL)
+WHERE
+    role_id = ANY ($1::int[])
+`
+
+func (q *Queries) RolesDeleteRestore(ctx context.Context, records []int32) error {
+	_, err := q.db.Exec(ctx, rolesDeleteRestore, records)
+	return err
+}
+
 const rolesList = `-- name: RolesList :many
 select  
 	role_id ,
