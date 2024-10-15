@@ -10,6 +10,9 @@ import (
 )
 
 type AccountsUsecaseInterface interface {
+	UsersDeleteRestore(ctx context.Context, req *apiv1.DeleteRestoreRequest) error
+	UsersList(ctx context.Context) (*apiv1.UsersListResponse, error)
+	UserCreateUpdate(ctx context.Context, req *apiv1.UserCreateUpdateRequest) (*apiv1.UserCreateUpdateResponse, error)
 	RolesDeleteRestore(ctx context.Context, req *apiv1.DeleteRestoreRequest) error
 	RolesList(ctx context.Context) (*apiv1.RolesListResponse, error)
 	RoleCreateUpdate(ctx context.Context, req *apiv1.RoleCreateUpdateRequest) (*apiv1.RoleCreateUpdateResponse, error)

@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package devkit.v1;
 
+import "devkit/v1/accounts_user.proto";
 import "devkit/v1/accounts_role.proto";
 
 message Empty {}
@@ -13,4 +14,8 @@ service DevkitService {
     rpc RolesList(Empty) returns (RolesListResponse) {}
     rpc RoleCreateUpdate(RoleCreateUpdateRequest) returns (RoleCreateUpdateResponse) {}
     rpc RolesDeleteRestore(DeleteRestoreRequest) returns (Empty) {}
+    rpc UsersList(Empty) returns (UsersListResponse) {}
+    rpc UserCreateUpdate(UserCreateUpdateRequest) returns (UserCreateUpdateResponse) {}
+    rpc UsersDeleteRestore(DeleteRestoreRequest) returns (Empty) {}
+
 }

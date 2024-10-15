@@ -12,6 +12,9 @@ type Querier interface {
 	RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdateParams) (AccountsSchemaRole, error)
 	RolesDeleteRestore(ctx context.Context, records []int32) error
 	RolesList(ctx context.Context) ([]AccountsSchemaRole, error)
+	UserCreateUpdate(ctx context.Context, arg UserCreateUpdateParams) (AccountsSchemaUser, error)
+	UsersDeleteRestore(ctx context.Context, records []int32) error
+	UsersList(ctx context.Context) ([]AccountsSchemaUser, error)
 }
 
 var _ Querier = (*Queries)(nil)

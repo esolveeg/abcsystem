@@ -11,7 +11,6 @@ create table accounts_schema.permissions(
 );
 
 
-
 create table accounts_schema.roles(
 	role_id serial primary key,
 	role_name varchar(200) not null unique,
@@ -29,3 +28,30 @@ CREATE TABLE accounts_schema.role_permissions(
 	FOREIGN KEY (permission_id) REFERENCES accounts_schema.permissions(permission_id),
 	PRIMARY KEY (role_id, permission_id)
 );
+create table accounts_schema.user_types(
+	user_type_id serial primary key,
+	user_type_name varchar(200) not null unique
+);
+
+create table accounts_schema.users(
+	user_id serial primary key,
+	user_name varchar(200) not null unique,
+	user_security_level int NOT NULL,
+	user_type_id int NOT NULL,
+	FOREIGN KEY (user_type_id) REFERENCES accounts_schema.user_types  (user_type_id),
+	user_phone varchar(200) unique,
+	user_email varchar(200) not null unique,
+	user_password varchar(200),
+	created_at timestamp not null default now(),
+	updated_at timestamp,
+	deleted_at timestamp 
+);
+
+CREATE TABLE accounts_schema.user_roles(
+	user_id int NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES accounts_schema.users(user_id),
+	role_id int NOT NULL,
+	FOREIGN KEY (role_id) REFERENCES accounts_schema.roles(role_id),
+	PRIMARY KEY (user_id, role_id)
+);
+

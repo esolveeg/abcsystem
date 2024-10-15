@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package devkit.v1;
+
+import "buf/validate/validate.proto";
+
+message UserCreateUpdateRequest {
+  int32 user_id = 1; // User's ID, should be unique
+  string user_name = 2 [
+  (buf.validate.field).string.min_len = 2,
+  (buf.validate.field).string.max_len = 200
+  ]; // User's name with validation
+  int32 user_security_level = 3; // Security level of the user (non-nullable in DB)
+  int32 user_type_id = 4 [
+  (buf.validate.field).int32.gt = 0
+  ]; // Foreign key for the user type (validated for presence)
+  string user_phone = 5 [
+  (buf.validate.field).string.max_len = 200,
+  (buf.validate.field).string.email = false
+  ]; // Optional phone number, unique in DB
+
+  string user_email = 6 [
+  (buf.validate.field).string.email = true,
+  (buf.validate.field).string.max_len = 200
+  ]; // Email, validated and unique
+
+  string user_password = 7 [
+  (buf.validate.field).string.max_len = 200
+  ]; // Password, requires length validation
+  repeated int32 roles = 8 [(buf.validate.field).repeated = {
+    unique: true,
+    max_items: 500,
+  }];
+}
+  message AccountsSchemaUser {
+    int32 user_id = 1;
+    string user_name = 2; // User's name, should be unique
+    int32 user_security_level = 3; // Security level of the user
+    int32 user_type_id = 4; // Foreign key for user type
+    string user_phone = 5; // Optional phone number
+    string user_email = 6; // User's email, unique in DB
+    string user_password = 7; // Password
+    string created_at = 9; // Creation timestamp
+    string updated_at = 10; // Update timestamp
+    string deleted_at = 11; // Deletion timestamp  
+}
+  message UserCreateUpdateResponse{
+    AccountsSchemaUser user = 1;
+  }
+  message UsersListResponse{
+    repeated AccountsSchemaUser records= 1;
+    repeated AccountsSchemaUser deleted_records = 2;
+  }

@@ -29,3 +29,26 @@ type AccountsSchemaRolePermission struct {
 	RoleID       int32 `json:"role_id"`
 	PermissionID int32 `json:"permission_id"`
 }
+
+type AccountsSchemaUser struct {
+	UserID            int32            `json:"user_id"`
+	UserName          string           `json:"user_name"`
+	UserSecurityLevel int32            `json:"user_security_level"`
+	UserTypeID        int32            `json:"user_type_id"`
+	UserPhone         pgtype.Text      `json:"user_phone"`
+	UserEmail         string           `json:"user_email"`
+	UserPassword      pgtype.Text      `json:"user_password"`
+	CreatedAt         pgtype.Timestamp `json:"created_at"`
+	UpdatedAt         pgtype.Timestamp `json:"updated_at"`
+	DeletedAt         pgtype.Timestamp `json:"deleted_at"`
+}
+
+type AccountsSchemaUserRole struct {
+	UserID int32 `json:"user_id"`
+	RoleID int32 `json:"role_id"`
+}
+
+type AccountsSchemaUserType struct {
+	UserTypeID   int32  `json:"user_type_id"`
+	UserTypeName string `json:"user_type_name"`
+}
