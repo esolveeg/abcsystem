@@ -3,6 +3,10 @@ syntax = "proto3";
 package devkit.v1;
 
 import "devkit/v1/accounts_role.proto";
+
+message Empty {}
+
 service DevkitService {
+    rpc RolesList(Empty) returns (RolesListResponse) {}
     rpc RoleCreateUpdate(RoleCreateUpdateRequest) returns (RoleCreateUpdateResponse) {}
 }

@@ -1,11 +1,11 @@
 
 
 config/*.env
-/gen/pb
-/gen/db/querier.go
-/gen/db/models.go
-/gen/db/db.go
-/gen/db/*.sql.go
+/proto_gen
+/db/querier.go
+/db/models.go
+/db/db.go
+/db/*.sql.go
 /tmp
 /bin
 

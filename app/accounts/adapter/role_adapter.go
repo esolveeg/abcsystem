@@ -27,6 +27,22 @@ func (a *AccountsAdapter) RoleCreateUpdateSqlFromGrpc(req *devkitv1.RoleCreateUp
 	log.Debug().Interface("adapter here", resp).Msg("test adapter")
 	return resp
 }
+func (a *AccountsAdapter) RolesListGrpcFromSql(resp []db.AccountsSchemaRole) *devkitv1.RolesListResponse {
+	records := make([]*devkitv1.AccountsSchemaRole, 0)
+	deletedRecords := make([]*devkitv1.AccountsSchemaRole, 0)
+	for _, v := range resp {
+		record := a.RoleEntityGrpcFromSql(&v)
+		if v.DeletedAt.Valid {
+			deletedRecords = append(deletedRecords, record)
+		} else {
+			records = append(records, record)
+		}
+	}
+	return &devkitv1.RolesListResponse{
+		DeletedRecords: deletedRecords,
+		Records:        records,
+	}
+}
 func (a *AccountsAdapter) RoleCreateUpdateGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.RoleCreateUpdateResponse {
 	return &devkitv1.RoleCreateUpdateResponse{
 		Role: a.RoleEntityGrpcFromSql(resp),

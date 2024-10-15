@@ -6,6 +6,7 @@ import (
 )
 
 type AccountsAdapterInterface interface {
+	RolesListGrpcFromSql(resp []db.AccountsSchemaRole) *devkitv1.RolesListResponse
 	RoleEntityGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.AccountsSchemaRole
 	RoleCreateUpdateSqlFromGrpc(req *devkitv1.RoleCreateUpdateRequest) *db.RoleCreateUpdateParams
 	RoleCreateUpdateGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.RoleCreateUpdateResponse

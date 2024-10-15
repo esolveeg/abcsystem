@@ -33,6 +33,8 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
+	// DevkitServiceRolesListProcedure is the fully-qualified name of the DevkitService's RolesList RPC.
+	DevkitServiceRolesListProcedure = "/devkit.v1.DevkitService/RolesList"
 	// DevkitServiceRoleCreateUpdateProcedure is the fully-qualified name of the DevkitService's
 	// RoleCreateUpdate RPC.
 	DevkitServiceRoleCreateUpdateProcedure = "/devkit.v1.DevkitService/RoleCreateUpdate"
@@ -41,11 +43,13 @@ const (
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
 	devkitServiceServiceDescriptor                = v1.File_devkit_v1_devkit_service_proto.Services().ByName("DevkitService")
+	devkitServiceRolesListMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("RolesList")
 	devkitServiceRoleCreateUpdateMethodDescriptor = devkitServiceServiceDescriptor.Methods().ByName("RoleCreateUpdate")
 )
 
 // DevkitServiceClient is a client for the devkit.v1.DevkitService service.
 type DevkitServiceClient interface {
+	RolesList(context.Context, *connect.Request[v1.Empty]) (*connect.Response[v1.RolesListResponse], error)
 	RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error)
 }
 
@@ -59,6 +63,12 @@ type DevkitServiceClient interface {
 func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) DevkitServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &devkitServiceClient{
+		rolesList: connect.NewClient[v1.Empty, v1.RolesListResponse](
+			httpClient,
+			baseURL+DevkitServiceRolesListProcedure,
+			connect.WithSchema(devkitServiceRolesListMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 		roleCreateUpdate: connect.NewClient[v1.RoleCreateUpdateRequest, v1.RoleCreateUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceRoleCreateUpdateProcedure,
@@ -70,7 +80,13 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 
 // devkitServiceClient implements DevkitServiceClient.
 type devkitServiceClient struct {
+	rolesList        *connect.Client[v1.Empty, v1.RolesListResponse]
 	roleCreateUpdate *connect.Client[v1.RoleCreateUpdateRequest, v1.RoleCreateUpdateResponse]
+}
+
+// RolesList calls devkit.v1.DevkitService.RolesList.
+func (c *devkitServiceClient) RolesList(ctx context.Context, req *connect.Request[v1.Empty]) (*connect.Response[v1.RolesListResponse], error) {
+	return c.rolesList.CallUnary(ctx, req)
 }
 
 // RoleCreateUpdate calls devkit.v1.DevkitService.RoleCreateUpdate.
@@ -80,6 +96,7 @@ func (c *devkitServiceClient) RoleCreateUpdate(ctx context.Context, req *connect
 
 // DevkitServiceHandler is an implementation of the devkit.v1.DevkitService service.
 type DevkitServiceHandler interface {
+	RolesList(context.Context, *connect.Request[v1.Empty]) (*connect.Response[v1.RolesListResponse], error)
 	RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error)
 }
 
@@ -89,6 +106,12 @@ type DevkitServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	devkitServiceRolesListHandler := connect.NewUnaryHandler(
+		DevkitServiceRolesListProcedure,
+		svc.RolesList,
+		connect.WithSchema(devkitServiceRolesListMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	devkitServiceRoleCreateUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceRoleCreateUpdateProcedure,
 		svc.RoleCreateUpdate,
@@ -97,6 +120,8 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 	)
 	return "/devkit.v1.DevkitService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
+		case DevkitServiceRolesListProcedure:
+			devkitServiceRolesListHandler.ServeHTTP(w, r)
 		case DevkitServiceRoleCreateUpdateProcedure:
 			devkitServiceRoleCreateUpdateHandler.ServeHTTP(w, r)
 		default:
@@ -107,6 +132,10 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 
 // UnimplementedDevkitServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedDevkitServiceHandler struct{}
+
+func (UnimplementedDevkitServiceHandler) RolesList(context.Context, *connect.Request[v1.Empty]) (*connect.Response[v1.RolesListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RolesList is not implemented"))
+}
 
 func (UnimplementedDevkitServiceHandler) RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleCreateUpdate is not implemented"))

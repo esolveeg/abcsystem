@@ -50,3 +50,40 @@ func (q *Queries) RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdatePara
 	)
 	return i, err
 }
+
+const rolesList = `-- name: RolesList :many
+select  
+	role_id ,
+	role_name ,
+	role_description ,
+	created_at ,
+	updated_at ,
+	deleted_at from accounts_schema.roles
+`
+
+func (q *Queries) RolesList(ctx context.Context) ([]AccountsSchemaRole, error) {
+	rows, err := q.db.Query(ctx, rolesList)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []AccountsSchemaRole{}
+	for rows.Next() {
+		var i AccountsSchemaRole
+		if err := rows.Scan(
+			&i.RoleID,
+			&i.RoleName,
+			&i.RoleDescription,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.DeletedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

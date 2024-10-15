@@ -10,6 +10,7 @@ import (
 )
 
 type AccountsUsecaseInterface interface {
+	RolesList(ctx context.Context) (*apiv1.RolesListResponse, error)
 	RoleCreateUpdate(ctx context.Context, req *apiv1.RoleCreateUpdateRequest) (*apiv1.RoleCreateUpdateResponse, error)
 }
 

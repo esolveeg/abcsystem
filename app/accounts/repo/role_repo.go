@@ -6,6 +6,13 @@ import (
 	"github.com/darwishdev/devkit-api/db"
 )
 
+func (repo *AccountsRepo) RolesList(ctx context.Context) ([]db.AccountsSchemaRole, error) {
+	resp, err := repo.store.RolesList(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
 func (repo *AccountsRepo) RoleCreateUpdate(ctx context.Context, req db.RoleCreateUpdateParams) (*db.AccountsSchemaRole, error) {
 	resp, err := repo.store.RoleCreateUpdate(context.Background(), req)
 	if err != nil {

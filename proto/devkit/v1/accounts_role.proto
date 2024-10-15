@@ -31,3 +31,7 @@ message AccountsSchemaRole {
 message RoleCreateUpdateResponse{
     AccountsSchemaRole role = 1;
 }
+message RolesListResponse{
+    repeated AccountsSchemaRole records= 1;
+    repeated AccountsSchemaRole deleted_records = 2;
+}

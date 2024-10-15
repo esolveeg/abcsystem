@@ -5,6 +5,14 @@ import (
 	apiv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
+func (u *AccountsUsecase) RolesList(ctx context.Context) (*apiv1.RolesListResponse, error) {
+	roles, err := u.repo.RolesList(ctx)
+	if err != nil {
+		return nil, err
+	}
+	response := u.adapter.RolesListGrpcFromSql(roles)
+	return response, nil
+}
 func (u *AccountsUsecase) RoleCreateUpdate(ctx context.Context, req *apiv1.RoleCreateUpdateRequest) (*apiv1.RoleCreateUpdateResponse, error) {
 
 	roleCreateParams := u.adapter.RoleCreateUpdateSqlFromGrpc(req)

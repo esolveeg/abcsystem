@@ -1,4 +1,12 @@
 
+-- name: RolesList :many
+select  
+	role_id ,
+	role_name ,
+	role_description ,
+	created_at ,
+	updated_at ,
+	deleted_at from accounts_schema.roles;
 -- name: RoleCreateUpdate :one
 select  
 	role_id ,
