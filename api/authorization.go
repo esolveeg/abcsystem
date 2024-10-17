@@ -70,6 +70,7 @@ func (api *Api) getAccessableActionsForGroup(ctx context.Context, header http.He
 		findRequestProperty          string = "recordId"
 		deleteRestoreRequestProperty string = "records"
 		redirectRoute                string = fmt.Sprintf("%s_list", group)
+		createUpdate                 string = fmt.Sprintf("%s_create_update", singularizedGroup)
 		create                       string = fmt.Sprintf("%s_create", singularizedGroup)
 		deleteRestore                string = fmt.Sprintf("%s_delete_restore", singularizedGroup)
 		update                       string = fmt.Sprintf("%s_update", singularizedGroup)
@@ -84,7 +85,7 @@ func (api *Api) getAccessableActionsForGroup(ctx context.Context, header http.He
 		response.CreateHandler = &devkitv1.CreateHandler{
 			RedirectRoute: redirectRoute,
 			Title:         create,
-			Endpoint:      strcase.ToLowerCamel(create),
+			Endpoint:      strcase.ToLowerCamel(createUpdate),
 			RouteName:     create,
 		}
 	}
@@ -94,7 +95,7 @@ func (api *Api) getAccessableActionsForGroup(ctx context.Context, header http.He
 
 			RedirectRoute:       redirectRoute,
 			Title:               update,
-			Endpoint:            strcase.ToLowerCamel(update),
+			Endpoint:            strcase.ToLowerCamel(createUpdate),
 			RouteName:           update,
 			FindEndpoint:        findEndpoint,
 			FindRequestProperty: findRequestProperty,
