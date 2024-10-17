@@ -2,6 +2,8 @@ package db
 
 import (
 	"context"
+
+	"connectrpc.com/connect"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -10,6 +12,7 @@ type Store interface {
 	Querier
 	ExecTX(ctx context.Context, fn func(*Queries) error) error
 	AuthUserIDFindByEmail(ctx context.Context, email string) (string, error)
+	DbErrorParser(err error, errorHandler map[string]string) *connect.Error
 }
 
 // Store provides all functions to execute SQL queries and transactions

@@ -55,3 +55,13 @@ CREATE TABLE accounts_schema.user_roles(
 	PRIMARY KEY (user_id, role_id)
 );
 
+CREATE TABLE accounts_schema.navigation_bars(
+    navigation_bar_id serial PRIMARY KEY,
+    menu_key varchar(200) UNIQUE NOT NULL,
+    label varchar(200) NOT NULL,
+    label_ar varchar(200),
+    icon varchar(200),
+    "route" varchar(200) UNIQUE,
+    parent_id int,
+    permission_id int
+);

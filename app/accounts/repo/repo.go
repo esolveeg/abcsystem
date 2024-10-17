@@ -19,11 +19,19 @@ type AccountsRepoInterface interface {
 }
 
 type AccountsRepo struct {
-	store db.Store
+	store        db.Store
+	errorHandler map[string]string
 }
 
 func NewAccountsRepo(store db.Store) AccountsRepoInterface {
+	errorHandler := map[string]string{
+		"roles_role_name_key":  "roleName",
+		"users_user_name_key":  "userName",
+		"users_user_email_key": "userEmail",
+		"users_user_phone_key": "userPhone",
+	}
 	return &AccountsRepo{
-		store: store,
+		store:        store,
+		errorHandler: errorHandler,
 	}
 }

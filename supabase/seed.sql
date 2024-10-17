@@ -1,3 +1,9 @@
+insert into input_types (input_type_name) values 
+	('text' ),
+	('toggle'),
+	('richtext'),
+	('date');
+
 
 insert into accounts_schema.permissions(permission_name , permission_function , permission_group , permission_description) values 
 ('roles list' , 'RolesList' , 'roles' , 'permission to list roles'),

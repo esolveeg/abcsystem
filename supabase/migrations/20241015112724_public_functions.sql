@@ -75,3 +75,27 @@ BEGIN
     END IF;
 END
 $$;
+
+CREATE OR REPLACE FUNCTION settings_bulk_create(keys text[], vals text[])
+    RETURNS void
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    -- Create a temporary table to hold the new values
+    CREATE TEMP TABLE temp_settings AS
+    SELECT
+        unnest($1) AS setting_key,
+        unnest($2) AS setting_value;
+    -- Update the main table based on the temporary table
+    UPDATE
+        settings AS s
+    SET
+        setting_value = t.setting_value
+    FROM
+        temp_settings AS t
+    WHERE
+        s.setting_key = t.setting_key;
+    -- Drop the temporary table
+    DROP TABLE temp_settings;
+END
+$$; 
