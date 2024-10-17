@@ -6,6 +6,7 @@ import (
 	"github.com/darwishdev/devkit-api/db"
 	apiv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	"github.com/darwishdev/devkit-api/redisclient"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
 	"github.com/supabase-community/auth-go/types"
@@ -29,7 +30,6 @@ func (u *AccountsUsecase) UsersList(ctx context.Context) (*apiv1.UsersListRespon
 func (u *AccountsUsecase) UserCreateUpdate(ctx context.Context, req *apiv1.UserCreateUpdateRequest) (*apiv1.UserCreateUpdateResponse, error) {
 	supabasRequest := types.AdminUpdateUserRequest{
 		Email:    req.UserEmail,
-		Phone:    req.UserPhone,
 		Password: req.UserPassword,
 	}
 	if req.UserId != 0 {
@@ -41,6 +41,7 @@ func (u *AccountsUsecase) UserCreateUpdate(ctx context.Context, req *apiv1.UserC
 		if err != nil {
 			return nil, err
 		}
+		supabasRequest.Phone = req.UserPhone
 		supabasRequest.UserID = uuid
 	}
 	_, err := u.supaapi.UserCreateUpdate(supabasRequest)
@@ -67,13 +68,25 @@ func (u *AccountsUsecase) userGenerateTokens(ctx context.Context, username strin
 	}
 	return loginInfo, nil
 }
-func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string) (*apiv1.UserLoginResponse, error) {
+func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string) (*apiv1.UserLoginResponse, redisclient.PermissionsMap, error) {
 	user, err := u.repo.UserFind(ctx, db.UserFindParams{SearchKey: loginCode})
 	if err != nil {
-		return nil, err
+		return nil, nil, err
+	}
+	permissions, err := u.repo.UserPermissionsMap(ctx, user.UserID)
+	if err != nil {
+		return nil, nil, err
+	}
+	permissionsMap, err := u.redisClient.AuthSessionCreate(ctx, loginCode, permissions)
+	if err != nil {
+		return nil, nil, err
 	}
 	response := u.adapter.UserLoginGrpcFromSql(user)
-	return response, nil
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return response, permissionsMap, nil
 
 }
 func (u *AccountsUsecase) UserLogin(ctx context.Context, req *apiv1.UserLoginRequest) (*apiv1.UserLoginResponse, error) {
@@ -82,7 +95,7 @@ func (u *AccountsUsecase) UserLogin(ctx context.Context, req *apiv1.UserLoginReq
 	if err != nil {
 		return nil, err
 	}
-	response, err := u.AppLogin(ctx, userFindParams.SearchKey)
+	response, _, err := u.AppLogin(ctx, userFindParams.SearchKey)
 
 	loginInfo, err := u.userGenerateTokens(ctx, req.LoginCode, response.User.UserId)
 	if err != nil {
@@ -148,7 +161,7 @@ func (u *AccountsUsecase) UserLoginProviderCallback(ctx context.Context, req *ap
 	if err != nil {
 		return nil, err
 	}
-	resp, err := u.AppLogin(ctx, user.Email)
+	resp, _, err := u.AppLogin(ctx, user.Email)
 	if err != nil {
 		return nil, err
 	}

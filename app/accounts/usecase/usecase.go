@@ -9,6 +9,7 @@ import (
 	"github.com/darwishdev/devkit-api/auth"
 	"github.com/darwishdev/devkit-api/db"
 	apiv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	"github.com/darwishdev/devkit-api/redisclient"
 	supaapigo "github.com/darwishdev/supaapi-go"
 )
 
@@ -21,7 +22,7 @@ type AccountsUsecaseInterface interface {
 	UserInvite(ctx context.Context, req *apiv1.UserInviteRequest) (*apiv1.UserInviteResponse, error)
 	RolesDeleteRestore(ctx context.Context, req *apiv1.DeleteRestoreRequest) error
 	RolesList(ctx context.Context) (*apiv1.RolesListResponse, error)
-	AppLogin(ctx context.Context, loginCode string) (*apiv1.UserLoginResponse, error)
+	AppLogin(ctx context.Context, loginCode string) (*apiv1.UserLoginResponse, redisclient.PermissionsMap, error)
 	UserResetPassword(ctx context.Context, req *apiv1.UserResetPasswordRequest) (*apiv1.UserLoginResponse, error)
 	UserResetPasswordEmail(ctx context.Context, req *apiv1.UserResetPasswordEmailRequest) (*apiv1.UserResetPasswordEmailResponse, error)
 	RoleCreateUpdate(ctx context.Context, req *apiv1.RoleCreateUpdateRequest) (*apiv1.RoleCreateUpdateResponse, error)
@@ -33,13 +34,15 @@ type AccountsUsecase struct {
 	tokenMaker    auth.Maker
 	tokenDuration time.Duration
 	supaapi       supaapigo.Supaapi
+	redisClient   redisclient.RedisClientInterface
 	repo          repo.AccountsRepoInterface
 }
 
-func NewAccountsUsecase(store db.Store, supaapi supaapigo.Supaapi, tokenMaker auth.Maker, tokenDuration time.Duration) AccountsUsecaseInterface {
+func NewAccountsUsecase(store db.Store, supaapi supaapigo.Supaapi, redisClient redisclient.RedisClientInterface, tokenMaker auth.Maker, tokenDuration time.Duration) AccountsUsecaseInterface {
 	return &AccountsUsecase{
 		supaapi:       supaapi,
 		tokenMaker:    tokenMaker,
+		redisClient:   redisClient,
 		tokenDuration: tokenDuration,
 		store:         store,
 		adapter:       adapter.NewAccountsAdapter(),

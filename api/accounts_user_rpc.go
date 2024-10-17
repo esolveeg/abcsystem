@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"connectrpc.com/connect"
 	apiv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
@@ -11,6 +10,17 @@ import (
 )
 
 func (api *Api) UsersList(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[apiv1.UsersListResponse], error) {
+	userPayload, err := api.authorizeRequestHeader(ctx, req.Header())
+	if err != nil {
+		return nil, fmt.Errorf("invalid access token: %s", err)
+	}
+
+	permissionMap, err := api.authrorizedUserPermissions(ctx, userPayload)
+	_, ok := permissionMap["users"]
+	if !ok {
+		return nil, fmt.Errorf("user don't have the permissions%s")
+	}
+
 	response, err := api.accountsUscase.UsersList(ctx)
 	if err != nil {
 		return nil, err
@@ -79,28 +89,11 @@ func (api *Api) UsersDeleteRestore(ctx context.Context, req *connect.Request[api
 	return connect.NewResponse(&emptypb.Empty{}), nil
 }
 func (api *Api) UserAuthorize(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[apiv1.UserLoginResponse], error) {
-
-	authHeader := req.Header().Get("Authorization")
-	if authHeader == "" {
-		return nil, fmt.Errorf("missing metadata")
-	}
-	fields := strings.Fields(authHeader)
-	if len(fields) < 2 {
-		return nil, fmt.Errorf("invalid authorization header format")
-	}
-
-	authType := strings.ToLower(fields[0])
-	if authType != "bearer" {
-		return nil, fmt.Errorf("unsupported authorization type: %s", authType)
-	}
-
-	accessToken := fields[1]
-	payload, err := api.tokenMaker.VerifyToken(accessToken)
-
+	payload, err := api.authorizeRequestHeader(ctx, req.Header())
 	if err != nil {
 		return nil, fmt.Errorf("invalid access token: %s", err)
 	}
-	response, err := api.accountsUscase.AppLogin(ctx, payload.Username)
+	response, _, err := api.accountsUscase.AppLogin(ctx, payload.Username)
 
 	return connect.NewResponse(response), nil
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/darwishdev/devkit-api/config"
 	"github.com/darwishdev/devkit-api/db"
 	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1/devkitv1connect"
+	"github.com/darwishdev/devkit-api/redisclient"
 	supaapigo "github.com/darwishdev/supaapi-go"
 )
 
@@ -16,6 +17,7 @@ type Api struct {
 	config         config.Config
 	validator      *protovalidate.Validator
 	tokenMaker     auth.Maker
+	redisClient    redisclient.RedisClientInterface
 	store          db.Store
 }
 
@@ -36,11 +38,12 @@ func NewApi(config config.Config, store db.Store) (devkitv1connect.DevkitService
 	if err != nil {
 		panic("cann't create paset maker in gapi/api.go")
 	}
-
-	accountsUsecase := accountsUsecase.NewAccountsUsecase(store, supaapi, tokenMaker, config.AccessTokenDuration)
+	redisClient := redisclient.NewRedisClient(config.RedisHost, config.RedisPort, config.RedisPassword, config.RedisDatabase)
+	accountsUsecase := accountsUsecase.NewAccountsUsecase(store, supaapi, redisClient, tokenMaker, config.AccessTokenDuration)
 	return &Api{
 		accountsUscase: accountsUsecase,
 		store:          store,
+		redisClient:    redisClient,
 		tokenMaker:     tokenMaker,
 		config:         config,
 		validator:      validator,

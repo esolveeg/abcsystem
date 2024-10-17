@@ -13,10 +13,19 @@ func (api *Api) RolesList(ctx context.Context, req *connect.Request[emptypb.Empt
 	if err != nil {
 		return nil, err
 	}
+	options, err := api.getAccessableActionsForGroup(ctx, req.Header(), "roles")
+	if err != nil {
+		return nil, err
+	}
+	response.Options = options
 	return connect.NewResponse(response), nil
 }
 func (api *Api) RoleCreateUpdate(ctx context.Context, req *connect.Request[apiv1.RoleCreateUpdateRequest]) (*connect.Response[apiv1.RoleCreateUpdateResponse], error) {
-	err := api.validator.Validate(req.Msg)
+	_, err := api.authorizeRequestHeader(ctx, req.Header())
+	if err != nil {
+		return nil, fmt.Errorf("invalid access token: %s", err)
+	}
+	err = api.validator.Validate(req.Msg)
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}

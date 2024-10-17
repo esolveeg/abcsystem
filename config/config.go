@@ -20,7 +20,13 @@ type Config struct {
 	SupabaseApiKey         string        `mapstructure:"SUPABASE_API_KEY"`
 	DBSource               string        `mapstructure:"DB_SOURCE"`
 	TokenSymmetricKey      string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
-	GRPCServerAddress      string        `mapstructure:"GRPC_SERVER_ADDRESS"`
+
+	RedisAddress      string `mapstructure:"REDIS_ADDRESS"`
+	RedisPort         string `mapstructure:"REDIS_PORT"`
+	RedisHost         string `mapstructure:"REDIS_HOST"`
+	RedisPassword     string `mapstructure:"REDIS_PASSWORD"`
+	RedisDatabase     int    `mapstructure:"REDIS_DATABASE"`
+	GRPCServerAddress string `mapstructure:"GRPC_SERVER_ADDRESS"`
 }
 
 // LoadConfig reads configuration from file or environment variables.

@@ -43,3 +43,10 @@ func (repo *AccountsRepo) UserFind(ctx context.Context, req db.UserFindParams) (
 	}
 	return &resp, nil
 }
+func (repo *AccountsRepo) UserPermissionsMap(ctx context.Context, userID int32) ([]byte, error) {
+	resp, err := repo.store.UserPermissionsMap(context.Background(), userID)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
+}

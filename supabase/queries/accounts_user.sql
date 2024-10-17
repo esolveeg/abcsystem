@@ -62,3 +62,16 @@ SET
 WHERE
     user_id = ANY (sqlc.arg('records')::int[]);
 
+-- name: UserPermissionsMap :one
+SELECT jsonb_object_agg(permission_group, permissions)
+FROM (
+    SELECT
+        p.permission_group,
+        jsonb_object_agg(p.permission_function, true) as permissions
+    FROM
+        accounts_schema.user_roles ur
+    JOIN accounts_schema.role_permissions rp ON rp.role_id = ur.role_id
+    JOIN accounts_schema.permissions p ON p.permission_id = rp.permission_id
+    where ur.user_id = $1
+    GROUP BY p.permission_group
+) as permissions_by_group;

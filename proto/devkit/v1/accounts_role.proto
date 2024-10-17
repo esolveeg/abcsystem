@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package devkit.v1;
 
+import "devkit/v1/client.proto";
 import "buf/validate/validate.proto";
 
 message RoleCreateUpdateRequest {
@@ -32,6 +33,7 @@ message RoleCreateUpdateResponse{
     AccountsSchemaRole role = 1;
 }
 message RolesListResponse{
-    repeated AccountsSchemaRole records= 1;
-    repeated AccountsSchemaRole deleted_records = 2;
+  repeated AccountsSchemaRole records= 1;
+  repeated AccountsSchemaRole deleted_records = 2;
+  ListDataOptions options = 3;  
 }
