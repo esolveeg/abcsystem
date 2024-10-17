@@ -43,6 +43,10 @@ func (api *Api) UserCreateUpdate(ctx context.Context, req *connect.Request[apiv1
 }
 
 func (api *Api) UserLoginProvider(ctx context.Context, req *connect.Request[apiv1.UserLoginProviderRequest]) (*connect.Response[apiv1.UserLoginProviderResponse], error) {
+	err := api.validator.Validate(req.Msg)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+	}
 	response, err := api.accountsUscase.UserLoginProvider(ctx, req.Msg)
 	if err != nil {
 		return nil, err
@@ -51,6 +55,15 @@ func (api *Api) UserLoginProvider(ctx context.Context, req *connect.Request[apiv
 }
 
 func (api *Api) UserResetPassword(ctx context.Context, req *connect.Request[apiv1.UserResetPasswordRequest]) (*connect.Response[apiv1.UserLoginResponse], error) {
+	err := api.validator.Validate(req.Msg)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+	}
+
+	if req.Msg.NewPassword != req.Msg.NewPasswordConfirmation {
+
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("password confirmation not match"))
+	}
 	response, err := api.accountsUscase.UserResetPassword(ctx, req.Msg)
 	if err != nil {
 		return nil, err
@@ -59,6 +72,10 @@ func (api *Api) UserResetPassword(ctx context.Context, req *connect.Request[apiv
 }
 
 func (api *Api) UserResetPasswordEmail(ctx context.Context, req *connect.Request[apiv1.UserResetPasswordEmailRequest]) (*connect.Response[apiv1.UserResetPasswordEmailResponse], error) {
+	err := api.validator.Validate(req.Msg)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+	}
 	response, err := api.accountsUscase.UserResetPasswordEmail(ctx, req.Msg)
 	if err != nil {
 		return nil, err
@@ -67,6 +84,10 @@ func (api *Api) UserResetPasswordEmail(ctx context.Context, req *connect.Request
 }
 
 func (api *Api) UserInvite(ctx context.Context, req *connect.Request[apiv1.UserInviteRequest]) (*connect.Response[apiv1.UserInviteResponse], error) {
+	err := api.validator.Validate(req.Msg)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+	}
 	response, err := api.accountsUscase.UserInvite(ctx, req.Msg)
 	if err != nil {
 		return nil, err
@@ -75,6 +96,10 @@ func (api *Api) UserInvite(ctx context.Context, req *connect.Request[apiv1.UserI
 }
 
 func (api *Api) UserLogin(ctx context.Context, req *connect.Request[apiv1.UserLoginRequest]) (*connect.Response[apiv1.UserLoginResponse], error) {
+	err := api.validator.Validate(req.Msg)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+	}
 	response, err := api.accountsUscase.UserLogin(ctx, req.Msg)
 	if err != nil {
 		return nil, err
@@ -82,7 +107,11 @@ func (api *Api) UserLogin(ctx context.Context, req *connect.Request[apiv1.UserLo
 	return connect.NewResponse(response), nil
 }
 func (api *Api) UsersDeleteRestore(ctx context.Context, req *connect.Request[apiv1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error) {
-	err := api.accountsUscase.UsersDeleteRestore(ctx, req.Msg)
+	err := api.validator.Validate(req.Msg)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+	}
+	err = api.accountsUscase.UsersDeleteRestore(ctx, req.Msg)
 	if err != nil {
 		return nil, err
 	}

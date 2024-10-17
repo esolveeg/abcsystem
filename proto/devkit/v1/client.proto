@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+import "buf/validate/validate.proto";
 package devkit.v1;
 
 message RouteQuery {
@@ -67,3 +68,10 @@ message SelectInputOptionWithGroup {
   string group_name = 2;
   repeated SelectInputOption items = 3;
 }
+message DeleteRestoreRequest{
+  repeated int32 records = 1 [(buf.validate.field).repeated = {
+  unique: true,
+  max_items: 500,
+}];
+}
+

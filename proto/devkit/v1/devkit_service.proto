@@ -3,12 +3,10 @@ syntax = "proto3";
 package devkit.v1;
 
 import "devkit/v1/accounts_user.proto";
+import "devkit/v1/client.proto";
 import "devkit/v1/accounts_role.proto";
 import "google/protobuf/empty.proto";
 
-message DeleteRestoreRequest{
-    repeated int32 records = 1;
-}
 service DevkitService {
     rpc RolesList(google.protobuf.Empty) returns (RolesListResponse) {
         option idempotency_level = NO_SIDE_EFFECTS;
