@@ -4,18 +4,30 @@ package devkit.v1;
 
 import "devkit/v1/accounts_user.proto";
 import "devkit/v1/accounts_role.proto";
-
-message Empty {}
+import "google/protobuf/empty.proto";
 
 message DeleteRestoreRequest{
     repeated int32 records = 1;
 }
 service DevkitService {
-    rpc RolesList(Empty) returns (RolesListResponse) {}
+    rpc RolesList(google.protobuf.Empty) returns (RolesListResponse) {
+        option idempotency_level = NO_SIDE_EFFECTS;
+    }
     rpc RoleCreateUpdate(RoleCreateUpdateRequest) returns (RoleCreateUpdateResponse) {}
-    rpc RolesDeleteRestore(DeleteRestoreRequest) returns (Empty) {}
-    rpc UsersList(Empty) returns (UsersListResponse) {}
+    rpc RolesDeleteRestore(DeleteRestoreRequest) returns (google.protobuf.Empty) {}
+    rpc UserLoginProviderCallback(UserLoginProviderCallbackRequest) returns (UserLoginResponse) {
+        option idempotency_level = NO_SIDE_EFFECTS;
+    }
+    rpc UserResetPassword(UserResetPasswordRequest) returns (UserLoginResponse) {}
+    rpc UserResetPasswordEmail(UserResetPasswordEmailRequest) returns (UserResetPasswordEmailResponse) {}
+    rpc UserLoginProvider(UserLoginProviderRequest) returns (UserLoginProviderResponse) {}
+    rpc UserInvite(UserInviteRequest) returns (UserInviteResponse) {}
+    rpc UserAuthorize(google.protobuf.Empty) returns (UserLoginResponse) {}
+    rpc UserLogin(UserLoginRequest) returns (UserLoginResponse) {}
+    rpc UsersList(google.protobuf.Empty) returns (UsersListResponse)  {
+        option idempotency_level = NO_SIDE_EFFECTS;
+    }
     rpc UserCreateUpdate(UserCreateUpdateRequest) returns (UserCreateUpdateResponse) {}
-    rpc UsersDeleteRestore(DeleteRestoreRequest) returns (Empty) {}
+    rpc UsersDeleteRestore(DeleteRestoreRequest) returns (google.protobuf.Empty) {}
 
 }

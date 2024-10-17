@@ -1,9 +1,12 @@
 package adapter
 
 import (
+	"strings"
+
 	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"github.com/rs/zerolog/log"
+	"github.com/supabase-community/auth-go/types"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (a *AccountsAdapter) UserEntityGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.AccountsSchemaUser {
@@ -21,6 +24,7 @@ func (a *AccountsAdapter) UserEntityGrpcFromSql(resp *db.AccountsSchemaUser) *de
 }
 
 func (a *AccountsAdapter) UserCreateUpdateSqlFromGrpc(req *devkitv1.UserCreateUpdateRequest) *db.UserCreateUpdateParams {
+	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.UserPassword), bcrypt.DefaultCost)
 	resp := &db.UserCreateUpdateParams{
 		UserID:            req.UserId,
 		UserName:          req.UserName,
@@ -28,11 +32,9 @@ func (a *AccountsAdapter) UserCreateUpdateSqlFromGrpc(req *devkitv1.UserCreateUp
 		UserTypeID:        req.UserTypeId,
 		UserPhone:         req.UserPhone,
 		UserEmail:         req.UserEmail,
-		UserPassword:      req.UserPassword,
+		UserPassword:      string(hashedPassword),
 		Roles:             req.Roles,
 	}
-
-	log.Debug().Interface("adapter here", resp).Msg("test adapter")
 	return resp
 }
 func (a *AccountsAdapter) UsersListGrpcFromSql(resp []db.AccountsSchemaUser) *devkitv1.UsersListResponse {
@@ -53,6 +55,25 @@ func (a *AccountsAdapter) UsersListGrpcFromSql(resp []db.AccountsSchemaUser) *de
 }
 func (a *AccountsAdapter) UserCreateUpdateGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.UserCreateUpdateResponse {
 	return &devkitv1.UserCreateUpdateResponse{
+		User: a.UserEntityGrpcFromSql(resp),
+	}
+}
+func (a *AccountsAdapter) UserLoginSqlFromGrpc(req *devkitv1.UserLoginRequest) (*db.UserFindParams, *types.TokenRequest) {
+	isEmail := strings.Contains(req.LoginCode, "@") && strings.Contains(req.LoginCode, ".")
+	supabseRequest := &types.TokenRequest{Password: req.UserPassword}
+	if isEmail {
+		supabseRequest.Email = req.LoginCode
+	} else {
+		supabseRequest.Phone = req.LoginCode
+	}
+	supabseRequest.GrantType = "password"
+	return &db.UserFindParams{
+		SearchKey: req.LoginCode,
+	}, supabseRequest
+}
+
+func (a *AccountsAdapter) UserLoginGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.UserLoginResponse {
+	return &devkitv1.UserLoginResponse{
 		User: a.UserEntityGrpcFromSql(resp),
 	}
 }

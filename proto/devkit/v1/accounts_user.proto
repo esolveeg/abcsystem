@@ -28,26 +28,72 @@ message UserCreateUpdateRequest {
   (buf.validate.field).string.max_len = 200
   ]; // Password, requires length validation
   repeated int32 roles = 8 [(buf.validate.field).repeated = {
-    unique: true,
-    max_items: 500,
-  }];
+  unique: true,
+  max_items: 500,
+}];
 }
-  message AccountsSchemaUser {
-    int32 user_id = 1;
-    string user_name = 2; // User's name, should be unique
-    int32 user_security_level = 3; // Security level of the user
-    int32 user_type_id = 4; // Foreign key for user type
-    string user_phone = 5; // Optional phone number
-    string user_email = 6; // User's email, unique in DB
-    string user_password = 7; // Password
-    string created_at = 9; // Creation timestamp
-    string updated_at = 10; // Update timestamp
-    string deleted_at = 11; // Deletion timestamp  
+message AccountsSchemaUser {
+  int32 user_id = 1;
+  string user_name = 2; // User's name, should be unique
+  int32 user_security_level = 3; // Security level of the user
+  int32 user_type_id = 4; // Foreign key for user type
+  string user_phone = 5; // Optional phone number
+  string user_email = 6; // User's email, unique in DB
+  string user_password = 7; // Password
+  string created_at = 9; // Creation timestamp
+  string updated_at = 10; // Update timestamp
+  string deleted_at = 11; // Deletion timestamp  
 }
-  message UserCreateUpdateResponse{
-    AccountsSchemaUser user = 1;
-  }
-  message UsersListResponse{
-    repeated AccountsSchemaUser records= 1;
-    repeated AccountsSchemaUser deleted_records = 2;
-  }
+message UserCreateUpdateResponse{
+  AccountsSchemaUser user = 1;
+}
+message UsersListResponse{
+  repeated AccountsSchemaUser records= 1;
+  repeated AccountsSchemaUser deleted_records = 2;
+}
+message UserLoginRequest{
+  string login_code = 1; 
+  string user_password = 2; 
+}
+message LoginInfo {
+  string access_token = 1;
+  string access_token_expires_at = 4;
+}
+message UserLoginResponse{
+  AccountsSchemaUser user = 1; 
+  LoginInfo     login_info = 2; 
+}
+message UserInviteRequest{
+  string user_email = 1 [
+  (buf.validate.field).string.email = true,
+  (buf.validate.field).string.max_len = 200
+  ]; 
+}
+message UserInviteResponse{
+  string message = 1; 
+}
+message UserLoginProviderRequest{
+  string provider = 2; 
+  string redirect_url = 1; 
+}
+message UserLoginProviderResponse{
+  string url = 1; 
+}
+message UserLoginProviderCallbackRequest{
+  string provider = 1; 
+  string access_token = 2; 
+}
+
+message UserResetPasswordEmailRequest{
+  string email = 1; 
+}
+message UserResetPasswordEmailResponse{
+  string message = 1; 
+}
+message UserResetPasswordRequest{
+  string email = 1; 
+  string new_password = 2; 
+  string new_password_confirmation = 3; 
+  string reset_token = 4; 
+}
+

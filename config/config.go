@@ -2,6 +2,8 @@ package config
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/spf13/viper"
 )
 
@@ -12,8 +14,13 @@ type StateConfig struct {
 // Config stores all configuration of the application.
 // The values are read by viper from a config file or environment variable.
 type Config struct {
-	DBSource          string `mapstructure:"DB_SOURCE"`
-	GRPCServerAddress string `mapstructure:"GRPC_SERVER_ADDRESS"`
+	AccessTokenDuration    time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
+	DBProjectREF           string        `mapstructure:"DB_PROJECT_REF"`
+	SupabaseServiceRoleKey string        `mapstructure:"SUPABASE_SERVICE_ROLE_KEY"`
+	SupabaseApiKey         string        `mapstructure:"SUPABASE_API_KEY"`
+	DBSource               string        `mapstructure:"DB_SOURCE"`
+	TokenSymmetricKey      string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
+	GRPCServerAddress      string        `mapstructure:"GRPC_SERVER_ADDRESS"`
 }
 
 // LoadConfig reads configuration from file or environment variables.

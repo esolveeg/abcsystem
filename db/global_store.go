@@ -1,12 +1,14 @@
 package db
 
 import (
+	"context"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 // Store defines all functions to execute db queries and transactions
 type Store interface {
 	Querier
+	AuthUserIDFindByEmail(ctx context.Context, email string) (string, error)
 }
 
 // Store provides all functions to execute SQL queries and transactions

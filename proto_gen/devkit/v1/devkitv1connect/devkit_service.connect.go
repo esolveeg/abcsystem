@@ -9,6 +9,7 @@ import (
 	context "context"
 	errors "errors"
 	v1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	http "net/http"
 	strings "strings"
 )
@@ -41,6 +42,26 @@ const (
 	// DevkitServiceRolesDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
 	// RolesDeleteRestore RPC.
 	DevkitServiceRolesDeleteRestoreProcedure = "/devkit.v1.DevkitService/RolesDeleteRestore"
+	// DevkitServiceUserLoginProviderCallbackProcedure is the fully-qualified name of the
+	// DevkitService's UserLoginProviderCallback RPC.
+	DevkitServiceUserLoginProviderCallbackProcedure = "/devkit.v1.DevkitService/UserLoginProviderCallback"
+	// DevkitServiceUserResetPasswordProcedure is the fully-qualified name of the DevkitService's
+	// UserResetPassword RPC.
+	DevkitServiceUserResetPasswordProcedure = "/devkit.v1.DevkitService/UserResetPassword"
+	// DevkitServiceUserResetPasswordEmailProcedure is the fully-qualified name of the DevkitService's
+	// UserResetPasswordEmail RPC.
+	DevkitServiceUserResetPasswordEmailProcedure = "/devkit.v1.DevkitService/UserResetPasswordEmail"
+	// DevkitServiceUserLoginProviderProcedure is the fully-qualified name of the DevkitService's
+	// UserLoginProvider RPC.
+	DevkitServiceUserLoginProviderProcedure = "/devkit.v1.DevkitService/UserLoginProvider"
+	// DevkitServiceUserInviteProcedure is the fully-qualified name of the DevkitService's UserInvite
+	// RPC.
+	DevkitServiceUserInviteProcedure = "/devkit.v1.DevkitService/UserInvite"
+	// DevkitServiceUserAuthorizeProcedure is the fully-qualified name of the DevkitService's
+	// UserAuthorize RPC.
+	DevkitServiceUserAuthorizeProcedure = "/devkit.v1.DevkitService/UserAuthorize"
+	// DevkitServiceUserLoginProcedure is the fully-qualified name of the DevkitService's UserLogin RPC.
+	DevkitServiceUserLoginProcedure = "/devkit.v1.DevkitService/UserLogin"
 	// DevkitServiceUsersListProcedure is the fully-qualified name of the DevkitService's UsersList RPC.
 	DevkitServiceUsersListProcedure = "/devkit.v1.DevkitService/UsersList"
 	// DevkitServiceUserCreateUpdateProcedure is the fully-qualified name of the DevkitService's
@@ -53,23 +74,37 @@ const (
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
-	devkitServiceServiceDescriptor                  = v1.File_devkit_v1_devkit_service_proto.Services().ByName("DevkitService")
-	devkitServiceRolesListMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("RolesList")
-	devkitServiceRoleCreateUpdateMethodDescriptor   = devkitServiceServiceDescriptor.Methods().ByName("RoleCreateUpdate")
-	devkitServiceRolesDeleteRestoreMethodDescriptor = devkitServiceServiceDescriptor.Methods().ByName("RolesDeleteRestore")
-	devkitServiceUsersListMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("UsersList")
-	devkitServiceUserCreateUpdateMethodDescriptor   = devkitServiceServiceDescriptor.Methods().ByName("UserCreateUpdate")
-	devkitServiceUsersDeleteRestoreMethodDescriptor = devkitServiceServiceDescriptor.Methods().ByName("UsersDeleteRestore")
+	devkitServiceServiceDescriptor                         = v1.File_devkit_v1_devkit_service_proto.Services().ByName("DevkitService")
+	devkitServiceRolesListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("RolesList")
+	devkitServiceRoleCreateUpdateMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("RoleCreateUpdate")
+	devkitServiceRolesDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("RolesDeleteRestore")
+	devkitServiceUserLoginProviderCallbackMethodDescriptor = devkitServiceServiceDescriptor.Methods().ByName("UserLoginProviderCallback")
+	devkitServiceUserResetPasswordMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("UserResetPassword")
+	devkitServiceUserResetPasswordEmailMethodDescriptor    = devkitServiceServiceDescriptor.Methods().ByName("UserResetPasswordEmail")
+	devkitServiceUserLoginProviderMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("UserLoginProvider")
+	devkitServiceUserInviteMethodDescriptor                = devkitServiceServiceDescriptor.Methods().ByName("UserInvite")
+	devkitServiceUserAuthorizeMethodDescriptor             = devkitServiceServiceDescriptor.Methods().ByName("UserAuthorize")
+	devkitServiceUserLoginMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("UserLogin")
+	devkitServiceUsersListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("UsersList")
+	devkitServiceUserCreateUpdateMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("UserCreateUpdate")
+	devkitServiceUsersDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("UsersDeleteRestore")
 )
 
 // DevkitServiceClient is a client for the devkit.v1.DevkitService service.
 type DevkitServiceClient interface {
-	RolesList(context.Context, *connect.Request[v1.Empty]) (*connect.Response[v1.RolesListResponse], error)
+	RolesList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.RolesListResponse], error)
 	RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error)
-	RolesDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[v1.Empty], error)
-	UsersList(context.Context, *connect.Request[v1.Empty]) (*connect.Response[v1.UsersListResponse], error)
+	RolesDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error)
+	UserLoginProviderCallback(context.Context, *connect.Request[v1.UserLoginProviderCallbackRequest]) (*connect.Response[v1.UserLoginResponse], error)
+	UserResetPassword(context.Context, *connect.Request[v1.UserResetPasswordRequest]) (*connect.Response[v1.UserLoginResponse], error)
+	UserResetPasswordEmail(context.Context, *connect.Request[v1.UserResetPasswordEmailRequest]) (*connect.Response[v1.UserResetPasswordEmailResponse], error)
+	UserLoginProvider(context.Context, *connect.Request[v1.UserLoginProviderRequest]) (*connect.Response[v1.UserLoginProviderResponse], error)
+	UserInvite(context.Context, *connect.Request[v1.UserInviteRequest]) (*connect.Response[v1.UserInviteResponse], error)
+	UserAuthorize(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.UserLoginResponse], error)
+	UserLogin(context.Context, *connect.Request[v1.UserLoginRequest]) (*connect.Response[v1.UserLoginResponse], error)
+	UsersList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.UsersListResponse], error)
 	UserCreateUpdate(context.Context, *connect.Request[v1.UserCreateUpdateRequest]) (*connect.Response[v1.UserCreateUpdateResponse], error)
-	UsersDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[v1.Empty], error)
+	UsersDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error)
 }
 
 // NewDevkitServiceClient constructs a client for the devkit.v1.DevkitService service. By default,
@@ -82,10 +117,11 @@ type DevkitServiceClient interface {
 func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) DevkitServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &devkitServiceClient{
-		rolesList: connect.NewClient[v1.Empty, v1.RolesListResponse](
+		rolesList: connect.NewClient[emptypb.Empty, v1.RolesListResponse](
 			httpClient,
 			baseURL+DevkitServiceRolesListProcedure,
 			connect.WithSchema(devkitServiceRolesListMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		roleCreateUpdate: connect.NewClient[v1.RoleCreateUpdateRequest, v1.RoleCreateUpdateResponse](
@@ -94,16 +130,60 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(devkitServiceRoleCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
-		rolesDeleteRestore: connect.NewClient[v1.DeleteRestoreRequest, v1.Empty](
+		rolesDeleteRestore: connect.NewClient[v1.DeleteRestoreRequest, emptypb.Empty](
 			httpClient,
 			baseURL+DevkitServiceRolesDeleteRestoreProcedure,
 			connect.WithSchema(devkitServiceRolesDeleteRestoreMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
-		usersList: connect.NewClient[v1.Empty, v1.UsersListResponse](
+		userLoginProviderCallback: connect.NewClient[v1.UserLoginProviderCallbackRequest, v1.UserLoginResponse](
+			httpClient,
+			baseURL+DevkitServiceUserLoginProviderCallbackProcedure,
+			connect.WithSchema(devkitServiceUserLoginProviderCallbackMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
+		userResetPassword: connect.NewClient[v1.UserResetPasswordRequest, v1.UserLoginResponse](
+			httpClient,
+			baseURL+DevkitServiceUserResetPasswordProcedure,
+			connect.WithSchema(devkitServiceUserResetPasswordMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		userResetPasswordEmail: connect.NewClient[v1.UserResetPasswordEmailRequest, v1.UserResetPasswordEmailResponse](
+			httpClient,
+			baseURL+DevkitServiceUserResetPasswordEmailProcedure,
+			connect.WithSchema(devkitServiceUserResetPasswordEmailMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		userLoginProvider: connect.NewClient[v1.UserLoginProviderRequest, v1.UserLoginProviderResponse](
+			httpClient,
+			baseURL+DevkitServiceUserLoginProviderProcedure,
+			connect.WithSchema(devkitServiceUserLoginProviderMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		userInvite: connect.NewClient[v1.UserInviteRequest, v1.UserInviteResponse](
+			httpClient,
+			baseURL+DevkitServiceUserInviteProcedure,
+			connect.WithSchema(devkitServiceUserInviteMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		userAuthorize: connect.NewClient[emptypb.Empty, v1.UserLoginResponse](
+			httpClient,
+			baseURL+DevkitServiceUserAuthorizeProcedure,
+			connect.WithSchema(devkitServiceUserAuthorizeMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		userLogin: connect.NewClient[v1.UserLoginRequest, v1.UserLoginResponse](
+			httpClient,
+			baseURL+DevkitServiceUserLoginProcedure,
+			connect.WithSchema(devkitServiceUserLoginMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		usersList: connect.NewClient[emptypb.Empty, v1.UsersListResponse](
 			httpClient,
 			baseURL+DevkitServiceUsersListProcedure,
 			connect.WithSchema(devkitServiceUsersListMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		userCreateUpdate: connect.NewClient[v1.UserCreateUpdateRequest, v1.UserCreateUpdateResponse](
@@ -112,7 +192,7 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(devkitServiceUserCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
-		usersDeleteRestore: connect.NewClient[v1.DeleteRestoreRequest, v1.Empty](
+		usersDeleteRestore: connect.NewClient[v1.DeleteRestoreRequest, emptypb.Empty](
 			httpClient,
 			baseURL+DevkitServiceUsersDeleteRestoreProcedure,
 			connect.WithSchema(devkitServiceUsersDeleteRestoreMethodDescriptor),
@@ -123,16 +203,23 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 
 // devkitServiceClient implements DevkitServiceClient.
 type devkitServiceClient struct {
-	rolesList          *connect.Client[v1.Empty, v1.RolesListResponse]
-	roleCreateUpdate   *connect.Client[v1.RoleCreateUpdateRequest, v1.RoleCreateUpdateResponse]
-	rolesDeleteRestore *connect.Client[v1.DeleteRestoreRequest, v1.Empty]
-	usersList          *connect.Client[v1.Empty, v1.UsersListResponse]
-	userCreateUpdate   *connect.Client[v1.UserCreateUpdateRequest, v1.UserCreateUpdateResponse]
-	usersDeleteRestore *connect.Client[v1.DeleteRestoreRequest, v1.Empty]
+	rolesList                 *connect.Client[emptypb.Empty, v1.RolesListResponse]
+	roleCreateUpdate          *connect.Client[v1.RoleCreateUpdateRequest, v1.RoleCreateUpdateResponse]
+	rolesDeleteRestore        *connect.Client[v1.DeleteRestoreRequest, emptypb.Empty]
+	userLoginProviderCallback *connect.Client[v1.UserLoginProviderCallbackRequest, v1.UserLoginResponse]
+	userResetPassword         *connect.Client[v1.UserResetPasswordRequest, v1.UserLoginResponse]
+	userResetPasswordEmail    *connect.Client[v1.UserResetPasswordEmailRequest, v1.UserResetPasswordEmailResponse]
+	userLoginProvider         *connect.Client[v1.UserLoginProviderRequest, v1.UserLoginProviderResponse]
+	userInvite                *connect.Client[v1.UserInviteRequest, v1.UserInviteResponse]
+	userAuthorize             *connect.Client[emptypb.Empty, v1.UserLoginResponse]
+	userLogin                 *connect.Client[v1.UserLoginRequest, v1.UserLoginResponse]
+	usersList                 *connect.Client[emptypb.Empty, v1.UsersListResponse]
+	userCreateUpdate          *connect.Client[v1.UserCreateUpdateRequest, v1.UserCreateUpdateResponse]
+	usersDeleteRestore        *connect.Client[v1.DeleteRestoreRequest, emptypb.Empty]
 }
 
 // RolesList calls devkit.v1.DevkitService.RolesList.
-func (c *devkitServiceClient) RolesList(ctx context.Context, req *connect.Request[v1.Empty]) (*connect.Response[v1.RolesListResponse], error) {
+func (c *devkitServiceClient) RolesList(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[v1.RolesListResponse], error) {
 	return c.rolesList.CallUnary(ctx, req)
 }
 
@@ -142,12 +229,47 @@ func (c *devkitServiceClient) RoleCreateUpdate(ctx context.Context, req *connect
 }
 
 // RolesDeleteRestore calls devkit.v1.DevkitService.RolesDeleteRestore.
-func (c *devkitServiceClient) RolesDeleteRestore(ctx context.Context, req *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[v1.Empty], error) {
+func (c *devkitServiceClient) RolesDeleteRestore(ctx context.Context, req *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error) {
 	return c.rolesDeleteRestore.CallUnary(ctx, req)
 }
 
+// UserLoginProviderCallback calls devkit.v1.DevkitService.UserLoginProviderCallback.
+func (c *devkitServiceClient) UserLoginProviderCallback(ctx context.Context, req *connect.Request[v1.UserLoginProviderCallbackRequest]) (*connect.Response[v1.UserLoginResponse], error) {
+	return c.userLoginProviderCallback.CallUnary(ctx, req)
+}
+
+// UserResetPassword calls devkit.v1.DevkitService.UserResetPassword.
+func (c *devkitServiceClient) UserResetPassword(ctx context.Context, req *connect.Request[v1.UserResetPasswordRequest]) (*connect.Response[v1.UserLoginResponse], error) {
+	return c.userResetPassword.CallUnary(ctx, req)
+}
+
+// UserResetPasswordEmail calls devkit.v1.DevkitService.UserResetPasswordEmail.
+func (c *devkitServiceClient) UserResetPasswordEmail(ctx context.Context, req *connect.Request[v1.UserResetPasswordEmailRequest]) (*connect.Response[v1.UserResetPasswordEmailResponse], error) {
+	return c.userResetPasswordEmail.CallUnary(ctx, req)
+}
+
+// UserLoginProvider calls devkit.v1.DevkitService.UserLoginProvider.
+func (c *devkitServiceClient) UserLoginProvider(ctx context.Context, req *connect.Request[v1.UserLoginProviderRequest]) (*connect.Response[v1.UserLoginProviderResponse], error) {
+	return c.userLoginProvider.CallUnary(ctx, req)
+}
+
+// UserInvite calls devkit.v1.DevkitService.UserInvite.
+func (c *devkitServiceClient) UserInvite(ctx context.Context, req *connect.Request[v1.UserInviteRequest]) (*connect.Response[v1.UserInviteResponse], error) {
+	return c.userInvite.CallUnary(ctx, req)
+}
+
+// UserAuthorize calls devkit.v1.DevkitService.UserAuthorize.
+func (c *devkitServiceClient) UserAuthorize(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[v1.UserLoginResponse], error) {
+	return c.userAuthorize.CallUnary(ctx, req)
+}
+
+// UserLogin calls devkit.v1.DevkitService.UserLogin.
+func (c *devkitServiceClient) UserLogin(ctx context.Context, req *connect.Request[v1.UserLoginRequest]) (*connect.Response[v1.UserLoginResponse], error) {
+	return c.userLogin.CallUnary(ctx, req)
+}
+
 // UsersList calls devkit.v1.DevkitService.UsersList.
-func (c *devkitServiceClient) UsersList(ctx context.Context, req *connect.Request[v1.Empty]) (*connect.Response[v1.UsersListResponse], error) {
+func (c *devkitServiceClient) UsersList(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[v1.UsersListResponse], error) {
 	return c.usersList.CallUnary(ctx, req)
 }
 
@@ -157,18 +279,25 @@ func (c *devkitServiceClient) UserCreateUpdate(ctx context.Context, req *connect
 }
 
 // UsersDeleteRestore calls devkit.v1.DevkitService.UsersDeleteRestore.
-func (c *devkitServiceClient) UsersDeleteRestore(ctx context.Context, req *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[v1.Empty], error) {
+func (c *devkitServiceClient) UsersDeleteRestore(ctx context.Context, req *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error) {
 	return c.usersDeleteRestore.CallUnary(ctx, req)
 }
 
 // DevkitServiceHandler is an implementation of the devkit.v1.DevkitService service.
 type DevkitServiceHandler interface {
-	RolesList(context.Context, *connect.Request[v1.Empty]) (*connect.Response[v1.RolesListResponse], error)
+	RolesList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.RolesListResponse], error)
 	RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error)
-	RolesDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[v1.Empty], error)
-	UsersList(context.Context, *connect.Request[v1.Empty]) (*connect.Response[v1.UsersListResponse], error)
+	RolesDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error)
+	UserLoginProviderCallback(context.Context, *connect.Request[v1.UserLoginProviderCallbackRequest]) (*connect.Response[v1.UserLoginResponse], error)
+	UserResetPassword(context.Context, *connect.Request[v1.UserResetPasswordRequest]) (*connect.Response[v1.UserLoginResponse], error)
+	UserResetPasswordEmail(context.Context, *connect.Request[v1.UserResetPasswordEmailRequest]) (*connect.Response[v1.UserResetPasswordEmailResponse], error)
+	UserLoginProvider(context.Context, *connect.Request[v1.UserLoginProviderRequest]) (*connect.Response[v1.UserLoginProviderResponse], error)
+	UserInvite(context.Context, *connect.Request[v1.UserInviteRequest]) (*connect.Response[v1.UserInviteResponse], error)
+	UserAuthorize(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.UserLoginResponse], error)
+	UserLogin(context.Context, *connect.Request[v1.UserLoginRequest]) (*connect.Response[v1.UserLoginResponse], error)
+	UsersList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.UsersListResponse], error)
 	UserCreateUpdate(context.Context, *connect.Request[v1.UserCreateUpdateRequest]) (*connect.Response[v1.UserCreateUpdateResponse], error)
-	UsersDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[v1.Empty], error)
+	UsersDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error)
 }
 
 // NewDevkitServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -181,6 +310,7 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		DevkitServiceRolesListProcedure,
 		svc.RolesList,
 		connect.WithSchema(devkitServiceRolesListMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceRoleCreateUpdateHandler := connect.NewUnaryHandler(
@@ -195,10 +325,54 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(devkitServiceRolesDeleteRestoreMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	devkitServiceUserLoginProviderCallbackHandler := connect.NewUnaryHandler(
+		DevkitServiceUserLoginProviderCallbackProcedure,
+		svc.UserLoginProviderCallback,
+		connect.WithSchema(devkitServiceUserLoginProviderCallbackMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceUserResetPasswordHandler := connect.NewUnaryHandler(
+		DevkitServiceUserResetPasswordProcedure,
+		svc.UserResetPassword,
+		connect.WithSchema(devkitServiceUserResetPasswordMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceUserResetPasswordEmailHandler := connect.NewUnaryHandler(
+		DevkitServiceUserResetPasswordEmailProcedure,
+		svc.UserResetPasswordEmail,
+		connect.WithSchema(devkitServiceUserResetPasswordEmailMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceUserLoginProviderHandler := connect.NewUnaryHandler(
+		DevkitServiceUserLoginProviderProcedure,
+		svc.UserLoginProvider,
+		connect.WithSchema(devkitServiceUserLoginProviderMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceUserInviteHandler := connect.NewUnaryHandler(
+		DevkitServiceUserInviteProcedure,
+		svc.UserInvite,
+		connect.WithSchema(devkitServiceUserInviteMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceUserAuthorizeHandler := connect.NewUnaryHandler(
+		DevkitServiceUserAuthorizeProcedure,
+		svc.UserAuthorize,
+		connect.WithSchema(devkitServiceUserAuthorizeMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceUserLoginHandler := connect.NewUnaryHandler(
+		DevkitServiceUserLoginProcedure,
+		svc.UserLogin,
+		connect.WithSchema(devkitServiceUserLoginMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	devkitServiceUsersListHandler := connect.NewUnaryHandler(
 		DevkitServiceUsersListProcedure,
 		svc.UsersList,
 		connect.WithSchema(devkitServiceUsersListMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceUserCreateUpdateHandler := connect.NewUnaryHandler(
@@ -221,6 +395,20 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 			devkitServiceRoleCreateUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceRolesDeleteRestoreProcedure:
 			devkitServiceRolesDeleteRestoreHandler.ServeHTTP(w, r)
+		case DevkitServiceUserLoginProviderCallbackProcedure:
+			devkitServiceUserLoginProviderCallbackHandler.ServeHTTP(w, r)
+		case DevkitServiceUserResetPasswordProcedure:
+			devkitServiceUserResetPasswordHandler.ServeHTTP(w, r)
+		case DevkitServiceUserResetPasswordEmailProcedure:
+			devkitServiceUserResetPasswordEmailHandler.ServeHTTP(w, r)
+		case DevkitServiceUserLoginProviderProcedure:
+			devkitServiceUserLoginProviderHandler.ServeHTTP(w, r)
+		case DevkitServiceUserInviteProcedure:
+			devkitServiceUserInviteHandler.ServeHTTP(w, r)
+		case DevkitServiceUserAuthorizeProcedure:
+			devkitServiceUserAuthorizeHandler.ServeHTTP(w, r)
+		case DevkitServiceUserLoginProcedure:
+			devkitServiceUserLoginHandler.ServeHTTP(w, r)
 		case DevkitServiceUsersListProcedure:
 			devkitServiceUsersListHandler.ServeHTTP(w, r)
 		case DevkitServiceUserCreateUpdateProcedure:
@@ -236,7 +424,7 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 // UnimplementedDevkitServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedDevkitServiceHandler struct{}
 
-func (UnimplementedDevkitServiceHandler) RolesList(context.Context, *connect.Request[v1.Empty]) (*connect.Response[v1.RolesListResponse], error) {
+func (UnimplementedDevkitServiceHandler) RolesList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.RolesListResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RolesList is not implemented"))
 }
 
@@ -244,11 +432,39 @@ func (UnimplementedDevkitServiceHandler) RoleCreateUpdate(context.Context, *conn
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleCreateUpdate is not implemented"))
 }
 
-func (UnimplementedDevkitServiceHandler) RolesDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[v1.Empty], error) {
+func (UnimplementedDevkitServiceHandler) RolesDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RolesDeleteRestore is not implemented"))
 }
 
-func (UnimplementedDevkitServiceHandler) UsersList(context.Context, *connect.Request[v1.Empty]) (*connect.Response[v1.UsersListResponse], error) {
+func (UnimplementedDevkitServiceHandler) UserLoginProviderCallback(context.Context, *connect.Request[v1.UserLoginProviderCallbackRequest]) (*connect.Response[v1.UserLoginResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserLoginProviderCallback is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) UserResetPassword(context.Context, *connect.Request[v1.UserResetPasswordRequest]) (*connect.Response[v1.UserLoginResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserResetPassword is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) UserResetPasswordEmail(context.Context, *connect.Request[v1.UserResetPasswordEmailRequest]) (*connect.Response[v1.UserResetPasswordEmailResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserResetPasswordEmail is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) UserLoginProvider(context.Context, *connect.Request[v1.UserLoginProviderRequest]) (*connect.Response[v1.UserLoginProviderResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserLoginProvider is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) UserInvite(context.Context, *connect.Request[v1.UserInviteRequest]) (*connect.Response[v1.UserInviteResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserInvite is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) UserAuthorize(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.UserLoginResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserAuthorize is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) UserLogin(context.Context, *connect.Request[v1.UserLoginRequest]) (*connect.Response[v1.UserLoginResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserLogin is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) UsersList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.UsersListResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UsersList is not implemented"))
 }
 
@@ -256,6 +472,6 @@ func (UnimplementedDevkitServiceHandler) UserCreateUpdate(context.Context, *conn
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserCreateUpdate is not implemented"))
 }
 
-func (UnimplementedDevkitServiceHandler) UsersDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[v1.Empty], error) {
+func (UnimplementedDevkitServiceHandler) UsersDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UsersDeleteRestore is not implemented"))
 }

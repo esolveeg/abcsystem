@@ -3,9 +3,13 @@ package adapter
 import (
 	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	"github.com/supabase-community/auth-go/types"
 )
 
 type AccountsAdapterInterface interface {
+	UserLoginSqlFromGrpc(req *devkitv1.UserLoginRequest) (*db.UserFindParams, *types.TokenRequest)
+
+	UserLoginGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.UserLoginResponse
 	UserCreateUpdateGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.UserCreateUpdateResponse
 	UsersListGrpcFromSql(resp []db.AccountsSchemaUser) *devkitv1.UsersListResponse
 	UserCreateUpdateSqlFromGrpc(req *devkitv1.UserCreateUpdateRequest) *db.UserCreateUpdateParams

@@ -92,9 +92,9 @@ enabled = true
 enabled = true
 # The base URL of your website. Used as an allow-list for redirects and for constructing URLs used
 # in emails.
-site_url = "http://127.0.0.1:3000"
+site_url = "http://127.0.0.1:5173"
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["https://127.0.0.1:3000"]
+additional_redirect_urls = ["http://localhost:9000/devkit.v1.DevkitService/UserLoginProviderCallback" , "https://127.0.0.1:5173" , "https://127.0.0.1:5174" , "https://127.0.0.1:5173/provider-login" , "https://127.0.0.1:5174/prvider-login" , "https://127.0.0.1:5173/reser-password" , "https://127.0.0.1:5174/reset-password" ]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # If disabled, the refresh token will never expire.
@@ -123,15 +123,15 @@ secure_password_change = false
 max_frequency = "1s"
 
 # Use a production-ready SMTP server
-# [auth.email.smtp]
-# host = "smtp.sendgrid.net"
-# port = 587
-# user = "apikey"
-# pass = "env(SENDGRID_API_KEY)"
-# admin_email = "admin@email.com"
-# sender_name = "Admin"
+[auth.email.smtp]
+host = "smtp.resend.com"
+port = 465
+user = "resend"
+pass = "re_ThbNHz1e_64UKW5wGHhfyqDPtKKWrg3M4"
+admin_email = "info@yallabeina.com"
+sender_name = "info"
 
-# Uncomment to customize email template
+#Uncomment to customize email template
 # [auth.email.template.invite]
 # subject = "You have been invited"
 # content_path = "./supabase/templates/invite.html"
@@ -190,13 +190,13 @@ verify_enabled = true
 # Use an external OAuth provider. The full list of providers are: `apple`, `azure`, `bitbucket`,
 # `discord`, `facebook`, `github`, `gitlab`, `google`, `keycloak`, `linkedin_oidc`, `notion`, `twitch`,
 # `twitter`, `slack`, `spotify`, `workos`, `zoom`.
-[auth.external.apple]
-enabled = false
-client_id = ""
+[auth.external.google]
+enabled = true
+client_id = "1004945141938-7i4e5mokgordq00a6kc4v68vo2bitd0b.apps.googleusercontent.com"
 # DO NOT commit your OAuth provider secret to git. Use environment variable substitution instead:
-secret = "env(SUPABASE_AUTH_EXTERNAL_APPLE_SECRET)"
+secret = "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"
 # Overrides the default auth redirectUrl.
-redirect_uri = ""
+redirect_uri = "http://localhost:5173/provider-login"
 # Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure,
 # or any other third-party OIDC providers.
 url = ""
