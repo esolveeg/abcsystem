@@ -127,9 +127,9 @@ max_frequency = "1s"
 host = "smtp.resend.com"
 port = 465
 user = "resend"
-pass = "re_ThbNHz1e_64UKW5wGHhfyqDPtKKWrg3M4"
-admin_email = "info@yallabeina.com"
-sender_name = "info"
+pass = "env(RESERND_API_KEY)"
+admin_email = "env(RESEND_EMAIL)"
+sender_name = "env(RESEND_NAME)"
 
 #Uncomment to customize email template
 # [auth.email.template.invite]
@@ -192,9 +192,9 @@ verify_enabled = true
 # `twitter`, `slack`, `spotify`, `workos`, `zoom`.
 [auth.external.google]
 enabled = true
-client_id = "1004945141938-7i4e5mokgordq00a6kc4v68vo2bitd0b.apps.googleusercontent.com"
+client_id = "env(GOOGLE_CLIENT_ID)"
 # DO NOT commit your OAuth provider secret to git. Use environment variable substitution instead:
-secret = "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"
+secret = "env(GOOGLE_CLIENT_SECRET)"
 # Overrides the default auth redirectUrl.
 redirect_uri = "http://localhost:5173/provider-login"
 # Overrides the default auth provider URL. Used to support self-hosted gitlab, single-tenant Azure,

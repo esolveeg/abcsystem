@@ -8,5 +8,5 @@ config/*.env
 /db/*.sql.go
 /tmp
 /bin
-
+/supabse/.env
 go.sum
