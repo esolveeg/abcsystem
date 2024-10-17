@@ -21,6 +21,7 @@ type AccountsUsecaseInterface interface {
 	UserInvite(ctx context.Context, req *apiv1.UserInviteRequest) (*apiv1.UserInviteResponse, error)
 	RolesDeleteRestore(ctx context.Context, req *apiv1.DeleteRestoreRequest) error
 	RolesList(ctx context.Context) (*apiv1.RolesListResponse, error)
+	AppLogin(ctx context.Context, loginCode string) (*apiv1.UserLoginResponse, error)
 	UserResetPassword(ctx context.Context, req *apiv1.UserResetPasswordRequest) (*apiv1.UserLoginResponse, error)
 	UserResetPasswordEmail(ctx context.Context, req *apiv1.UserResetPasswordEmailRequest) (*apiv1.UserResetPasswordEmailResponse, error)
 	RoleCreateUpdate(ctx context.Context, req *apiv1.RoleCreateUpdateRequest) (*apiv1.RoleCreateUpdateResponse, error)

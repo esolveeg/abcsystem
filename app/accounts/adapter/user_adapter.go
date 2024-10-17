@@ -16,8 +16,7 @@ func (a *AccountsAdapter) UserEntityGrpcFromSql(resp *db.AccountsSchemaUser) *de
 		UserSecurityLevel: resp.UserSecurityLevel, // Security level of the user
 		UserTypeId:        resp.UserTypeID,
 		UserPhone:         resp.UserPhone.String,
-		UserEmail:         resp.UserEmail,           // User's email, unique in DB
-		UserPassword:      resp.UserPassword.String, // Password
+		UserEmail:         resp.UserEmail, // User's email, unique in DB
 		CreatedAt:         db.TimeToString(resp.CreatedAt.Time),
 		DeletedAt:         db.TimeToString(resp.DeletedAt.Time),
 	}

@@ -27,13 +27,9 @@ func (u *AccountsUsecase) UsersList(ctx context.Context) (*apiv1.UsersListRespon
 	return response, nil
 }
 func (u *AccountsUsecase) UserCreateUpdate(ctx context.Context, req *apiv1.UserCreateUpdateRequest) (*apiv1.UserCreateUpdateResponse, error) {
-	userCreateParams := u.adapter.UserCreateUpdateSqlFromGrpc(req)
-	user, err := u.repo.UserCreateUpdate(ctx, *userCreateParams)
-	if err != nil {
-		return nil, err
-	}
 	supabasRequest := types.AdminUpdateUserRequest{
-		Email:    user.UserEmail,
+		Email:    req.UserEmail,
+		Phone:    req.UserPhone,
 		Password: req.UserPassword,
 	}
 	if req.UserId != 0 {
@@ -47,19 +43,21 @@ func (u *AccountsUsecase) UserCreateUpdate(ctx context.Context, req *apiv1.UserC
 		}
 		supabasRequest.UserID = uuid
 	}
-	_, err = u.supaapi.UserCreateUpdate(supabasRequest)
+	_, err := u.supaapi.UserCreateUpdate(supabasRequest)
 	if err != nil {
 		return nil, err
 	}
+	userCreateParams := u.adapter.UserCreateUpdateSqlFromGrpc(req)
+	user, err := u.repo.UserCreateUpdate(ctx, *userCreateParams)
+	if err != nil {
+		return nil, err
+	}
+
 	resp := u.adapter.UserCreateUpdateGrpcFromSql(user)
 	return resp, nil
 }
-func (u *AccountsUsecase) appLogin(ctx context.Context, loginCode string) (*apiv1.UserLoginResponse, error) {
-	user, err := u.repo.UserFind(ctx, db.UserFindParams{SearchKey: loginCode})
-	if err != nil {
-		return nil, err
-	}
-	accessToken, accessPayload, err := u.tokenMaker.CreateToken(user.UserEmail, user.UserID, u.tokenDuration)
+func (u *AccountsUsecase) userGenerateTokens(ctx context.Context, username string, userID int32) (*apiv1.LoginInfo, error) {
+	accessToken, accessPayload, err := u.tokenMaker.CreateToken(username, userID, u.tokenDuration)
 	if err != nil {
 		return nil, err
 	}
@@ -67,8 +65,14 @@ func (u *AccountsUsecase) appLogin(ctx context.Context, loginCode string) (*apiv
 		AccessToken:          accessToken,
 		AccessTokenExpiresAt: accessPayload.ExpiredAt.Format("2006-01-02 15:04:05"),
 	}
+	return loginInfo, nil
+}
+func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string) (*apiv1.UserLoginResponse, error) {
+	user, err := u.repo.UserFind(ctx, db.UserFindParams{SearchKey: loginCode})
+	if err != nil {
+		return nil, err
+	}
 	response := u.adapter.UserLoginGrpcFromSql(user)
-	response.LoginInfo = loginInfo
 	return response, nil
 
 }
@@ -78,7 +82,14 @@ func (u *AccountsUsecase) UserLogin(ctx context.Context, req *apiv1.UserLoginReq
 	if err != nil {
 		return nil, err
 	}
-	response, err := u.appLogin(ctx, userFindParams.SearchKey)
+	response, err := u.AppLogin(ctx, userFindParams.SearchKey)
+
+	loginInfo, err := u.userGenerateTokens(ctx, req.LoginCode, response.User.UserId)
+	if err != nil {
+		return nil, err
+	}
+	response.LoginInfo = loginInfo
+
 	return response, nil
 }
 
@@ -108,10 +119,6 @@ func (u *AccountsUsecase) UserResetPasswordEmail(ctx context.Context, req *apiv1
 	return &apiv1.UserResetPasswordEmailResponse{}, nil
 }
 func (u *AccountsUsecase) UserResetPassword(ctx context.Context, req *apiv1.UserResetPasswordRequest) (*apiv1.UserLoginResponse, error) {
-	// resp, err := u.supaapi.AuthClient.WithToken(req.ResetToken).GetUser()
-	// if err != nil {
-	// 	return nil, err
-	// }
 	if len(req.ResetToken) == 6 {
 		resp, err := u.supaapi.AuthClient.VerifyForUser(types.VerifyForUserRequest{Type: types.VerificationTypeRecovery, Token: req.ResetToken, Email: req.Email, RedirectTo: "http://localhost:3000/"})
 		if err != nil {
@@ -141,7 +148,7 @@ func (u *AccountsUsecase) UserLoginProviderCallback(ctx context.Context, req *ap
 	if err != nil {
 		return nil, err
 	}
-	resp, err := u.appLogin(ctx, user.Email)
+	resp, err := u.AppLogin(ctx, user.Email)
 	if err != nil {
 		return nil, err
 	}

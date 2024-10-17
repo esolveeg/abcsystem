@@ -15,6 +15,7 @@ type Api struct {
 	accountsUscase accountsUsecase.AccountsUsecaseInterface
 	config         config.Config
 	validator      *protovalidate.Validator
+	tokenMaker     auth.Maker
 	store          db.Store
 }
 
@@ -40,6 +41,7 @@ func NewApi(config config.Config, store db.Store) (devkitv1connect.DevkitService
 	return &Api{
 		accountsUscase: accountsUsecase,
 		store:          store,
+		tokenMaker:     tokenMaker,
 		config:         config,
 		validator:      validator,
 	}, nil
