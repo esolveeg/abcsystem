@@ -26,9 +26,7 @@ func getValidRole() *devkitv1.RoleCreateUpdateRequest {
 		Permissions:     []int32{1, 2, 3},
 	}
 }
-
 func TestRoleCreateUpdate(t *testing.T) {
-
 	validRole := getValidRole()
 	// Define a slice of test cases
 	testcases := []roleCreateUpdateTest{

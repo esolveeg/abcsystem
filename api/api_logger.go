@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func GrpcLogger() connect.UnaryInterceptorFunc {
+func GrpcLogger(isDev bool) connect.UnaryInterceptorFunc {
 
 	interceptor := func(next connect.UnaryFunc) connect.UnaryFunc {
 		return connect.UnaryFunc(func(
@@ -22,15 +22,19 @@ func GrpcLogger() connect.UnaryInterceptorFunc {
 			zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 			log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 			logger := log.Info()
-			if err != nil {
-				logger = log.Error().Err(err)
+			if isDev {
+				if err != nil {
+					logger = log.Error().Err(err)
+				}
+
+				logger.
+					Str("Procedure", req.Spec().Procedure).
+					Interface("request", req.Any()).
+					Interface("response", result).
+					Dur("duration", duration).
+					Msg("received a gRPC request")
+
 			}
-			logger.
-				Str("Procedure", req.Spec().Procedure).
-				Interface("request", req.Any()).
-				Interface("response", result).
-				Dur("duration", duration).
-				Msg("received a gRPC request")
 			return result, err
 		})
 	}

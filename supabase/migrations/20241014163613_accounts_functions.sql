@@ -16,7 +16,8 @@ if NOT IsNull(in_role_id) then
   update accounts_schema.roles 
   set 
   role_name = IsNullReplace(in_role_name , role_name) , 
-  role_description = IsNullReplace(in_role_description , role_description)
+  role_description = IsNullReplace(in_role_description , role_description),
+            updated_at = NOW()
   where role_id = in_role_id;
 
 
@@ -76,13 +77,14 @@ if NOT IsNull(in_user_id) then
   user_type_id = IsNullReplace(in_user_type_id , user_type_id), 
   user_email = IsNullReplace(in_user_email , user_email), 
   user_phone = IsNullReplace(in_user_phone , user_phone), 
-  user_password = IsNullReplace(in_user_password , user_password)
+  user_password = IsNullReplace(in_user_password , user_password),
+            updated_at = NOW()
   where user_id = in_user_id;
 
 
   if NOT IsNull(in_roles) then
     delete from accounts_schema.user_roles where user_id = in_user_id;
-    insert into accounts_schema.user_roles (role_id , user_id) select in_user_id , unnest(in_roles);
+    insert into accounts_schema.user_roles (user_id , role_id) select in_user_id , unnest(in_roles);
   end if;
 else
       INSERT INTO accounts_schema.users(

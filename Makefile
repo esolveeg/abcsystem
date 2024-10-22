@@ -21,7 +21,7 @@ testdb:
 	go test ./db/... -v
 
 testapi:
-	go test ./api/... -v
+	go test ./api/... -v --race
 
 
 			
@@ -32,13 +32,13 @@ run:
 buf:
 	cd proto && buf generate 
 sqlc:
-	sqlc generate	
+	rm -rf db/*.sql.go && sqlc generate	
 gen:
 	buf generate && sqlc generate
 
 mock:
 	mockgen -package mockdb -destination db/mock/store.go github.com/darwishdev/devkit-api/db Store
 test:
-	make mock && go test ./... -v
+	make mock && go test ./... -v --cover
 
 

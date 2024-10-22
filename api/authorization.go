@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 
+	"connectrpc.com/connect"
 	"github.com/darwishdev/devkit-api/auth"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"github.com/darwishdev/devkit-api/redisclient"
@@ -62,7 +63,7 @@ func (api *Api) getAccessableActionsForGroup(ctx context.Context, header http.He
 
 	groupPermissions, ok := permissionsMap[group]
 	if !ok {
-		return nil, fmt.Errorf("user don't have permission to this group")
+		return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("user don't have permission to this group"))
 	}
 	var (
 		singularizedGroup            string = inflector.Singularize(group)

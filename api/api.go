@@ -3,6 +3,7 @@ package api
 import (
 	"github.com/bufbuild/protovalidate-go"
 	accountsUsecase "github.com/darwishdev/devkit-api/app/accounts/usecase"
+	publicUsecase "github.com/darwishdev/devkit-api/app/public/usecase"
 	"github.com/darwishdev/devkit-api/auth"
 	"github.com/darwishdev/devkit-api/config"
 	"github.com/darwishdev/devkit-api/db"
@@ -17,6 +18,7 @@ type Api struct {
 	config         config.Config
 	validator      *protovalidate.Validator
 	tokenMaker     auth.Maker
+	publicUsecase  publicUsecase.PublicUsecaseInterface
 	redisClient    redisclient.RedisClientInterface
 	store          db.Store
 }
@@ -40,12 +42,14 @@ func NewApi(config config.Config, store db.Store) (devkitv1connect.DevkitService
 	}
 	redisClient := redisclient.NewRedisClient(config.RedisHost, config.RedisPort, config.RedisPassword, config.RedisDatabase)
 	accountsUsecase := accountsUsecase.NewAccountsUsecase(store, supaapi, redisClient, tokenMaker, config.AccessTokenDuration)
+	publicUsecase := publicUsecase.NewPublicUsecase(store, supaapi, redisClient)
 	return &Api{
 		accountsUscase: accountsUsecase,
 		store:          store,
 		redisClient:    redisClient,
 		tokenMaker:     tokenMaker,
 		config:         config,
+		publicUsecase:  publicUsecase,
 		validator:      validator,
 	}, nil
 }

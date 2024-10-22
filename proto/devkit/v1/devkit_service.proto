@@ -4,6 +4,10 @@ package devkit.v1;
 
 import "devkit/v1/accounts_user.proto";
 import "devkit/v1/client.proto";
+import "devkit/v1/accounts_auth.proto";
+import "devkit/v1/public_setting.proto";
+import "devkit/v1/public_icon.proto";
+import "devkit/v1/public_storage.proto";
 import "devkit/v1/accounts_role.proto";
 import "google/protobuf/empty.proto";
 
@@ -11,6 +15,12 @@ service DevkitService {
     rpc RolesList(google.protobuf.Empty) returns (RolesListResponse) {
         option idempotency_level = NO_SIDE_EFFECTS;
     }
+
+  rpc SettingsUpdate(SettingsUpdateRequest) returns (SettingsUpdateResponse) {}
+  rpc SettingsFindForUpdate(SettingsFindForUpdateRequest) returns (SettingsFindForUpdateResponse) {}
+  //icons
+  rpc IconsInputList(google.protobuf.Empty) returns (IconsInputListResponse) {}
+
     rpc RoleCreateUpdate(RoleCreateUpdateRequest) returns (RoleCreateUpdateResponse) {}
     rpc RolesDeleteRestore(DeleteRestoreRequest) returns (google.protobuf.Empty) {}
     rpc UserLoginProviderCallback(UserLoginProviderCallbackRequest) returns (UserLoginResponse) {
@@ -25,6 +35,10 @@ service DevkitService {
     rpc UsersList(google.protobuf.Empty) returns (UsersListResponse)  {
         option idempotency_level = NO_SIDE_EFFECTS;
     }
+      // images
+    rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {}
+    rpc UploadFiles(UploadFilesRequest) returns (UploadFileResponse) {}
+
     rpc UserCreateUpdate(UserCreateUpdateRequest) returns (UserCreateUpdateResponse) {}
     rpc UsersDeleteRestore(DeleteRestoreRequest) returns (google.protobuf.Empty) {}
 

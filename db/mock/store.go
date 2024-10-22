@@ -8,6 +8,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	connect "connectrpc.com/connect"
 	db "github.com/darwishdev/devkit-api/db"
 	gomock "github.com/golang/mock/gomock"
 )
@@ -33,6 +34,108 @@ func NewMockStore(ctrl *gomock.Controller) *MockStore {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 	return m.recorder
+}
+
+// AuthUserIDFindByEmail mocks base method.
+func (m *MockStore) AuthUserIDFindByEmail(arg0 context.Context, arg1 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AuthUserIDFindByEmail", arg0, arg1)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AuthUserIDFindByEmail indicates an expected call of AuthUserIDFindByEmail.
+func (mr *MockStoreMockRecorder) AuthUserIDFindByEmail(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthUserIDFindByEmail", reflect.TypeOf((*MockStore)(nil).AuthUserIDFindByEmail), arg0, arg1)
+}
+
+// CompaniesDeleteRestore mocks base method.
+func (m *MockStore) CompaniesDeleteRestore(arg0 context.Context, arg1 []int32) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CompaniesDeleteRestore", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CompaniesDeleteRestore indicates an expected call of CompaniesDeleteRestore.
+func (mr *MockStoreMockRecorder) CompaniesDeleteRestore(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CompaniesDeleteRestore", reflect.TypeOf((*MockStore)(nil).CompaniesDeleteRestore), arg0, arg1)
+}
+
+// CompaniesList mocks base method.
+func (m *MockStore) CompaniesList(arg0 context.Context) ([]db.CompaniesSchemaCompany, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CompaniesList", arg0)
+	ret0, _ := ret[0].([]db.CompaniesSchemaCompany)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CompaniesList indicates an expected call of CompaniesList.
+func (mr *MockStoreMockRecorder) CompaniesList(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CompaniesList", reflect.TypeOf((*MockStore)(nil).CompaniesList), arg0)
+}
+
+// CompanyCreateUpdate mocks base method.
+func (m *MockStore) CompanyCreateUpdate(arg0 context.Context, arg1 db.CompanyCreateUpdateParams) (db.CompaniesSchemaCompany, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CompanyCreateUpdate", arg0, arg1)
+	ret0, _ := ret[0].(db.CompaniesSchemaCompany)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CompanyCreateUpdate indicates an expected call of CompanyCreateUpdate.
+func (mr *MockStoreMockRecorder) CompanyCreateUpdate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CompanyCreateUpdate", reflect.TypeOf((*MockStore)(nil).CompanyCreateUpdate), arg0, arg1)
+}
+
+// DbErrorParser mocks base method.
+func (m *MockStore) DbErrorParser(arg0 error, arg1 map[string]string) *connect.Error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DbErrorParser", arg0, arg1)
+	ret0, _ := ret[0].(*connect.Error)
+	return ret0
+}
+
+// DbErrorParser indicates an expected call of DbErrorParser.
+func (mr *MockStoreMockRecorder) DbErrorParser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DbErrorParser", reflect.TypeOf((*MockStore)(nil).DbErrorParser), arg0, arg1)
+}
+
+// ExecTX mocks base method.
+func (m *MockStore) ExecTX(arg0 context.Context, arg1 func(*db.Queries) error) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ExecTX", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ExecTX indicates an expected call of ExecTX.
+func (mr *MockStoreMockRecorder) ExecTX(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExecTX", reflect.TypeOf((*MockStore)(nil).ExecTX), arg0, arg1)
+}
+
+// IconsInputList mocks base method.
+func (m *MockStore) IconsInputList(arg0 context.Context) ([]db.Icon, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IconsInputList", arg0)
+	ret0, _ := ret[0].([]db.Icon)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IconsInputList indicates an expected call of IconsInputList.
+func (mr *MockStoreMockRecorder) IconsInputList(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IconsInputList", reflect.TypeOf((*MockStore)(nil).IconsInputList), arg0)
 }
 
 // RoleCreateUpdate mocks base method.
@@ -79,6 +182,36 @@ func (mr *MockStoreMockRecorder) RolesList(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RolesList", reflect.TypeOf((*MockStore)(nil).RolesList), arg0)
 }
 
+// SettingsFindForUpdate mocks base method.
+func (m *MockStore) SettingsFindForUpdate(arg0 context.Context) ([]db.SettingsFindForUpdateRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SettingsFindForUpdate", arg0)
+	ret0, _ := ret[0].([]db.SettingsFindForUpdateRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SettingsFindForUpdate indicates an expected call of SettingsFindForUpdate.
+func (mr *MockStoreMockRecorder) SettingsFindForUpdate(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SettingsFindForUpdate", reflect.TypeOf((*MockStore)(nil).SettingsFindForUpdate), arg0)
+}
+
+// SettingsUpdate mocks base method.
+func (m *MockStore) SettingsUpdate(arg0 context.Context, arg1 db.SettingsUpdateParams) (db.SettingsUpdateRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SettingsUpdate", arg0, arg1)
+	ret0, _ := ret[0].(db.SettingsUpdateRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SettingsUpdate indicates an expected call of SettingsUpdate.
+func (mr *MockStoreMockRecorder) SettingsUpdate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SettingsUpdate", reflect.TypeOf((*MockStore)(nil).SettingsUpdate), arg0, arg1)
+}
+
 // UserCreateUpdate mocks base method.
 func (m *MockStore) UserCreateUpdate(arg0 context.Context, arg1 db.UserCreateUpdateParams) (db.AccountsSchemaUser, error) {
 	m.ctrl.T.Helper()
@@ -92,6 +225,36 @@ func (m *MockStore) UserCreateUpdate(arg0 context.Context, arg1 db.UserCreateUpd
 func (mr *MockStoreMockRecorder) UserCreateUpdate(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserCreateUpdate", reflect.TypeOf((*MockStore)(nil).UserCreateUpdate), arg0, arg1)
+}
+
+// UserFind mocks base method.
+func (m *MockStore) UserFind(arg0 context.Context, arg1 db.UserFindParams) (db.AccountsSchemaUser, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserFind", arg0, arg1)
+	ret0, _ := ret[0].(db.AccountsSchemaUser)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UserFind indicates an expected call of UserFind.
+func (mr *MockStoreMockRecorder) UserFind(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserFind", reflect.TypeOf((*MockStore)(nil).UserFind), arg0, arg1)
+}
+
+// UserPermissionsMap mocks base method.
+func (m *MockStore) UserPermissionsMap(arg0 context.Context, arg1 int32) ([]byte, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserPermissionsMap", arg0, arg1)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UserPermissionsMap indicates an expected call of UserPermissionsMap.
+func (mr *MockStoreMockRecorder) UserPermissionsMap(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserPermissionsMap", reflect.TypeOf((*MockStore)(nil).UserPermissionsMap), arg0, arg1)
 }
 
 // UsersDeleteRestore mocks base method.

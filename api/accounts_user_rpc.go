@@ -18,7 +18,7 @@ func (api *Api) UsersList(ctx context.Context, req *connect.Request[emptypb.Empt
 	permissionMap, err := api.authrorizedUserPermissions(ctx, userPayload)
 	_, ok := permissionMap["users"]
 	if !ok {
-		return nil, fmt.Errorf("user don't have the permissions%s")
+		return nil, fmt.Errorf("user don't have the permissions")
 	}
 
 	response, err := api.accountsUscase.UsersList(ctx)

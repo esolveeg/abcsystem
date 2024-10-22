@@ -7,8 +7,9 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func InitDB(ctx context.Context, source string) (Store, *pgxpool.Pool, error) {
-	dbTracer := NewDbTracer()
+func InitDB(ctx context.Context, source string, isDevelopment bool) (Store, *pgxpool.Pool, error) {
+	dbTracer := NewDbTracer(isDevelopment)
+
 	dbConfig, err := pgxpool.ParseConfig(source)
 	if err != nil {
 		return nil, nil, err

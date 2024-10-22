@@ -8,6 +8,11 @@ import (
 type PermissionsMap map[string]map[string]bool
 
 func (r *RedisClient) AuthSessionCreate(ctx context.Context, userName string, permissions []byte) (PermissionsMap, error) {
+	if permissions == nil {
+		r.client.Del(ctx, userName)
+		return nil, nil
+	}
+
 	err := r.client.Set(ctx, userName, permissions, 0).Err()
 	if err != nil {
 		return nil, err

@@ -3,7 +3,6 @@ package adapter
 import (
 	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"github.com/rs/zerolog/log"
 )
 
 func (a *AccountsAdapter) RoleEntityGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.AccountsSchemaRole {
@@ -24,7 +23,6 @@ func (a *AccountsAdapter) RoleCreateUpdateSqlFromGrpc(req *devkitv1.RoleCreateUp
 		Permissions:     req.Permissions,
 	}
 
-	log.Debug().Interface("adapter here", resp).Msg("test adapter")
 	return resp
 }
 func (a *AccountsAdapter) RolesListGrpcFromSql(resp []db.AccountsSchemaRole) *devkitv1.RolesListResponse {

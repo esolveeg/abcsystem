@@ -18,6 +18,7 @@ type Config struct {
 	DBProjectREF           string        `mapstructure:"DB_PROJECT_REF"`
 	SupabaseServiceRoleKey string        `mapstructure:"SUPABASE_SERVICE_ROLE_KEY"`
 	SupabaseApiKey         string        `mapstructure:"SUPABASE_API_KEY"`
+	State                  string        `mapstructure:"STATE"`
 	DBSource               string        `mapstructure:"DB_SOURCE"`
 	TokenSymmetricKey      string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 

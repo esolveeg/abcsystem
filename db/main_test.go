@@ -33,7 +33,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed load config")
 	}
-	store, _, err = InitDB(ctx, config.DBSource)
+	store, _, err = InitDB(ctx, config.DBSource, false)
 
 	if err != nil {
 		log.Fatal().Str("DBSource", config.DBSource).Err(err).Msg("db failed to connect")

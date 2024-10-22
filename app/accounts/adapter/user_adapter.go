@@ -1,11 +1,8 @@
 package adapter
 
 import (
-	"strings"
-
 	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"github.com/supabase-community/auth-go/types"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -54,25 +51,6 @@ func (a *AccountsAdapter) UsersListGrpcFromSql(resp []db.AccountsSchemaUser) *de
 }
 func (a *AccountsAdapter) UserCreateUpdateGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.UserCreateUpdateResponse {
 	return &devkitv1.UserCreateUpdateResponse{
-		User: a.UserEntityGrpcFromSql(resp),
-	}
-}
-func (a *AccountsAdapter) UserLoginSqlFromGrpc(req *devkitv1.UserLoginRequest) (*db.UserFindParams, *types.TokenRequest) {
-	isEmail := strings.Contains(req.LoginCode, "@") && strings.Contains(req.LoginCode, ".")
-	supabseRequest := &types.TokenRequest{Password: req.UserPassword}
-	if isEmail {
-		supabseRequest.Email = req.LoginCode
-	} else {
-		supabseRequest.Phone = req.LoginCode
-	}
-	supabseRequest.GrantType = "password"
-	return &db.UserFindParams{
-		SearchKey: req.LoginCode,
-	}, supabseRequest
-}
-
-func (a *AccountsAdapter) UserLoginGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.UserLoginResponse {
-	return &devkitv1.UserLoginResponse{
 		User: a.UserEntityGrpcFromSql(resp),
 	}
 }

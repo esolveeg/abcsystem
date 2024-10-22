@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"os"
 	"testing"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+var realDbApi devkitv1connect.DevkitServiceHandler
 var testConfig config.Config
 
 func newTestApi(store db.Store) devkitv1connect.DevkitServiceHandler {
@@ -27,6 +29,15 @@ func TestMain(m *testing.M) {
 	testConfig, err = config.LoadConfig("../config", "test")
 	if err != nil {
 		panic(err)
+	}
+
+	store, _, err := db.InitDB(context.Background(), testConfig.DBSource, false)
+	if err != nil {
+		log.Fatal().Err(err).Msg("canot start the api")
+	}
+	realDbApi, err = NewApi(testConfig, store)
+	if err != nil {
+		log.Fatal().Err(err).Msg("canot start the api")
 	}
 
 	os.Exit(m.Run())

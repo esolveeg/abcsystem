@@ -39,7 +39,7 @@ func (s Server) NewGrpcHttpServer() *http.Server {
 	mux.Handle("/", http.RedirectHandler("https://darwishdev.com", http.StatusFound))
 	// here we can find examples of diffrent compression method 	https://connectrpc.com/docs/go/serialization-and-compression/#compression
 	compress1KB := connect.WithCompressMinBytes(1024)
-	interceptors := connect.WithInterceptors(GrpcLogger())
+	interceptors := connect.WithInterceptors(GrpcLogger(s.config.State == "dev"))
 
 	mux.Handle(devkitv1connect.NewDevkitServiceHandler(
 		s.api,

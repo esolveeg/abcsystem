@@ -8,7 +8,7 @@ import (
 
 type AccountsAdapterInterface interface {
 	UserLoginSqlFromGrpc(req *devkitv1.UserLoginRequest) (*db.UserFindParams, *types.TokenRequest)
-
+	UserResetPasswordSupaFromGrpc(req *devkitv1.UserResetPasswordRequest) *types.VerifyForUserRequest
 	UserLoginGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.UserLoginResponse
 	UserCreateUpdateGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.UserCreateUpdateResponse
 	UsersListGrpcFromSql(resp []db.AccountsSchemaUser) *devkitv1.UsersListResponse

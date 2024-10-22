@@ -10,8 +10,6 @@ CREATE TABLE input_types(
 
 CREATE TABLE settings(
     setting_id serial PRIMARY KEY,
-    company_id int NOT NULL,
-    FOREIGN KEY (company_id) REFERENCES companies_schema.companies(company_id),
     input_type_id int NOT NULL,
     FOREIGN KEY (input_type_id) REFERENCES input_types(input_type_id),
     setting_key varchar(100) NOT NULL UNIQUE,

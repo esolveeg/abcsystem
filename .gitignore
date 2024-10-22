@@ -9,4 +9,5 @@ config/*.env
 /tmp
 /bin
 /supabse/.env
+.env
 go.sum

@@ -35,7 +35,7 @@ create table accounts_schema.user_types(
 
 create table accounts_schema.users(
 	user_id serial primary key,
-	user_name varchar(200) not null unique,
+	user_name varchar(200) not null,
 	user_security_level int NOT NULL,
 	user_type_id int NOT NULL,
 	FOREIGN KEY (user_type_id) REFERENCES accounts_schema.user_types  (user_type_id),
@@ -63,5 +63,6 @@ CREATE TABLE accounts_schema.navigation_bars(
     icon varchar(200),
     "route" varchar(200) UNIQUE,
     parent_id int,
+    FOREIGN KEY (parent_id) REFERENCES accounts_schema.navigation_bars(navigation_bar_id),
     permission_id int
 );

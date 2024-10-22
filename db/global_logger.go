@@ -10,10 +10,13 @@ import (
 )
 
 type DbTracer struct {
+	isDevelopment bool
 }
 
-func NewDbTracer() *DbTracer {
-	return &DbTracer{}
+func NewDbTracer(isDevelopment bool) *DbTracer {
+	return &DbTracer{
+		isDevelopment: isDevelopment,
+	}
 }
 
 func (tracer *DbTracer) TraceQueryStart(
@@ -22,17 +25,21 @@ func (tracer *DbTracer) TraceQueryStart(
 	data pgx.TraceQueryStartData) context.Context {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	logger := log.Info()
-	logger.Interface("arguments", data.Args).
-		Str("query", data.SQL).
-		Msg("DB Call Start")
+	if tracer.isDevelopment {
+		logger.Interface("arguments", data.Args).
+			Str("query", data.SQL).
+			Msg("DB Call Start")
+
+	}
 	return ctx
 }
 
 func (tracer *DbTracer) TraceQueryEnd(ctx context.Context, conn *pgx.Conn, data pgx.TraceQueryEndData) {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	logger := log.Info()
-	logger.Interface("arguments", data).
-		Err(data.Err).
-		Msg("DB Call End")
-
+	if tracer.isDevelopment {
+		logger.Interface("arguments", data).
+			Err(data.Err).
+			Msg("DB Call End")
+	}
 }

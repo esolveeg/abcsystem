@@ -79,7 +79,7 @@ func main() {
 	}
 	config, err := config.LoadConfig("./config", state.State)
 
-	store, connPool, err := db.InitDB(ctx, config.DBSource)
+	store, connPool, err := db.InitDB(ctx, config.DBSource, config.State == "dev")
 	if err != nil {
 		log.Fatal().Str("DBSource", config.DBSource).Err(err).Msg("db failed to connect")
 	}

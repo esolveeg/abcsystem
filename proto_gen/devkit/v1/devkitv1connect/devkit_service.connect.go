@@ -36,6 +36,15 @@ const (
 const (
 	// DevkitServiceRolesListProcedure is the fully-qualified name of the DevkitService's RolesList RPC.
 	DevkitServiceRolesListProcedure = "/devkit.v1.DevkitService/RolesList"
+	// DevkitServiceSettingsUpdateProcedure is the fully-qualified name of the DevkitService's
+	// SettingsUpdate RPC.
+	DevkitServiceSettingsUpdateProcedure = "/devkit.v1.DevkitService/SettingsUpdate"
+	// DevkitServiceSettingsFindForUpdateProcedure is the fully-qualified name of the DevkitService's
+	// SettingsFindForUpdate RPC.
+	DevkitServiceSettingsFindForUpdateProcedure = "/devkit.v1.DevkitService/SettingsFindForUpdate"
+	// DevkitServiceIconsInputListProcedure is the fully-qualified name of the DevkitService's
+	// IconsInputList RPC.
+	DevkitServiceIconsInputListProcedure = "/devkit.v1.DevkitService/IconsInputList"
 	// DevkitServiceRoleCreateUpdateProcedure is the fully-qualified name of the DevkitService's
 	// RoleCreateUpdate RPC.
 	DevkitServiceRoleCreateUpdateProcedure = "/devkit.v1.DevkitService/RoleCreateUpdate"
@@ -64,6 +73,12 @@ const (
 	DevkitServiceUserLoginProcedure = "/devkit.v1.DevkitService/UserLogin"
 	// DevkitServiceUsersListProcedure is the fully-qualified name of the DevkitService's UsersList RPC.
 	DevkitServiceUsersListProcedure = "/devkit.v1.DevkitService/UsersList"
+	// DevkitServiceUploadFileProcedure is the fully-qualified name of the DevkitService's UploadFile
+	// RPC.
+	DevkitServiceUploadFileProcedure = "/devkit.v1.DevkitService/UploadFile"
+	// DevkitServiceUploadFilesProcedure is the fully-qualified name of the DevkitService's UploadFiles
+	// RPC.
+	DevkitServiceUploadFilesProcedure = "/devkit.v1.DevkitService/UploadFiles"
 	// DevkitServiceUserCreateUpdateProcedure is the fully-qualified name of the DevkitService's
 	// UserCreateUpdate RPC.
 	DevkitServiceUserCreateUpdateProcedure = "/devkit.v1.DevkitService/UserCreateUpdate"
@@ -76,6 +91,9 @@ const (
 var (
 	devkitServiceServiceDescriptor                         = v1.File_devkit_v1_devkit_service_proto.Services().ByName("DevkitService")
 	devkitServiceRolesListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("RolesList")
+	devkitServiceSettingsUpdateMethodDescriptor            = devkitServiceServiceDescriptor.Methods().ByName("SettingsUpdate")
+	devkitServiceSettingsFindForUpdateMethodDescriptor     = devkitServiceServiceDescriptor.Methods().ByName("SettingsFindForUpdate")
+	devkitServiceIconsInputListMethodDescriptor            = devkitServiceServiceDescriptor.Methods().ByName("IconsInputList")
 	devkitServiceRoleCreateUpdateMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("RoleCreateUpdate")
 	devkitServiceRolesDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("RolesDeleteRestore")
 	devkitServiceUserLoginProviderCallbackMethodDescriptor = devkitServiceServiceDescriptor.Methods().ByName("UserLoginProviderCallback")
@@ -86,6 +104,8 @@ var (
 	devkitServiceUserAuthorizeMethodDescriptor             = devkitServiceServiceDescriptor.Methods().ByName("UserAuthorize")
 	devkitServiceUserLoginMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("UserLogin")
 	devkitServiceUsersListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("UsersList")
+	devkitServiceUploadFileMethodDescriptor                = devkitServiceServiceDescriptor.Methods().ByName("UploadFile")
+	devkitServiceUploadFilesMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("UploadFiles")
 	devkitServiceUserCreateUpdateMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("UserCreateUpdate")
 	devkitServiceUsersDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("UsersDeleteRestore")
 )
@@ -93,6 +113,10 @@ var (
 // DevkitServiceClient is a client for the devkit.v1.DevkitService service.
 type DevkitServiceClient interface {
 	RolesList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.RolesListResponse], error)
+	SettingsUpdate(context.Context, *connect.Request[v1.SettingsUpdateRequest]) (*connect.Response[v1.SettingsUpdateResponse], error)
+	SettingsFindForUpdate(context.Context, *connect.Request[v1.SettingsFindForUpdateRequest]) (*connect.Response[v1.SettingsFindForUpdateResponse], error)
+	// icons
+	IconsInputList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.IconsInputListResponse], error)
 	RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error)
 	RolesDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error)
 	UserLoginProviderCallback(context.Context, *connect.Request[v1.UserLoginProviderCallbackRequest]) (*connect.Response[v1.UserLoginResponse], error)
@@ -103,6 +127,9 @@ type DevkitServiceClient interface {
 	UserAuthorize(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.UserLoginResponse], error)
 	UserLogin(context.Context, *connect.Request[v1.UserLoginRequest]) (*connect.Response[v1.UserLoginResponse], error)
 	UsersList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.UsersListResponse], error)
+	// images
+	UploadFile(context.Context, *connect.Request[v1.UploadFileRequest]) (*connect.Response[v1.UploadFileResponse], error)
+	UploadFiles(context.Context, *connect.Request[v1.UploadFilesRequest]) (*connect.Response[v1.UploadFileResponse], error)
 	UserCreateUpdate(context.Context, *connect.Request[v1.UserCreateUpdateRequest]) (*connect.Response[v1.UserCreateUpdateResponse], error)
 	UsersDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error)
 }
@@ -122,6 +149,24 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			baseURL+DevkitServiceRolesListProcedure,
 			connect.WithSchema(devkitServiceRolesListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
+		settingsUpdate: connect.NewClient[v1.SettingsUpdateRequest, v1.SettingsUpdateResponse](
+			httpClient,
+			baseURL+DevkitServiceSettingsUpdateProcedure,
+			connect.WithSchema(devkitServiceSettingsUpdateMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		settingsFindForUpdate: connect.NewClient[v1.SettingsFindForUpdateRequest, v1.SettingsFindForUpdateResponse](
+			httpClient,
+			baseURL+DevkitServiceSettingsFindForUpdateProcedure,
+			connect.WithSchema(devkitServiceSettingsFindForUpdateMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		iconsInputList: connect.NewClient[emptypb.Empty, v1.IconsInputListResponse](
+			httpClient,
+			baseURL+DevkitServiceIconsInputListProcedure,
+			connect.WithSchema(devkitServiceIconsInputListMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		roleCreateUpdate: connect.NewClient[v1.RoleCreateUpdateRequest, v1.RoleCreateUpdateResponse](
@@ -186,6 +231,18 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
+		uploadFile: connect.NewClient[v1.UploadFileRequest, v1.UploadFileResponse](
+			httpClient,
+			baseURL+DevkitServiceUploadFileProcedure,
+			connect.WithSchema(devkitServiceUploadFileMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		uploadFiles: connect.NewClient[v1.UploadFilesRequest, v1.UploadFileResponse](
+			httpClient,
+			baseURL+DevkitServiceUploadFilesProcedure,
+			connect.WithSchema(devkitServiceUploadFilesMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 		userCreateUpdate: connect.NewClient[v1.UserCreateUpdateRequest, v1.UserCreateUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceUserCreateUpdateProcedure,
@@ -204,6 +261,9 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 // devkitServiceClient implements DevkitServiceClient.
 type devkitServiceClient struct {
 	rolesList                 *connect.Client[emptypb.Empty, v1.RolesListResponse]
+	settingsUpdate            *connect.Client[v1.SettingsUpdateRequest, v1.SettingsUpdateResponse]
+	settingsFindForUpdate     *connect.Client[v1.SettingsFindForUpdateRequest, v1.SettingsFindForUpdateResponse]
+	iconsInputList            *connect.Client[emptypb.Empty, v1.IconsInputListResponse]
 	roleCreateUpdate          *connect.Client[v1.RoleCreateUpdateRequest, v1.RoleCreateUpdateResponse]
 	rolesDeleteRestore        *connect.Client[v1.DeleteRestoreRequest, emptypb.Empty]
 	userLoginProviderCallback *connect.Client[v1.UserLoginProviderCallbackRequest, v1.UserLoginResponse]
@@ -214,6 +274,8 @@ type devkitServiceClient struct {
 	userAuthorize             *connect.Client[emptypb.Empty, v1.UserLoginResponse]
 	userLogin                 *connect.Client[v1.UserLoginRequest, v1.UserLoginResponse]
 	usersList                 *connect.Client[emptypb.Empty, v1.UsersListResponse]
+	uploadFile                *connect.Client[v1.UploadFileRequest, v1.UploadFileResponse]
+	uploadFiles               *connect.Client[v1.UploadFilesRequest, v1.UploadFileResponse]
 	userCreateUpdate          *connect.Client[v1.UserCreateUpdateRequest, v1.UserCreateUpdateResponse]
 	usersDeleteRestore        *connect.Client[v1.DeleteRestoreRequest, emptypb.Empty]
 }
@@ -221,6 +283,21 @@ type devkitServiceClient struct {
 // RolesList calls devkit.v1.DevkitService.RolesList.
 func (c *devkitServiceClient) RolesList(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[v1.RolesListResponse], error) {
 	return c.rolesList.CallUnary(ctx, req)
+}
+
+// SettingsUpdate calls devkit.v1.DevkitService.SettingsUpdate.
+func (c *devkitServiceClient) SettingsUpdate(ctx context.Context, req *connect.Request[v1.SettingsUpdateRequest]) (*connect.Response[v1.SettingsUpdateResponse], error) {
+	return c.settingsUpdate.CallUnary(ctx, req)
+}
+
+// SettingsFindForUpdate calls devkit.v1.DevkitService.SettingsFindForUpdate.
+func (c *devkitServiceClient) SettingsFindForUpdate(ctx context.Context, req *connect.Request[v1.SettingsFindForUpdateRequest]) (*connect.Response[v1.SettingsFindForUpdateResponse], error) {
+	return c.settingsFindForUpdate.CallUnary(ctx, req)
+}
+
+// IconsInputList calls devkit.v1.DevkitService.IconsInputList.
+func (c *devkitServiceClient) IconsInputList(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[v1.IconsInputListResponse], error) {
+	return c.iconsInputList.CallUnary(ctx, req)
 }
 
 // RoleCreateUpdate calls devkit.v1.DevkitService.RoleCreateUpdate.
@@ -273,6 +350,16 @@ func (c *devkitServiceClient) UsersList(ctx context.Context, req *connect.Reques
 	return c.usersList.CallUnary(ctx, req)
 }
 
+// UploadFile calls devkit.v1.DevkitService.UploadFile.
+func (c *devkitServiceClient) UploadFile(ctx context.Context, req *connect.Request[v1.UploadFileRequest]) (*connect.Response[v1.UploadFileResponse], error) {
+	return c.uploadFile.CallUnary(ctx, req)
+}
+
+// UploadFiles calls devkit.v1.DevkitService.UploadFiles.
+func (c *devkitServiceClient) UploadFiles(ctx context.Context, req *connect.Request[v1.UploadFilesRequest]) (*connect.Response[v1.UploadFileResponse], error) {
+	return c.uploadFiles.CallUnary(ctx, req)
+}
+
 // UserCreateUpdate calls devkit.v1.DevkitService.UserCreateUpdate.
 func (c *devkitServiceClient) UserCreateUpdate(ctx context.Context, req *connect.Request[v1.UserCreateUpdateRequest]) (*connect.Response[v1.UserCreateUpdateResponse], error) {
 	return c.userCreateUpdate.CallUnary(ctx, req)
@@ -286,6 +373,10 @@ func (c *devkitServiceClient) UsersDeleteRestore(ctx context.Context, req *conne
 // DevkitServiceHandler is an implementation of the devkit.v1.DevkitService service.
 type DevkitServiceHandler interface {
 	RolesList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.RolesListResponse], error)
+	SettingsUpdate(context.Context, *connect.Request[v1.SettingsUpdateRequest]) (*connect.Response[v1.SettingsUpdateResponse], error)
+	SettingsFindForUpdate(context.Context, *connect.Request[v1.SettingsFindForUpdateRequest]) (*connect.Response[v1.SettingsFindForUpdateResponse], error)
+	// icons
+	IconsInputList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.IconsInputListResponse], error)
 	RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error)
 	RolesDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error)
 	UserLoginProviderCallback(context.Context, *connect.Request[v1.UserLoginProviderCallbackRequest]) (*connect.Response[v1.UserLoginResponse], error)
@@ -296,6 +387,9 @@ type DevkitServiceHandler interface {
 	UserAuthorize(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.UserLoginResponse], error)
 	UserLogin(context.Context, *connect.Request[v1.UserLoginRequest]) (*connect.Response[v1.UserLoginResponse], error)
 	UsersList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.UsersListResponse], error)
+	// images
+	UploadFile(context.Context, *connect.Request[v1.UploadFileRequest]) (*connect.Response[v1.UploadFileResponse], error)
+	UploadFiles(context.Context, *connect.Request[v1.UploadFilesRequest]) (*connect.Response[v1.UploadFileResponse], error)
 	UserCreateUpdate(context.Context, *connect.Request[v1.UserCreateUpdateRequest]) (*connect.Response[v1.UserCreateUpdateResponse], error)
 	UsersDeleteRestore(context.Context, *connect.Request[v1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error)
 }
@@ -311,6 +405,24 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		svc.RolesList,
 		connect.WithSchema(devkitServiceRolesListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceSettingsUpdateHandler := connect.NewUnaryHandler(
+		DevkitServiceSettingsUpdateProcedure,
+		svc.SettingsUpdate,
+		connect.WithSchema(devkitServiceSettingsUpdateMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceSettingsFindForUpdateHandler := connect.NewUnaryHandler(
+		DevkitServiceSettingsFindForUpdateProcedure,
+		svc.SettingsFindForUpdate,
+		connect.WithSchema(devkitServiceSettingsFindForUpdateMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceIconsInputListHandler := connect.NewUnaryHandler(
+		DevkitServiceIconsInputListProcedure,
+		svc.IconsInputList,
+		connect.WithSchema(devkitServiceIconsInputListMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceRoleCreateUpdateHandler := connect.NewUnaryHandler(
@@ -375,6 +487,18 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
+	devkitServiceUploadFileHandler := connect.NewUnaryHandler(
+		DevkitServiceUploadFileProcedure,
+		svc.UploadFile,
+		connect.WithSchema(devkitServiceUploadFileMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceUploadFilesHandler := connect.NewUnaryHandler(
+		DevkitServiceUploadFilesProcedure,
+		svc.UploadFiles,
+		connect.WithSchema(devkitServiceUploadFilesMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	devkitServiceUserCreateUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceUserCreateUpdateProcedure,
 		svc.UserCreateUpdate,
@@ -391,6 +515,12 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		switch r.URL.Path {
 		case DevkitServiceRolesListProcedure:
 			devkitServiceRolesListHandler.ServeHTTP(w, r)
+		case DevkitServiceSettingsUpdateProcedure:
+			devkitServiceSettingsUpdateHandler.ServeHTTP(w, r)
+		case DevkitServiceSettingsFindForUpdateProcedure:
+			devkitServiceSettingsFindForUpdateHandler.ServeHTTP(w, r)
+		case DevkitServiceIconsInputListProcedure:
+			devkitServiceIconsInputListHandler.ServeHTTP(w, r)
 		case DevkitServiceRoleCreateUpdateProcedure:
 			devkitServiceRoleCreateUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceRolesDeleteRestoreProcedure:
@@ -411,6 +541,10 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 			devkitServiceUserLoginHandler.ServeHTTP(w, r)
 		case DevkitServiceUsersListProcedure:
 			devkitServiceUsersListHandler.ServeHTTP(w, r)
+		case DevkitServiceUploadFileProcedure:
+			devkitServiceUploadFileHandler.ServeHTTP(w, r)
+		case DevkitServiceUploadFilesProcedure:
+			devkitServiceUploadFilesHandler.ServeHTTP(w, r)
 		case DevkitServiceUserCreateUpdateProcedure:
 			devkitServiceUserCreateUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceUsersDeleteRestoreProcedure:
@@ -426,6 +560,18 @@ type UnimplementedDevkitServiceHandler struct{}
 
 func (UnimplementedDevkitServiceHandler) RolesList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.RolesListResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RolesList is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) SettingsUpdate(context.Context, *connect.Request[v1.SettingsUpdateRequest]) (*connect.Response[v1.SettingsUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SettingsUpdate is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) SettingsFindForUpdate(context.Context, *connect.Request[v1.SettingsFindForUpdateRequest]) (*connect.Response[v1.SettingsFindForUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SettingsFindForUpdate is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) IconsInputList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.IconsInputListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.IconsInputList is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error) {
@@ -466,6 +612,14 @@ func (UnimplementedDevkitServiceHandler) UserLogin(context.Context, *connect.Req
 
 func (UnimplementedDevkitServiceHandler) UsersList(context.Context, *connect.Request[emptypb.Empty]) (*connect.Response[v1.UsersListResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UsersList is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) UploadFile(context.Context, *connect.Request[v1.UploadFileRequest]) (*connect.Response[v1.UploadFileResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UploadFile is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) UploadFiles(context.Context, *connect.Request[v1.UploadFilesRequest]) (*connect.Response[v1.UploadFileResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UploadFiles is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) UserCreateUpdate(context.Context, *connect.Request[v1.UserCreateUpdateRequest]) (*connect.Response[v1.UserCreateUpdateResponse], error) {

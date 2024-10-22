@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package devkit.v1;
+
+import "buf/validate/validate.proto";
+
+message Setting {
+  string setting_key = 1;
+  string setting_value = 2;
+  string input_type_name = 3;
+}
+
+message SettingsFindForUpdateRequest {}
+
+message SettingsUpdateRequestRow {
+  string setting_key = 1 [
+  (buf.validate.field).string.min_len = 2,
+  (buf.validate.field).string.max_len = 200
+  ];  
+  string setting_value = 2  [
+  (buf.validate.field).string.min_len = 2
+  ];  
+}
+
+message SettingsUpdateRequest {
+  repeated SettingsUpdateRequestRow settings = 1;
+}
+
+message SettingsFindForUpdateRow {
+  string setting_key = 1;
+  string setting_value = 2;
+  string input_type = 3;
+}
+message SettingsFindForUpdateResponse {
+  repeated SettingsFindForUpdateRow settings = 1;
+}
+message SettingsUpdateResponse {}

@@ -8,6 +8,17 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type AccountsSchemaNavigationBar struct {
+	NavigationBarID int32       `json:"navigation_bar_id"`
+	MenuKey         string      `json:"menu_key"`
+	Label           string      `json:"label"`
+	LabelAr         pgtype.Text `json:"label_ar"`
+	Icon            pgtype.Text `json:"icon"`
+	Route           pgtype.Text `json:"route"`
+	ParentID        pgtype.Int4 `json:"parent_id"`
+	PermissionID    pgtype.Int4 `json:"permission_id"`
+}
+
 type AccountsSchemaPermission struct {
 	PermissionID          int32       `json:"permission_id"`
 	PermissionFunction    string      `json:"permission_function"`
@@ -51,4 +62,27 @@ type AccountsSchemaUserRole struct {
 type AccountsSchemaUserType struct {
 	UserTypeID   int32  `json:"user_type_id"`
 	UserTypeName string `json:"user_type_name"`
+}
+
+type Icon struct {
+	IconID      int32  `json:"icon_id"`
+	IconName    string `json:"icon_name"`
+	IconContent string `json:"icon_content"`
+}
+
+type InputType struct {
+	InputTypeID   int32  `json:"input_type_id"`
+	InputTypeName string `json:"input_type_name"`
+}
+
+type Setting struct {
+	SettingID    int32            `json:"setting_id"`
+	InputTypeID  int32            `json:"input_type_id"`
+	SettingKey   string           `json:"setting_key"`
+	SettingValue string           `json:"setting_value"`
+	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
+}
+
+type Tag struct {
+	Tag string `json:"tag"`
 }

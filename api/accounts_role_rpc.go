@@ -21,11 +21,7 @@ func (api *Api) RolesList(ctx context.Context, req *connect.Request[emptypb.Empt
 	return connect.NewResponse(response), nil
 }
 func (api *Api) RoleCreateUpdate(ctx context.Context, req *connect.Request[apiv1.RoleCreateUpdateRequest]) (*connect.Response[apiv1.RoleCreateUpdateResponse], error) {
-	_, err := api.authorizeRequestHeader(ctx, req.Header())
-	if err != nil {
-		return nil, fmt.Errorf("invalid access token: %s", err)
-	}
-	err = api.validator.Validate(req.Msg)
+	err := api.validator.Validate(req.Msg)
 	if err != nil {
 		return nil, connect.NewError(connect.CodeInvalidArgument, err)
 	}
