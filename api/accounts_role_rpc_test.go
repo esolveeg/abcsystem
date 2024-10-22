@@ -7,8 +7,8 @@ import (
 	"connectrpc.com/connect"
 	"github.com/darwishdev/devkit-api/db"
 	mockdb "github.com/darwishdev/devkit-api/db/mock"
+	"github.com/darwishdev/devkit-api/pkg/random"
 	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"github.com/darwishdev/devkit-api/random"
 	"github.com/golang/mock/gomock"
 )
 

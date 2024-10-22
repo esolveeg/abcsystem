@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/darwishdev/devkit-api/random"
+	"github.com/darwishdev/devkit-api/pkg/random"
 	"github.com/stretchr/testify/require"
 )
 
