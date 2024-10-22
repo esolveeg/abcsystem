@@ -1,6 +1,8 @@
 
 
-config/*.env
+config/state.env
+config/prod.env
+config/dev.env
 /proto_gen
 /db/querier.go
 /db/models.go
