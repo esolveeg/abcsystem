@@ -4,11 +4,11 @@ import (
 	"github.com/bufbuild/protovalidate-go"
 	accountsUsecase "github.com/darwishdev/devkit-api/app/accounts/usecase"
 	publicUsecase "github.com/darwishdev/devkit-api/app/public/usecase"
-	"github.com/darwishdev/devkit-api/auth"
 	"github.com/darwishdev/devkit-api/config"
 	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/pkg/auth"
+	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1/devkitv1connect"
-	"github.com/darwishdev/devkit-api/redisclient"
 	supaapigo "github.com/darwishdev/supaapi-go"
 )
 

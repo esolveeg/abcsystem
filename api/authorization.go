@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"connectrpc.com/connect"
-	"github.com/darwishdev/devkit-api/auth"
+	"github.com/darwishdev/devkit-api/pkg/auth"
+	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"github.com/darwishdev/devkit-api/redisclient"
 	"github.com/iancoleman/strcase"
 	"github.com/tangzero/inflector"
 )

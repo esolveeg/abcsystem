@@ -3,6 +3,8 @@ package api
 import (
 	"net/http"
 
+	"time"
+
 	"connectrpc.com/connect"
 	"connectrpc.com/grpchealth"
 	"connectrpc.com/grpcreflect"
@@ -10,9 +12,9 @@ import (
 	"github.com/darwishdev/devkit-api/db"
 	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1/devkitv1connect"
 	"github.com/rs/cors"
+	"github.com/rs/zerolog/log"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
-	"time"
 )
 
 type Server struct {
@@ -39,6 +41,7 @@ func (s Server) NewGrpcHttpServer() *http.Server {
 	mux.Handle("/", http.RedirectHandler("https://darwishdev.com", http.StatusFound))
 	// here we can find examples of diffrent compression method 	https://connectrpc.com/docs/go/serialization-and-compression/#compression
 	compress1KB := connect.WithCompressMinBytes(1024)
+	log.Debug().Interface("stete", s.config.State).Msg("state ios")
 	interceptors := connect.WithInterceptors(GrpcLogger(s.config.State == "dev"))
 
 	mux.Handle(devkitv1connect.NewDevkitServiceHandler(

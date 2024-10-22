@@ -6,8 +6,8 @@ import (
 	"github.com/darwishdev/devkit-api/app/public/adapter"
 	"github.com/darwishdev/devkit-api/app/public/repo"
 	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"github.com/darwishdev/devkit-api/redisclient"
 	supaapigo "github.com/darwishdev/supaapi-go"
 )
 

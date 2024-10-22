@@ -4,13 +4,12 @@ import (
 	"context"
 
 	"github.com/darwishdev/devkit-api/db"
-	apiv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"github.com/darwishdev/devkit-api/redisclient"
 	"github.com/supabase-community/auth-go/types"
 )
 
-func (u *AccountsUsecase) userGenerateTokens(username string, userID int32) (*apiv1.LoginInfo, error) {
+func (u *AccountsUsecase) userGenerateTokens(username string, userID int32) (*devkitv1.LoginInfo, error) {
 	accessToken, accessPayload, err := u.tokenMaker.CreateToken(username, userID, u.tokenDuration)
 	if err != nil {
 		return nil, err
@@ -21,7 +20,7 @@ func (u *AccountsUsecase) userGenerateTokens(username string, userID int32) (*ap
 	}
 	return loginInfo, nil
 }
-func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string) (*apiv1.UserLoginResponse, redisclient.PermissionsMap, error) {
+func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string) (*devkitv1.UserLoginResponse, redisclient.PermissionsMap, error) {
 	user, err := u.repo.UserFind(ctx, db.UserFindParams{SearchKey: loginCode})
 	if err != nil {
 		return nil, nil, err
@@ -39,7 +38,7 @@ func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string) (*apiv
 	return response, permissionsMap, nil
 
 }
-func (u *AccountsUsecase) UserLogin(ctx context.Context, req *apiv1.UserLoginRequest) (*apiv1.UserLoginResponse, error) {
+func (u *AccountsUsecase) UserLogin(ctx context.Context, req *devkitv1.UserLoginRequest) (*devkitv1.UserLoginResponse, error) {
 	userFindParams, supabaseRequest := u.adapter.UserLoginSqlFromGrpc(req)
 	_, err := u.supaapi.AuthClient.Token(*supabaseRequest)
 	if err != nil {
@@ -56,32 +55,32 @@ func (u *AccountsUsecase) UserLogin(ctx context.Context, req *apiv1.UserLoginReq
 	return response, nil
 }
 
-func (u *AccountsUsecase) UserInvite(ctx context.Context, req *apiv1.UserInviteRequest) (*apiv1.UserInviteResponse, error) {
+func (u *AccountsUsecase) UserInvite(ctx context.Context, req *devkitv1.UserInviteRequest) (*devkitv1.UserInviteResponse, error) {
 	_, err := u.supaapi.AuthClient.Invite(types.InviteRequest{Email: req.UserEmail})
 	if err != nil {
 		return nil, err
 	}
-	return &apiv1.UserInviteResponse{
+	return &devkitv1.UserInviteResponse{
 		Message: "invitation sent",
 	}, nil
 }
-func (u *AccountsUsecase) UserLoginProvider(ctx context.Context, req *apiv1.UserLoginProviderRequest) (*apiv1.UserLoginProviderResponse, error) {
+func (u *AccountsUsecase) UserLoginProvider(ctx context.Context, req *devkitv1.UserLoginProviderRequest) (*devkitv1.UserLoginProviderResponse, error) {
 	resp, err := u.supaapi.ProviderLogin(types.Provider(req.Provider), req.RedirectUrl)
 	if err != nil {
 		return nil, err
 	}
-	return &apiv1.UserLoginProviderResponse{
+	return &devkitv1.UserLoginProviderResponse{
 		Url: resp.AuthorizationURL,
 	}, nil
 }
-func (u *AccountsUsecase) UserResetPasswordEmail(ctx context.Context, req *apiv1.UserResetPasswordEmailRequest) (*apiv1.UserResetPasswordEmailResponse, error) {
+func (u *AccountsUsecase) UserResetPasswordEmail(ctx context.Context, req *devkitv1.UserResetPasswordEmailRequest) (*devkitv1.UserResetPasswordEmailResponse, error) {
 	err := u.supaapi.AuthClient.Recover(types.RecoverRequest{Email: req.Email})
 	if err != nil {
 		return nil, err
 	}
-	return &apiv1.UserResetPasswordEmailResponse{}, nil
+	return &devkitv1.UserResetPasswordEmailResponse{}, nil
 }
-func (u *AccountsUsecase) UserResetPassword(ctx context.Context, req *apiv1.UserResetPasswordRequest) (*apiv1.UserLoginResponse, error) {
+func (u *AccountsUsecase) UserResetPassword(ctx context.Context, req *devkitv1.UserResetPasswordRequest) (*devkitv1.UserLoginResponse, error) {
 	if len(req.ResetToken) == 6 {
 		resp, err := u.supaapi.AuthClient.VerifyForUser(*u.adapter.UserResetPasswordSupaFromGrpc(req))
 		if err != nil {
@@ -97,13 +96,13 @@ func (u *AccountsUsecase) UserResetPassword(ctx context.Context, req *apiv1.User
 	if err != nil {
 		return nil, err
 	}
-	resp, err := u.UserLogin(ctx, &apiv1.UserLoginRequest{LoginCode: req.Email, UserPassword: req.NewPassword})
+	resp, err := u.UserLogin(ctx, &devkitv1.UserLoginRequest{LoginCode: req.Email, UserPassword: req.NewPassword})
 	if err != nil {
 		return nil, err
 	}
 	return resp, nil
 }
-func (u *AccountsUsecase) UserLoginProviderCallback(ctx context.Context, req *apiv1.UserLoginProviderCallbackRequest) (*apiv1.UserLoginResponse, error) {
+func (u *AccountsUsecase) UserLoginProviderCallback(ctx context.Context, req *devkitv1.UserLoginProviderCallbackRequest) (*devkitv1.UserLoginResponse, error) {
 	user, err := u.supaapi.AuthClient.WithToken(req.AccessToken).GetUser()
 	if err != nil {
 		return nil, err

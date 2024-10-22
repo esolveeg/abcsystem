@@ -67,6 +67,7 @@ func LoadConfig(path string, state string) (config Config, err error) {
 	}
 	viper.SetConfigName("shared.env")
 	err = loadAncScan(&config)
+	config.State = state
 	if err != nil {
 		return
 	}

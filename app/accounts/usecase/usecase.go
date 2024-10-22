@@ -6,10 +6,10 @@ import (
 
 	"github.com/darwishdev/devkit-api/app/accounts/adapter"
 	"github.com/darwishdev/devkit-api/app/accounts/repo"
-	"github.com/darwishdev/devkit-api/auth"
 	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/pkg/auth"
+	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	apiv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"github.com/darwishdev/devkit-api/redisclient"
 	supaapigo "github.com/darwishdev/supaapi-go"
 )
 
