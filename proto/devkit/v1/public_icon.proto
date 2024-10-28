@@ -1,10 +1,18 @@
 syntax = "proto3";
 package devkit.v1;
-message IconsInputListRow {
+message Icon {
   int32 icon_id = 1;
   string icon_name = 2;
   string icon_content = 3;
 }
-message IconsInputListResponse {
-  repeated IconsInputListRow icons = 1;
+message IconCreateUpdate {
+  string icon_name = 2;
+  string icon_content = 3;
 }
+message IconsListResponse {
+  repeated Icon icons = 1;
+}
+message IconsCreateUpdateBulkRequest {
+  repeated IconCreateUpdate icons = 1;
+}
+

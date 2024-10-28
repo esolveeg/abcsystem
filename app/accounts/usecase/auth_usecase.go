@@ -34,7 +34,6 @@ func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string) (*devk
 	if err != nil {
 		return nil, nil, err
 	}
-
 	return response, permissionsMap, nil
 
 }
@@ -51,6 +50,19 @@ func (u *AccountsUsecase) UserLogin(ctx context.Context, req *devkitv1.UserLogin
 		return nil, err
 	}
 	response.LoginInfo = loginInfo
+	// this means this use is admin
+	if response.User.UserTypeId == 1 {
+		navigationBar, err := u.repo.UserFindNavigationBars(ctx, response.User.UserId)
+		if err != nil {
+			return nil, err
+		}
+		navigations, err := u.adapter.UserFindNavigationBarsGrpcFromSql(&navigationBar)
+		if err != nil {
+			return nil, err
+		}
+		response.NavigationBar = *navigations
+
+	}
 
 	return response, nil
 }

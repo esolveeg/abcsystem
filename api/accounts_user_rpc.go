@@ -6,6 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	apiv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -106,6 +107,22 @@ func (api *Api) UserLogin(ctx context.Context, req *connect.Request[apiv1.UserLo
 	}
 	return connect.NewResponse(response), nil
 }
+func (api *Api) UserDelete(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[devkitv1.AccountsSchemaUser], error) {
+	err := api.validator.Validate(req.Msg)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+	}
+	payload, err := api.authorizeRequestHeader(ctx, req.Header())
+	if err != nil {
+		return nil, connect.NewError(connect.CodeUnauthenticated, err)
+	}
+	resp, err := api.accountsUscase.UserDelete(ctx, payload.UserId)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(resp), nil
+}
+
 func (api *Api) UsersDeleteRestore(ctx context.Context, req *connect.Request[apiv1.DeleteRestoreRequest]) (*connect.Response[emptypb.Empty], error) {
 	err := api.validator.Validate(req.Msg)
 	if err != nil {

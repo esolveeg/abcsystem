@@ -7,6 +7,16 @@ import (
 
 type PermissionsMap map[string]map[string]bool
 
+func (r *RedisClient) AuthSessionDelete(ctx context.Context, userName string) error {
+
+	err := r.client.Del(ctx, userName).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r *RedisClient) AuthSessionCreate(ctx context.Context, userName string, permissions []byte) (PermissionsMap, error) {
 	if permissions == nil {
 		r.client.Del(ctx, userName)

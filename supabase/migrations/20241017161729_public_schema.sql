@@ -17,6 +17,13 @@ CREATE TABLE settings(
     updated_at timestamp
 
 );
+CREATE TABLE translations(
+    translation_key varchar(200) NOT NULL UNIQUE,
+    arabic_value varchar(200) NOT NULL ,
+    english_value varchar(200) NOT NULL ,
+    primary key(translation_key)
+); 
+
 CREATE TABLE icons(
     icon_id serial PRIMARY KEY,
     icon_name varchar(200) NOT NULL UNIQUE,

@@ -1,5 +1,4 @@
 
-
 CREATE OR REPLACE FUNCTION accounts_schema.role_create_update(
     in_role_id int,
     in_role_name varchar(200),
@@ -121,6 +120,33 @@ end if;
 	updated_at ,
 	deleted_at 
 from accounts_schema.users where user_id = isnullreplace(v_user_id , in_user_id);
+END
+$$; 
+
+
+CREATE OR REPLACE FUNCTION accounts_schema.user_delete(
+    in_user_id int
+)
+    RETURNS setof accounts_schema.users
+    LANGUAGE plpgsql
+    AS $$
+    declare v_role_id int;
+BEGIN
+
+-- delete auth user
+with temp_user_email as (
+  select user_email from accounts_schema.users where user_id = in_user_id
+)
+DELETE FROM auth.users 
+USING temp_user_email
+WHERE email = temp_user_email.user_email;
+
+
+-- delete user roles
+delete from accounts_schema.user_roles where user_id = in_user_id;
+
+-- delete users
+return query delete from accounts_schema.users where user_id = in_user_id RETURNING *;      
 END
 $$; 
 

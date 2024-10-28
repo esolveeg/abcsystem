@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package devkit.v1;
+
+import "buf/validate/validate.proto";
+
+
+message Translation {
+  string translation_key = 1;
+  string english_value = 2;
+  string arabic_value = 3;
+}
+
+message TranslationsCreateUpdateBulkRequest {
+  repeated Translation records = 1;
+}
+
+
+
+message TranslationsListResponse {
+  repeated Translation translations = 1;
+}
+
+message TranslationsDeleteRequest {
+  repeated string keys = 1 ;
+}
+

@@ -9,14 +9,20 @@ import (
 )
 
 type Querier interface {
+	IconsCreateUpdateBulk(ctx context.Context, arg IconsCreateUpdateBulkParams) ([]Icon, error)
 	IconsInputList(ctx context.Context) ([]Icon, error)
 	RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdateParams) (AccountsSchemaRole, error)
 	RolesDeleteRestore(ctx context.Context, records []int32) error
 	RolesList(ctx context.Context) ([]AccountsSchemaRole, error)
 	SettingsFindForUpdate(ctx context.Context) ([]SettingsFindForUpdateRow, error)
 	SettingsUpdate(ctx context.Context, arg SettingsUpdateParams) (SettingsUpdateRow, error)
+	TranslationsCreateUpdateBulk(ctx context.Context, arg TranslationsCreateUpdateBulkParams) ([]TranslationsCreateUpdateBulkRow, error)
+	TranslationsDelete(ctx context.Context, keys []string) ([]Translation, error)
+	TranslationsList(ctx context.Context) ([]Translation, error)
 	UserCreateUpdate(ctx context.Context, arg UserCreateUpdateParams) (AccountsSchemaUser, error)
+	UserDelete(ctx context.Context, userID int32) (AccountsSchemaUser, error)
 	UserFind(ctx context.Context, arg UserFindParams) (AccountsSchemaUser, error)
+	UserFindNavigationBars(ctx context.Context, userID int32) ([]UserFindNavigationBarsRow, error)
 	UserPermissionsMap(ctx context.Context, userID int32) ([]byte, error)
 	UsersDeleteRestore(ctx context.Context, records []int32) error
 	UsersList(ctx context.Context) ([]AccountsSchemaUser, error)

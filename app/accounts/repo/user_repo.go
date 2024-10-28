@@ -6,6 +6,22 @@ import (
 	"github.com/darwishdev/devkit-api/db"
 )
 
+func (repo *AccountsRepo) UserFindNavigationBars(ctx context.Context, userId int32) ([]db.UserFindNavigationBarsRow, error) {
+	resp, err := repo.store.UserFindNavigationBars(context.Background(), userId)
+	if err != nil {
+		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
+	}
+	return resp, nil
+}
+
+func (repo *AccountsRepo) UserDelete(ctx context.Context, userID int32) (*db.AccountsSchemaUser, error) {
+	resp, err := repo.store.UserDelete(context.Background(), userID)
+	if err != nil {
+		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
+	}
+	return &resp, nil
+}
+
 func (repo *AccountsRepo) UsersList(ctx context.Context) ([]db.AccountsSchemaUser, error) {
 	resp, err := repo.store.UsersList(context.Background())
 	if err != nil {

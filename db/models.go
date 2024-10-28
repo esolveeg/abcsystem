@@ -86,3 +86,9 @@ type Setting struct {
 type Tag struct {
 	Tag string `json:"tag"`
 }
+
+type Translation struct {
+	TranslationKey string `json:"translation_key"`
+	ArabicValue    string `json:"arabic_value"`
+	EnglishValue   string `json:"english_value"`
+}

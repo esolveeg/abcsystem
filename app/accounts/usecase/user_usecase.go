@@ -7,6 +7,28 @@ import (
 	"github.com/supabase-community/auth-go/types"
 )
 
+func (u *AccountsUsecase) UserDelete(ctx context.Context, userID int32) (*apiv1.AccountsSchemaUser, error) {
+	user, err := u.repo.UserDelete(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	err = u.redisClient.AuthSessionDelete(ctx, user.UserEmail)
+	if err != nil {
+		return nil, err
+	}
+	err = u.redisClient.AuthSessionDelete(ctx, user.UserName)
+	if err != nil {
+		return nil, err
+	}
+	err = u.redisClient.AuthSessionDelete(ctx, user.UserPhone.String)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := u.adapter.UserEntityGrpcFromSql(user)
+	return resp, nil
+}
+
 func (u *AccountsUsecase) UsersDeleteRestore(ctx context.Context, req *apiv1.DeleteRestoreRequest) error {
 	err := u.repo.UsersDeleteRestore(ctx, req.Records)
 	if err != nil {

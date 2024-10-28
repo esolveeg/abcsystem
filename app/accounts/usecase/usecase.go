@@ -19,6 +19,7 @@ type AccountsUsecaseInterface interface {
 	UsersList(ctx context.Context) (*apiv1.UsersListResponse, error)
 	UserCreateUpdate(ctx context.Context, req *apiv1.UserCreateUpdateRequest) (*apiv1.UserCreateUpdateResponse, error)
 	UserLoginProvider(ctx context.Context, req *apiv1.UserLoginProviderRequest) (*apiv1.UserLoginProviderResponse, error)
+	UserDelete(ctx context.Context, userID int32) (*apiv1.AccountsSchemaUser, error)
 	UserInvite(ctx context.Context, req *apiv1.UserInviteRequest) (*apiv1.UserInviteResponse, error)
 	RolesDeleteRestore(ctx context.Context, req *apiv1.DeleteRestoreRequest) error
 	RolesList(ctx context.Context) (*apiv1.RolesListResponse, error)

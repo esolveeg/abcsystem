@@ -75,3 +75,63 @@ FROM (
     where ur.user_id = $1
     GROUP BY p.permission_group
 ) as permissions_by_group;
+
+-- name: UserFindNavigationBars :many
+WITH userpermissions AS (
+  SELECT 
+    rp.permission_id
+  FROM 
+    accounts_schema.role_permissions rp
+    join accounts_schema.roles r  on rp.role_id = r.role_id 
+    join accounts_schema.user_roles ur on r.role_id = ur.role_id
+    where ur.user_id = $1
+)
+, allowed_navigations as (
+    SELECT
+        navigation_bar_id,
+        menu_key "key",
+        label,
+        label_ar,
+        icon,
+        "route",
+        menu_key,
+        parent_id
+        from accounts_schema.navigation_bars n
+        JOIN userpermissions p on n.permission_id = p.permission_id 
+    union 
+    SELECT
+        navigation_bar_id,
+        menu_key "key",
+        label,
+        label_ar,
+        icon,
+        "route",
+        menu_key,
+        parent_id
+        from accounts_schema.navigation_bars n 
+        where n.permission_id is null
+    ORDER BY
+        menu_key
+) , children_permissions as (
+    select * from allowed_navigations where parent_id is not null
+) select 
+p.navigation_bar_id,
+p.menu_key "key",
+p.label,
+p.label_ar,
+p.icon,
+p."route",
+(
+    select Jsonb_Agg(nested_items) from (
+        select c.* from children_permissions c where 
+        c.parent_id = p.navigation_bar_id
+    ) nested_items
+) items
+from allowed_navigations p where route is null or parent_id is null order by p.navigation_bar_id;
+
+-- name: UserDelete :one
+SELECT * FROM accounts_schema.user_delete(sqlc.arg('user_id'));
+
+
+
+

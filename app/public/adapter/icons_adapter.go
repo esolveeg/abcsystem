@@ -5,16 +5,30 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (a *PublicAdapter) IconsInputListGrpcFromSql(resp *[]db.Icon) *devkitv1.IconsInputListResponse {
-	// IconsInputListGrpcFromSql
-	records := make([]*devkitv1.IconsInputListRow, 0)
-	for _, v := range *resp {
-		record := &devkitv1.IconsInputListRow{
-			IconId:      v.IconID,
-			IconName:    v.IconName,
-			IconContent: v.IconContent,
-		}
-		records = append(records, record)
+func (a *PublicAdapter) IconGrpcFromSql(icon *db.Icon) *devkitv1.Icon {
+	return &devkitv1.Icon{
+		IconId:      icon.IconID,
+		IconName:    icon.IconName,
+		IconContent: icon.IconContent,
+	}
+
+}
+func (a *PublicAdapter) IconsCreateUpdateBulkSqlFromGrpc(req *devkitv1.IconsCreateUpdateBulkRequest) db.IconsCreateUpdateBulkParams {
+	names := make([]string, len(req.Icons))
+	contents := make([]string, len(req.Icons))
+	for index, v := range req.Icons {
+		names[index] = v.IconName
+		contents[index] = v.IconContent
+	}
+	return db.IconsCreateUpdateBulkParams{
+		IconsName:     names,
+		IconsContents: contents,
+	}
+}
+func (a *PublicAdapter) IconsInputListGrpcFromSql(resp []db.Icon) *devkitv1.IconsInputListResponse {
+	records := make([]*devkitv1.Icon, len(resp))
+	for index, v := range resp {
+		records[index] = a.IconGrpcFromSql(&v)
 	}
 	return &devkitv1.IconsInputListResponse{
 		Icons: records,

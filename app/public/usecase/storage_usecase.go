@@ -7,6 +7,7 @@ import (
 
 	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	storage_go "github.com/supabase-community/storage-go"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func (s *PublicUsecase) UploadFile(ctx context.Context, req *devkitv1.UploadFileRequest) (*devkitv1.UploadFileResponse, error) {
@@ -25,6 +26,37 @@ func (s *PublicUsecase) UploadFile(ctx context.Context, req *devkitv1.UploadFile
 	}, nil
 
 }
+func (s *PublicUsecase) FilesList(ctx context.Context, req *devkitv1.FilesListRequest) (*devkitv1.FilesListResponse, error) {
+	options := storage_go.FileSearchOptions{
+		Limit:  int(req.Limit),
+		Offset: int(req.Offest),
+	}
+	resp, err := s.supaapi.StorageClient.ListFiles(req.BucketId, req.QueryPath, options)
+	if err != nil {
+		return nil, err
+	}
+
+	response := s.adapter.FilesListGrpcFromSupa(resp)
+	return response, nil
+}
+
+func (s *PublicUsecase) BucketsList(ctx context.Context, req *emptypb.Empty) (*devkitv1.BucketsListResponse, error) {
+	resp, err := s.supaapi.StorageClient.ListBuckets()
+	if err != nil {
+		return nil, err
+	}
+	response := s.adapter.BucketsListGrpcFromSupa(resp)
+	return response, nil
+}
+
+func (s *PublicUsecase) FilesDelete(ctx context.Context, req *devkitv1.FilesDeleteRequest) (*devkitv1.FilesDeleteResponse, error) {
+	resp, err := s.supaapi.StorageClient.RemoveFile(req.BucketId, req.FilesPaths)
+	if err != nil {
+		return nil, err
+	}
+	response := s.adapter.FilesDeleteGrpcFromSupa(resp)
+	return response, nil
+}
 
 func (s *PublicUsecase) UploadFiles(ctx context.Context, req *devkitv1.UploadFilesRequest) (*devkitv1.UploadFileResponse, error) {
 	imagesPath := ""
@@ -35,7 +67,5 @@ func (s *PublicUsecase) UploadFiles(ctx context.Context, req *devkitv1.UploadFil
 		}
 		imagesPath += response.Path + ","
 	}
-
 	return &devkitv1.UploadFileResponse{Path: imagesPath}, nil
-
 }
