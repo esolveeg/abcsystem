@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package devkit.v1;
+// INJECT IMPORTS
 
 import "devkit/v1/accounts_user.proto";
 import "devkit/v1/client.proto";
@@ -13,7 +13,10 @@ import "devkit/v1/public_storage.proto";
 import "devkit/v1/accounts_role.proto";
 import "google/protobuf/empty.proto";
 
+package devkit.v1;
 service DevkitService {
+	// INJECT METHODS
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 // public 
 //////////////////////////////////////////////////////////////////////////////////////////////
