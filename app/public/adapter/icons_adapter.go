@@ -25,12 +25,12 @@ func (a *PublicAdapter) IconsCreateUpdateBulkSqlFromGrpc(req *devkitv1.IconsCrea
 		IconsContents: contents,
 	}
 }
-func (a *PublicAdapter) IconsInputListGrpcFromSql(resp []db.Icon) *devkitv1.IconsInputListResponse {
+func (a *PublicAdapter) IconsInputListGrpcFromSql(resp []db.Icon) *devkitv1.IconsListResponse {
 	records := make([]*devkitv1.Icon, len(resp))
 	for index, v := range resp {
 		records[index] = a.IconGrpcFromSql(&v)
 	}
-	return &devkitv1.IconsInputListResponse{
+	return &devkitv1.IconsListResponse{
 		Icons: records,
 	}
 }

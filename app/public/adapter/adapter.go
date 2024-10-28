@@ -23,7 +23,7 @@ type PublicAdapterInterface interface {
 	SettingsUpdateSqlFromGrpc(req *devkitv1.SettingsUpdateRequest) *db.SettingsUpdateParams
 	SettingsEntityGrpcFromSql(resp []db.Setting) []*devkitv1.Setting
 	SettingsFindForUpdateGrpcFromSql(resp *[]db.SettingsFindForUpdateRow) *devkitv1.SettingsFindForUpdateResponse
-	IconsInputListGrpcFromSql(resp []db.Icon) *devkitv1.IconsInputListResponse
+	IconsInputListGrpcFromSql(resp []db.Icon) *devkitv1.IconsListResponse
 }
 
 type PublicAdapter struct {

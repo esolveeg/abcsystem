@@ -1,6 +1,7 @@
 
 
 config/state.env
+config/shared.env
 config/prod.env
 config/dev.env
 /proto_gen
