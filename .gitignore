@@ -14,4 +14,4 @@ config/dev.env
 /bin
 /supabse/.env
 .env
-go.sum
+devkit.env
