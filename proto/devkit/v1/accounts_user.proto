@@ -48,6 +48,20 @@ message AccountsSchemaUser {
 message UserCreateUpdateResponse{
   AccountsSchemaUser user = 1;
 }
+message UsersDeleteRestoreRequest{
+  repeated int32 records = 1;
+}
+message UsersDeleteRestoreResponse{
+  AccountsSchemaUser record = 1;
+}
+
+
+
+message UserDeleteRequest{
+  int32 record_id = 1;
+}
+message UserDeleteResponse{}
+message UsersListRequest{}
 message UsersListResponse{
   repeated AccountsSchemaUser records= 1;
   repeated AccountsSchemaUser deleted_records = 2;

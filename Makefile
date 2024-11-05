@@ -26,11 +26,11 @@ testapi:
 
 			
 rdb:
-	supabase db reset
+	supabase db reset && devkit seed storage -f ../storage_seed/assets -i ../storage_seed/icons && devkit seed accounts_schema --file-path ../accounts.xlsx -e
 run:
 	go run main.go
 buf:
-	cd proto && buf generate 
+	cd proto && buf lint && buf generate 
 sqlc:
 	rm -rf db/*.sql.go && sqlc generate	
 gen:

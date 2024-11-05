@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package devkit.v1;
 
-import "buf/validate/validate.proto";
 
 
 message Translation {
@@ -16,6 +15,8 @@ message TranslationsCreateUpdateBulkRequest {
 }
 
 
+message TranslationsListRequest {
+}
 
 message TranslationsListResponse {
   repeated Translation translations = 1;
@@ -25,3 +26,9 @@ message TranslationsDeleteRequest {
   repeated string keys = 1 ;
 }
 
+message TranslationsDeleteResponse {
+  repeated Translation translations = 1;
+}
+message TranslationsCreateUpdateBulkResponse {
+  repeated Translation translations = 1;
+}

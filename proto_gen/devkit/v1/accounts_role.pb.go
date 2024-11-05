@@ -220,6 +220,132 @@ func (x *RoleCreateUpdateResponse) GetRole() *AccountsSchemaRole {
 	return nil
 }
 
+type RolesDeleteRestoreRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Records []int32 `protobuf:"varint,1,rep,packed,name=records,proto3" json:"records,omitempty"`
+}
+
+func (x *RolesDeleteRestoreRequest) Reset() {
+	*x = RolesDeleteRestoreRequest{}
+	mi := &file_devkit_v1_accounts_role_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RolesDeleteRestoreRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RolesDeleteRestoreRequest) ProtoMessage() {}
+
+func (x *RolesDeleteRestoreRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_devkit_v1_accounts_role_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RolesDeleteRestoreRequest.ProtoReflect.Descriptor instead.
+func (*RolesDeleteRestoreRequest) Descriptor() ([]byte, []int) {
+	return file_devkit_v1_accounts_role_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *RolesDeleteRestoreRequest) GetRecords() []int32 {
+	if x != nil {
+		return x.Records
+	}
+	return nil
+}
+
+type RolesDeleteRestoreResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Record *AccountsSchemaRole `protobuf:"bytes,1,opt,name=record,proto3" json:"record,omitempty"`
+}
+
+func (x *RolesDeleteRestoreResponse) Reset() {
+	*x = RolesDeleteRestoreResponse{}
+	mi := &file_devkit_v1_accounts_role_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RolesDeleteRestoreResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RolesDeleteRestoreResponse) ProtoMessage() {}
+
+func (x *RolesDeleteRestoreResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_devkit_v1_accounts_role_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RolesDeleteRestoreResponse.ProtoReflect.Descriptor instead.
+func (*RolesDeleteRestoreResponse) Descriptor() ([]byte, []int) {
+	return file_devkit_v1_accounts_role_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *RolesDeleteRestoreResponse) GetRecord() *AccountsSchemaRole {
+	if x != nil {
+		return x.Record
+	}
+	return nil
+}
+
+type RolesListRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *RolesListRequest) Reset() {
+	*x = RolesListRequest{}
+	mi := &file_devkit_v1_accounts_role_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RolesListRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RolesListRequest) ProtoMessage() {}
+
+func (x *RolesListRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_devkit_v1_accounts_role_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RolesListRequest.ProtoReflect.Descriptor instead.
+func (*RolesListRequest) Descriptor() ([]byte, []int) {
+	return file_devkit_v1_accounts_role_proto_rawDescGZIP(), []int{5}
+}
+
 type RolesListResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -232,7 +358,7 @@ type RolesListResponse struct {
 
 func (x *RolesListResponse) Reset() {
 	*x = RolesListResponse{}
-	mi := &file_devkit_v1_accounts_role_proto_msgTypes[3]
+	mi := &file_devkit_v1_accounts_role_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -244,7 +370,7 @@ func (x *RolesListResponse) String() string {
 func (*RolesListResponse) ProtoMessage() {}
 
 func (x *RolesListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_devkit_v1_accounts_role_proto_msgTypes[3]
+	mi := &file_devkit_v1_accounts_role_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -257,7 +383,7 @@ func (x *RolesListResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RolesListResponse.ProtoReflect.Descriptor instead.
 func (*RolesListResponse) Descriptor() ([]byte, []int) {
-	return file_devkit_v1_accounts_role_proto_rawDescGZIP(), []int{3}
+	return file_devkit_v1_accounts_role_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *RolesListResponse) GetRecords() []*AccountsSchemaRole {
@@ -320,7 +446,17 @@ var file_devkit_v1_accounts_role_proto_rawDesc = []byte{
 	0x73, 0x65, 0x12, 0x31, 0x0a, 0x04, 0x72, 0x6f, 0x6c, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
 	0x32, 0x1d, 0x2e, 0x64, 0x65, 0x76, 0x6b, 0x69, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x41, 0x63, 0x63,
 	0x6f, 0x75, 0x6e, 0x74, 0x73, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x52, 0x6f, 0x6c, 0x65, 0x52,
-	0x04, 0x72, 0x6f, 0x6c, 0x65, 0x22, 0xca, 0x01, 0x0a, 0x11, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x4c,
+	0x04, 0x72, 0x6f, 0x6c, 0x65, 0x22, 0x35, 0x0a, 0x19, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x44, 0x65,
+	0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x18, 0x01, 0x20,
+	0x03, 0x28, 0x05, 0x52, 0x07, 0x72, 0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x22, 0x53, 0x0a, 0x1a,
+	0x52, 0x6f, 0x6c, 0x65, 0x73, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x65, 0x73, 0x74, 0x6f,
+	0x72, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x35, 0x0a, 0x06, 0x72, 0x65,
+	0x63, 0x6f, 0x72, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x64, 0x65, 0x76,
+	0x6b, 0x69, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x53,
+	0x63, 0x68, 0x65, 0x6d, 0x61, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x06, 0x72, 0x65, 0x63, 0x6f, 0x72,
+	0x64, 0x22, 0x12, 0x0a, 0x10, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0xca, 0x01, 0x0a, 0x11, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x4c,
 	0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x37, 0x0a, 0x07, 0x72,
 	0x65, 0x63, 0x6f, 0x72, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x64,
 	0x65, 0x76, 0x6b, 0x69, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x41, 0x63, 0x63, 0x6f, 0x75, 0x6e, 0x74,
@@ -359,24 +495,28 @@ func file_devkit_v1_accounts_role_proto_rawDescGZIP() []byte {
 	return file_devkit_v1_accounts_role_proto_rawDescData
 }
 
-var file_devkit_v1_accounts_role_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_devkit_v1_accounts_role_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_devkit_v1_accounts_role_proto_goTypes = []any{
-	(*RoleCreateUpdateRequest)(nil),  // 0: devkit.v1.RoleCreateUpdateRequest
-	(*AccountsSchemaRole)(nil),       // 1: devkit.v1.AccountsSchemaRole
-	(*RoleCreateUpdateResponse)(nil), // 2: devkit.v1.RoleCreateUpdateResponse
-	(*RolesListResponse)(nil),        // 3: devkit.v1.RolesListResponse
-	(*ListDataOptions)(nil),          // 4: devkit.v1.ListDataOptions
+	(*RoleCreateUpdateRequest)(nil),    // 0: devkit.v1.RoleCreateUpdateRequest
+	(*AccountsSchemaRole)(nil),         // 1: devkit.v1.AccountsSchemaRole
+	(*RoleCreateUpdateResponse)(nil),   // 2: devkit.v1.RoleCreateUpdateResponse
+	(*RolesDeleteRestoreRequest)(nil),  // 3: devkit.v1.RolesDeleteRestoreRequest
+	(*RolesDeleteRestoreResponse)(nil), // 4: devkit.v1.RolesDeleteRestoreResponse
+	(*RolesListRequest)(nil),           // 5: devkit.v1.RolesListRequest
+	(*RolesListResponse)(nil),          // 6: devkit.v1.RolesListResponse
+	(*ListDataOptions)(nil),            // 7: devkit.v1.ListDataOptions
 }
 var file_devkit_v1_accounts_role_proto_depIdxs = []int32{
 	1, // 0: devkit.v1.RoleCreateUpdateResponse.role:type_name -> devkit.v1.AccountsSchemaRole
-	1, // 1: devkit.v1.RolesListResponse.records:type_name -> devkit.v1.AccountsSchemaRole
-	1, // 2: devkit.v1.RolesListResponse.deleted_records:type_name -> devkit.v1.AccountsSchemaRole
-	4, // 3: devkit.v1.RolesListResponse.options:type_name -> devkit.v1.ListDataOptions
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	1, // 1: devkit.v1.RolesDeleteRestoreResponse.record:type_name -> devkit.v1.AccountsSchemaRole
+	1, // 2: devkit.v1.RolesListResponse.records:type_name -> devkit.v1.AccountsSchemaRole
+	1, // 3: devkit.v1.RolesListResponse.deleted_records:type_name -> devkit.v1.AccountsSchemaRole
+	7, // 4: devkit.v1.RolesListResponse.options:type_name -> devkit.v1.ListDataOptions
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_devkit_v1_accounts_role_proto_init() }
@@ -391,7 +531,7 @@ func file_devkit_v1_accounts_role_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_devkit_v1_accounts_role_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

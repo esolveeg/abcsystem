@@ -9,7 +9,6 @@ import (
 	"github.com/darwishdev/devkit-api/pkg/random"
 	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"github.com/stretchr/testify/require"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 var (
@@ -23,7 +22,7 @@ var (
 		UserPassword: userPassword,
 	})
 
-	emptyRequest      = connect.NewRequest(&emptypb.Empty{})
+	emptyRequest      = connect.NewRequest(&devkitv1.RolesListRequest{})
 	userCreateRequest = connect.NewRequest(&devkitv1.UserCreateUpdateRequest{
 		UserId:            0,
 		UserEmail:         userEmail,

@@ -34,6 +34,12 @@ message UserLoginResponse{
   LoginInfo login_info = 2; 
   repeated NavigationBarItem navigation_bar = 3;
 }
+message UserAuthorizeRequest{}
+message UserAuthorizeResponse{
+  AccountsSchemaUser user = 1; 
+  LoginInfo login_info = 2; 
+  repeated NavigationBarItem navigation_bar = 3;
+}
 message UserInviteRequest{
   string user_email = 1 [
   (buf.validate.field).string.email = true,
@@ -53,11 +59,17 @@ message UserLoginProviderRequest{
 message UserLoginProviderResponse{
   string url = 1; 
 }
+
 message UserLoginProviderCallbackRequest{
   string provider = 1; 
   string access_token = 2 [
   (buf.validate.field).string.min_len = 6
   ]; 
+}
+message UserLoginProviderCallbackResponse{
+  AccountsSchemaUser user = 1; 
+  LoginInfo login_info = 2; 
+  repeated NavigationBarItem navigation_bar = 3;
 }
 
 message UserResetPasswordEmailRequest{
@@ -90,4 +102,8 @@ message UserResetPasswordRequest{
  
   string redirect_url = 5; 
 }
-
+message UserResetPasswordResponse{
+  AccountsSchemaUser user = 1; 
+  LoginInfo login_info = 2; 
+  repeated NavigationBarItem navigation_bar = 3;
+}

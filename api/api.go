@@ -18,12 +18,12 @@ import (
 
 type Api struct {
 	devkitv1connect.UnimplementedDevkitServiceHandler
-	accountsUscase accountsUsecase.AccountsUsecaseInterface
-	config         config.Config
-	validator      *protovalidate.Validator
-	tokenMaker     auth.Maker
-	sqlSeeder      sqlseeder.SeederInterface
-	publicUsecase  publicUsecase.PublicUsecaseInterface
+	accountsUsecase accountsUsecase.AccountsUsecaseInterface
+	config          config.Config
+	validator       *protovalidate.Validator
+	tokenMaker      auth.Maker
+	sqlSeeder       sqlseeder.SeederInterface
+	publicUsecase   publicUsecase.PublicUsecaseInterface
 	// USECASE_FIELDS
 	supaapi     supaapigo.Supaapi
 	redisClient redisclient.RedisClientInterface
@@ -44,7 +44,7 @@ func NewApi(config config.Config, store db.Store) (devkitv1connect.DevkitService
 	supaapi := supaapigo.NewSupaapi(supaapigo.SupaapiConfig{
 		ProjectRef:     config.DBProjectREF,
 		Env:            supaapigo.DEV,
-		Port:           config.DBPort,
+		Port:           config.SupaAPIPort,
 		ServiceRoleKey: config.SupabaseServiceRoleKey,
 		ApiKey:         config.SupabaseApiKey,
 	})
@@ -59,14 +59,14 @@ func NewApi(config config.Config, store db.Store) (devkitv1connect.DevkitService
 	publicUsecase := publicUsecase.NewPublicUsecase(store, supaapi, redisClient, resendClient)
 	return &Api{
 		// USECASE_INJECTIONS
-		accountsUscase: accountsUsecase,
-		store:          store,
-		redisClient:    redisClient,
-		tokenMaker:     tokenMaker,
-		supaapi:        supaapi,
-		config:         config,
-		sqlSeeder:      sqlSeeder,
-		publicUsecase:  publicUsecase,
-		validator:      validator,
+		accountsUsecase: accountsUsecase,
+		store:           store,
+		redisClient:     redisClient,
+		tokenMaker:      tokenMaker,
+		supaapi:         supaapi,
+		config:          config,
+		sqlSeeder:       sqlSeeder,
+		publicUsecase:   publicUsecase,
+		validator:       validator,
 	}, nil
 }

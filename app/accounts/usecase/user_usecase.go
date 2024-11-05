@@ -29,12 +29,12 @@ func (u *AccountsUsecase) UserDelete(ctx context.Context, userID int32) (*apiv1.
 	return resp, nil
 }
 
-func (u *AccountsUsecase) UsersDeleteRestore(ctx context.Context, req *apiv1.DeleteRestoreRequest) error {
+func (u *AccountsUsecase) UsersDeleteRestore(ctx context.Context, req *apiv1.UsersDeleteRestoreRequest) (*apiv1.UsersDeleteRestoreResponse, error) {
 	err := u.repo.UsersDeleteRestore(ctx, req.Records)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return &apiv1.UsersDeleteRestoreResponse{}, nil
 }
 func (u *AccountsUsecase) UsersList(ctx context.Context) (*apiv1.UsersListResponse, error) {
 	users, err := u.repo.UsersList(ctx)

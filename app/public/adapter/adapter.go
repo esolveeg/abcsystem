@@ -19,6 +19,7 @@ type PublicAdapterInterface interface {
 	FileObjectGrpcFromSupa(resp *storage_go.FileObject) *devkitv1.FileObject
 	FileUploadResponseGrpcFromSupa(resp *storage_go.FileUploadResponse) *devkitv1.FileUploadResponse
 	BucketsListGrpcFromSupa(resp []storage_go.Bucket) *devkitv1.BucketsListResponse
+	StorageBucketGrpcFromSupa(resp *storage_go.Bucket) *devkitv1.StorageBucket
 
 	SettingsUpdateSqlFromGrpc(req *devkitv1.SettingsUpdateRequest) *db.SettingsUpdateParams
 	SettingsEntityGrpcFromSql(resp []db.Setting) []*devkitv1.Setting

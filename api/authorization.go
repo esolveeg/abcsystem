@@ -37,10 +37,10 @@ func (api *Api) authorizeRequestHeader(ctx context.Context, header http.Header) 
 	return payload, nil
 
 }
-func (api *Api) authrorizedUserPermissions(ctx context.Context, payload *auth.Payload) (redisclient.PermissionsMap, error) {
+func (api *Api) authorizedUserPermissions(ctx context.Context, payload *auth.Payload) (redisclient.PermissionsMap, error) {
 	permissionsMap, err := api.redisClient.AuthSessionFind(ctx, payload.Username)
 	if err != nil {
-		_, permissionsMap, err = api.accountsUscase.AppLogin(ctx, payload.Username)
+		_, permissionsMap, err = api.accountsUsecase.AppLogin(ctx, payload.Username)
 		if err != nil {
 			return nil, fmt.Errorf("can't load permissions: %s", err)
 
@@ -56,7 +56,7 @@ func (api *Api) getAccessableActionsForGroup(ctx context.Context, header http.He
 	if err != nil {
 		return nil, err
 	}
-	permissionsMap, err := api.authrorizedUserPermissions(ctx, payload)
+	permissionsMap, err := api.authorizedUserPermissions(ctx, payload)
 	if err != nil {
 		return nil, err
 	}

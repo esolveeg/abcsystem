@@ -7,20 +7,20 @@ import "devkit/v1/client.proto";
 import "buf/validate/validate.proto";
 
 message RoleCreateUpdateRequest {
-    int32 role_id = 1; 
-    string role_name = 2 [
-    (buf.validate.field).string.min_len = 2,
-    (buf.validate.field).string.max_len = 200
+  int32 role_id = 1; 
+  string role_name = 2 [
+  (buf.validate.field).string.min_len = 2,
+  (buf.validate.field).string.max_len = 200
   ];
 
-    string role_description = 3 [
-    (buf.validate.field).string.max_len = 200
+  string role_description = 3 [
+  (buf.validate.field).string.max_len = 200
   ];
 
   repeated int32 permissions = 4 [(buf.validate.field).repeated = {
-    unique: true,
-    max_items: 500,
-  }];
+  unique: true,
+  max_items: 500,
+}];
 }
 message AccountsSchemaRole {
   int32 role_id = 1;
@@ -31,7 +31,16 @@ message AccountsSchemaRole {
   string deleted_at = 6;
 }
 message RoleCreateUpdateResponse{
-    AccountsSchemaRole role = 1;
+  AccountsSchemaRole role = 1;
+}
+
+message RolesDeleteRestoreRequest{
+  repeated int32 records = 1;
+}
+message RolesDeleteRestoreResponse{
+  AccountsSchemaRole record = 1;
+}
+message RolesListRequest{
 }
 message RolesListResponse{
   repeated AccountsSchemaRole records= 1;

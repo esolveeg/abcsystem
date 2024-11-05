@@ -3,7 +3,6 @@ syntax = "proto3";
 // INJECT IMPORTS
 
 import "devkit/v1/accounts_user.proto";
-import "devkit/v1/client.proto";
 import "devkit/v1/accounts_auth.proto";
 import "devkit/v1/public_email.proto";
 import "devkit/v1/public_translations.proto";
@@ -11,7 +10,6 @@ import "devkit/v1/public_setting.proto";
 import "devkit/v1/public_icon.proto";
 import "devkit/v1/public_storage.proto";
 import "devkit/v1/accounts_role.proto";
-import "google/protobuf/empty.proto";
 
 package devkit.v1;
 service DevkitService {
@@ -27,28 +25,29 @@ service DevkitService {
     }
 
     // icons
-    rpc IconsInputList(google.protobuf.Empty) returns (IconsListResponse)  {
+    rpc IconsList(IconsListRequest) returns (IconsListResponse)  {
         option idempotency_level = NO_SIDE_EFFECTS;
     }
-    rpc IconsCreateUpdateBulk(IconsCreateUpdateBulkRequest) returns (IconsListResponse)  {
+    rpc IconsCreateUpdateBulk(IconsCreateUpdateBulkRequest) returns (IconsCreateUpdateBulkResponse)  {
         option idempotency_level = NO_SIDE_EFFECTS;
     }    // storage
+    rpc BucketCreateUpdate(BucketCreateUpdateRequest) returns (BucketCreateUpdateResponse) {}
     rpc FilesList(FilesListRequest) returns (FilesListResponse) {
         option idempotency_level = NO_SIDE_EFFECTS;
     }
-    rpc BucketsList(google.protobuf.Empty) returns (BucketsListResponse)  {
+    rpc BucketsList(BucketsListRequest) returns (BucketsListResponse)  {
         option idempotency_level = NO_SIDE_EFFECTS;
     }
     rpc UploadFile(UploadFileRequest) returns (UploadFileResponse) {}
-    rpc UploadFiles(UploadFilesRequest) returns (UploadFileResponse) {}
+    rpc UploadFiles(UploadFilesRequest) returns (UploadFilesResponse) {}
     rpc FilesDelete(FilesDeleteRequest) returns (FilesDeleteResponse) {}
     rpc ImportTable(ImportTableRequest) returns (ImportTableResponse) {}
     // emails
     rpc SendEmail(SendEmailRequest) returns (SendEmailResponse) {}
     // translations
-    rpc TranslationsCreateUpdateBulk(TranslationsCreateUpdateBulkRequest) returns (TranslationsListResponse) {}
-    rpc TranslationsDelete(TranslationsDeleteRequest) returns (TranslationsListResponse) {}
-    rpc TranslationsList(google.protobuf.Empty) returns (TranslationsListResponse)  {
+    rpc TranslationsCreateUpdateBulk(TranslationsCreateUpdateBulkRequest) returns (TranslationsCreateUpdateBulkResponse) {}
+    rpc TranslationsDelete(TranslationsDeleteRequest) returns (TranslationsDeleteResponse) {}
+    rpc TranslationsList(TranslationsListRequest) returns (TranslationsListResponse)  {
         option idempotency_level = NO_SIDE_EFFECTS;
     }
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,31 +55,31 @@ service DevkitService {
 //////////////////////////////////////////////////////////////////////////////////////////////
     // roles
 //*******************************************************************************************//
-    rpc RolesList(google.protobuf.Empty) returns (RolesListResponse) {
+    rpc RolesList(RolesListRequest) returns (RolesListResponse) {
         option idempotency_level = NO_SIDE_EFFECTS;
     }
     rpc RoleCreateUpdate(RoleCreateUpdateRequest) returns (RoleCreateUpdateResponse) {}
-    rpc RolesDeleteRestore(DeleteRestoreRequest) returns (google.protobuf.Empty) {}
+    rpc RolesDeleteRestore(RolesDeleteRestoreRequest) returns (RolesDeleteRestoreResponse) {}
 //*******************************************************************************************//
     // users
 //*******************************************************************************************//
-    rpc UsersList(google.protobuf.Empty) returns (UsersListResponse)  {
+    rpc UsersList(UsersListRequest) returns (UsersListResponse)  {
         option idempotency_level = NO_SIDE_EFFECTS;
     }
     rpc UserCreateUpdate(UserCreateUpdateRequest) returns (UserCreateUpdateResponse) {}
-    rpc UserDelete(google.protobuf.Empty) returns (AccountsSchemaUser) {}
-    rpc UsersDeleteRestore(DeleteRestoreRequest) returns (google.protobuf.Empty) {}
+    rpc UserDelete(UserDeleteRequest) returns (UserDeleteResponse) {}
+    rpc UsersDeleteRestore(UsersDeleteRestoreRequest) returns (UsersDeleteRestoreResponse) {}
 //*******************************************************************************************//
     // auth
 //*******************************************************************************************//
-    rpc UserLoginProviderCallback(UserLoginProviderCallbackRequest) returns (UserLoginResponse) {
+    rpc UserLoginProviderCallback(UserLoginProviderCallbackRequest) returns (UserLoginProviderCallbackResponse) {
         option idempotency_level = NO_SIDE_EFFECTS;
     }
-    rpc UserResetPassword(UserResetPasswordRequest) returns (UserLoginResponse) {}
+    rpc UserResetPassword(UserResetPasswordRequest) returns (UserResetPasswordResponse) {}
     rpc UserResetPasswordEmail(UserResetPasswordEmailRequest) returns (UserResetPasswordEmailResponse) {}
     rpc UserLoginProvider(UserLoginProviderRequest) returns (UserLoginProviderResponse) {}
     rpc UserInvite(UserInviteRequest) returns (UserInviteResponse) {}
-    rpc UserAuthorize(google.protobuf.Empty) returns (UserLoginResponse) {}
+    rpc UserAuthorize(UserAuthorizeRequest) returns (UserAuthorizeResponse) {}
     rpc UserLogin(UserLoginRequest) returns (UserLoginResponse) {}
 
 }

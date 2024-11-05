@@ -10,6 +10,18 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
+var testBucket string = "test_bucket"
+
+func TestBucketCreateUpdate(t *testing.T) {
+	request := connect.NewRequest(&devkitv1.BucketCreateUpdateRequest{
+		BucketName: testBucket,
+	})
+	resp, err := realDbApi.BucketCreateUpdate(context.Background(), request)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(resp)
+}
 func TestUploadFile(t *testing.T) {
 	imagePath := "/home/darwishdev/code/darwishdev/devkit-api/logo.png"
 	img, err := os.ReadFile(imagePath)
@@ -18,7 +30,7 @@ func TestUploadFile(t *testing.T) {
 	}
 	request := connect.NewRequest(&devkitv1.UploadFileRequest{
 		Path:       "initial/img.png",
-		BucketName: "images",
+		BucketName: testBucket,
 		FileType:   "image/png",
 		Reader:     img,
 	})
@@ -43,7 +55,7 @@ func TestUploadFiles(t *testing.T) {
 	request := connect.NewRequest(&devkitv1.UploadFilesRequest{
 		Files: []*devkitv1.UploadFileRequest{{
 			Path:       "initial/img2.png",
-			BucketName: "images",
+			BucketName: testBucket,
 			FileType:   "image/png",
 			Reader:     img,
 		},

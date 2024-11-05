@@ -5,10 +5,9 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (api *Api) TranslationsDelete(ctx context.Context, req *connect.Request[devkitv1.TranslationsDeleteRequest]) (*connect.Response[devkitv1.TranslationsListResponse], error) {
+func (api *Api) TranslationsDelete(ctx context.Context, req *connect.Request[devkitv1.TranslationsDeleteRequest]) (*connect.Response[devkitv1.TranslationsDeleteResponse], error) {
 	if err := ctx.Err(); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
@@ -16,7 +15,7 @@ func (api *Api) TranslationsDelete(ctx context.Context, req *connect.Request[dev
 	return connect.NewResponse(response), err
 }
 
-func (api *Api) TranslationsList(ctx context.Context, req *connect.Request[emptypb.Empty]) (*connect.Response[devkitv1.TranslationsListResponse], error) {
+func (api *Api) TranslationsList(ctx context.Context, req *connect.Request[devkitv1.TranslationsListRequest]) (*connect.Response[devkitv1.TranslationsListResponse], error) {
 	if err := ctx.Err(); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
@@ -24,7 +23,7 @@ func (api *Api) TranslationsList(ctx context.Context, req *connect.Request[empty
 	return connect.NewResponse(response), err
 }
 
-func (api *Api) TranslationsCreateUpdateBulk(ctx context.Context, req *connect.Request[devkitv1.TranslationsCreateUpdateBulkRequest]) (*connect.Response[devkitv1.TranslationsListResponse], error) {
+func (api *Api) TranslationsCreateUpdateBulk(ctx context.Context, req *connect.Request[devkitv1.TranslationsCreateUpdateBulkRequest]) (*connect.Response[devkitv1.TranslationsCreateUpdateBulkResponse], error) {
 	if err := ctx.Err(); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}

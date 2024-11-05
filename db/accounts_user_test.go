@@ -70,7 +70,7 @@ func TestUserCreateUpdate(t *testing.T) {
 				UserPassword: "123456",
 				UserTypeID:   1,
 				UserPhone:    random.RandomString(50),
-				Roles:        []int32{1, 2, 3},
+				Roles:        []int32{1, 2, 300},
 			},
 			expectErr: true,
 		},

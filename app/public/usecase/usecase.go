@@ -10,23 +10,23 @@ import (
 	"github.com/darwishdev/devkit-api/pkg/resend"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	supaapigo "github.com/darwishdev/supaapi-go"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type PublicUsecaseInterface interface {
 	TranslationsList(ctx context.Context) (*devkitv1.TranslationsListResponse, error)
-	TranslationsCreateUpdateBulk(ctx context.Context, req *devkitv1.TranslationsCreateUpdateBulkRequest) (*devkitv1.TranslationsListResponse, error)
-	TranslationsDelete(ctx context.Context, req *devkitv1.TranslationsDeleteRequest) (*devkitv1.TranslationsListResponse, error)
+	TranslationsCreateUpdateBulk(ctx context.Context, req *devkitv1.TranslationsCreateUpdateBulkRequest) (*devkitv1.TranslationsCreateUpdateBulkResponse, error)
+	TranslationsDelete(ctx context.Context, req *devkitv1.TranslationsDeleteRequest) (*devkitv1.TranslationsDeleteResponse, error)
 	FilesDelete(ctx context.Context, req *devkitv1.FilesDeleteRequest) (*devkitv1.FilesDeleteResponse, error)
 	FilesList(ctx context.Context, req *devkitv1.FilesListRequest) (*devkitv1.FilesListResponse, error)
 	SendEmail(ctx context.Context, req *devkitv1.SendEmailRequest) (*devkitv1.SendEmailResponse, error)
-	BucketsList(ctx context.Context, req *emptypb.Empty) (*devkitv1.BucketsListResponse, error)
+	BucketsList(ctx context.Context, req *devkitv1.BucketsListRequest) (*devkitv1.BucketsListResponse, error)
 	SettingsUpdate(ctx context.Context, req *devkitv1.SettingsUpdateRequest) error
 	SettingsFindForUpdate(ctx context.Context, req *devkitv1.SettingsFindForUpdateRequest) (*devkitv1.SettingsFindForUpdateResponse, error)
 	UploadFile(ctx context.Context, req *devkitv1.UploadFileRequest) (*devkitv1.UploadFileResponse, error)
+	BucketCreateUpdate(ctx context.Context, req *devkitv1.BucketCreateUpdateRequest) (*devkitv1.BucketCreateUpdateResponse, error)
 	IconsCreateUpdateBulk(ctx context.Context, req *devkitv1.IconsCreateUpdateBulkRequest) (*devkitv1.IconsListResponse, error)
 	IconsInputList(ctx context.Context) (*devkitv1.IconsListResponse, error)
-	UploadFiles(ctx context.Context, req *devkitv1.UploadFilesRequest) (*devkitv1.UploadFileResponse, error)
+	UploadFiles(ctx context.Context, req *devkitv1.UploadFilesRequest) (*devkitv1.UploadFilesResponse, error)
 }
 
 type PublicUsecase struct {
