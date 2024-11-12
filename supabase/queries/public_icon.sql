@@ -1,21 +1,21 @@
 
--- name: IconsCreateUpdateBulk :many
+-- name: IconCreateUpdateBulk :many
 select 
-    icon_id ,
-    icon_name ,
+    icon_id,
+    icon_name,
     icon_content
-FROM  icons_create_update_bulk(sqlc.arg(icons_name)::text[] , sqlc.arg(icons_contents)::text[]);
+FROM  icon_create_update_bulk(sqlc.arg(icons_names)::text[] , sqlc.arg(icons_contents)::text[]);
 
 
 
 
--- name: IconsInputList :many
+-- name: IconList :many
 select 
-    icon_id ,
-    icon_name ,
+    icon_id,
+    icon_name,
     icon_content
-   FROM 
- icons  ;
+FROM 
+icon;
 
 
 

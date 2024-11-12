@@ -3,7 +3,6 @@ syntax = "proto3";
 package devkit.v1;
 
 import "buf/validate/validate.proto";
-
 import "devkit/v1/client.proto";
 message UserCreateUpdateRequest {
   int32 user_id = 1; // User's ID, should be unique
@@ -16,10 +15,8 @@ message UserCreateUpdateRequest {
   (buf.validate.field).int32.gt = 0
   ]; // Foreign key for the user type (validated for presence)
   string user_phone = 5 [
-  (buf.validate.field).string.max_len = 200,
-  (buf.validate.field).string.email = false
-  ]; // Optional phone number, unique in DB
-
+  (buf.validate.field).string.max_len = 50
+  ];
   string user_email = 6 [
   (buf.validate.field).string.email = true,
   (buf.validate.field).string.max_len = 200
@@ -48,11 +45,11 @@ message AccountsSchemaUser {
 message UserCreateUpdateResponse{
   AccountsSchemaUser user = 1;
 }
-message UsersDeleteRestoreRequest{
+message UserDeleteRestoreRequest{
   repeated int32 records = 1;
 }
-message UsersDeleteRestoreResponse{
-  AccountsSchemaUser record = 1;
+message UserDeleteRestoreResponse{
+  repeated AccountsSchemaUser record = 1;
 }
 
 
@@ -60,11 +57,24 @@ message UsersDeleteRestoreResponse{
 message UserDeleteRequest{
   int32 record_id = 1;
 }
-message UserDeleteResponse{}
-message UsersListRequest{}
-message UsersListResponse{
+message UserDeleteResponse{
+  AccountsSchemaUser record = 1;
+}
+message UserListRequest{}
+message UserListResponse{
   repeated AccountsSchemaUser records= 1;
   repeated AccountsSchemaUser deleted_records = 2;
-  ListDataOptions options = 3;
+  AvailableOptions options = 3;
+}
+message UserListInputRequest{}
+message UserListInputResponse{
+  repeated SelectInputOption options = 1;
+}
+
+message UserFindForUpdateRequest{
+  int32 record_id = 1;
+}
+message UserFindForUpdateResponse {
+  UserCreateUpdateRequest request = 1;
 }
 

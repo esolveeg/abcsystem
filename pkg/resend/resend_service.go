@@ -5,6 +5,7 @@ import (
 )
 
 func (r *ResendService) SendEmail(req *resend.SendEmailRequest) (*resend.SendEmailResponse, error) {
+
 	resp, err := r.Client.Emails.Send(req)
 	if err != nil {
 		return nil, err

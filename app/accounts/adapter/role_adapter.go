@@ -25,7 +25,7 @@ func (a *AccountsAdapter) RoleCreateUpdateSqlFromGrpc(req *devkitv1.RoleCreateUp
 
 	return resp
 }
-func (a *AccountsAdapter) RolesListGrpcFromSql(resp []db.AccountsSchemaRole) *devkitv1.RolesListResponse {
+func (a *AccountsAdapter) RoleListGrpcFromSql(resp []db.AccountsSchemaRole) *devkitv1.RoleListResponse {
 	records := make([]*devkitv1.AccountsSchemaRole, 0)
 	deletedRecords := make([]*devkitv1.AccountsSchemaRole, 0)
 	for _, v := range resp {
@@ -36,7 +36,7 @@ func (a *AccountsAdapter) RolesListGrpcFromSql(resp []db.AccountsSchemaRole) *de
 			records = append(records, record)
 		}
 	}
-	return &devkitv1.RolesListResponse{
+	return &devkitv1.RoleListResponse{
 		DeletedRecords: deletedRecords,
 		Records:        records,
 	}

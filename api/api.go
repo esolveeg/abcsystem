@@ -34,13 +34,11 @@ func HashFunc(req string) string {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req), bcrypt.DefaultCost)
 	return string(hashedPassword)
 }
-func NewApi(config config.Config, store db.Store) (devkitv1connect.DevkitServiceHandler, error) {
-	validator, err := protovalidate.New()
+func NewApi(config config.Config, store db.Store, tokenMaker auth.Maker, redisClient redisclient.RedisClientInterface, validator *protovalidate.Validator) (devkitv1connect.DevkitServiceHandler, error) {
+	resendClient, err := resend.NewResendService(config.ResendApiKey, config.ClientBaseUrl)
 	if err != nil {
 		return nil, err
 	}
-	resendClient, err := resend.NewResendService(config.ResendApiKey, config.ClientBaseUrl)
-
 	supaapi := supaapigo.NewSupaapi(supaapigo.SupaapiConfig{
 		ProjectRef:     config.DBProjectREF,
 		Env:            supaapigo.DEV,
@@ -48,12 +46,7 @@ func NewApi(config config.Config, store db.Store) (devkitv1connect.DevkitService
 		ServiceRoleKey: config.SupabaseServiceRoleKey,
 		ApiKey:         config.SupabaseApiKey,
 	})
-	tokenMaker, err := auth.NewPasetoMaker(config.TokenSymmetricKey)
-	if err != nil {
-		panic("cann't create paset maker in gapi/api.go")
-	}
 	sqlSeeder := sqlseeder.NewSeeder(sqlseeder.SeederConfig{HashFunc: HashFunc})
-	redisClient := redisclient.NewRedisClient(config.RedisHost, config.RedisPort, config.RedisPassword, config.RedisDatabase)
 	// USECASE_INSTANTIATIONS
 	accountsUsecase := accountsUsecase.NewAccountsUsecase(store, supaapi, redisClient, tokenMaker, config.AccessTokenDuration)
 	publicUsecase := publicUsecase.NewPublicUsecase(store, supaapi, redisClient, resendClient)

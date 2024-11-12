@@ -1,5 +1,4 @@
 syntax = "proto3";
-
 import "buf/validate/validate.proto";
 package devkit.v1;
 
@@ -31,6 +30,11 @@ message UpdateHandler {
   string find_endpoint = 6;
   string find_request_property = 7;
 }
+message DeleteHandler {
+  string endpoint = 1;
+  string request_property = 2;
+}
+
 message DeleteRestoreHandler {
   string endpoint = 1;
   string request_property = 2;
@@ -43,13 +47,14 @@ message ErrorHandler {
   string constraint_name = 1;
   string field_name = 2;
 }
-message ListDataOptions {
+message AvailableOptions {
   string title = 1;
   string description = 2;
   CreateHandler create_handler = 3;
   UpdateHandler update_handler = 4;
   DeleteRestoreHandler delete_restore_handler = 5;
-  ImportHandler import_handler = 6;
+  DeleteHandler delete_handler = 6;
+  ImportHandler import_handler = 7;
 }
 
 message RowActions {

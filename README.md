@@ -61,7 +61,7 @@ CREATE TABLE input_types(
     input_type_name varchar(20) NOT NULL UNIQUE
 );
 
-CREATE TABLE settings(
+CREATE TABLE setting(
     setting_id serial PRIMARY KEY,
     input_type_id int NOT NULL,
     FOREIGN KEY (input_type_id) REFERENCES input_types(input_type_id),

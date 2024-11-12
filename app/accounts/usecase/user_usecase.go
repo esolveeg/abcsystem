@@ -2,25 +2,23 @@ package usecase
 
 import (
 	"context"
-	apiv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+
+	"connectrpc.com/connect"
+	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"github.com/google/uuid"
 	"github.com/supabase-community/auth-go/types"
 )
 
-func (u *AccountsUsecase) UserDelete(ctx context.Context, userID int32) (*apiv1.AccountsSchemaUser, error) {
-	user, err := u.repo.UserDelete(ctx, userID)
+func (u *AccountsUsecase) UserDelete(ctx context.Context, userID int32) (*devkitv1.AccountsSchemaUser, error) {
+	params := db.UserDeleteParams{
+		UserID: userID,
+	}
+	user, err := u.repo.UserDelete(ctx, params)
 	if err != nil {
 		return nil, err
 	}
-	err = u.redisClient.AuthSessionDelete(ctx, user.UserEmail)
-	if err != nil {
-		return nil, err
-	}
-	err = u.redisClient.AuthSessionDelete(ctx, user.UserName)
-	if err != nil {
-		return nil, err
-	}
-	err = u.redisClient.AuthSessionDelete(ctx, user.UserPhone.String)
+	err = u.redisClient.AuthSessionDelete(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -29,28 +27,37 @@ func (u *AccountsUsecase) UserDelete(ctx context.Context, userID int32) (*apiv1.
 	return resp, nil
 }
 
-func (u *AccountsUsecase) UsersDeleteRestore(ctx context.Context, req *apiv1.UsersDeleteRestoreRequest) (*apiv1.UsersDeleteRestoreResponse, error) {
-	err := u.repo.UsersDeleteRestore(ctx, req.Records)
-	if err != nil {
-		return nil, err
+func (u *AccountsUsecase) UserDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.UserDeleteRestoreRequest]) (*devkitv1.UserDeleteRestoreResponse, error) {
+	response := make([]*devkitv1.AccountsSchemaUser, 0)
+	for _, rec := range req.Msg.Records {
+		params := db.UserDeleteRestoreParams{
+			UserID: rec,
+		}
+		resp, err := u.repo.UserDeleteRestore(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+		response = append(response, u.adapter.UserEntityGrpcFromSql(resp))
 	}
-	return &apiv1.UsersDeleteRestoreResponse{}, nil
+	return &devkitv1.UserDeleteRestoreResponse{
+		Record: response,
+	}, nil
 }
-func (u *AccountsUsecase) UsersList(ctx context.Context) (*apiv1.UsersListResponse, error) {
-	users, err := u.repo.UsersList(ctx)
+func (u *AccountsUsecase) UserList(ctx context.Context) (*devkitv1.UserListResponse, error) {
+	users, err := u.repo.UserList(ctx)
 	if err != nil {
 		return nil, err
 	}
-	response := u.adapter.UsersListGrpcFromSql(users)
+	response := u.adapter.UserListGrpcFromSql(users)
 	return response, nil
 }
-func (u *AccountsUsecase) UserCreateUpdate(ctx context.Context, req *apiv1.UserCreateUpdateRequest) (*apiv1.UserCreateUpdateResponse, error) {
+func (u *AccountsUsecase) UserCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.UserCreateUpdateRequest]) (*devkitv1.UserCreateUpdateResponse, error) {
 	supabasRequest := types.AdminUpdateUserRequest{
-		Email:    req.UserEmail,
-		Password: req.UserPassword,
+		Email:    req.Msg.UserEmail,
+		Password: req.Msg.UserPassword,
 	}
-	if req.UserId != 0 {
-		userID, err := u.repo.AuthUserIDFindByEmail(ctx, req.UserEmail)
+	if req.Msg.UserId != 0 {
+		userID, err := u.repo.AuthUserIDFindByEmail(ctx, req.Msg.UserEmail)
 		if err != nil {
 			return nil, err
 		}
@@ -64,7 +71,7 @@ func (u *AccountsUsecase) UserCreateUpdate(ctx context.Context, req *apiv1.UserC
 	if err != nil {
 		return nil, err
 	}
-	userCreateParams := u.adapter.UserCreateUpdateSqlFromGrpc(req)
+	userCreateParams := u.adapter.UserCreateUpdateSqlFromGrpc(req.Msg)
 	user, err := u.repo.UserCreateUpdate(ctx, *userCreateParams)
 	if err != nil {
 		return nil, err

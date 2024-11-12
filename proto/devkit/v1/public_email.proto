@@ -4,7 +4,7 @@ package devkit.v1;
 
 
 
-message SendEmailRequest {
+message EmailSendRequest {
   string from = 1;
   repeated string to = 2;
   string subject = 3;
@@ -19,7 +19,7 @@ message SendEmailRequest {
   string scheduled_at = 12;
 }
 
-message SendEmailResponse {
+message EmailSendResponse {
   string id = 1;
 }
 

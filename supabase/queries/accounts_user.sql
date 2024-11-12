@@ -1,9 +1,52 @@
+-- name: UserNavigationBarFind :many
+with recursive items as (
+  select 
+    n.navigation_bar_item_id,
+    n.menu_key,
+    n.label,
+    n.label_ar,
+    n.icon,
+    n."route",
+    n.navigation_bar_id,
+    n.parent_id,
+    n.permission_id,
+    1 level
+    from accounts_schema.navigation_bar_item n where n.parent_id is null and n.navigation_bar_id  = sqlc.arg('navigation_bar_id')::int
+ union 
+ select 
+    l2.navigation_bar_item_id,
+    l2.menu_key,
+    l2.label,
+    l2.label_ar,
+    l2.icon,
+    l2."route",
+    l2.navigation_bar_id,
+    l2.parent_id,
+    l2.permission_id,
+    (l1.level + 1) level
+ from items l1 join accounts_schema.navigation_bar_item l2 on l1.navigation_bar_item_id = l2.parent_id and l2.navigation_bar_id = l1.navigation_bar_id 
+) select  
+i.navigation_bar_item_id,
+i.menu_key,
+i.label,
+i.label_ar,
+i.icon,
+i."route",
+i.navigation_bar_id,
+i.parent_id,
+i.permission_id,
+i.level
+from items i 
+left join accounts_schema.user_permissions_list(in_user_id => sqlc.arg('user_id')::int) u on u.permission_id = i.permission_id 
+where i.permission_id is null or u.permission_id is not null
+order by 
+level,
+menu_key;
 
 -- name: UserFind :one
 SELECT
     user_id,
     user_name,
-    user_security_level,
     user_type_id,
     user_phone,
     user_email,
@@ -12,16 +55,15 @@ SELECT
     updated_at,
     deleted_at
 FROM
-    accounts_schema.users
+    accounts_schema.user
 WHERE deleted_at is null and (
     user_email = sqlc.arg('search_key')
     OR user_phone = sqlc.arg('search_key')
     OR user_id = sqlc.arg('user_id'));
--- name: UsersList :many
+-- name: UserList :many
 SELECT  
     user_id,
     user_name,
-    user_security_level,
     user_type_id,
     user_phone,
     user_email,
@@ -29,13 +71,12 @@ SELECT
     created_at,
     updated_at,
     deleted_at
-FROM accounts_schema.users;
+FROM accounts_schema.user;
 
 -- name: UserCreateUpdate :one
 SELECT  
     user_id,
     user_name,
-    user_security_level,
     user_type_id,
     user_phone,
     user_email,
@@ -46,92 +87,78 @@ SELECT
 FROM accounts_schema.user_create_update(
     in_user_id => sqlc.arg('user_id'),
     in_user_name => sqlc.arg('user_name'),
-    in_user_security_level => sqlc.arg('user_security_level'),
+    in_caller_id => sqlc.arg('caller_id'),
     in_user_type_id => sqlc.arg('user_type_id'),
     in_user_phone => sqlc.arg('user_phone'),
     in_user_email => sqlc.arg('user_email'),
     in_user_password => sqlc.arg('user_password'),
     in_roles => sqlc.arg('roles')::int[]
 );
-
--- name: UsersDeleteRestore :exec
-UPDATE
-    accounts_schema.users
-SET
-    deleted_at = IIF(deleted_at IS NULL, now(), NULL)
-WHERE
-    user_id = ANY (sqlc.arg('records')::int[]);
-
--- name: UserPermissionsMap :one
-SELECT jsonb_object_agg(permission_group, permissions)
-FROM (
-    SELECT
-        p.permission_group,
-        jsonb_object_agg(p.permission_function, true) as permissions
-    FROM
-        accounts_schema.user_roles ur
-    JOIN accounts_schema.role_permissions rp ON rp.role_id = ur.role_id
-    JOIN accounts_schema.permissions p ON p.permission_id = rp.permission_id
-    where ur.user_id = $1
-    GROUP BY p.permission_group
-) as permissions_by_group;
-
--- name: UserFindNavigationBars :many
-WITH userpermissions AS (
-  SELECT 
-    rp.permission_id
-  FROM 
-    accounts_schema.role_permissions rp
-    join accounts_schema.roles r  on rp.role_id = r.role_id 
-    join accounts_schema.user_roles ur on r.role_id = ur.role_id
-    where ur.user_id = $1
+-- name: UserFindForUpdate :one
+with user_roles as (
+    select role_id from accounts_schema.user_role where user_id = sqlc.arg('user_id')
 )
-, allowed_navigations as (
-    SELECT
-        navigation_bar_id,
-        menu_key "key",
-        label,
-        label_ar,
-        icon,
-        "route",
-        menu_key,
-        parent_id
-        from accounts_schema.navigation_bars n
-        JOIN userpermissions p on n.permission_id = p.permission_id 
-    union 
-    SELECT
-        navigation_bar_id,
-        menu_key "key",
-        label,
-        label_ar,
-        icon,
-        "route",
-        menu_key,
-        parent_id
-        from accounts_schema.navigation_bars n 
-        where n.permission_id is null
-    ORDER BY
-        menu_key
-) , children_permissions as (
-    select * from allowed_navigations where parent_id is not null
-) select 
-p.navigation_bar_id,
-p.menu_key "key",
-p.label,
-p.label_ar,
-p.icon,
-p."route",
-(
-    select Jsonb_Agg(nested_items) from (
-        select c.* from children_permissions c where 
-        c.parent_id = p.navigation_bar_id
-    ) nested_items
-) items
-from allowed_navigations p where route is null or parent_id is null order by p.navigation_bar_id;
+select 
+    u.user_id,
+    u.user_name,
+    u.user_type_id,
+    u.user_phone,
+    u.user_email, 
+    array_agg(r.role_id) roles 
+from accounts_schema.user u
+cross join user_roles r
+where u.user_id = sqlc.arg('user_id');
+
+-- name: UserDeleteRestore :one
+SELECT user_id,
+    user_name,
+    user_type_id,
+    user_phone,
+    user_email,
+    user_password,
+    created_at,
+    updated_at,
+    deleted_at FROM accounts_schema.user_delete_restore(in_user_id => sqlc.arg(user_id) , in_caller_id => sqlc.arg(caller_id));
+
+-- name: UserPermissionsMap :many
+select permission_group::varchar(200), permissions::jsonb from accounts_schema.user_permissions_list_map(in_user_id => sqlc.arg('user_id'));
+
 
 -- name: UserDelete :one
-SELECT * FROM accounts_schema.user_delete(sqlc.arg('user_id'));
+SELECT 
+    user_id,
+    user_name,
+    user_type_id,
+    user_phone,
+    user_email,
+    user_password,
+    created_at,
+    updated_at,
+    deleted_at
+    FROM accounts_schema.user_delete(in_user_id => sqlc.arg('user_id'), in_caller_id => sqlc.arg('caller_id'));
 
+-- name: UserListInput :many
+select 
+  u.user_id ,
+  u.user_name ,
+  u.user_email ,
+  u.user_phone ,
+  max(r.role_security_level) user_security_level
+  from accounts_schema.user u 
+  join accounts_schema.user_role ur on u.user_id = ur.user_id
+  join accounts_schema.role r on ur.role_id = r.role_id and r.role_security_level <= accounts_schema.user_security_level_find(sqlc.arg('caller_id'))
+  group by 
+  u.user_id ,
+  u.user_name ,
+  u.user_email ,
+  u.user_phone;
 
-
+ 
+-- name: UserResetPassword :exec
+UPDATE
+    accounts_schema.user
+SET
+    user_password = $2
+WHERE
+    user_email = $1;
 

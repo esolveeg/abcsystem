@@ -4,13 +4,14 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/darwishdev/devkit-api/db"
 	"github.com/redis/go-redis/v9"
 )
 
 type RedisClientInterface interface {
-	AuthSessionCreate(ctx context.Context, userName string, permissions []byte) (PermissionsMap, error)
-	AuthSessionDelete(ctx context.Context, userName string) error
-	AuthSessionFind(ctx context.Context, username string) (PermissionsMap, error)
+	AuthSessionCreate(ctx context.Context, userId int32, permissions []db.UserPermissionsMapRow) (PermissionsMap, error)
+	AuthSessionDelete(ctx context.Context, userId int32) error
+	AuthSessionFind(ctx context.Context, userId int32) (PermissionsMap, error)
 }
 
 type RedisClient struct {

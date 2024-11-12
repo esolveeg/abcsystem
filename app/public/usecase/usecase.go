@@ -13,20 +13,20 @@ import (
 )
 
 type PublicUsecaseInterface interface {
-	TranslationsList(ctx context.Context) (*devkitv1.TranslationsListResponse, error)
-	TranslationsCreateUpdateBulk(ctx context.Context, req *devkitv1.TranslationsCreateUpdateBulkRequest) (*devkitv1.TranslationsCreateUpdateBulkResponse, error)
-	TranslationsDelete(ctx context.Context, req *devkitv1.TranslationsDeleteRequest) (*devkitv1.TranslationsDeleteResponse, error)
-	FilesDelete(ctx context.Context, req *devkitv1.FilesDeleteRequest) (*devkitv1.FilesDeleteResponse, error)
-	FilesList(ctx context.Context, req *devkitv1.FilesListRequest) (*devkitv1.FilesListResponse, error)
-	SendEmail(ctx context.Context, req *devkitv1.SendEmailRequest) (*devkitv1.SendEmailResponse, error)
-	BucketsList(ctx context.Context, req *devkitv1.BucketsListRequest) (*devkitv1.BucketsListResponse, error)
-	SettingsUpdate(ctx context.Context, req *devkitv1.SettingsUpdateRequest) error
-	SettingsFindForUpdate(ctx context.Context, req *devkitv1.SettingsFindForUpdateRequest) (*devkitv1.SettingsFindForUpdateResponse, error)
-	UploadFile(ctx context.Context, req *devkitv1.UploadFileRequest) (*devkitv1.UploadFileResponse, error)
+	TranslationList(ctx context.Context) (*devkitv1.TranslationListResponse, error)
+	TranslationCreateUpdateBulk(ctx context.Context, req *devkitv1.TranslationCreateUpdateBulkRequest) (*devkitv1.TranslationCreateUpdateBulkResponse, error)
+	TranslationDelete(ctx context.Context, req *devkitv1.TranslationDeleteRequest) (*devkitv1.TranslationDeleteResponse, error)
+	FileDelete(ctx context.Context, req *devkitv1.FileDeleteRequest) (*devkitv1.FileDeleteResponse, error)
+	FileList(ctx context.Context, req *devkitv1.FileListRequest) (*devkitv1.FileListResponse, error)
+	EmailSend(ctx context.Context, req *devkitv1.EmailSendRequest) (*devkitv1.EmailSendResponse, error)
+	BucketList(ctx context.Context, req *devkitv1.BucketListRequest) (*devkitv1.BucketListResponse, error)
+	SettingUpdate(ctx context.Context, req *devkitv1.SettingUpdateRequest) error
+	SettingFindForUpdate(ctx context.Context, req *devkitv1.SettingFindForUpdateRequest) (*devkitv1.SettingFindForUpdateResponse, error)
+	FileCreate(ctx context.Context, req *devkitv1.FileCreateRequest) (*devkitv1.FileCreateResponse, error)
 	BucketCreateUpdate(ctx context.Context, req *devkitv1.BucketCreateUpdateRequest) (*devkitv1.BucketCreateUpdateResponse, error)
-	IconsCreateUpdateBulk(ctx context.Context, req *devkitv1.IconsCreateUpdateBulkRequest) (*devkitv1.IconsListResponse, error)
-	IconsInputList(ctx context.Context) (*devkitv1.IconsListResponse, error)
-	UploadFiles(ctx context.Context, req *devkitv1.UploadFilesRequest) (*devkitv1.UploadFilesResponse, error)
+	IconCreateUpdateBulk(ctx context.Context, req *devkitv1.IconCreateUpdateBulkRequest) (*devkitv1.IconListResponse, error)
+	IconList(ctx context.Context) (*devkitv1.IconListResponse, error)
+	FileCreateBuilk(ctx context.Context, req *devkitv1.FileCreateBulkRequest) (*devkitv1.FileCreateBulkResponse, error)
 }
 
 type PublicUsecase struct {

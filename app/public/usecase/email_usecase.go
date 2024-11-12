@@ -6,13 +6,13 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (s *PublicUsecase) SendEmail(ctx context.Context, req *devkitv1.SendEmailRequest) (*devkitv1.SendEmailResponse, error) {
-	params := s.adapter.SendEmailResendFromGrpc(req)
+func (s *PublicUsecase) EmailSend(ctx context.Context, req *devkitv1.EmailSendRequest) (*devkitv1.EmailSendResponse, error) {
+	params := s.adapter.EmailSendResendFromGrpc(req)
 	resp, err := s.resendClient.SendEmail(&params)
 	if err != nil {
 		return nil, err
 	}
-	return &devkitv1.SendEmailResponse{
+	return &devkitv1.EmailSendResponse{
 		Id: resp.Id,
 	}, nil
 

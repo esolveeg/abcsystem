@@ -9,7 +9,6 @@ import (
 )
 
 func TestRoleCreateUpdate(t *testing.T) {
-	// Define test input parameters.
 	validName := random.RandomName()
 	testcases := []struct {
 		name             string
@@ -20,28 +19,34 @@ func TestRoleCreateUpdate(t *testing.T) {
 		{
 			name: "ValidRole",
 			params: &RoleCreateUpdateParams{
-				RoleName:        validName,
-				RoleDescription: random.RandomString(50),
-				Permissions:     []int32{1, 2, 3},
+				RoleName:          validName,
+				RoleSecurityLevel: 1,
+				CalledByUserID:    1,
+				RoleDescription:   random.RandomString(50),
+				Permissions:       []int32{1, 2, 3},
 			},
 			expectErr: false,
 		},
 		{
 			name: "ValidRoleUpdate",
 			params: &RoleCreateUpdateParams{
-				RoleID:          1,
-				RoleName:        random.RandomName(),
-				RoleDescription: random.RandomString(50),
-				Permissions:     []int32{1, 2, 3},
+				RoleID:            1,
+				RoleName:          random.RandomName(),
+				RoleSecurityLevel: 1,
+				CalledByUserID:    1,
+				RoleDescription:   random.RandomString(50),
+				Permissions:       []int32{1, 2, 3},
 			},
 			expectErr: false,
 		},
 		{
 			name: "DuplicatedRoleName",
 			params: &RoleCreateUpdateParams{
-				RoleName:        validName,
-				RoleDescription: random.RandomString(50),
-				Permissions:     []int32{1, 2, 3},
+				RoleName:          validName,
+				RoleDescription:   random.RandomString(50),
+				CalledByUserID:    1,
+				RoleSecurityLevel: 1,
+				Permissions:       []int32{1, 2, 3},
 			},
 			expectErr: true,
 		},
@@ -49,9 +54,11 @@ func TestRoleCreateUpdate(t *testing.T) {
 		{
 			name: "RoleNameTooLong",
 			params: &RoleCreateUpdateParams{
-				RoleName:        random.RandomString(220), // Exceeds max length
-				RoleDescription: random.RandomString(50),
-				Permissions:     []int32{1, 2, 3},
+				RoleName:          random.RandomString(220), // Exceeds max length
+				RoleSecurityLevel: 1,
+				RoleDescription:   random.RandomString(50),
+				CalledByUserID:    1,
+				Permissions:       []int32{1, 2, 3},
 			},
 			expectErr: true,
 		},

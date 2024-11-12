@@ -7,15 +7,19 @@ import (
 )
 
 type AccountsAdapterInterface interface {
-	UserLoginSqlFromGrpc(req *devkitv1.UserLoginRequest) (*db.UserFindParams, *types.TokenRequest)
-	UserResetPasswordSupaFromGrpc(req *devkitv1.UserResetPasswordRequest) *types.VerifyForUserRequest
-	UserLoginGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.UserLoginResponse
-	UserFindNavigationBarsGrpcFromSql(resp *[]db.UserFindNavigationBarsRow) (*[]*devkitv1.NavigationBarItem, error)
+	UserPermissionsMapRedisFromSql(resp []db.UserPermissionsMapRow) ([]byte, error)
+	AuthLoginSqlFromGrpc(req *devkitv1.AuthLoginRequest) (*db.UserFindParams, *types.TokenRequest)
+	UserCreateUpdateRequestFromAuthRegister(req *devkitv1.AuthRegisterRequest) *devkitv1.UserCreateUpdateRequest
+	AuthResetPasswordSupaFromGrpc(req *devkitv1.AuthResetPasswordRequest) *types.VerifyForUserRequest
+	AuthLoginGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.AuthLoginResponse
+	UserNavigationBarFindGrpcFromSql(resp *[]db.UserNavigationBarFindRow) ([]*devkitv1.NavigationBarItem, error)
 	UserCreateUpdateGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.UserCreateUpdateResponse
-	UsersListGrpcFromSql(resp []db.AccountsSchemaUser) *devkitv1.UsersListResponse
+
+	NavigationBarItemGrpcFromSql(resp *db.UserNavigationBarFindRow) *devkitv1.NavigationBarItem
+	UserListGrpcFromSql(resp []db.AccountsSchemaUser) *devkitv1.UserListResponse
 	UserCreateUpdateSqlFromGrpc(req *devkitv1.UserCreateUpdateRequest) *db.UserCreateUpdateParams
 	UserEntityGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.AccountsSchemaUser
-	RolesListGrpcFromSql(resp []db.AccountsSchemaRole) *devkitv1.RolesListResponse
+	RoleListGrpcFromSql(resp []db.AccountsSchemaRole) *devkitv1.RoleListResponse
 	RoleEntityGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.AccountsSchemaRole
 	RoleCreateUpdateSqlFromGrpc(req *devkitv1.RoleCreateUpdateRequest) *db.RoleCreateUpdateParams
 	RoleCreateUpdateGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.RoleCreateUpdateResponse

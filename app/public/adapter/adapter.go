@@ -8,23 +8,22 @@ import (
 )
 
 type PublicAdapterInterface interface {
-	IconsCreateUpdateBulkSqlFromGrpc(req *devkitv1.IconsCreateUpdateBulkRequest) db.IconsCreateUpdateBulkParams
-	SendEmailResendFromGrpc(req *devkitv1.SendEmailRequest) resend.SendEmailRequest
-	TranslationsCreateUpdateBulkGrpcFromSql(resp []db.TranslationsCreateUpdateBulkRow) devkitv1.TranslationsListResponse
-	TranslationsListGrpcFromSql(resp []db.Translation) devkitv1.TranslationsListResponse
+	IconCreateUpdateBulkSqlFromGrpc(req *devkitv1.IconCreateUpdateBulkRequest) db.IconCreateUpdateBulkParams
+	EmailSendResendFromGrpc(req *devkitv1.EmailSendRequest) resend.SendEmailRequest
+	TranslationCreateUpdateBulkGrpcFromSql(resp []db.TranslationCreateUpdateBulkRow) devkitv1.TranslationListResponse
+	TranslationListGrpcFromSql(resp []db.Translation) devkitv1.TranslationListResponse
 	TranslationGrpcFromSql(resp *db.Translation) *devkitv1.Translation
-	TranslationsCreateUpdateBulkSqlFromGrpc(req *devkitv1.TranslationsCreateUpdateBulkRequest) *db.TranslationsCreateUpdateBulkParams
-	FilesDeleteGrpcFromSupa(resp []storage_go.FileUploadResponse) *devkitv1.FilesDeleteResponse
-	FilesListGrpcFromSupa(resp []storage_go.FileObject) *devkitv1.FilesListResponse
+	TranslationCreateUpdateBulkSqlFromGrpc(req *devkitv1.TranslationCreateUpdateBulkRequest) *db.TranslationCreateUpdateBulkParams
+	FileDeleteGrpcFromSupa(resp []storage_go.FileUploadResponse) *devkitv1.FileDeleteResponse
+	FileListGrpcFromSupa(resp []storage_go.FileObject) *devkitv1.FileListResponse
 	FileObjectGrpcFromSupa(resp *storage_go.FileObject) *devkitv1.FileObject
-	FileUploadResponseGrpcFromSupa(resp *storage_go.FileUploadResponse) *devkitv1.FileUploadResponse
-	BucketsListGrpcFromSupa(resp []storage_go.Bucket) *devkitv1.BucketsListResponse
+	FileCreateResponseGrpcFromSupa(resp *storage_go.FileUploadResponse) *devkitv1.FileCreateResponse
+	BucketListGrpcFromSupa(resp []storage_go.Bucket) *devkitv1.BucketListResponse
 	StorageBucketGrpcFromSupa(resp *storage_go.Bucket) *devkitv1.StorageBucket
-
-	SettingsUpdateSqlFromGrpc(req *devkitv1.SettingsUpdateRequest) *db.SettingsUpdateParams
-	SettingsEntityGrpcFromSql(resp []db.Setting) []*devkitv1.Setting
-	SettingsFindForUpdateGrpcFromSql(resp *[]db.SettingsFindForUpdateRow) *devkitv1.SettingsFindForUpdateResponse
-	IconsInputListGrpcFromSql(resp []db.Icon) *devkitv1.IconsListResponse
+	SettingUpdateSqlFromGrpc(req *devkitv1.SettingUpdateRequest) *db.SettingUpdateParams
+	SettingEntityGrpcFromSql(resp []db.Setting) []*devkitv1.Setting
+	SettingFindForUpdateGrpcFromSql(resp *[]db.SettingFindForUpdateRow) *devkitv1.SettingFindForUpdateResponse
+	IconListGrpcFromSql(resp []db.Icon) *devkitv1.IconListResponse
 }
 
 type PublicAdapter struct {

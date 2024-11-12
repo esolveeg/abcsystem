@@ -9,7 +9,7 @@ import (
 	storage_go "github.com/supabase-community/storage-go"
 )
 
-func (s *PublicUsecase) UploadFile(ctx context.Context, req *devkitv1.UploadFileRequest) (*devkitv1.UploadFileResponse, error) {
+func (s *PublicUsecase) FileCreate(ctx context.Context, req *devkitv1.FileCreateRequest) (*devkitv1.FileCreateResponse, error) {
 	reader := io.NopCloser(bytes.NewReader(req.Reader))
 	isUpsert := true
 	fileOpts := storage_go.FileOptions{
@@ -20,12 +20,12 @@ func (s *PublicUsecase) UploadFile(ctx context.Context, req *devkitv1.UploadFile
 	if err != nil {
 		return nil, err
 	}
-	return &devkitv1.UploadFileResponse{
+	return &devkitv1.FileCreateResponse{
 		Path: response.Key,
 	}, nil
 
 }
-func (s *PublicUsecase) FilesList(ctx context.Context, req *devkitv1.FilesListRequest) (*devkitv1.FilesListResponse, error) {
+func (s *PublicUsecase) FileList(ctx context.Context, req *devkitv1.FileListRequest) (*devkitv1.FileListResponse, error) {
 	options := storage_go.FileSearchOptions{
 		Limit:  int(req.Limit),
 		Offset: int(req.Offest),
@@ -35,7 +35,7 @@ func (s *PublicUsecase) FilesList(ctx context.Context, req *devkitv1.FilesListRe
 		return nil, err
 	}
 
-	response := s.adapter.FilesListGrpcFromSupa(resp)
+	response := s.adapter.FileListGrpcFromSupa(resp)
 	return response, nil
 }
 func (s *PublicUsecase) BucketCreateUpdate(ctx context.Context, req *devkitv1.BucketCreateUpdateRequest) (*devkitv1.BucketCreateUpdateResponse, error) {
@@ -62,32 +62,32 @@ func (s *PublicUsecase) BucketCreateUpdate(ctx context.Context, req *devkitv1.Bu
 	}, nil
 }
 
-func (s *PublicUsecase) BucketsList(ctx context.Context, req *devkitv1.BucketsListRequest) (*devkitv1.BucketsListResponse, error) {
+func (s *PublicUsecase) BucketList(ctx context.Context, req *devkitv1.BucketListRequest) (*devkitv1.BucketListResponse, error) {
 	resp, err := s.supaapi.StorageClient.ListBuckets()
 	if err != nil {
 		return nil, err
 	}
-	response := s.adapter.BucketsListGrpcFromSupa(resp)
+	response := s.adapter.BucketListGrpcFromSupa(resp)
 	return response, nil
 }
 
-func (s *PublicUsecase) FilesDelete(ctx context.Context, req *devkitv1.FilesDeleteRequest) (*devkitv1.FilesDeleteResponse, error) {
+func (s *PublicUsecase) FileDelete(ctx context.Context, req *devkitv1.FileDeleteRequest) (*devkitv1.FileDeleteResponse, error) {
 	resp, err := s.supaapi.StorageClient.RemoveFile(req.BucketId, req.FilesPaths)
 	if err != nil {
 		return nil, err
 	}
-	response := s.adapter.FilesDeleteGrpcFromSupa(resp)
+	response := s.adapter.FileDeleteGrpcFromSupa(resp)
 	return response, nil
 }
 
-func (s *PublicUsecase) UploadFiles(ctx context.Context, req *devkitv1.UploadFilesRequest) (*devkitv1.UploadFilesResponse, error) {
+func (s *PublicUsecase) FileCreateBuilk(ctx context.Context, req *devkitv1.FileCreateBulkRequest) (*devkitv1.FileCreateBulkResponse, error) {
 	images := make([]string, len(req.Files))
 	for index, file := range req.Files {
-		response, err := s.UploadFile(ctx, file)
+		response, err := s.FileCreate(ctx, file)
 		if err != nil {
 			return nil, err
 		}
 		images[index] = response.Path
 	}
-	return &devkitv1.UploadFilesResponse{Path: images}, nil
+	return &devkitv1.FileCreateBulkResponse{Path: images}, nil
 }

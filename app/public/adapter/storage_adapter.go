@@ -14,12 +14,9 @@ func (a *PublicAdapter) StorageBucketGrpcFromSupa(resp *storage_go.Bucket) *devk
 	}
 }
 
-func (a *PublicAdapter) FileUploadResponseGrpcFromSupa(resp *storage_go.FileUploadResponse) *devkitv1.FileUploadResponse {
-	return &devkitv1.FileUploadResponse{
-		Key:        resp.Key,
-		Message:    resp.Message,
-		StatusCode: resp.Code,
-		Data:       resp.Data,
+func (a *PublicAdapter) FileCreateResponseGrpcFromSupa(resp *storage_go.FileUploadResponse) *devkitv1.FileCreateResponse {
+	return &devkitv1.FileCreateResponse{
+		Path: resp.Key,
 	}
 }
 
@@ -33,26 +30,26 @@ func (a *PublicAdapter) FileObjectGrpcFromSupa(resp *storage_go.FileObject) *dev
 	}
 }
 
-func (a *PublicAdapter) FilesDeleteGrpcFromSupa(resp []storage_go.FileUploadResponse) *devkitv1.FilesDeleteResponse {
-	response := make([]*devkitv1.FileUploadResponse, len(resp))
+func (a *PublicAdapter) FileDeleteGrpcFromSupa(resp []storage_go.FileUploadResponse) *devkitv1.FileDeleteResponse {
+	response := make([]*devkitv1.FileCreateResponse, len(resp))
 	for index, rec := range resp {
-		response[index] = a.FileUploadResponseGrpcFromSupa(&rec)
+		response[index] = a.FileCreateResponseGrpcFromSupa(&rec)
 	}
-	return &devkitv1.FilesDeleteResponse{
+	return &devkitv1.FileDeleteResponse{
 		Responses: response,
 	}
 }
-func (a *PublicAdapter) FilesListGrpcFromSupa(resp []storage_go.FileObject) *devkitv1.FilesListResponse {
+func (a *PublicAdapter) FileListGrpcFromSupa(resp []storage_go.FileObject) *devkitv1.FileListResponse {
 	files := make([]*devkitv1.FileObject, len(resp))
 	for index, rec := range resp {
 		files[index] = a.FileObjectGrpcFromSupa(&rec)
 	}
-	return &devkitv1.FilesListResponse{Files: files}
+	return &devkitv1.FileListResponse{Files: files}
 }
-func (a *PublicAdapter) BucketsListGrpcFromSupa(resp []storage_go.Bucket) *devkitv1.BucketsListResponse {
+func (a *PublicAdapter) BucketListGrpcFromSupa(resp []storage_go.Bucket) *devkitv1.BucketListResponse {
 	buckets := make([]*devkitv1.StorageBucket, len(resp))
 	for index, rec := range resp {
 		buckets[index] = a.StorageBucketGrpcFromSupa(&rec)
 	}
-	return &devkitv1.BucketsListResponse{Buckets: buckets}
+	return &devkitv1.BucketListResponse{Buckets: buckets}
 }

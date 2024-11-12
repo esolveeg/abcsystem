@@ -6,36 +6,36 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (s *PublicUsecase) TranslationsDelete(ctx context.Context, req *devkitv1.TranslationsDeleteRequest) (*devkitv1.TranslationsDeleteResponse, error) {
-	resp, err := s.repo.TranslationsDelete(ctx, req.Keys)
+func (s *PublicUsecase) TranslationDelete(ctx context.Context, req *devkitv1.TranslationDeleteRequest) (*devkitv1.TranslationDeleteResponse, error) {
+	resp, err := s.repo.TranslationDelete(ctx, req.Keys)
 	if err != nil {
 		return nil, err
 	}
-	response := s.adapter.TranslationsListGrpcFromSql(resp)
-	return &devkitv1.TranslationsDeleteResponse{
+	response := s.adapter.TranslationListGrpcFromSql(resp)
+	return &devkitv1.TranslationDeleteResponse{
 		Translations: response.Translations,
 	}, nil
 
 }
 
-func (s *PublicUsecase) TranslationsCreateUpdateBulk(ctx context.Context, req *devkitv1.TranslationsCreateUpdateBulkRequest) (*devkitv1.TranslationsCreateUpdateBulkResponse, error) {
-	params := s.adapter.TranslationsCreateUpdateBulkSqlFromGrpc(req)
-	resp, err := s.repo.TranslationsCreateUpdateBulk(ctx, *params)
+func (s *PublicUsecase) TranslationCreateUpdateBulk(ctx context.Context, req *devkitv1.TranslationCreateUpdateBulkRequest) (*devkitv1.TranslationCreateUpdateBulkResponse, error) {
+	params := s.adapter.TranslationCreateUpdateBulkSqlFromGrpc(req)
+	resp, err := s.repo.TranslationCreateUpdateBulk(ctx, *params)
 	if err != nil {
 		return nil, err
 	}
-	response := s.adapter.TranslationsCreateUpdateBulkGrpcFromSql(resp)
-	return &devkitv1.TranslationsCreateUpdateBulkResponse{
+	response := s.adapter.TranslationCreateUpdateBulkGrpcFromSql(resp)
+	return &devkitv1.TranslationCreateUpdateBulkResponse{
 		Translations: response.Translations,
 	}, nil
 }
 
-func (u *PublicUsecase) TranslationsList(ctx context.Context) (*devkitv1.TranslationsListResponse, error) {
-	settings, err := u.repo.TranslationsList(ctx)
+func (u *PublicUsecase) TranslationList(ctx context.Context) (*devkitv1.TranslationListResponse, error) {
+	settings, err := u.repo.TranslationList(ctx)
 
 	if err != nil {
 		return nil, err
 	}
-	resp := u.adapter.TranslationsListGrpcFromSql(settings)
+	resp := u.adapter.TranslationListGrpcFromSql(settings)
 	return &resp, nil
 }

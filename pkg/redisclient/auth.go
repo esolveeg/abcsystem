@@ -3,13 +3,29 @@ package redisclient
 import (
 	"context"
 	"encoding/json"
+	"strconv"
+
+	"github.com/darwishdev/devkit-api/db"
 )
 
 type PermissionsMap map[string]map[string]bool
 
-func (r *RedisClient) AuthSessionDelete(ctx context.Context, userName string) error {
+func (r *RedisClient) UserPermissionsMapRedisFromSql(resp []db.UserPermissionsMapRow) (PermissionsMap, error) {
+	respMap := make(PermissionsMap)
+	for _, rec := range resp {
+		perms := make(map[string]bool)
+		err := json.Unmarshal(rec.Permissions, &perms)
+		if err != nil {
+			return nil, err
+		}
+		respMap[rec.PermissionGroup] = perms
+	}
+	return respMap, nil
+}
 
-	err := r.client.Del(ctx, userName).Err()
+func (r *RedisClient) AuthSessionDelete(ctx context.Context, userId int32) error {
+	key := strconv.Itoa(int(userId))
+	err := r.client.Del(ctx, key).Err()
 	if err != nil {
 		return err
 	}
@@ -17,31 +33,36 @@ func (r *RedisClient) AuthSessionDelete(ctx context.Context, userName string) er
 	return nil
 }
 
-func (r *RedisClient) AuthSessionCreate(ctx context.Context, userName string, permissions []byte) (PermissionsMap, error) {
+func (r *RedisClient) AuthSessionCreate(ctx context.Context, userId int32, permissions []db.UserPermissionsMapRow) (PermissionsMap, error) {
+	key := strconv.Itoa(int(userId))
 	if permissions == nil {
-		r.client.Del(ctx, userName)
+		r.client.Del(ctx, key)
 		return nil, nil
 	}
-
-	err := r.client.Set(ctx, userName, permissions, 0).Err()
+	permissionMap, err := r.UserPermissionsMapRedisFromSql(permissions)
 	if err != nil {
 		return nil, err
 	}
-	_, err = r.AuthSessionFind(ctx, userName)
+	response, err := json.Marshal(permissionMap)
 	if err != nil {
 		return nil, err
 	}
-	var parsedStruct PermissionsMap
-	if err = json.Unmarshal(permissions, &parsedStruct); err != nil {
+	err = r.client.Set(ctx, key, response, 0).Err()
+	if err != nil {
+		return nil, err
+	}
+	_, err = r.AuthSessionFind(ctx, userId)
+	if err != nil {
 		return nil, err
 	}
 
-	return parsedStruct, nil
+	return r.UserPermissionsMapRedisFromSql(permissions)
 }
 
-func (r *RedisClient) AuthSessionFind(ctx context.Context, username string) (PermissionsMap, error) {
+func (r *RedisClient) AuthSessionFind(ctx context.Context, userId int32) (PermissionsMap, error) {
 	var parsedStruct PermissionsMap
-	jsonBytes, err := r.client.Get(ctx, username).Bytes()
+	key := strconv.Itoa(int(userId))
+	jsonBytes, err := r.client.Get(ctx, key).Bytes()
 	if err != nil {
 		return nil, err
 	}

@@ -11,9 +11,12 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/bufbuild/protovalidate-go"
 	"github.com/darwishdev/devkit-api/api"
 	"github.com/darwishdev/devkit-api/config"
 	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/pkg/auth"
+	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
@@ -83,7 +86,17 @@ func main() {
 	if err != nil {
 		log.Fatal().Str("DBSource", config.DBSource).Err(err).Msg("db failed to connect")
 	}
-	server, err := api.NewServer(config, store) // Start the server in a goroutine
+	tokenMaker, err := auth.NewPasetoMaker(config.TokenSymmetricKey)
+	if err != nil {
+		panic("cann't create paset maker in gapi/api.go")
+	}
+
+	redisClient := redisclient.NewRedisClient(config.RedisHost, config.RedisPort, config.RedisPassword, config.RedisDatabase)
+	validator, err := protovalidate.New()
+	if err != nil {
+		log.Fatal().Err(err).Msg("can't get the validator")
+	}
+	server, err := api.NewServer(config, store, tokenMaker, redisClient, validator) // Start the server in a goroutine
 	if err != nil {
 		log.Fatal().Err(err).Msg("server initialization failed")
 	}

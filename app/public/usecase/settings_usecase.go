@@ -5,9 +5,9 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (s *PublicUsecase) SettingsUpdate(ctx context.Context, req *devkitv1.SettingsUpdateRequest) error {
-	params := s.adapter.SettingsUpdateSqlFromGrpc(req)
-	err := s.repo.SettingsUpdate(ctx, params)
+func (s *PublicUsecase) SettingUpdate(ctx context.Context, req *devkitv1.SettingUpdateRequest) error {
+	params := s.adapter.SettingUpdateSqlFromGrpc(req)
+	err := s.repo.SettingUpdate(ctx, params)
 	if err != nil {
 		return err
 	}
@@ -15,13 +15,13 @@ func (s *PublicUsecase) SettingsUpdate(ctx context.Context, req *devkitv1.Settin
 
 }
 
-func (u *PublicUsecase) SettingsFindForUpdate(ctx context.Context, req *devkitv1.SettingsFindForUpdateRequest) (*devkitv1.SettingsFindForUpdateResponse, error) {
-	settings, err := u.repo.SettingsFindForUpdate(ctx)
+func (u *PublicUsecase) SettingFindForUpdate(ctx context.Context, req *devkitv1.SettingFindForUpdateRequest) (*devkitv1.SettingFindForUpdateResponse, error) {
+	settings, err := u.repo.SettingFindForUpdate(ctx)
 
 	if err != nil {
 		return nil, err
 	}
-	resp := u.adapter.SettingsFindForUpdateGrpcFromSql(settings)
+	resp := u.adapter.SettingFindForUpdateGrpcFromSql(settings)
 
 	return resp, nil
 }

@@ -9,18 +9,18 @@ message IconCreateUpdate {
   string icon_name = 2;
   string icon_content = 3;
 }
-message IconsListRequest{
+message IconListRequest{
 }
 
-message IconsListResponse {
+message IconListResponse {
   repeated Icon icons = 1;
 }
 
 
-message IconsCreateUpdateBulkRequest {
+message IconCreateUpdateBulkRequest {
   repeated IconCreateUpdate icons = 1;
 }
 
-message IconsCreateUpdateBulkResponse {
+message IconCreateUpdateBulkResponse {
   repeated Icon icons = 1;
 }

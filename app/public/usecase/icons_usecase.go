@@ -6,20 +6,20 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (u *PublicUsecase) IconsCreateUpdateBulk(ctx context.Context, req *devkitv1.IconsCreateUpdateBulkRequest) (*devkitv1.IconsListResponse, error) {
-	params := u.adapter.IconsCreateUpdateBulkSqlFromGrpc(req)
-	icons, err := u.repo.IconsCreateUpdateBulk(ctx, params)
+func (u *PublicUsecase) IconCreateUpdateBulk(ctx context.Context, req *devkitv1.IconCreateUpdateBulkRequest) (*devkitv1.IconListResponse, error) {
+	params := u.adapter.IconCreateUpdateBulkSqlFromGrpc(req)
+	icons, err := u.repo.IconCreateUpdateBulk(ctx, params)
 	if err != nil {
 		return nil, err
 	}
-	res := u.adapter.IconsInputListGrpcFromSql(*icons)
+	res := u.adapter.IconListGrpcFromSql(*icons)
 	return res, nil
 }
-func (u *PublicUsecase) IconsInputList(ctx context.Context) (*devkitv1.IconsListResponse, error) {
-	icons, err := u.repo.IconsInputList(ctx)
+func (u *PublicUsecase) IconList(ctx context.Context) (*devkitv1.IconListResponse, error) {
+	icons, err := u.repo.IconList(ctx)
 	if err != nil {
 		return nil, err
 	}
-	res := u.adapter.IconsInputListGrpcFromSql(*icons)
+	res := u.adapter.IconListGrpcFromSql(*icons)
 	return res, nil
 }

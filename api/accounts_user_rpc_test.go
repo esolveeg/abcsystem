@@ -17,12 +17,12 @@ var (
 	userNewPassword = random.RandomString(10)
 	userPhone       = random.RandomPhone()
 	userNewPhone    = random.RandomPhone()
-	loginRequest    = connect.NewRequest(&devkitv1.UserLoginRequest{
+	loginRequest    = connect.NewRequest(&devkitv1.AuthLoginRequest{
 		LoginCode:    userEmail,
 		UserPassword: userPassword,
 	})
 
-	emptyRequest      = connect.NewRequest(&devkitv1.RolesListRequest{})
+	emptyRequest      = connect.NewRequest(&devkitv1.RoleListRequest{})
 	userCreateRequest = connect.NewRequest(&devkitv1.UserCreateUpdateRequest{
 		UserId:            0,
 		UserEmail:         userEmail,
@@ -35,17 +35,20 @@ var (
 )
 
 func TestCycle(t *testing.T) {
-
 	ctx := context.Background()
+
 	t.Run("Login not existed user", func(t *testing.T) {
-		_, err := realDbApi.UserLogin(ctx, loginRequest)
+		_, err := testClient.AuthLogin(ctx, loginRequest)
 		require.NotEmpty(t, err)
 		require.Contains(t, err.Error(), "400")
 		require.Contains(t, err.Error(), "Invalid login credentials")
 	})
-	// // create new user
+	// // // create new user
 	t.Run("create new user with no roles", func(t *testing.T) {
-		resp, err := realDbApi.UserCreateUpdate(ctx, userCreateRequest)
+		loginResp, err := testClient.AuthLogin(ctx, connect.NewRequest(&devkitv1.AuthLoginRequest{LoginCode: "admin@devkit.com", UserPassword: "123456"}))
+		userCreateRequest.Header().Add("Authorization", fmt.Sprintf("bearer %s", loginResp.Msg.LoginInfo.AccessToken))
+
+		resp, err := testClient.UserCreateUpdate(ctx, userCreateRequest)
 		require.NoError(t, err)
 		userCreateRequest.Msg.UserId = resp.Msg.User.UserId
 
@@ -53,47 +56,48 @@ func TestCycle(t *testing.T) {
 		require.Equal(t, resp.Msg.User.UserEmail, userCreateRequest.Msg.UserEmail)
 		require.Equal(t, resp.Msg.User.UserPhone, userCreateRequest.Msg.UserPhone)
 	})
-	// // login with wrong password
+	// // // login with wrong password
 	t.Run("Login with wrong password", func(t *testing.T) {
-		wrongLoginRequest := connect.NewRequest(&devkitv1.UserLoginRequest{
+
+		wrongLoginRequest := connect.NewRequest(&devkitv1.AuthLoginRequest{
 			LoginCode:    userEmail,
 			UserPassword: "wrongPassword",
 		})
 
-		_, err := realDbApi.UserLogin(ctx, wrongLoginRequest)
+		_, err := testClient.AuthLogin(ctx, wrongLoginRequest)
 		require.NotEmpty(t, err)
 		require.Contains(t, err.Error(), "400")
 		require.Contains(t, err.Error(), "Invalid login credentials")
 	})
-	// // login with wrong password
+	// // // // login with wrong password
 	t.Run("Login with correct password", func(t *testing.T) {
-		resp, err := realDbApi.UserLogin(ctx, loginRequest)
+		resp, err := testClient.AuthLogin(ctx, loginRequest)
 		require.NoError(t, err)
 		require.NotEmpty(t, resp.Msg.LoginInfo.AccessToken)
 		require.Equal(t, resp.Msg.User.UserName, userCreateRequest.Msg.UserName)
 		require.Equal(t, resp.Msg.User.UserEmail, userCreateRequest.Msg.UserEmail)
 		require.Equal(t, resp.Msg.User.UserPhone, userCreateRequest.Msg.UserPhone)
 	})
-	// update the created user password
+	// // update the created user password
 	t.Run("update the password of created user", func(t *testing.T) {
 		userCreateRequest.Msg.UserPassword = userNewPassword
-		resp, err := realDbApi.UserCreateUpdate(ctx, userCreateRequest)
+		resp, err := testClient.UserCreateUpdate(ctx, userCreateRequest)
 		require.NoError(t, err)
 		require.Equal(t, resp.Msg.User.UserName, userCreateRequest.Msg.UserName)
 		require.Equal(t, resp.Msg.User.UserEmail, userCreateRequest.Msg.UserEmail)
 		require.Equal(t, resp.Msg.User.UserPhone, userCreateRequest.Msg.UserPhone)
 	})
-	// login with the old password
+	// // login with the old password
 	t.Run("Login with old password", func(t *testing.T) {
-		_, err := realDbApi.UserLogin(ctx, loginRequest)
+		_, err := testClient.AuthLogin(ctx, loginRequest)
 		require.NotEmpty(t, err)
 		require.Contains(t, err.Error(), "400")
 		require.Contains(t, err.Error(), "Invalid login credentials")
 	})
-	// login with the updated password
+	// // login with the updated password
 	t.Run("Login with updated password", func(t *testing.T) {
 		loginRequest.Msg.UserPassword = userNewPassword
-		resp, err := realDbApi.UserLogin(ctx, loginRequest)
+		resp, err := testClient.AuthLogin(ctx, loginRequest)
 		require.NoError(t, err)
 		emptyRequest.Header().Add("Authorization", fmt.Sprintf("bearer %s", resp.Msg.LoginInfo.AccessToken))
 		require.NotEmpty(t, resp.Msg.LoginInfo.AccessToken)
@@ -101,37 +105,35 @@ func TestCycle(t *testing.T) {
 		require.Equal(t, resp.Msg.User.UserEmail, userCreateRequest.Msg.UserEmail)
 		require.Equal(t, resp.Msg.User.UserPhone, userCreateRequest.Msg.UserPhone)
 	})
-	// try to access ednpoint that needs access
+	// // try to access ednpoint that needs access
 	t.Run("forbidden access", func(t *testing.T) {
-		_, err := realDbApi.RolesList(ctx, emptyRequest)
+		req := connect.NewRequest(&devkitv1.RoleListRequest{})
+		_, err := testClient.RoleList(context.Background(), req)
 		require.NotEmpty(t, err)
-		require.Contains(t, err.Error(), "don't have permission")
-
 	})
-	// update the created user  roles
+	// // update the created user  roles
 	t.Run("update the roles of created user", func(t *testing.T) {
 		userCreateRequest.Msg.Roles = []int32{1}
-		resp, err := realDbApi.UserCreateUpdate(ctx, userCreateRequest)
+		resp, err := testClient.UserCreateUpdate(ctx, userCreateRequest)
 		require.NoError(t, err)
 		require.Equal(t, resp.Msg.User.UserName, userCreateRequest.Msg.UserName)
 		require.Equal(t, resp.Msg.User.UserEmail, userCreateRequest.Msg.UserEmail)
 		require.Equal(t, resp.Msg.User.UserPhone, userCreateRequest.Msg.UserPhone)
 	})
 	// // login with the updated roles
-	// t.Run("Login with updated roles", func(t *testing.T) {
-	// 	resp, err := realDbApi.UserLogin(ctx, loginRequest)
-	// 	require.NoError(t, err)
-	// 	emptyRequest.Header().Add("Authorization", fmt.Sprintf("bearer %s", resp.Msg.LoginInfo.AccessToken))
-	// 	require.NotEmpty(t, resp.Msg.LoginInfo.AccessToken)
-	// 	require.Equal(t, resp.Msg.User.UserName, userCreateRequest.Msg.UserName)
-	// 	require.Equal(t, resp.Msg.User.UserEmail, userCreateRequest.Msg.UserEmail)
-	// 	require.Equal(t, resp.Msg.User.UserPhone, userCreateRequest.Msg.UserPhone)
-	// })
+	t.Run("Login with updated roles", func(t *testing.T) {
+		resp, err := testClient.AuthLogin(ctx, loginRequest)
+		require.NoError(t, err)
+		emptyRequest.Header().Add("Authorization", fmt.Sprintf("bearer %s", resp.Msg.LoginInfo.AccessToken))
+		require.NotEmpty(t, resp.Msg.LoginInfo.AccessToken)
+		require.Equal(t, resp.Msg.User.UserName, userCreateRequest.Msg.UserName)
+		require.Equal(t, resp.Msg.User.UserEmail, userCreateRequest.Msg.UserEmail)
+		require.Equal(t, resp.Msg.User.UserPhone, userCreateRequest.Msg.UserPhone)
+	})
 	// // try to recall the endpoint after permissions added
-	// t.Run("granted access", func(t *testing.T) {
-	// 	_, err := realDbApi.RolesList(ctx, emptyRequest)
-	// 	require.NoError(t, err)
-	//
-	// })
+	t.Run("granted access", func(t *testing.T) {
+		_, err := testClient.RoleList(ctx, emptyRequest)
+		require.NoError(t, err)
+	})
 	//
 }

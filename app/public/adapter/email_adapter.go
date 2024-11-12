@@ -5,7 +5,7 @@ import (
 	"github.com/resend/resend-go/v2"
 )
 
-func (a *PublicAdapter) SendEmailResendFromGrpc(req *devkitv1.SendEmailRequest) resend.SendEmailRequest {
+func (a *PublicAdapter) EmailSendResendFromGrpc(req *devkitv1.EmailSendRequest) resend.SendEmailRequest {
 	var tags []resend.Tag
 	for _, tag := range req.Tags {
 		tags = append(tags, resend.Tag{Name: tag.Key, Value: tag.Value})

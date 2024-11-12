@@ -6,16 +6,16 @@ import (
 	"github.com/darwishdev/devkit-api/db"
 )
 
-func (repo *PublicRepo) IconsCreateUpdateBulk(ctx context.Context, req db.IconsCreateUpdateBulkParams) (*[]db.Icon, error) {
-	resp, err := repo.store.IconsCreateUpdateBulk(context.Background(), req)
+func (repo *PublicRepo) IconCreateUpdateBulk(ctx context.Context, req db.IconCreateUpdateBulkParams) (*[]db.Icon, error) {
+	resp, err := repo.store.IconCreateUpdateBulk(context.Background(), req)
 
 	if err != nil {
 		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
 	}
 	return &resp, nil
 }
-func (repo *PublicRepo) IconsInputList(ctx context.Context) (*[]db.Icon, error) {
-	resp, err := repo.store.IconsInputList(context.Background())
+func (repo *PublicRepo) IconList(ctx context.Context) (*[]db.Icon, error) {
+	resp, err := repo.store.IconList(context.Background())
 
 	if err != nil {
 		return nil, repo.store.DbErrorParser(err, repo.errorHandler)

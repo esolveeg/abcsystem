@@ -8,8 +8,11 @@ import (
 	"connectrpc.com/connect"
 	"connectrpc.com/grpchealth"
 	"connectrpc.com/grpcreflect"
+	"github.com/bufbuild/protovalidate-go"
 	"github.com/darwishdev/devkit-api/config"
 	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/pkg/auth"
+	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1/devkitv1connect"
 	"github.com/rs/cors"
 	"github.com/rs/zerolog/log"
@@ -18,21 +21,27 @@ import (
 )
 
 type Server struct {
-	config config.Config
-	store  db.Store
-	api    devkitv1connect.DevkitServiceHandler
+	config      config.Config
+	store       db.Store
+	tokenMaker  auth.Maker
+	redisClient redisclient.RedisClientInterface
+	validator   *protovalidate.Validator
+	api         devkitv1connect.DevkitServiceHandler
 }
 
-func NewServer(config config.Config, store db.Store) (*Server, error) {
-	api, err := NewApi(config, store)
+func NewServer(config config.Config, store db.Store, tokenMaker auth.Maker, redisClient redisclient.RedisClientInterface, validator *protovalidate.Validator) (*Server, error) {
+	api, err := NewApi(config, store, tokenMaker, redisClient, validator)
 
 	if err != nil {
 		return nil, err
 	}
 	return &Server{
-		config: config,
-		store:  store,
-		api:    api,
+		config:      config,
+		validator:   validator,
+		redisClient: redisClient,
+		tokenMaker:  tokenMaker,
+		store:       store,
+		api:         api,
 	}, nil
 }
 
@@ -42,7 +51,7 @@ func (s Server) NewGrpcHttpServer() *http.Server {
 	// here we can find examples of diffrent compression method 	https://connectrpc.com/docs/go/serialization-and-compression/#compression
 	compress1KB := connect.WithCompressMinBytes(1024)
 	log.Debug().Interface("stete", s.config.State).Msg("state ios")
-	interceptors := connect.WithInterceptors(GrpcLogger(s.config.State == "dev"))
+	interceptors := connect.WithInterceptors(s.NewValidateInterceptor(), s.NewAuthenticationInterceptor(), s.NewAuthorizationInterceptor(), s.NewLoggerInterceptor())
 
 	mux.Handle(devkitv1connect.NewDevkitServiceHandler(
 		s.api,

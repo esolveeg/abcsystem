@@ -5,7 +5,7 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (a *PublicAdapter) TranslationsCreateUpdateBulkSqlFromGrpc(req *devkitv1.TranslationsCreateUpdateBulkRequest) *db.TranslationsCreateUpdateBulkParams {
+func (a *PublicAdapter) TranslationCreateUpdateBulkSqlFromGrpc(req *devkitv1.TranslationCreateUpdateBulkRequest) *db.TranslationCreateUpdateBulkParams {
 	keys := make([]string, len(req.Records))
 	enValues := make([]string, len(req.Records))
 	arValues := make([]string, len(req.Records))
@@ -14,14 +14,14 @@ func (a *PublicAdapter) TranslationsCreateUpdateBulkSqlFromGrpc(req *devkitv1.Tr
 		enValues[index] = v.EnglishValue
 		arValues[index] = v.ArabicValue
 	}
-	return &db.TranslationsCreateUpdateBulkParams{
+	return &db.TranslationCreateUpdateBulkParams{
 		Keys:          keys,
 		ArabicValues:  arValues,
 		EnglishValues: enValues,
 	}
 }
 
-func (a *PublicAdapter) TranslationCreateUpdateBulkRowGrpcFromSql(resp *db.TranslationsCreateUpdateBulkRow) *devkitv1.Translation {
+func (a *PublicAdapter) TranslationCreateUpdateBulkRowGrpcFromSql(resp *db.TranslationCreateUpdateBulkRow) *devkitv1.Translation {
 	return &devkitv1.Translation{
 		TranslationKey: resp.TranslationKey,
 		EnglishValue:   resp.EnglishValue,
@@ -37,21 +37,21 @@ func (a *PublicAdapter) TranslationGrpcFromSql(resp *db.Translation) *devkitv1.T
 	}
 }
 
-func (a *PublicAdapter) TranslationsCreateUpdateBulkGrpcFromSql(resp []db.TranslationsCreateUpdateBulkRow) devkitv1.TranslationsListResponse {
+func (a *PublicAdapter) TranslationCreateUpdateBulkGrpcFromSql(resp []db.TranslationCreateUpdateBulkRow) devkitv1.TranslationListResponse {
 	translations := make([]*devkitv1.Translation, len(resp))
 	for index, t := range resp {
 		translations[index] = a.TranslationCreateUpdateBulkRowGrpcFromSql(&t)
 	}
-	return devkitv1.TranslationsListResponse{
+	return devkitv1.TranslationListResponse{
 		Translations: translations,
 	}
 }
-func (a *PublicAdapter) TranslationsListGrpcFromSql(resp []db.Translation) devkitv1.TranslationsListResponse {
+func (a *PublicAdapter) TranslationListGrpcFromSql(resp []db.Translation) devkitv1.TranslationListResponse {
 	translations := make([]*devkitv1.Translation, len(resp))
 	for index, t := range resp {
 		translations[index] = a.TranslationGrpcFromSql(&t)
 	}
-	return devkitv1.TranslationsListResponse{
+	return devkitv1.TranslationListResponse{
 		Translations: translations,
 	}
 }

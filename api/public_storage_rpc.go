@@ -9,23 +9,23 @@ import (
 	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (api *Api) FilesDelete(ctx context.Context, req *connect.Request[devkitv1.FilesDeleteRequest]) (*connect.Response[devkitv1.FilesDeleteResponse], error) {
+func (api *Api) FileDelete(ctx context.Context, req *connect.Request[devkitv1.FileDeleteRequest]) (*connect.Response[devkitv1.FileDeleteResponse], error) {
 	if err := ctx.Err(); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
-	response, err := api.publicUsecase.FilesDelete(ctx, req.Msg)
+	response, err := api.publicUsecase.FileDelete(ctx, req.Msg)
 	return connect.NewResponse(response), err
 }
 
-func (api *Api) FilesList(ctx context.Context, req *connect.Request[devkitv1.FilesListRequest]) (*connect.Response[devkitv1.FilesListResponse], error) {
+func (api *Api) FileList(ctx context.Context, req *connect.Request[devkitv1.FileListRequest]) (*connect.Response[devkitv1.FileListResponse], error) {
 	if err := ctx.Err(); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
-	response, err := api.publicUsecase.FilesList(ctx, req.Msg)
+	response, err := api.publicUsecase.FileList(ctx, req.Msg)
 	return connect.NewResponse(response), err
 }
 func (api *Api) BucketCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.BucketCreateUpdateRequest]) (*connect.Response[devkitv1.BucketCreateUpdateResponse], error) {
-	_, err := api.checkForAccess(req.Header(), "buckets", "create_update")
+	_, err := api.checkForAccess(req.Header(), "bucket", "create")
 	if err != nil {
 		return nil, err
 	}
@@ -36,30 +36,30 @@ func (api *Api) BucketCreateUpdate(ctx context.Context, req *connect.Request[dev
 	return connect.NewResponse(response), err
 }
 
-func (api *Api) BucketsList(ctx context.Context, req *connect.Request[devkitv1.BucketsListRequest]) (*connect.Response[devkitv1.BucketsListResponse], error) {
+func (api *Api) BucketList(ctx context.Context, req *connect.Request[devkitv1.BucketListRequest]) (*connect.Response[devkitv1.BucketListResponse], error) {
 	if err := ctx.Err(); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
-	response, err := api.publicUsecase.BucketsList(ctx, req.Msg)
+	response, err := api.publicUsecase.BucketList(ctx, req.Msg)
 	return connect.NewResponse(response), err
 }
 
-func (api *Api) UploadFile(ctx context.Context, req *connect.Request[devkitv1.UploadFileRequest]) (*connect.Response[devkitv1.UploadFileResponse], error) {
+func (api *Api) FileCreate(ctx context.Context, req *connect.Request[devkitv1.FileCreateRequest]) (*connect.Response[devkitv1.FileCreateResponse], error) {
 	if err := ctx.Err(); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
-	resp, err := api.publicUsecase.UploadFile(ctx, req.Msg)
+	resp, err := api.publicUsecase.FileCreate(ctx, req.Msg)
 	if err != nil {
 		return nil, err
 	}
 	return connect.NewResponse(resp), nil
 }
 
-func (api *Api) UploadFiles(ctx context.Context, req *connect.Request[devkitv1.UploadFilesRequest]) (*connect.Response[devkitv1.UploadFilesResponse], error) {
+func (api *Api) FileCreateBulk(ctx context.Context, req *connect.Request[devkitv1.FileCreateBulkRequest]) (*connect.Response[devkitv1.FileCreateBulkResponse], error) {
 	if err := ctx.Err(); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
-	resp, err := api.publicUsecase.UploadFiles(ctx, req.Msg)
+	resp, err := api.publicUsecase.FileCreateBuilk(ctx, req.Msg)
 	if err != nil {
 		return nil, err
 	}

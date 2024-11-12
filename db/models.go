@@ -9,14 +9,20 @@ import (
 )
 
 type AccountsSchemaNavigationBar struct {
-	NavigationBarID int32       `json:"navigation_bar_id"`
-	MenuKey         string      `json:"menu_key"`
-	Label           string      `json:"label"`
-	LabelAr         pgtype.Text `json:"label_ar"`
-	Icon            pgtype.Text `json:"icon"`
-	Route           pgtype.Text `json:"route"`
-	ParentID        pgtype.Int4 `json:"parent_id"`
-	PermissionID    pgtype.Int4 `json:"permission_id"`
+	NavigationBarID   int32  `json:"navigation_bar_id"`
+	NavigationBarName string `json:"navigation_bar_name"`
+}
+
+type AccountsSchemaNavigationBarItem struct {
+	NavigationBarItemID int32       `json:"navigation_bar_item_id"`
+	MenuKey             string      `json:"menu_key"`
+	Label               string      `json:"label"`
+	LabelAr             pgtype.Text `json:"label_ar"`
+	Icon                pgtype.Text `json:"icon"`
+	Route               pgtype.Text `json:"route"`
+	NavigationBarID     pgtype.Int4 `json:"navigation_bar_id"`
+	ParentID            pgtype.Int4 `json:"parent_id"`
+	PermissionID        pgtype.Int4 `json:"permission_id"`
 }
 
 type AccountsSchemaPermission struct {
@@ -28,12 +34,13 @@ type AccountsSchemaPermission struct {
 }
 
 type AccountsSchemaRole struct {
-	RoleID          int32            `json:"role_id"`
-	RoleName        string           `json:"role_name"`
-	RoleDescription pgtype.Text      `json:"role_description"`
-	CreatedAt       pgtype.Timestamp `json:"created_at"`
-	UpdatedAt       pgtype.Timestamp `json:"updated_at"`
-	DeletedAt       pgtype.Timestamp `json:"deleted_at"`
+	RoleID            int32            `json:"role_id"`
+	RoleName          string           `json:"role_name"`
+	RoleSecurityLevel int32            `json:"role_security_level"`
+	RoleDescription   pgtype.Text      `json:"role_description"`
+	CreatedAt         pgtype.Timestamp `json:"created_at"`
+	UpdatedAt         pgtype.Timestamp `json:"updated_at"`
+	DeletedAt         pgtype.Timestamp `json:"deleted_at"`
 }
 
 type AccountsSchemaRolePermission struct {
@@ -42,16 +49,15 @@ type AccountsSchemaRolePermission struct {
 }
 
 type AccountsSchemaUser struct {
-	UserID            int32            `json:"user_id"`
-	UserName          string           `json:"user_name"`
-	UserSecurityLevel int32            `json:"user_security_level"`
-	UserTypeID        int32            `json:"user_type_id"`
-	UserPhone         pgtype.Text      `json:"user_phone"`
-	UserEmail         string           `json:"user_email"`
-	UserPassword      pgtype.Text      `json:"user_password"`
-	CreatedAt         pgtype.Timestamp `json:"created_at"`
-	UpdatedAt         pgtype.Timestamp `json:"updated_at"`
-	DeletedAt         pgtype.Timestamp `json:"deleted_at"`
+	UserID       int32            `json:"user_id"`
+	UserName     string           `json:"user_name"`
+	UserTypeID   int32            `json:"user_type_id"`
+	UserPhone    pgtype.Text      `json:"user_phone"`
+	UserEmail    string           `json:"user_email"`
+	UserPassword pgtype.Text      `json:"user_password"`
+	CreatedAt    pgtype.Timestamp `json:"created_at"`
+	UpdatedAt    pgtype.Timestamp `json:"updated_at"`
+	DeletedAt    pgtype.Timestamp `json:"deleted_at"`
 }
 
 type AccountsSchemaUserRole struct {
@@ -73,6 +79,17 @@ type Icon struct {
 type InputType struct {
 	InputTypeID   int32  `json:"input_type_id"`
 	InputTypeName string `json:"input_type_name"`
+}
+
+type Log struct {
+	LogID          int32            `json:"log_id"`
+	LogTitle       string           `json:"log_title"`
+	UserID         int32            `json:"user_id"`
+	RecordID       pgtype.Int4      `json:"record_id"`
+	ActionName     pgtype.Text      `json:"action_name"`
+	TableName      pgtype.Text      `json:"table_name"`
+	PermissionName pgtype.Text      `json:"permission_name"`
+	CreatedAt      pgtype.Timestamp `json:"created_at"`
 }
 
 type Setting struct {

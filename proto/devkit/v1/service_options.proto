@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "google/protobuf/descriptor.proto";
+package devkit.v1;
+// Define a custom option to indicate whether authentication should be skipped.
+extend google.protobuf.MethodOptions {
+  bool skip_authentication = 50001;
+  bool skip_authorization = 50002;
+}

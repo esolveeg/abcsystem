@@ -10,25 +10,25 @@ message Translation {
   string arabic_value = 3;
 }
 
-message TranslationsCreateUpdateBulkRequest {
+message TranslationCreateUpdateBulkRequest {
   repeated Translation records = 1;
 }
 
 
-message TranslationsListRequest {
+message TranslationListRequest {
 }
 
-message TranslationsListResponse {
+message TranslationListResponse {
   repeated Translation translations = 1;
 }
 
-message TranslationsDeleteRequest {
+message TranslationDeleteRequest {
   repeated string keys = 1 ;
 }
 
-message TranslationsDeleteResponse {
+message TranslationDeleteResponse {
   repeated Translation translations = 1;
 }
-message TranslationsCreateUpdateBulkResponse {
+message TranslationCreateUpdateBulkResponse {
   repeated Translation translations = 1;
 }

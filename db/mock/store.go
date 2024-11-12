@@ -79,34 +79,34 @@ func (mr *MockStoreMockRecorder) ExecTX(arg0, arg1 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExecTX", reflect.TypeOf((*MockStore)(nil).ExecTX), arg0, arg1)
 }
 
-// IconsCreateUpdateBulk mocks base method.
-func (m *MockStore) IconsCreateUpdateBulk(arg0 context.Context, arg1 db.IconsCreateUpdateBulkParams) ([]db.Icon, error) {
+// IconCreateUpdateBulk mocks base method.
+func (m *MockStore) IconCreateUpdateBulk(arg0 context.Context, arg1 db.IconCreateUpdateBulkParams) ([]db.Icon, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IconsCreateUpdateBulk", arg0, arg1)
+	ret := m.ctrl.Call(m, "IconCreateUpdateBulk", arg0, arg1)
 	ret0, _ := ret[0].([]db.Icon)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// IconsCreateUpdateBulk indicates an expected call of IconsCreateUpdateBulk.
-func (mr *MockStoreMockRecorder) IconsCreateUpdateBulk(arg0, arg1 interface{}) *gomock.Call {
+// IconCreateUpdateBulk indicates an expected call of IconCreateUpdateBulk.
+func (mr *MockStoreMockRecorder) IconCreateUpdateBulk(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IconsCreateUpdateBulk", reflect.TypeOf((*MockStore)(nil).IconsCreateUpdateBulk), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IconCreateUpdateBulk", reflect.TypeOf((*MockStore)(nil).IconCreateUpdateBulk), arg0, arg1)
 }
 
-// IconsInputList mocks base method.
-func (m *MockStore) IconsInputList(arg0 context.Context) ([]db.Icon, error) {
+// IconList mocks base method.
+func (m *MockStore) IconList(arg0 context.Context) ([]db.Icon, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IconsInputList", arg0)
+	ret := m.ctrl.Call(m, "IconList", arg0)
 	ret0, _ := ret[0].([]db.Icon)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// IconsInputList indicates an expected call of IconsInputList.
-func (mr *MockStoreMockRecorder) IconsInputList(arg0 interface{}) *gomock.Call {
+// IconList indicates an expected call of IconList.
+func (mr *MockStoreMockRecorder) IconList(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IconsInputList", reflect.TypeOf((*MockStore)(nil).IconsInputList), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IconList", reflect.TypeOf((*MockStore)(nil).IconList), arg0)
 }
 
 // RoleCreateUpdate mocks base method.
@@ -124,108 +124,123 @@ func (mr *MockStoreMockRecorder) RoleCreateUpdate(arg0, arg1 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RoleCreateUpdate", reflect.TypeOf((*MockStore)(nil).RoleCreateUpdate), arg0, arg1)
 }
 
-// RolesDeleteRestore mocks base method.
-func (m *MockStore) RolesDeleteRestore(arg0 context.Context, arg1 []int32) error {
+// RoleDeleteRestore mocks base method.
+func (m *MockStore) RoleDeleteRestore(arg0 context.Context, arg1 []int32) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RolesDeleteRestore", arg0, arg1)
+	ret := m.ctrl.Call(m, "RoleDeleteRestore", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// RolesDeleteRestore indicates an expected call of RolesDeleteRestore.
-func (mr *MockStoreMockRecorder) RolesDeleteRestore(arg0, arg1 interface{}) *gomock.Call {
+// RoleDeleteRestore indicates an expected call of RoleDeleteRestore.
+func (mr *MockStoreMockRecorder) RoleDeleteRestore(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RolesDeleteRestore", reflect.TypeOf((*MockStore)(nil).RolesDeleteRestore), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RoleDeleteRestore", reflect.TypeOf((*MockStore)(nil).RoleDeleteRestore), arg0, arg1)
 }
 
-// RolesList mocks base method.
-func (m *MockStore) RolesList(arg0 context.Context) ([]db.AccountsSchemaRole, error) {
+// RoleList mocks base method.
+func (m *MockStore) RoleList(arg0 context.Context) ([]db.AccountsSchemaRole, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RolesList", arg0)
+	ret := m.ctrl.Call(m, "RoleList", arg0)
 	ret0, _ := ret[0].([]db.AccountsSchemaRole)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// RolesList indicates an expected call of RolesList.
-func (mr *MockStoreMockRecorder) RolesList(arg0 interface{}) *gomock.Call {
+// RoleList indicates an expected call of RoleList.
+func (mr *MockStoreMockRecorder) RoleList(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RolesList", reflect.TypeOf((*MockStore)(nil).RolesList), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RoleList", reflect.TypeOf((*MockStore)(nil).RoleList), arg0)
 }
 
-// SettingsFindForUpdate mocks base method.
-func (m *MockStore) SettingsFindForUpdate(arg0 context.Context) ([]db.SettingsFindForUpdateRow, error) {
+// RoleListInput mocks base method.
+func (m *MockStore) RoleListInput(arg0 context.Context, arg1 int32) ([]db.RoleListInputRow, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SettingsFindForUpdate", arg0)
-	ret0, _ := ret[0].([]db.SettingsFindForUpdateRow)
+	ret := m.ctrl.Call(m, "RoleListInput", arg0, arg1)
+	ret0, _ := ret[0].([]db.RoleListInputRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SettingsFindForUpdate indicates an expected call of SettingsFindForUpdate.
-func (mr *MockStoreMockRecorder) SettingsFindForUpdate(arg0 interface{}) *gomock.Call {
+// RoleListInput indicates an expected call of RoleListInput.
+func (mr *MockStoreMockRecorder) RoleListInput(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SettingsFindForUpdate", reflect.TypeOf((*MockStore)(nil).SettingsFindForUpdate), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RoleListInput", reflect.TypeOf((*MockStore)(nil).RoleListInput), arg0, arg1)
 }
 
-// SettingsUpdate mocks base method.
-func (m *MockStore) SettingsUpdate(arg0 context.Context, arg1 db.SettingsUpdateParams) (db.SettingsUpdateRow, error) {
+// SettingFindForUpdate mocks base method.
+func (m *MockStore) SettingFindForUpdate(arg0 context.Context) ([]db.SettingFindForUpdateRow, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SettingsUpdate", arg0, arg1)
-	ret0, _ := ret[0].(db.SettingsUpdateRow)
+	ret := m.ctrl.Call(m, "SettingFindForUpdate", arg0)
+	ret0, _ := ret[0].([]db.SettingFindForUpdateRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// SettingsUpdate indicates an expected call of SettingsUpdate.
-func (mr *MockStoreMockRecorder) SettingsUpdate(arg0, arg1 interface{}) *gomock.Call {
+// SettingFindForUpdate indicates an expected call of SettingFindForUpdate.
+func (mr *MockStoreMockRecorder) SettingFindForUpdate(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SettingsUpdate", reflect.TypeOf((*MockStore)(nil).SettingsUpdate), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SettingFindForUpdate", reflect.TypeOf((*MockStore)(nil).SettingFindForUpdate), arg0)
 }
 
-// TranslationsCreateUpdateBulk mocks base method.
-func (m *MockStore) TranslationsCreateUpdateBulk(arg0 context.Context, arg1 db.TranslationsCreateUpdateBulkParams) ([]db.TranslationsCreateUpdateBulkRow, error) {
+// SettingUpdate mocks base method.
+func (m *MockStore) SettingUpdate(arg0 context.Context, arg1 db.SettingUpdateParams) (db.SettingUpdateRow, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "TranslationsCreateUpdateBulk", arg0, arg1)
-	ret0, _ := ret[0].([]db.TranslationsCreateUpdateBulkRow)
+	ret := m.ctrl.Call(m, "SettingUpdate", arg0, arg1)
+	ret0, _ := ret[0].(db.SettingUpdateRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// TranslationsCreateUpdateBulk indicates an expected call of TranslationsCreateUpdateBulk.
-func (mr *MockStoreMockRecorder) TranslationsCreateUpdateBulk(arg0, arg1 interface{}) *gomock.Call {
+// SettingUpdate indicates an expected call of SettingUpdate.
+func (mr *MockStoreMockRecorder) SettingUpdate(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TranslationsCreateUpdateBulk", reflect.TypeOf((*MockStore)(nil).TranslationsCreateUpdateBulk), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SettingUpdate", reflect.TypeOf((*MockStore)(nil).SettingUpdate), arg0, arg1)
 }
 
-// TranslationsDelete mocks base method.
-func (m *MockStore) TranslationsDelete(arg0 context.Context, arg1 []string) ([]db.Translation, error) {
+// TranslationCreateUpdateBulk mocks base method.
+func (m *MockStore) TranslationCreateUpdateBulk(arg0 context.Context, arg1 db.TranslationCreateUpdateBulkParams) ([]db.TranslationCreateUpdateBulkRow, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "TranslationsDelete", arg0, arg1)
+	ret := m.ctrl.Call(m, "TranslationCreateUpdateBulk", arg0, arg1)
+	ret0, _ := ret[0].([]db.TranslationCreateUpdateBulkRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TranslationCreateUpdateBulk indicates an expected call of TranslationCreateUpdateBulk.
+func (mr *MockStoreMockRecorder) TranslationCreateUpdateBulk(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TranslationCreateUpdateBulk", reflect.TypeOf((*MockStore)(nil).TranslationCreateUpdateBulk), arg0, arg1)
+}
+
+// TranslationDelete mocks base method.
+func (m *MockStore) TranslationDelete(arg0 context.Context, arg1 []string) ([]db.Translation, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TranslationDelete", arg0, arg1)
 	ret0, _ := ret[0].([]db.Translation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// TranslationsDelete indicates an expected call of TranslationsDelete.
-func (mr *MockStoreMockRecorder) TranslationsDelete(arg0, arg1 interface{}) *gomock.Call {
+// TranslationDelete indicates an expected call of TranslationDelete.
+func (mr *MockStoreMockRecorder) TranslationDelete(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TranslationsDelete", reflect.TypeOf((*MockStore)(nil).TranslationsDelete), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TranslationDelete", reflect.TypeOf((*MockStore)(nil).TranslationDelete), arg0, arg1)
 }
 
-// TranslationsList mocks base method.
-func (m *MockStore) TranslationsList(arg0 context.Context) ([]db.Translation, error) {
+// TranslationList mocks base method.
+func (m *MockStore) TranslationList(arg0 context.Context) ([]db.Translation, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "TranslationsList", arg0)
+	ret := m.ctrl.Call(m, "TranslationList", arg0)
 	ret0, _ := ret[0].([]db.Translation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// TranslationsList indicates an expected call of TranslationsList.
-func (mr *MockStoreMockRecorder) TranslationsList(arg0 interface{}) *gomock.Call {
+// TranslationList indicates an expected call of TranslationList.
+func (mr *MockStoreMockRecorder) TranslationList(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TranslationsList", reflect.TypeOf((*MockStore)(nil).TranslationsList), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TranslationList", reflect.TypeOf((*MockStore)(nil).TranslationList), arg0)
 }
 
 // UserCreateUpdate mocks base method.
@@ -244,7 +259,7 @@ func (mr *MockStoreMockRecorder) UserCreateUpdate(arg0, arg1 interface{}) *gomoc
 }
 
 // UserDelete mocks base method.
-func (m *MockStore) UserDelete(arg0 context.Context, arg1 int32) (db.AccountsSchemaUser, error) {
+func (m *MockStore) UserDelete(arg0 context.Context, arg1 db.UserDeleteParams) (db.AccountsSchemaUser, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserDelete", arg0, arg1)
 	ret0, _ := ret[0].(db.AccountsSchemaUser)
@@ -256,6 +271,21 @@ func (m *MockStore) UserDelete(arg0 context.Context, arg1 int32) (db.AccountsSch
 func (mr *MockStoreMockRecorder) UserDelete(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserDelete", reflect.TypeOf((*MockStore)(nil).UserDelete), arg0, arg1)
+}
+
+// UserDeleteRestore mocks base method.
+func (m *MockStore) UserDeleteRestore(arg0 context.Context, arg1 db.UserDeleteRestoreParams) (db.AccountsSchemaUser, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserDeleteRestore", arg0, arg1)
+	ret0, _ := ret[0].(db.AccountsSchemaUser)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UserDeleteRestore indicates an expected call of UserDeleteRestore.
+func (mr *MockStoreMockRecorder) UserDeleteRestore(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserDeleteRestore", reflect.TypeOf((*MockStore)(nil).UserDeleteRestore), arg0, arg1)
 }
 
 // UserFind mocks base method.
@@ -273,26 +303,71 @@ func (mr *MockStoreMockRecorder) UserFind(arg0, arg1 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserFind", reflect.TypeOf((*MockStore)(nil).UserFind), arg0, arg1)
 }
 
-// UserFindNavigationBars mocks base method.
-func (m *MockStore) UserFindNavigationBars(arg0 context.Context, arg1 int32) ([]db.UserFindNavigationBarsRow, error) {
+// UserFindForUpdate mocks base method.
+func (m *MockStore) UserFindForUpdate(arg0 context.Context, arg1 int32) (db.UserFindForUpdateRow, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UserFindNavigationBars", arg0, arg1)
-	ret0, _ := ret[0].([]db.UserFindNavigationBarsRow)
+	ret := m.ctrl.Call(m, "UserFindForUpdate", arg0, arg1)
+	ret0, _ := ret[0].(db.UserFindForUpdateRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// UserFindNavigationBars indicates an expected call of UserFindNavigationBars.
-func (mr *MockStoreMockRecorder) UserFindNavigationBars(arg0, arg1 interface{}) *gomock.Call {
+// UserFindForUpdate indicates an expected call of UserFindForUpdate.
+func (mr *MockStoreMockRecorder) UserFindForUpdate(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserFindNavigationBars", reflect.TypeOf((*MockStore)(nil).UserFindNavigationBars), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserFindForUpdate", reflect.TypeOf((*MockStore)(nil).UserFindForUpdate), arg0, arg1)
+}
+
+// UserList mocks base method.
+func (m *MockStore) UserList(arg0 context.Context) ([]db.AccountsSchemaUser, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserList", arg0)
+	ret0, _ := ret[0].([]db.AccountsSchemaUser)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UserList indicates an expected call of UserList.
+func (mr *MockStoreMockRecorder) UserList(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserList", reflect.TypeOf((*MockStore)(nil).UserList), arg0)
+}
+
+// UserListInput mocks base method.
+func (m *MockStore) UserListInput(arg0 context.Context, arg1 int32) ([]db.UserListInputRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserListInput", arg0, arg1)
+	ret0, _ := ret[0].([]db.UserListInputRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UserListInput indicates an expected call of UserListInput.
+func (mr *MockStoreMockRecorder) UserListInput(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserListInput", reflect.TypeOf((*MockStore)(nil).UserListInput), arg0, arg1)
+}
+
+// UserNavigationBarFind mocks base method.
+func (m *MockStore) UserNavigationBarFind(arg0 context.Context, arg1 db.UserNavigationBarFindParams) ([]db.UserNavigationBarFindRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserNavigationBarFind", arg0, arg1)
+	ret0, _ := ret[0].([]db.UserNavigationBarFindRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UserNavigationBarFind indicates an expected call of UserNavigationBarFind.
+func (mr *MockStoreMockRecorder) UserNavigationBarFind(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserNavigationBarFind", reflect.TypeOf((*MockStore)(nil).UserNavigationBarFind), arg0, arg1)
 }
 
 // UserPermissionsMap mocks base method.
-func (m *MockStore) UserPermissionsMap(arg0 context.Context, arg1 int32) ([]byte, error) {
+func (m *MockStore) UserPermissionsMap(arg0 context.Context, arg1 int32) ([]db.UserPermissionsMapRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UserPermissionsMap", arg0, arg1)
-	ret0, _ := ret[0].([]byte)
+	ret0, _ := ret[0].([]db.UserPermissionsMapRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -303,31 +378,16 @@ func (mr *MockStoreMockRecorder) UserPermissionsMap(arg0, arg1 interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserPermissionsMap", reflect.TypeOf((*MockStore)(nil).UserPermissionsMap), arg0, arg1)
 }
 
-// UsersDeleteRestore mocks base method.
-func (m *MockStore) UsersDeleteRestore(arg0 context.Context, arg1 []int32) error {
+// UserResetPassword mocks base method.
+func (m *MockStore) UserResetPassword(arg0 context.Context, arg1 db.UserResetPasswordParams) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UsersDeleteRestore", arg0, arg1)
+	ret := m.ctrl.Call(m, "UserResetPassword", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// UsersDeleteRestore indicates an expected call of UsersDeleteRestore.
-func (mr *MockStoreMockRecorder) UsersDeleteRestore(arg0, arg1 interface{}) *gomock.Call {
+// UserResetPassword indicates an expected call of UserResetPassword.
+func (mr *MockStoreMockRecorder) UserResetPassword(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UsersDeleteRestore", reflect.TypeOf((*MockStore)(nil).UsersDeleteRestore), arg0, arg1)
-}
-
-// UsersList mocks base method.
-func (m *MockStore) UsersList(arg0 context.Context) ([]db.AccountsSchemaUser, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UsersList", arg0)
-	ret0, _ := ret[0].([]db.AccountsSchemaUser)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// UsersList indicates an expected call of UsersList.
-func (mr *MockStoreMockRecorder) UsersList(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UsersList", reflect.TypeOf((*MockStore)(nil).UsersList), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserResetPassword", reflect.TypeOf((*MockStore)(nil).UserResetPassword), arg0, arg1)
 }

@@ -3,7 +3,7 @@ import "google/protobuf/struct.proto";
 import "buf/validate/validate.proto";
 
 package devkit.v1;
-message UploadFileRequest {
+message FileCreateRequest {
   string path = 1 [
   (buf.validate.field).string.min_len = 2
   ];
@@ -13,15 +13,15 @@ message UploadFileRequest {
   bytes reader = 3;
   string file_type = 4;
 }
-message UploadFilesRequest {
-  repeated UploadFileRequest files = 1;
+message FileCreateBulkRequest {
+  repeated FileCreateRequest files = 1;
 }
 
-message UploadFileResponse {
+message FileCreateResponse {
   string path = 1;
 }
 
-message UploadFilesResponse {
+message FileCreateBulkResponse {
   repeated string path = 1;
 }
 
@@ -60,9 +60,9 @@ message BucketCreateUpdateRequest{
 message BucketCreateUpdateResponse {
    StorageBucket bucket = 1 ;
 }
-message BucketsListRequest{
+message BucketListRequest{
 }
-message BucketsListResponse {
+message BucketListResponse {
   repeated StorageBucket buckets = 1 ;
 }
 
@@ -78,25 +78,19 @@ message FileObject {
   StorageBucket buckets = 9; 
 }
 
-message FilesListRequest {
+message FileListRequest {
   string bucket_id = 1;
   string query_path = 2;
   int32 limit = 3;
   int32 offest = 4;
 }
 
-message FilesListResponse {
+message FileListResponse {
   repeated FileObject files = 1;
 }
-message FileUploadResponse {
-  string key = 1;
-  string message = 2;
-  bytes data = 3;
-  string status_code = 4; // Use snake_case for field names
-  string error = 5;
-}
 
-message FilesDeleteRequest {
+
+message FileDeleteRequest {
   string bucket_id = 1  [
   (buf.validate.field).string.min_len = 2
   ];
@@ -107,6 +101,6 @@ message FilesDeleteRequest {
 
 }
 
-message FilesDeleteResponse {
-  repeated FileUploadResponse responses = 1;
+message FileDeleteResponse {
+  repeated FileCreateResponse responses = 1;
 }

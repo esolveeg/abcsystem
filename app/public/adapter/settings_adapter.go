@@ -5,19 +5,19 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (a *PublicAdapter) SettingsUpdateSqlFromGrpc(req *devkitv1.SettingsUpdateRequest) *db.SettingsUpdateParams {
+func (a *PublicAdapter) SettingUpdateSqlFromGrpc(req *devkitv1.SettingUpdateRequest) *db.SettingUpdateParams {
 	keys := make([]string, len(req.Settings))
 	values := make([]string, len(req.Settings))
 	for index, v := range req.Settings {
 		keys[index] = v.SettingKey
 		values[index] = v.SettingValue
 	}
-	return &db.SettingsUpdateParams{
+	return &db.SettingUpdateParams{
 		Keys:   keys,
 		Values: values,
 	}
 }
-func (a *PublicAdapter) SettingsEntityGrpcFromSql(resp []db.Setting) []*devkitv1.Setting {
+func (a *PublicAdapter) SettingEntityGrpcFromSql(resp []db.Setting) []*devkitv1.Setting {
 	grpcResp := make([]*devkitv1.Setting, len(resp))
 	for _, v := range resp {
 		record := &devkitv1.Setting{
@@ -30,10 +30,10 @@ func (a *PublicAdapter) SettingsEntityGrpcFromSql(resp []db.Setting) []*devkitv1
 
 }
 
-func (a *PublicAdapter) SettingsFindForUpdateGrpcFromSql(resp *[]db.SettingsFindForUpdateRow) *devkitv1.SettingsFindForUpdateResponse {
-	grpcRows := make([]*devkitv1.SettingsFindForUpdateRow, len(*resp))
+func (a *PublicAdapter) SettingFindForUpdateGrpcFromSql(resp *[]db.SettingFindForUpdateRow) *devkitv1.SettingFindForUpdateResponse {
+	grpcRows := make([]*devkitv1.SettingFindForUpdateRow, len(*resp))
 	for index, v := range *resp {
-		grpcRow := &devkitv1.SettingsFindForUpdateRow{
+		grpcRow := &devkitv1.SettingFindForUpdateRow{
 			SettingKey:   v.SettingKey,
 			SettingValue: v.SettingValue,
 			InputType:    v.InputTypeName,
@@ -43,7 +43,7 @@ func (a *PublicAdapter) SettingsFindForUpdateGrpcFromSql(resp *[]db.SettingsFind
 
 	}
 
-	return &devkitv1.SettingsFindForUpdateResponse{
+	return &devkitv1.SettingFindForUpdateResponse{
 		Settings: grpcRows,
 	}
 

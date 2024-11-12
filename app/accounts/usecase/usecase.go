@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"connectrpc.com/connect"
 	"github.com/darwishdev/devkit-api/app/accounts/adapter"
 	"github.com/darwishdev/devkit-api/app/accounts/repo"
 	"github.com/darwishdev/devkit-api/db"
@@ -14,19 +15,21 @@ import (
 )
 
 type AccountsUsecaseInterface interface {
-	UserLogin(ctx context.Context, req *devkitv1.UserLoginRequest) (*devkitv1.UserLoginResponse, error)
-	UsersDeleteRestore(ctx context.Context, req *devkitv1.UsersDeleteRestoreRequest) (*devkitv1.UsersDeleteRestoreResponse, error)
-	UsersList(ctx context.Context) (*devkitv1.UsersListResponse, error)
-	UserCreateUpdate(ctx context.Context, req *devkitv1.UserCreateUpdateRequest) (*devkitv1.UserCreateUpdateResponse, error)
-	UserLoginProvider(ctx context.Context, req *devkitv1.UserLoginProviderRequest) (*devkitv1.UserLoginProviderResponse, error)
+	// CheckForAccess(ctx context.Context, header http.Header, functionName string, isCreateUpdate bool) (*devkitv1.AvailableOptions, error)
+	AuthLogin(ctx context.Context, req *connect.Request[devkitv1.AuthLoginRequest]) (*devkitv1.AuthLoginResponse, error)
+	AuthRegister(ctx context.Context, req *connect.Request[devkitv1.AuthRegisterRequest]) (*devkitv1.AuthRegisterResponse, error)
+	UserDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.UserDeleteRestoreRequest]) (*devkitv1.UserDeleteRestoreResponse, error)
+	UserList(ctx context.Context) (*devkitv1.UserListResponse, error)
+	UserCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.UserCreateUpdateRequest]) (*devkitv1.UserCreateUpdateResponse, error)
+	AuthLoginProvider(ctx context.Context, req *connect.Request[devkitv1.AuthLoginProviderRequest]) (*devkitv1.AuthLoginProviderResponse, error)
 	UserDelete(ctx context.Context, userID int32) (*devkitv1.AccountsSchemaUser, error)
-	UserInvite(ctx context.Context, req *devkitv1.UserInviteRequest) (*devkitv1.UserInviteResponse, error)
-	RolesDeleteRestore(ctx context.Context, req *devkitv1.RolesDeleteRestoreRequest) (*devkitv1.RolesDeleteRestoreResponse, error)
-	RolesList(ctx context.Context) (*devkitv1.RolesListResponse, error)
-	AppLogin(ctx context.Context, loginCode string) (*devkitv1.UserLoginResponse, redisclient.PermissionsMap, error)
-	UserResetPassword(ctx context.Context, req *devkitv1.UserResetPasswordRequest) (*devkitv1.UserResetPasswordResponse, error)
-	UserResetPasswordEmail(ctx context.Context, req *devkitv1.UserResetPasswordEmailRequest) (*devkitv1.UserResetPasswordEmailResponse, error)
-	RoleCreateUpdate(ctx context.Context, req *devkitv1.RoleCreateUpdateRequest) (*devkitv1.RoleCreateUpdateResponse, error)
+	AuthInvite(ctx context.Context, req *connect.Request[devkitv1.AuthInviteRequest]) (*devkitv1.AuthInviteResponse, error)
+	RoleDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.RoleDeleteRestoreRequest]) (*devkitv1.RoleDeleteRestoreResponse, error)
+	RoleList(ctx context.Context) (*devkitv1.RoleListResponse, error)
+	AppLogin(ctx context.Context, loginCode string) (*devkitv1.AuthLoginResponse, redisclient.PermissionsMap, error)
+	AuthResetPassword(ctx context.Context, req *connect.Request[devkitv1.AuthResetPasswordRequest]) (*devkitv1.AuthResetPasswordResponse, error)
+	AuthResetPasswordEmail(ctx context.Context, req *connect.Request[devkitv1.AuthResetPasswordEmailRequest]) (*devkitv1.AuthResetPasswordEmailResponse, error)
+	RoleCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.RoleCreateUpdateRequest]) (*devkitv1.RoleCreateUpdateResponse, error)
 }
 
 type AccountsUsecase struct {

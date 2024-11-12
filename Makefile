@@ -1,3 +1,4 @@
+
 LANG=en_US.UTF-8
 SHELL=/bin/bash
 .SHELLFLAGS=--norc --noprofile -e -u -o pipefail -c
@@ -24,9 +25,20 @@ testapi:
 	go test ./api/... -v --race
 
 
+seed_storage:
+	devkit seed storage -f ../storage_seed/assets -i ../storage_seed/icons 
+
+seed_accounts:
+	devkit seed accounts_schema --file-path ../accounts.xlsx -e
+
+seed_super_user:
+	devkit seed super-user -e admin@devkit.com -n "super admin user"
+
+supabase_reset:
+	supabase db reset 
 			
 rdb:
-	supabase db reset && devkit seed storage -f ../storage_seed/assets -i ../storage_seed/icons && devkit seed accounts_schema --file-path ../accounts.xlsx -e
+	make supabase_reset seed_super_user seed_accounts seed_storage	
 run:
 	go run main.go
 buf:
