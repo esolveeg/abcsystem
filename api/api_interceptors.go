@@ -1,20 +1,22 @@
 package api
 
 import (
-	"connectrpc.com/connect"
 	"context"
 	"fmt"
+	"os"
+	"strings"
+	"time"
+
+	"connectrpc.com/connect"
 	"github.com/darwishdev/devkit-api/pkg/auth"
 	"github.com/darwishdev/devkit-api/pkg/contextkeys"
+	"github.com/darwishdev/devkit-api/pkg/headerkeys"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"github.com/iancoleman/strcase"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
-	"os"
-	"strings"
-	"time"
 )
 
 type contextKey string
@@ -155,7 +157,6 @@ func (s *Server) NewAuthorizationInterceptor() connect.UnaryInterceptorFunc {
 				return next(ctx, req)
 			}
 
-			log.Debug().Interface("ctex", permissionFunction).Msg("auyiwwwwwwth")
 			callerId, ok := contextkeys.CallerID(ctx)
 			if !ok {
 				return next(ctx, req)
@@ -169,6 +170,7 @@ func (s *Server) NewAuthorizationInterceptor() connect.UnaryInterceptorFunc {
 				permissionsMap, err = s.redisClient.AuthSessionCreate(ctx, callerId, &permissions)
 			}
 			_, group := s.proccessProcedureName(req.Spec().Procedure)
+			headerkeys.WithPermissionGroup(req.Header(), group)
 			permissionGroup, ok := permissionsMap[group]
 			if !ok {
 				return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("user does not have the required permission for this group %s", group))
@@ -177,6 +179,8 @@ func (s *Server) NewAuthorizationInterceptor() connect.UnaryInterceptorFunc {
 			if !ok || !isPermissionGranted {
 				return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("user does not have the required permission for this permission %s on this group %s", permissionFunction, group))
 			}
+
+			headerkeys.WithPermittedActions(req.Header(), permissionGroup)
 			return next(ctx, req)
 		})
 	}

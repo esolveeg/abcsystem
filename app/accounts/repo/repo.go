@@ -7,17 +7,22 @@ import (
 )
 
 type AccountsRepoInterface interface {
-	UserNavigationBarFind(ctx context.Context, req db.UserNavigationBarFindParams) ([]db.UserNavigationBarFindRow, error)
+	UserNavigationBarFind(ctx context.Context, req db.UserNavigationBarFindParams) (*[]db.UserNavigationBarFindRow, error)
+	UserListInput(ctx context.Context) (*[]db.UserListInputRow, error)
+	UseriFindForUpdate(ctx context.Context, req int32) (*db.UserFindForUpdateRow, error)
 	UserFind(ctx context.Context, req db.UserFindParams) (*db.AccountsSchemaUser, error)
 	UserDeleteRestore(ctx context.Context, req db.UserDeleteRestoreParams) (*db.AccountsSchemaUser, error)
 	UserDelete(ctx context.Context, req db.UserDeleteParams) (*db.AccountsSchemaUser, error)
 	UserPermissionsMap(ctx context.Context, userID int32) (*[]db.UserPermissionsMapRow, error)
 	UserCreateUpdate(ctx context.Context, req db.UserCreateUpdateParams) (*db.AccountsSchemaUser, error)
 	UserList(ctx context.Context) (*[]db.AccountsSchemaUser, error)
+	RoleListInput(ctx context.Context) (*[]db.RoleListInputRow, error)
+	RoleFindForUpdate(ctx context.Context, req int32) (*db.RoleFindForUpdateRow, error)
 	RoleList(ctx context.Context) (*[]db.AccountsSchemaRole, error)
 	AuthUserIDFindByEmail(ctx context.Context, req string) (*string, error)
 	RoleCreateUpdate(ctx context.Context, req db.RoleCreateUpdateParams) (*db.AccountsSchemaRole, error)
-	RoleDeleteRestore(ctx context.Context, req []int32) error
+	RoleDelete(ctx context.Context, req db.RoleDeleteParams) (*db.AccountsSchemaRole, error)
+	RoleDeleteRestore(ctx context.Context, req db.RoleDeleteRestoreParams) (*db.AccountsSchemaRole, error)
 }
 
 type AccountsRepo struct {

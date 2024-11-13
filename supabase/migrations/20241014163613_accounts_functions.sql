@@ -469,7 +469,7 @@ CREATE OR REPLACE FUNCTION accounts_schema.role_delete(
     in_role_id int,
     in_caller_id int
 )
-    RETURNS setof accounts_schema.user
+    RETURNS setof accounts_schema.role
     LANGUAGE plpgsql
     AS $$
 BEGIN

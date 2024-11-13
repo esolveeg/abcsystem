@@ -79,6 +79,8 @@ rpc CompanyCreateUpdate(CompanyCreateUpdateRequest) returns (CompanyCreateUpdate
     }
 
     rpc RoleCreateUpdate(RoleCreateUpdateRequest) returns (RoleCreateUpdateResponse) {}
+
+    rpc RoleDelete(RoleDeleteRequest) returns (RoleDeleteResponse) {}
     rpc RoleDeleteRestore(RoleDeleteRestoreRequest) returns (RoleDeleteRestoreResponse) {}
 //*******************************************************************************************//
     // users

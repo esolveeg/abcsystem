@@ -95,6 +95,9 @@ const (
 	// DevkitServiceRoleCreateUpdateProcedure is the fully-qualified name of the DevkitService's
 	// RoleCreateUpdate RPC.
 	DevkitServiceRoleCreateUpdateProcedure = "/devkit.v1.DevkitService/RoleCreateUpdate"
+	// DevkitServiceRoleDeleteProcedure is the fully-qualified name of the DevkitService's RoleDelete
+	// RPC.
+	DevkitServiceRoleDeleteProcedure = "/devkit.v1.DevkitService/RoleDelete"
 	// DevkitServiceRoleDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
 	// RoleDeleteRestore RPC.
 	DevkitServiceRoleDeleteRestoreProcedure = "/devkit.v1.DevkitService/RoleDeleteRestore"
@@ -165,6 +168,7 @@ var (
 	devkitServiceRoleFindForUpdateMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("RoleFindForUpdate")
 	devkitServiceRoleListInputMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("RoleListInput")
 	devkitServiceRoleCreateUpdateMethodDescriptor            = devkitServiceServiceDescriptor.Methods().ByName("RoleCreateUpdate")
+	devkitServiceRoleDeleteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("RoleDelete")
 	devkitServiceRoleDeleteRestoreMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("RoleDeleteRestore")
 	devkitServiceUserListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("UserList")
 	devkitServiceUserListInputMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("UserListInput")
@@ -219,6 +223,7 @@ type DevkitServiceClient interface {
 	RoleFindForUpdate(context.Context, *connect.Request[v1.RoleFindForUpdateRequest]) (*connect.Response[v1.RoleFindForUpdateResponse], error)
 	RoleListInput(context.Context, *connect.Request[v1.RoleListInputRequest]) (*connect.Response[v1.RoleListInputResponse], error)
 	RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error)
+	RoleDelete(context.Context, *connect.Request[v1.RoleDeleteRequest]) (*connect.Response[v1.RoleDeleteResponse], error)
 	RoleDeleteRestore(context.Context, *connect.Request[v1.RoleDeleteRestoreRequest]) (*connect.Response[v1.RoleDeleteRestoreResponse], error)
 	// *******************************************************************************************//
 	// users
@@ -393,6 +398,12 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(devkitServiceRoleCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		roleDelete: connect.NewClient[v1.RoleDeleteRequest, v1.RoleDeleteResponse](
+			httpClient,
+			baseURL+DevkitServiceRoleDeleteProcedure,
+			connect.WithSchema(devkitServiceRoleDeleteMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 		roleDeleteRestore: connect.NewClient[v1.RoleDeleteRestoreRequest, v1.RoleDeleteRestoreResponse](
 			httpClient,
 			baseURL+DevkitServiceRoleDeleteRestoreProcedure,
@@ -513,6 +524,7 @@ type devkitServiceClient struct {
 	roleFindForUpdate           *connect.Client[v1.RoleFindForUpdateRequest, v1.RoleFindForUpdateResponse]
 	roleListInput               *connect.Client[v1.RoleListInputRequest, v1.RoleListInputResponse]
 	roleCreateUpdate            *connect.Client[v1.RoleCreateUpdateRequest, v1.RoleCreateUpdateResponse]
+	roleDelete                  *connect.Client[v1.RoleDeleteRequest, v1.RoleDeleteResponse]
 	roleDeleteRestore           *connect.Client[v1.RoleDeleteRestoreRequest, v1.RoleDeleteRestoreResponse]
 	userList                    *connect.Client[v1.UserListRequest, v1.UserListResponse]
 	userListInput               *connect.Client[v1.UserListInputRequest, v1.UserListInputResponse]
@@ -640,6 +652,11 @@ func (c *devkitServiceClient) RoleCreateUpdate(ctx context.Context, req *connect
 	return c.roleCreateUpdate.CallUnary(ctx, req)
 }
 
+// RoleDelete calls devkit.v1.DevkitService.RoleDelete.
+func (c *devkitServiceClient) RoleDelete(ctx context.Context, req *connect.Request[v1.RoleDeleteRequest]) (*connect.Response[v1.RoleDeleteResponse], error) {
+	return c.roleDelete.CallUnary(ctx, req)
+}
+
 // RoleDeleteRestore calls devkit.v1.DevkitService.RoleDeleteRestore.
 func (c *devkitServiceClient) RoleDeleteRestore(ctx context.Context, req *connect.Request[v1.RoleDeleteRestoreRequest]) (*connect.Response[v1.RoleDeleteRestoreResponse], error) {
 	return c.roleDeleteRestore.CallUnary(ctx, req)
@@ -752,6 +769,7 @@ type DevkitServiceHandler interface {
 	RoleFindForUpdate(context.Context, *connect.Request[v1.RoleFindForUpdateRequest]) (*connect.Response[v1.RoleFindForUpdateResponse], error)
 	RoleListInput(context.Context, *connect.Request[v1.RoleListInputRequest]) (*connect.Response[v1.RoleListInputResponse], error)
 	RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error)
+	RoleDelete(context.Context, *connect.Request[v1.RoleDeleteRequest]) (*connect.Response[v1.RoleDeleteResponse], error)
 	RoleDeleteRestore(context.Context, *connect.Request[v1.RoleDeleteRestoreRequest]) (*connect.Response[v1.RoleDeleteRestoreResponse], error)
 	// *******************************************************************************************//
 	// users
@@ -922,6 +940,12 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(devkitServiceRoleCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	devkitServiceRoleDeleteHandler := connect.NewUnaryHandler(
+		DevkitServiceRoleDeleteProcedure,
+		svc.RoleDelete,
+		connect.WithSchema(devkitServiceRoleDeleteMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	devkitServiceRoleDeleteRestoreHandler := connect.NewUnaryHandler(
 		DevkitServiceRoleDeleteRestoreProcedure,
 		svc.RoleDeleteRestore,
@@ -1061,6 +1085,8 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 			devkitServiceRoleListInputHandler.ServeHTTP(w, r)
 		case DevkitServiceRoleCreateUpdateProcedure:
 			devkitServiceRoleCreateUpdateHandler.ServeHTTP(w, r)
+		case DevkitServiceRoleDeleteProcedure:
+			devkitServiceRoleDeleteHandler.ServeHTTP(w, r)
 		case DevkitServiceRoleDeleteRestoreProcedure:
 			devkitServiceRoleDeleteRestoreHandler.ServeHTTP(w, r)
 		case DevkitServiceUserListProcedure:
@@ -1186,6 +1212,10 @@ func (UnimplementedDevkitServiceHandler) RoleListInput(context.Context, *connect
 
 func (UnimplementedDevkitServiceHandler) RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleCreateUpdate is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) RoleDelete(context.Context, *connect.Request[v1.RoleDeleteRequest]) (*connect.Response[v1.RoleDeleteResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleDelete is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) RoleDeleteRestore(context.Context, *connect.Request[v1.RoleDeleteRestoreRequest]) (*connect.Response[v1.RoleDeleteRestoreResponse], error) {

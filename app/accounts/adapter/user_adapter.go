@@ -55,6 +55,29 @@ func (a *AccountsAdapter) UserCreateUpdateSqlFromGrpc(req *devkitv1.UserCreateUp
 	}
 	return resp
 }
+func (a *AccountsAdapter) UserFindForUpdateUpdateGrpcFromSql(resp *db.UserFindForUpdateRow) *devkitv1.UserCreateUpdateRequest {
+	return &devkitv1.UserCreateUpdateRequest{
+		UserId:     resp.UserID,
+		UserName:   resp.UserName,
+		UserTypeId: resp.UserTypeID,
+		UserPhone:  resp.UserPhone.String,
+		UserEmail:  resp.UserEmail,
+		Roles:      resp.Roles,
+	}
+}
+func (a *AccountsAdapter) UserListInputGrpcFromSql(resp *[]db.UserListInputRow) *devkitv1.UserListInputResponse {
+	records := make([]*devkitv1.SelectInputOption, 0)
+	for _, v := range *resp {
+		records = append(records, &devkitv1.SelectInputOption{
+			Value: v.Value,
+			Note:  v.Note,
+			Label: v.Label,
+		})
+	}
+	return &devkitv1.UserListInputResponse{
+		Options: records,
+	}
+}
 func (a *AccountsAdapter) UserListGrpcFromSql(resp *[]db.AccountsSchemaUser) *devkitv1.UserListResponse {
 	records := make([]*devkitv1.AccountsSchemaUser, 0)
 	deletedRecords := make([]*devkitv1.AccountsSchemaUser, 0)

@@ -39,7 +39,13 @@ message RoleDeleteRestoreRequest{
   repeated int32 records = 1;
 }
 message RoleDeleteRestoreResponse{
-  repeated AccountsSchemaRole record = 1;
+  repeated AccountsSchemaRole records = 1;
+}
+message RoleDeleteRequest{
+  int32 record = 1;
+}
+message RoleDeleteResponse{
+  AccountsSchemaRole record = 1;
 }
 message RoleListRequest{
 }

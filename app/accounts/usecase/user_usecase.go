@@ -10,15 +10,15 @@ import (
 	"github.com/supabase-community/auth-go/types"
 )
 
-func (u *AccountsUsecase) UserDelete(ctx context.Context, userID int32) (*devkitv1.AccountsSchemaUser, error) {
+func (u *AccountsUsecase) UserDelete(ctx context.Context, req *connect.Request[devkitv1.UserDeleteRequest]) (*devkitv1.AccountsSchemaUser, error) {
 	params := db.UserDeleteParams{
-		UserID: userID,
+		UserID: req.Msg.RecordId,
 	}
 	user, err := u.repo.UserDelete(ctx, params)
 	if err != nil {
 		return nil, err
 	}
-	err = u.redisClient.AuthSessionDelete(ctx, userID)
+	err = u.redisClient.AuthSessionDelete(ctx, req.Msg.RecordId)
 	if err != nil {
 		return nil, err
 	}
@@ -40,8 +40,26 @@ func (u *AccountsUsecase) UserDeleteRestore(ctx context.Context, req *connect.Re
 		response = append(response, u.adapter.UserEntityGrpcFromSql(resp))
 	}
 	return &devkitv1.UserDeleteRestoreResponse{
-		Record: response,
+		Records: response,
 	}, nil
+}
+func (u *AccountsUsecase) UserFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.UserFindForUpdateRequest]) (*devkitv1.UserFindForUpdateResponse, error) {
+	user, err := u.repo.UseriFindForUpdate(ctx, req.Msg.RecordId)
+	if err != nil {
+		return nil, err
+	}
+	request := u.adapter.UserFindForUpdateUpdateGrpcFromSql(user)
+	return &devkitv1.UserFindForUpdateResponse{
+		Request: request,
+	}, nil
+}
+func (u *AccountsUsecase) UserListInput(ctx context.Context) (*devkitv1.UserListInputResponse, error) {
+	users, err := u.repo.UserListInput(ctx)
+	if err != nil {
+		return nil, err
+	}
+	response := u.adapter.UserListInputGrpcFromSql(users)
+	return response, nil
 }
 func (u *AccountsUsecase) UserList(ctx context.Context) (*devkitv1.UserListResponse, error) {
 	users, err := u.repo.UserList(ctx)

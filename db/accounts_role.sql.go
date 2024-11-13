@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const roleCreateUpdate = `-- name: RoleCreateUpdate :one
@@ -17,7 +19,8 @@ select
 	role_description ,
 	created_at ,
 	updated_at ,
-	deleted_at  from accounts_schema.role_create_update(
+deleted_at  
+from accounts_schema.role_create_update(
 in_role_id => $1,
 in_role_name => $2,
 in_role_security_level => $3,
@@ -31,7 +34,7 @@ type RoleCreateUpdateParams struct {
 	RoleID            int32   `json:"role_id"`
 	RoleName          string  `json:"role_name"`
 	RoleSecurityLevel int32   `json:"role_security_level"`
-	CalledByUserID    int32   `json:"called_by_user_id"`
+	CallerID          int32   `json:"caller_id"`
 	RoleDescription   string  `json:"role_description"`
 	Permissions       []int32 `json:"permissions"`
 }
@@ -41,7 +44,7 @@ func (q *Queries) RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdatePara
 		arg.RoleID,
 		arg.RoleName,
 		arg.RoleSecurityLevel,
-		arg.CalledByUserID,
+		arg.CallerID,
 		arg.RoleDescription,
 		arg.Permissions,
 	)
@@ -58,18 +61,104 @@ func (q *Queries) RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdatePara
 	return i, err
 }
 
-const roleDeleteRestore = `-- name: RoleDeleteRestore :exec
-UPDATE
-accounts_schema.role
-SET
-deleted_at = IIF(deleted_at IS NULL, now(), NULL)
-WHERE
-role_id = ANY ($1::int[])
+const roleDelete = `-- name: RoleDelete :one
+SELECT 
+	role_id ,
+	role_name ,
+	role_security_level ,
+	role_description ,
+	created_at ,
+	updated_at ,
+	deleted_at  
+FROM accounts_schema.role_delete(in_role_id => $1 , in_caller_id => $2)
 `
 
-func (q *Queries) RoleDeleteRestore(ctx context.Context, records []int32) error {
-	_, err := q.db.Exec(ctx, roleDeleteRestore, records)
-	return err
+type RoleDeleteParams struct {
+	RoleID   int32 `json:"role_id"`
+	CallerID int32 `json:"caller_id"`
+}
+
+func (q *Queries) RoleDelete(ctx context.Context, arg RoleDeleteParams) (AccountsSchemaRole, error) {
+	row := q.db.QueryRow(ctx, roleDelete, arg.RoleID, arg.CallerID)
+	var i AccountsSchemaRole
+	err := row.Scan(
+		&i.RoleID,
+		&i.RoleName,
+		&i.RoleSecurityLevel,
+		&i.RoleDescription,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
+const roleDeleteRestore = `-- name: RoleDeleteRestore :one
+SELECT 
+	role_id ,
+	role_name ,
+	role_security_level ,
+	role_description ,
+	created_at ,
+	updated_at ,
+deleted_at  
+FROM accounts_schema.role_delete_restore(in_role_id => $1 , in_caller_id => $2)
+`
+
+type RoleDeleteRestoreParams struct {
+	RoleID   int32 `json:"role_id"`
+	CallerID int32 `json:"caller_id"`
+}
+
+func (q *Queries) RoleDeleteRestore(ctx context.Context, arg RoleDeleteRestoreParams) (AccountsSchemaRole, error) {
+	row := q.db.QueryRow(ctx, roleDeleteRestore, arg.RoleID, arg.CallerID)
+	var i AccountsSchemaRole
+	err := row.Scan(
+		&i.RoleID,
+		&i.RoleName,
+		&i.RoleSecurityLevel,
+		&i.RoleDescription,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
+}
+
+const roleFindForUpdate = `-- name: RoleFindForUpdate :one
+with permissions as (
+	select p.role_id , array_agg(p.permission_id)::int[] permissions from accounts_schema.role_permission p where p.role_id = $1 group by p.role_id
+)
+select  
+r.role_id ,
+r.role_name ,
+r.role_security_level ,
+r.role_description ,
+p.permissions permissions
+	from accounts_schema.role r
+ join permissions p 
+on r.role_id = p.role_id
+`
+
+type RoleFindForUpdateRow struct {
+	RoleID            int32       `json:"role_id"`
+	RoleName          string      `json:"role_name"`
+	RoleSecurityLevel int32       `json:"role_security_level"`
+	RoleDescription   pgtype.Text `json:"role_description"`
+	Permissions       []int32     `json:"permissions"`
+}
+
+func (q *Queries) RoleFindForUpdate(ctx context.Context, roleID int32) (RoleFindForUpdateRow, error) {
+	row := q.db.QueryRow(ctx, roleFindForUpdate, roleID)
+	var i RoleFindForUpdateRow
+	err := row.Scan(
+		&i.RoleID,
+		&i.RoleName,
+		&i.RoleSecurityLevel,
+		&i.RoleDescription,
+		&i.Permissions,
+	)
+	return i, err
 }
 
 const roleList = `-- name: RoleList :many
@@ -115,16 +204,18 @@ func (q *Queries) RoleList(ctx context.Context) ([]AccountsSchemaRole, error) {
 
 const roleListInput = `-- name: RoleListInput :many
 select 
-role_id record_id,
-role_name label
+role_id value,
+role_name label,
+concat("level: " , role_security_level::varchar)::varchar note
 from accounts_schema.role 
 where 
 role_security_level <= accounts_schema.user_security_level_find($1)
 `
 
 type RoleListInputRow struct {
-	RecordID int32  `json:"record_id"`
-	Label    string `json:"label"`
+	Value int32  `json:"value"`
+	Label string `json:"label"`
+	Note  string `json:"note"`
 }
 
 func (q *Queries) RoleListInput(ctx context.Context, callerID int32) ([]RoleListInputRow, error) {
@@ -136,7 +227,7 @@ func (q *Queries) RoleListInput(ctx context.Context, callerID int32) ([]RoleList
 	items := []RoleListInputRow{}
 	for rows.Next() {
 		var i RoleListInputRow
-		if err := rows.Scan(&i.RecordID, &i.Label); err != nil {
+		if err := rows.Scan(&i.Value, &i.Label, &i.Note); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

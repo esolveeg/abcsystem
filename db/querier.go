@@ -15,7 +15,9 @@ type Querier interface {
 	IconCreateUpdateBulk(ctx context.Context, arg IconCreateUpdateBulkParams) ([]Icon, error)
 	IconList(ctx context.Context) ([]Icon, error)
 	RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdateParams) (AccountsSchemaRole, error)
-	RoleDeleteRestore(ctx context.Context, records []int32) error
+	RoleDelete(ctx context.Context, arg RoleDeleteParams) (AccountsSchemaRole, error)
+	RoleDeleteRestore(ctx context.Context, arg RoleDeleteRestoreParams) (AccountsSchemaRole, error)
+	RoleFindForUpdate(ctx context.Context, roleID int32) (RoleFindForUpdateRow, error)
 	RoleList(ctx context.Context) ([]AccountsSchemaRole, error)
 	RoleListInput(ctx context.Context, callerID int32) ([]RoleListInputRow, error)
 	SettingFindForUpdate(ctx context.Context) ([]SettingFindForUpdateRow, error)

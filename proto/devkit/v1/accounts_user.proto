@@ -49,7 +49,7 @@ message UserDeleteRestoreRequest{
   repeated int32 records = 1;
 }
 message UserDeleteRestoreResponse{
-  repeated AccountsSchemaUser record = 1;
+  repeated AccountsSchemaUser records = 1;
 }
 
 

@@ -42,13 +42,13 @@ func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string) (*devk
 	}
 	return response, nil, nil
 }
+
 func (u *AccountsUsecase) AuthRegister(ctx context.Context, req *connect.Request[devkitv1.AuthRegisterRequest]) (*devkitv1.AuthRegisterResponse, error) {
 	userCreateRequest := u.adapter.UserCreateUpdateRequestFromAuthRegister(req.Msg)
 	user, err := u.UserCreateUpdate(contextkeys.WithCallerID(ctx, 1), connect.NewRequest(userCreateRequest))
 	if err != nil {
 		return nil, err
 	}
-
 	loginInfo, err := u.userGenerateTokens(user.User.UserEmail, user.User.UserId, user.User.UserSecurityLevel)
 	if err != nil {
 		return nil, err
@@ -58,6 +58,7 @@ func (u *AccountsUsecase) AuthRegister(ctx context.Context, req *connect.Request
 		LoginInfo: loginInfo,
 	}, nil
 }
+
 func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[devkitv1.AuthLoginRequest]) (*devkitv1.AuthLoginResponse, error) {
 	userFindParams, supabaseRequest := u.adapter.AuthLoginSqlFromGrpc(req.Msg)
 	_, err := u.supaapi.AuthClient.Token(*supabaseRequest)
@@ -69,13 +70,11 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 	if err != nil {
 		return nil, err
 	}
-
 	loginInfo, err := u.userGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.UserSecurityLevel)
 	if err != nil {
 		return nil, err
 	}
 	response.LoginInfo = loginInfo
-
 	if response.User.UserTypeId == 1 {
 		navigtionBarRequest := db.UserNavigationBarFindParams{
 			UserID:          response.User.UserId,
@@ -91,7 +90,6 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 		}
 		response.NavigationBar = navigations
 	}
-
 	return response, nil
 }
 

@@ -96,7 +96,7 @@ FROM accounts_schema.user_create_update(
 );
 -- name: UserFindForUpdate :one
 with user_roles as (
-    select role_id from accounts_schema.user_role where user_id = sqlc.arg('user_id')
+    select ur.user_id , array_agg(ur.role_id)::int[] roles from accounts_schema.user_role ur where ur.user_id = $1 group by ur.user_id
 )
 select 
     u.user_id,
@@ -104,10 +104,9 @@ select
     u.user_type_id,
     u.user_phone,
     u.user_email, 
-    array_agg(r.role_id) roles 
+    r.roles 
 from accounts_schema.user u
-cross join user_roles r
-where u.user_id = sqlc.arg('user_id');
+join user_roles r on u.user_id = r.user_id;
 
 -- name: UserDeleteRestore :one
 SELECT user_id,
@@ -139,11 +138,9 @@ SELECT
 
 -- name: UserListInput :many
 select 
-  u.user_id ,
-  u.user_name ,
-  u.user_email ,
-  u.user_phone ,
-  max(r.role_security_level) user_security_level
+  u.user_id value,
+  u.user_name label,
+  concat("✉️" , u.user_email ,"📱" , u.user_phone)::varchar note
   from accounts_schema.user u 
   join accounts_schema.user_role ur on u.user_id = ur.user_id
   join accounts_schema.role r on ur.role_id = r.role_id and r.role_security_level <= accounts_schema.user_security_level_find(sqlc.arg('caller_id'))

@@ -5,6 +5,27 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
+func (a *AccountsAdapter) RoleFindForUpdateUpdateGrpcFromSql(resp *db.RoleFindForUpdateRow) *devkitv1.RoleCreateUpdateRequest {
+	return &devkitv1.RoleCreateUpdateRequest{
+		RoleId:          resp.RoleID,
+		RoleName:        resp.RoleName,
+		RoleDescription: resp.RoleDescription.String,
+		Permissions:     resp.Permissions,
+	}
+}
+func (a *AccountsAdapter) RoleListInputGrpcFromSql(resp *[]db.RoleListInputRow) *devkitv1.RoleListInputResponse {
+	records := make([]*devkitv1.SelectInputOption, 0)
+	for _, v := range *resp {
+		records = append(records, &devkitv1.SelectInputOption{
+			Value: v.Value,
+			Note:  v.Note,
+			Label: v.Label,
+		})
+	}
+	return &devkitv1.RoleListInputResponse{
+		Options: records,
+	}
+}
 func (a *AccountsAdapter) RoleEntityGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.AccountsSchemaRole {
 	return &devkitv1.AccountsSchemaRole{
 		RoleId:          int32(resp.RoleID),
