@@ -26,6 +26,8 @@ type Config struct {
 	TokenSymmetricKey      string `mapstructure:"TOKEN_SYMMETRIC_KEY"`
 	ClientBaseUrl          string `mapstructure:"CLIENT_BASE_URL"`
 	DockerHubUser          string `mapstructure:"DOCKERHUB_USER"`
+	AppName                string `mapstructure:"APP_NAME"`
+	GitUser                string `mapstructure:"GIT_USER"`
 	ApiVersion             string `mapstructure:"API_VERSION"`
 	ApiServiceName         string `mapstructure:"API_SERVICE_NAME"`
 	ResendApiKey           string `mapstructure:"RESEND_API_KEY"`
