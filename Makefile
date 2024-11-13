@@ -26,10 +26,10 @@ testapi:
 
 
 seed_storage:
-	devkit seed storage -f ../storage_seed/assets -i ../storage_seed/icons 
+	devkit seed storage -f seeds/assets -i seeds/icons 
 
 seed_accounts:
-	devkit seed accounts_schema --file-path ../accounts.xlsx -e
+	devkit seed accounts_schema --file-path seeds/schemas/accounts.xlsx -e
 
 seed_super_user:
 	devkit seed super-user -e admin@devkit.com -n "super admin user"
