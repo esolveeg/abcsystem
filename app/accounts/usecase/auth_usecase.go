@@ -33,7 +33,7 @@ func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string) (*devk
 		return nil, nil, err
 	}
 	response := u.adapter.AuthLoginGrpcFromSql(user)
-	if len(permissions) > 0 {
+	if len(*permissions) > 0 {
 		permissionsMap, err := u.redisClient.AuthSessionCreate(ctx, user.UserID, permissions)
 		if err != nil {
 			return nil, nil, err

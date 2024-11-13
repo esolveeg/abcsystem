@@ -23,12 +23,12 @@ func (repo *AccountsRepo) UserDelete(ctx context.Context, req db.UserDeleteParam
 	return &resp, nil
 }
 
-func (repo *AccountsRepo) UserList(ctx context.Context) ([]db.AccountsSchemaUser, error) {
+func (repo *AccountsRepo) UserList(ctx context.Context) (*[]db.AccountsSchemaUser, error) {
 	resp, err := repo.store.UserList(context.Background())
 	if err != nil {
 		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
 	}
-	return resp, nil
+	return &resp, nil
 }
 func (repo *AccountsRepo) UserCreateUpdate(ctx context.Context, req db.UserCreateUpdateParams) (*db.AccountsSchemaUser, error) {
 	callerId, ok := contextkeys.CallerID(ctx)
@@ -64,10 +64,10 @@ func (repo *AccountsRepo) UserFind(ctx context.Context, req db.UserFindParams) (
 	}
 	return &resp, nil
 }
-func (repo *AccountsRepo) UserPermissionsMap(ctx context.Context, userID int32) ([]db.UserPermissionsMapRow, error) {
+func (repo *AccountsRepo) UserPermissionsMap(ctx context.Context, userID int32) (*[]db.UserPermissionsMapRow, error) {
 	resp, err := repo.store.UserPermissionsMap(context.Background(), userID)
 	if err != nil {
 		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
 	}
-	return resp, nil
+	return &resp, nil
 }

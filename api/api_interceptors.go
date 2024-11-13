@@ -166,7 +166,7 @@ func (s *Server) NewAuthorizationInterceptor() connect.UnaryInterceptorFunc {
 				if err != nil {
 					return nil, connect.NewError(connect.CodeUnauthenticated, err)
 				}
-				permissionsMap, err = s.redisClient.AuthSessionCreate(ctx, callerId, permissions)
+				permissionsMap, err = s.redisClient.AuthSessionCreate(ctx, callerId, &permissions)
 			}
 			_, group := s.proccessProcedureName(req.Spec().Procedure)
 			permissionGroup, ok := permissionsMap[group]

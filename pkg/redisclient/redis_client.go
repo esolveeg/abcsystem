@@ -9,7 +9,7 @@ import (
 )
 
 type RedisClientInterface interface {
-	AuthSessionCreate(ctx context.Context, userId int32, permissions []db.UserPermissionsMapRow) (PermissionsMap, error)
+	AuthSessionCreate(ctx context.Context, userId int32, permissions *[]db.UserPermissionsMapRow) (PermissionsMap, error)
 	AuthSessionDelete(ctx context.Context, userId int32) error
 	AuthSessionFind(ctx context.Context, userId int32) (PermissionsMap, error)
 }

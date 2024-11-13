@@ -10,9 +10,9 @@ import (
 
 type PermissionsMap map[string]map[string]bool
 
-func (r *RedisClient) UserPermissionsMapRedisFromSql(resp []db.UserPermissionsMapRow) (PermissionsMap, error) {
+func (r *RedisClient) UserPermissionsMapRedisFromSql(resp *[]db.UserPermissionsMapRow) (PermissionsMap, error) {
 	respMap := make(PermissionsMap)
-	for _, rec := range resp {
+	for _, rec := range *resp {
 		perms := make(map[string]bool)
 		err := json.Unmarshal(rec.Permissions, &perms)
 		if err != nil {
@@ -33,7 +33,7 @@ func (r *RedisClient) AuthSessionDelete(ctx context.Context, userId int32) error
 	return nil
 }
 
-func (r *RedisClient) AuthSessionCreate(ctx context.Context, userId int32, permissions []db.UserPermissionsMapRow) (PermissionsMap, error) {
+func (r *RedisClient) AuthSessionCreate(ctx context.Context, userId int32, permissions *[]db.UserPermissionsMapRow) (PermissionsMap, error) {
 	key := strconv.Itoa(int(userId))
 	if permissions == nil {
 		r.client.Del(ctx, key)

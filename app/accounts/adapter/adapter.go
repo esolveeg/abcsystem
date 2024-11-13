@@ -16,10 +16,10 @@ type AccountsAdapterInterface interface {
 	UserCreateUpdateGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.UserCreateUpdateResponse
 
 	NavigationBarItemGrpcFromSql(resp *db.UserNavigationBarFindRow) *devkitv1.NavigationBarItem
-	UserListGrpcFromSql(resp []db.AccountsSchemaUser) *devkitv1.UserListResponse
+	UserListGrpcFromSql(resp *[]db.AccountsSchemaUser) *devkitv1.UserListResponse
 	UserCreateUpdateSqlFromGrpc(req *devkitv1.UserCreateUpdateRequest) *db.UserCreateUpdateParams
 	UserEntityGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.AccountsSchemaUser
-	RoleListGrpcFromSql(resp []db.AccountsSchemaRole) *devkitv1.RoleListResponse
+	RoleListGrpcFromSql(resp *[]db.AccountsSchemaRole) *devkitv1.RoleListResponse
 	RoleEntityGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.AccountsSchemaRole
 	RoleCreateUpdateSqlFromGrpc(req *devkitv1.RoleCreateUpdateRequest) *db.RoleCreateUpdateParams
 	RoleCreateUpdateGrpcFromSql(resp *db.AccountsSchemaRole) *devkitv1.RoleCreateUpdateResponse

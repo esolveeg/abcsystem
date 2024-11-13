@@ -55,10 +55,10 @@ func (a *AccountsAdapter) UserCreateUpdateSqlFromGrpc(req *devkitv1.UserCreateUp
 	}
 	return resp
 }
-func (a *AccountsAdapter) UserListGrpcFromSql(resp []db.AccountsSchemaUser) *devkitv1.UserListResponse {
+func (a *AccountsAdapter) UserListGrpcFromSql(resp *[]db.AccountsSchemaUser) *devkitv1.UserListResponse {
 	records := make([]*devkitv1.AccountsSchemaUser, 0)
 	deletedRecords := make([]*devkitv1.AccountsSchemaUser, 0)
-	for _, v := range resp {
+	for _, v := range *resp {
 		record := a.UserEntityGrpcFromSql(&v)
 		if v.DeletedAt.Valid {
 			deletedRecords = append(deletedRecords, record)

@@ -33,6 +33,15 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
+	// DevkitServiceCompanyDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
+	// CompanyDeleteRestore RPC.
+	DevkitServiceCompanyDeleteRestoreProcedure = "/devkit.v1.DevkitService/CompanyDeleteRestore"
+	// DevkitServiceCompanyListProcedure is the fully-qualified name of the DevkitService's CompanyList
+	// RPC.
+	DevkitServiceCompanyListProcedure = "/devkit.v1.DevkitService/CompanyList"
+	// DevkitServiceCompanyCreateUpdateProcedure is the fully-qualified name of the DevkitService's
+	// CompanyCreateUpdate RPC.
+	DevkitServiceCompanyCreateUpdateProcedure = "/devkit.v1.DevkitService/CompanyCreateUpdate"
 	// DevkitServiceSettingUpdateProcedure is the fully-qualified name of the DevkitService's
 	// SettingUpdate RPC.
 	DevkitServiceSettingUpdateProcedure = "/devkit.v1.DevkitService/SettingUpdate"
@@ -134,6 +143,9 @@ const (
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
 	devkitServiceServiceDescriptor                           = v1.File_devkit_v1_devkit_service_proto.Services().ByName("DevkitService")
+	devkitServiceCompanyDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("CompanyDeleteRestore")
+	devkitServiceCompanyListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("CompanyList")
+	devkitServiceCompanyCreateUpdateMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("CompanyCreateUpdate")
 	devkitServiceSettingUpdateMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("SettingUpdate")
 	devkitServiceSettingFindForUpdateMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("SettingFindForUpdate")
 	devkitServiceIconListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("IconList")
@@ -172,6 +184,10 @@ var (
 
 // DevkitServiceClient is a client for the devkit.v1.DevkitService service.
 type DevkitServiceClient interface {
+	// INJECT METHODS
+	CompanyDeleteRestore(context.Context, *connect.Request[v1.CompanyDeleteRestoreRequest]) (*connect.Response[v1.CompanyDeleteRestoreResponse], error)
+	CompanyList(context.Context, *connect.Request[v1.CompanyListRequest]) (*connect.Response[v1.CompanyListResponse], error)
+	CompanyCreateUpdate(context.Context, *connect.Request[v1.CompanyCreateUpdateRequest]) (*connect.Response[v1.CompanyCreateUpdateResponse], error)
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// public
 	// ////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,6 +252,25 @@ type DevkitServiceClient interface {
 func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) DevkitServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &devkitServiceClient{
+		companyDeleteRestore: connect.NewClient[v1.CompanyDeleteRestoreRequest, v1.CompanyDeleteRestoreResponse](
+			httpClient,
+			baseURL+DevkitServiceCompanyDeleteRestoreProcedure,
+			connect.WithSchema(devkitServiceCompanyDeleteRestoreMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		companyList: connect.NewClient[v1.CompanyListRequest, v1.CompanyListResponse](
+			httpClient,
+			baseURL+DevkitServiceCompanyListProcedure,
+			connect.WithSchema(devkitServiceCompanyListMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
+		companyCreateUpdate: connect.NewClient[v1.CompanyCreateUpdateRequest, v1.CompanyCreateUpdateResponse](
+			httpClient,
+			baseURL+DevkitServiceCompanyCreateUpdateProcedure,
+			connect.WithSchema(devkitServiceCompanyCreateUpdateMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 		settingUpdate: connect.NewClient[v1.SettingUpdateRequest, v1.SettingUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceSettingUpdateProcedure,
@@ -456,6 +491,9 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 
 // devkitServiceClient implements DevkitServiceClient.
 type devkitServiceClient struct {
+	companyDeleteRestore        *connect.Client[v1.CompanyDeleteRestoreRequest, v1.CompanyDeleteRestoreResponse]
+	companyList                 *connect.Client[v1.CompanyListRequest, v1.CompanyListResponse]
+	companyCreateUpdate         *connect.Client[v1.CompanyCreateUpdateRequest, v1.CompanyCreateUpdateResponse]
 	settingUpdate               *connect.Client[v1.SettingUpdateRequest, v1.SettingUpdateResponse]
 	settingFindForUpdate        *connect.Client[v1.SettingFindForUpdateRequest, v1.SettingFindForUpdateResponse]
 	iconList                    *connect.Client[v1.IconListRequest, v1.IconListResponse]
@@ -490,6 +528,21 @@ type devkitServiceClient struct {
 	authAuthorize               *connect.Client[v1.AuthAuthorizeRequest, v1.AuthAuthorizeResponse]
 	authLogin                   *connect.Client[v1.AuthLoginRequest, v1.AuthLoginResponse]
 	authRegister                *connect.Client[v1.AuthRegisterRequest, v1.AuthRegisterResponse]
+}
+
+// CompanyDeleteRestore calls devkit.v1.DevkitService.CompanyDeleteRestore.
+func (c *devkitServiceClient) CompanyDeleteRestore(ctx context.Context, req *connect.Request[v1.CompanyDeleteRestoreRequest]) (*connect.Response[v1.CompanyDeleteRestoreResponse], error) {
+	return c.companyDeleteRestore.CallUnary(ctx, req)
+}
+
+// CompanyList calls devkit.v1.DevkitService.CompanyList.
+func (c *devkitServiceClient) CompanyList(ctx context.Context, req *connect.Request[v1.CompanyListRequest]) (*connect.Response[v1.CompanyListResponse], error) {
+	return c.companyList.CallUnary(ctx, req)
+}
+
+// CompanyCreateUpdate calls devkit.v1.DevkitService.CompanyCreateUpdate.
+func (c *devkitServiceClient) CompanyCreateUpdate(ctx context.Context, req *connect.Request[v1.CompanyCreateUpdateRequest]) (*connect.Response[v1.CompanyCreateUpdateResponse], error) {
+	return c.companyCreateUpdate.CallUnary(ctx, req)
 }
 
 // SettingUpdate calls devkit.v1.DevkitService.SettingUpdate.
@@ -664,6 +717,10 @@ func (c *devkitServiceClient) AuthRegister(ctx context.Context, req *connect.Req
 
 // DevkitServiceHandler is an implementation of the devkit.v1.DevkitService service.
 type DevkitServiceHandler interface {
+	// INJECT METHODS
+	CompanyDeleteRestore(context.Context, *connect.Request[v1.CompanyDeleteRestoreRequest]) (*connect.Response[v1.CompanyDeleteRestoreResponse], error)
+	CompanyList(context.Context, *connect.Request[v1.CompanyListRequest]) (*connect.Response[v1.CompanyListResponse], error)
+	CompanyCreateUpdate(context.Context, *connect.Request[v1.CompanyCreateUpdateRequest]) (*connect.Response[v1.CompanyCreateUpdateResponse], error)
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// public
 	// ////////////////////////////////////////////////////////////////////////////////////////////
@@ -724,6 +781,25 @@ type DevkitServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	devkitServiceCompanyDeleteRestoreHandler := connect.NewUnaryHandler(
+		DevkitServiceCompanyDeleteRestoreProcedure,
+		svc.CompanyDeleteRestore,
+		connect.WithSchema(devkitServiceCompanyDeleteRestoreMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceCompanyListHandler := connect.NewUnaryHandler(
+		DevkitServiceCompanyListProcedure,
+		svc.CompanyList,
+		connect.WithSchema(devkitServiceCompanyListMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceCompanyCreateUpdateHandler := connect.NewUnaryHandler(
+		DevkitServiceCompanyCreateUpdateProcedure,
+		svc.CompanyCreateUpdate,
+		connect.WithSchema(devkitServiceCompanyCreateUpdateMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	devkitServiceSettingUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceSettingUpdateProcedure,
 		svc.SettingUpdate,
@@ -941,6 +1017,12 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 	)
 	return "/devkit.v1.DevkitService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
+		case DevkitServiceCompanyDeleteRestoreProcedure:
+			devkitServiceCompanyDeleteRestoreHandler.ServeHTTP(w, r)
+		case DevkitServiceCompanyListProcedure:
+			devkitServiceCompanyListHandler.ServeHTTP(w, r)
+		case DevkitServiceCompanyCreateUpdateProcedure:
+			devkitServiceCompanyCreateUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceSettingUpdateProcedure:
 			devkitServiceSettingUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceSettingFindForUpdateProcedure:
@@ -1017,6 +1099,18 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 
 // UnimplementedDevkitServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedDevkitServiceHandler struct{}
+
+func (UnimplementedDevkitServiceHandler) CompanyDeleteRestore(context.Context, *connect.Request[v1.CompanyDeleteRestoreRequest]) (*connect.Response[v1.CompanyDeleteRestoreResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.CompanyDeleteRestore is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) CompanyList(context.Context, *connect.Request[v1.CompanyListRequest]) (*connect.Response[v1.CompanyListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.CompanyList is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) CompanyCreateUpdate(context.Context, *connect.Request[v1.CompanyCreateUpdateRequest]) (*connect.Response[v1.CompanyCreateUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.CompanyCreateUpdate is not implemented"))
+}
 
 func (UnimplementedDevkitServiceHandler) SettingUpdate(context.Context, *connect.Request[v1.SettingUpdateRequest]) (*connect.Response[v1.SettingUpdateResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SettingUpdate is not implemented"))
