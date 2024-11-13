@@ -7,12 +7,12 @@ import (
 	"github.com/darwishdev/devkit-api/pkg/contextkeys"
 )
 
-func (repo *AccountsRepo) RoleList(ctx context.Context) ([]db.AccountsSchemaRole, error) {
+func (repo *AccountsRepo) RoleList(ctx context.Context) (*[]db.AccountsSchemaRole, error) {
 	resp, err := repo.store.RoleList(context.Background())
 	if err != nil {
 		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
 	}
-	return resp, nil
+	return &resp, nil
 }
 func (repo *AccountsRepo) RoleCreateUpdate(ctx context.Context, req db.RoleCreateUpdateParams) (*db.AccountsSchemaRole, error) {
 	callerId, ok := contextkeys.CallerID(ctx)

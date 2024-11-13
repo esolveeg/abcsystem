@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 // INJECT IMPORTS
+import "devkit/v1/company_company.proto";
 
 import "devkit/v1/service_options.proto";
 import "devkit/v1/accounts_user.proto";
@@ -15,6 +16,15 @@ package devkit.v1;
 
 service DevkitService {
 	// INJECT METHODS
+rpc CompanyDeleteRestore(CompanyDeleteRestoreRequest) returns (CompanyDeleteRestoreResponse) {  }
+
+
+rpc CompanyList(CompanyListRequest) returns (CompanyListResponse) {  option idempotency_level = NO_SIDE_EFFECTS;  }
+
+
+rpc CompanyCreateUpdate(CompanyCreateUpdateRequest) returns (CompanyCreateUpdateResponse) {  }
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // public 
