@@ -10,7 +10,6 @@ import (
 	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"github.com/iancoleman/strcase"
-	"github.com/rs/zerolog/log"
 )
 
 func (api *Api) authorizeRequestHeader(header http.Header) (*auth.Payload, error) {

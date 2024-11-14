@@ -104,7 +104,7 @@ select
     u.user_type_id,
     u.user_phone,
     u.user_email, 
-    r.roles 
+    r.roles::int[] roles
 from accounts_schema.user u
 join user_roles r on u.user_id = r.user_id;
 

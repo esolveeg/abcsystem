@@ -2,6 +2,7 @@ package adapter
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 
 	"github.com/darwishdev/devkit-api/db"
@@ -10,6 +11,72 @@ import (
 	"github.com/supabase-community/auth-go/types"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type NavigationsMap map[int32]*devkitv1.NavigationBarItem
+
+// The UserNavigationBarFindGrpcFromSql function builds a hierarchical structure of navigation bar items from a sorted database response (dbResponse).
+// This hierarchy supports any number of levels, as long as the input list is sorted in ascending order by level.
+// The function uses navigationBarItemId as a primary key and parentId as a foreign key to link items with their parents.
+// The function logic breakdown is listed as comments inside the function body.
+func (a *AccountsAdapter) UserNavigationBarFindGrpcFromSql(dbResponse []db.UserNavigationBarFindRow) ([]*devkitv1.NavigationBarItem, error) {
+	// 1. Get the maximum level in the tree by accessing the last element in the array, since the response is sorted by level.
+	maxLevel := dbResponse[len(dbResponse)-1].Level
+
+	// 2. Declare rootItems, which will store the top-level items and serve as the function's return value.
+	rootItems := make([]*devkitv1.NavigationBarItem, 0)
+
+	// 3. Initialize levelItemsMap with empty maps. This will store each level's items separately in its own hashmap.
+	//    We populate levelItemsMap in reverse order so that the highest level appears first.
+	//    For example, if maxLevel is 3, levelItemsMap will look like:
+	//    [
+	//      {map with all items of level 3},
+	//      {map with all items of level 2},
+	//      {map with all items of level 1},
+	//    ]
+	levelItemsMap := make([]NavigationsMap, maxLevel)
+	for i := range levelItemsMap {
+		levelItemsMap[i] = NavigationsMap{}
+	}
+
+	// 4. Populate levelItemsMap from dbResponse.
+	for _, dbItem := range dbResponse {
+		primaryKeyValue := dbItem.NavigationBarItemID
+		grpcItem := a.NavigationBarItemGrpcFromSql(&dbItem)
+
+		// Calculate levelIndex to store items in reverse order in levelItemsMap.
+		// If dbItem.Level equals maxLevel, it will go to the first index in levelItemsMap,
+		// and if dbItem.Level equals 1, it will go to the last index.
+		levelIndex := maxLevel - dbItem.Level
+		levelItemsMap[levelIndex][primaryKeyValue] = grpcItem
+	}
+
+	// 5. Construct the response by linking items from levelItemsMap.
+	for levelIndex, grpcItemsMap := range levelItemsMap {
+		for _, grpcItem := range grpcItemsMap {
+			// If we're at the last level in levelItemsMap (root level),
+			// we add the item directly to rootItems, as it has no parent to attach to.
+			if levelIndex == int(maxLevel)-1 {
+				rootItems = append(rootItems, grpcItem)
+				continue
+			}
+
+			// Retrieve the parent level, which is always the next item in levelItemsMap.
+			// This works because levelItemsMap is ordered in reverse.
+			// The previous check prevents out-of-bounds errors by ensuring we're not at the root level.
+			parentLevel := levelItemsMap[levelIndex+1]
+
+			// Find the parentNode of the current item by looking up its parentId in the parent level map.
+			parentNode, ok := parentLevel[grpcItem.ParentId]
+			if !ok {
+				return nil, fmt.Errorf("item %s with parent id %d couldn't be found the parent level - check that data is sorted by level", grpcItem.Label, grpcItem.ParentId)
+			}
+			// Attach the current item as a child of its parentNode.
+			parentNode.Items = append(parentNode.Items, grpcItem)
+
+		}
+	}
+	return rootItems, nil
+}
 
 func (a *AccountsAdapter) UserCreateUpdateRequestFromAuthRegister(req *devkitv1.AuthRegisterRequest) *devkitv1.UserCreateUpdateRequest {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.UserPassword), bcrypt.DefaultCost)
@@ -22,6 +89,7 @@ func (a *AccountsAdapter) UserCreateUpdateRequestFromAuthRegister(req *devkitv1.
 	}
 	return resp
 }
+
 func (a *AccountsAdapter) UserPermissionsMapRedisFromSql(resp []db.UserPermissionsMapRow) ([]byte, error) {
 	respMap := make(map[string]map[string]bool)
 	for _, rec := range resp {
@@ -60,11 +128,14 @@ func (a *AccountsAdapter) NavigationBarItemGrpcFromSql(resp *db.UserNavigationBa
 		resp.LabelAr.String = resp.Label
 	}
 	return &devkitv1.NavigationBarItem{
-		Key:     resp.MenuKey,
-		Label:   resp.Label,
-		LabelAr: resp.LabelAr.String,
-		Icon:    resp.Icon.String,
-		Route:   resp.Route.String,
+		Key:                 resp.MenuKey,
+		Level:               resp.Level,
+		NavigationBarItemId: resp.NavigationBarItemID,
+		ParentId:            resp.ParentID.Int32,
+		Label:               resp.Label,
+		LabelAr:             resp.LabelAr.String,
+		Icon:                resp.Icon.String,
+		Route:               resp.Route.String,
 	}
 }
 

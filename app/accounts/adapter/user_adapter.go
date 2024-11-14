@@ -1,34 +1,10 @@
 package adapter
 
 import (
-	"fmt"
-
 	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"
 )
-
-func (a *AccountsAdapter) UserNavigationBarFindGrpcFromSql(resp *[]db.UserNavigationBarFindRow) ([]*devkitv1.NavigationBarItem, error) {
-	response := make([]*devkitv1.NavigationBarItem, 0)
-	responseMap := make(map[int32]*devkitv1.NavigationBarItem, 0)
-	for _, row := range *resp {
-		if row.Level == 1 {
-			responseMap[row.NavigationBarItemID] = a.NavigationBarItemGrpcFromSql(&row)
-		}
-
-		if row.Level == 2 {
-			parentNode, ok := responseMap[row.ParentID.Int32]
-			if !ok {
-				return nil, fmt.Errorf("parent id not found for %d", row.ParentID.Int32)
-			}
-			parentNode.Items = append(parentNode.Items, a.NavigationBarItemGrpcFromSql(&row))
-		}
-	}
-
-	log.Debug().Interface("user", responseMap).Msg("navigation")
-	return response, nil
-}
 
 func (a *AccountsAdapter) UserEntityGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.AccountsSchemaUser {
 	return &devkitv1.AccountsSchemaUser{

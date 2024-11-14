@@ -21,14 +21,19 @@ message LoginInfo {
   string access_token = 1;
   string access_token_expires_at = 4;
 }
+
 message NavigationBarItem {
+  int32 navigation_bar_item_id = 8;
+  int32 parent_id = 9;
   string key = 1;
   string label = 2;
   string label_ar = 3;
   string icon = 4;
   string route = 5;
+  int32 level = 7;
   repeated NavigationBarItem items = 6;
 }
+
 message AuthLoginResponse{
   AccountsSchemaUser user = 1; 
   LoginInfo login_info = 2; 

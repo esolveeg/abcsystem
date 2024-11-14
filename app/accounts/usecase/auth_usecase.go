@@ -84,10 +84,11 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 		if err != nil {
 			return nil, err
 		}
-		navigations, err := u.adapter.UserNavigationBarFindGrpcFromSql(&navigationBar)
+		navigations, err := u.adapter.UserNavigationBarFindGrpcFromSql(*navigationBar)
 		if err != nil {
 			return nil, err
 		}
+
 		response.NavigationBar = navigations
 	}
 	return response, nil
