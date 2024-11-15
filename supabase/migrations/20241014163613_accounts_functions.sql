@@ -1,5 +1,6 @@
-
-
+--This function retrieves a list of permissions for a specific user (in_user_id) 
+-- by joining several tables: role_permission, role, user_role, and permission.
+--It returns a table with columns: permission_id, permission_group, and permission_function.
 CREATE OR REPLACE FUNCTION accounts_schema.user_permissions_list(in_user_id int) 
 RETURNS table (
 permission_id int,
@@ -22,6 +23,10 @@ BEGIN
 END
 $$;
 
+
+-- This function groups the permissions for a user into permission groups and returns a JSONB object
+-- where the keys are permission_function, and the value is always true.
+-- this endpoint result will be cached to be able to access the accessebility of certain user to a certain permission on O(1) constant time
 CREATE OR REPLACE FUNCTION accounts_schema.user_permissions_list_map(in_user_id int) 
 RETURNS table (
 permission_group varchar(200),
@@ -145,6 +150,8 @@ return query select
 END
 $$; 
 
+
+-- return the maximum role_security_level for specific user
 CREATE OR REPLACE FUNCTION accounts_schema.user_security_level_find(in_user_id int) 
 RETURNS int
 LANGUAGE plpgsql 
