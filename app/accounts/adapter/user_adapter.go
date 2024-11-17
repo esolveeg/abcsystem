@@ -34,6 +34,7 @@ func (a *AccountsAdapter) UserCreateUpdateSqlFromGrpc(req *devkitv1.UserCreateUp
 func (a *AccountsAdapter) UserFindForUpdateUpdateGrpcFromSql(resp *db.UserFindForUpdateRow) *devkitv1.UserCreateUpdateRequest {
 	return &devkitv1.UserCreateUpdateRequest{
 		UserId:     resp.UserID,
+		CompanyId:  resp.CompanyID.Int32,
 		UserName:   resp.UserName,
 		UserTypeId: resp.UserTypeID,
 		UserPhone:  resp.UserPhone.String,

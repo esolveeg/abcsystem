@@ -88,7 +88,7 @@ func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 		) (connect.AnyResponse, error) {
 			methodDesc, ok := req.Spec().Schema.(protoreflect.MethodDescriptor)
 			if !ok {
-				fmt.Errorf("Schema is not a MethodDescriptor")
+				return nil, fmt.Errorf("Schema is not a MethodDescriptor")
 			}
 			// Access the method options
 			options := methodDesc.Options()
@@ -104,7 +104,7 @@ func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 				}
 				// Inject the callerID into the context
 				ctx = contextkeys.WithCallerID(ctx, payload.UserId)
-
+				ctx = contextkeys.WithiTenantID(ctx, payload.TenantId)
 				skipAuthorization, ok := proto.GetExtension(options, devkitv1.E_SkipAuthorization).(bool)
 				if skipAuthorization && ok {
 					return next(ctx, req)

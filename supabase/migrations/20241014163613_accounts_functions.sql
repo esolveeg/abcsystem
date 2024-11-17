@@ -227,6 +227,7 @@ $$;
  CREATE OR REPLACE FUNCTION accounts_schema.role_create_update(
     in_role_id int,
     in_caller_id int,
+    in_company_id int,
     in_role_security_level int,
     in_role_name varchar(200),
     in_role_description varchar(200),
@@ -260,6 +261,7 @@ if NOT is_null(in_role_id) then
   update accounts_schema.role
   set 
   role_name = is_null_replace(in_role_name , role_name) , 
+  company_id = (is_null(in_company_id, null)),
   role_description = is_null_replace(in_role_description , role_description),
   role_security_level = in_role_security_level,
   updated_at = NOW()
@@ -273,9 +275,11 @@ else
        INSERT INTO accounts_schema.role (
             role_name,
             role_security_level, 
+            company_id,
             role_description 
         ) VALUES (
             in_role_name,
+            is_null(in_company_id,null),
             in_role_security_level, 
             in_role_description
         ) RETURNING role_id INTO v_role_id;
@@ -286,12 +290,13 @@ else
         ) select v_role_id , unnest(in_permissions);
 end if;
   return query select  
-    role_id ,
-    role_name ,
+    role_id,
+    role_name,
+    company_id,
     role_security_level,
-    role_description ,
-    created_at ,
-    updated_at ,
+    role_description,
+    created_at,
+    updated_at,
     deleted_at from accounts_schema.role where role_id = is_null_replace(v_role_id , in_role_id);
 
 END
@@ -309,6 +314,7 @@ CREATE OR REPLACE FUNCTION accounts_schema.user_create_update(
     in_user_id int,
     in_user_name varchar(200),
     in_caller_id int,
+    in_company_id int,
     in_user_type_id int,
     in_user_phone varchar(200),
     in_user_email varchar(200),
@@ -347,6 +353,7 @@ if NOT is_null(in_user_id) then
   set 
   user_name = is_null_replace(in_user_name , user_name), 
   user_type_id = is_null_replace(in_user_type_id , user_type_id), 
+  company_id = is_null(in_company_id,null), 
   user_email = is_null_replace(in_user_email , user_email), 
   user_phone = is_null_replace(in_user_phone , user_phone), 
   user_password = is_null_replace(in_user_password , user_password),
@@ -362,6 +369,7 @@ else
       INSERT INTO accounts_schema.user(
             user_name,
             user_type_id,
+            company_id,
             user_phone,
             user_email,
             user_password
@@ -369,6 +377,7 @@ else
       ) VALUES (
             in_user_name,
             in_user_type_id,
+            in_company_id,
             in_user_phone,
             in_user_email,
             in_user_password
@@ -384,6 +393,7 @@ end if;
 	user_name ,
 	user_type_id ,
 	user_phone ,
+        company_id,
 	user_email ,
 	user_password ,
 	created_at ,
@@ -529,5 +539,6 @@ WHERE
     role_id = in_role_id RETURNING *;
 END
 $$; 
+
 
 

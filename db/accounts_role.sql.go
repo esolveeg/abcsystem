@@ -13,26 +13,22 @@ import (
 
 const roleCreateUpdate = `-- name: RoleCreateUpdate :one
 select  
-	role_id ,
-	role_name ,
-	role_security_level ,
-	role_description ,
-	created_at ,
-	updated_at ,
-deleted_at  
+	role_id, company_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at
 from accounts_schema.role_create_update(
 in_role_id => $1,
 in_role_name => $2,
-in_role_security_level => $3,
-in_caller_id => $4,
-in_role_description => $5,
-in_permissions => $6::int[]
+in_company_id => $3,
+in_role_security_level => $4,
+in_caller_id => $5,
+in_role_description => $6,
+in_permissions => $7::int[]
 )
 `
 
 type RoleCreateUpdateParams struct {
 	RoleID            int32   `json:"role_id"`
 	RoleName          string  `json:"role_name"`
+	CompanyID         int32   `json:"company_id"`
 	RoleSecurityLevel int32   `json:"role_security_level"`
 	CallerID          int32   `json:"caller_id"`
 	RoleDescription   string  `json:"role_description"`
@@ -43,6 +39,7 @@ func (q *Queries) RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdatePara
 	row := q.db.QueryRow(ctx, roleCreateUpdate,
 		arg.RoleID,
 		arg.RoleName,
+		arg.CompanyID,
 		arg.RoleSecurityLevel,
 		arg.CallerID,
 		arg.RoleDescription,
@@ -51,6 +48,7 @@ func (q *Queries) RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdatePara
 	var i AccountsSchemaRole
 	err := row.Scan(
 		&i.RoleID,
+		&i.CompanyID,
 		&i.RoleName,
 		&i.RoleSecurityLevel,
 		&i.RoleDescription,
@@ -63,13 +61,7 @@ func (q *Queries) RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdatePara
 
 const roleDelete = `-- name: RoleDelete :one
 SELECT 
-	role_id ,
-	role_name ,
-	role_security_level ,
-	role_description ,
-	created_at ,
-	updated_at ,
-	deleted_at  
+	role_id, company_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at
 FROM accounts_schema.role_delete(in_role_id => $1 , in_caller_id => $2)
 `
 
@@ -83,6 +75,7 @@ func (q *Queries) RoleDelete(ctx context.Context, arg RoleDeleteParams) (Account
 	var i AccountsSchemaRole
 	err := row.Scan(
 		&i.RoleID,
+		&i.CompanyID,
 		&i.RoleName,
 		&i.RoleSecurityLevel,
 		&i.RoleDescription,
@@ -95,13 +88,7 @@ func (q *Queries) RoleDelete(ctx context.Context, arg RoleDeleteParams) (Account
 
 const roleDeleteRestore = `-- name: RoleDeleteRestore :one
 SELECT 
-	role_id ,
-	role_name ,
-	role_security_level ,
-	role_description ,
-	created_at ,
-	updated_at ,
-deleted_at  
+	role_id, company_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at  
 FROM accounts_schema.role_delete_restore(in_role_id => $1 , in_caller_id => $2)
 `
 
@@ -115,6 +102,7 @@ func (q *Queries) RoleDeleteRestore(ctx context.Context, arg RoleDeleteRestorePa
 	var i AccountsSchemaRole
 	err := row.Scan(
 		&i.RoleID,
+		&i.CompanyID,
 		&i.RoleName,
 		&i.RoleSecurityLevel,
 		&i.RoleDescription,
@@ -132,6 +120,7 @@ with permissions as (
 select  
 r.role_id ,
 r.role_name ,
+r.company_id,
 r.role_security_level ,
 r.role_description ,
 p.permissions permissions
@@ -143,6 +132,7 @@ on r.role_id = p.role_id
 type RoleFindForUpdateRow struct {
 	RoleID            int32       `json:"role_id"`
 	RoleName          string      `json:"role_name"`
+	CompanyID         pgtype.Int4 `json:"company_id"`
 	RoleSecurityLevel int32       `json:"role_security_level"`
 	RoleDescription   pgtype.Text `json:"role_description"`
 	Permissions       []int32     `json:"permissions"`
@@ -154,6 +144,7 @@ func (q *Queries) RoleFindForUpdate(ctx context.Context, roleID int32) (RoleFind
 	err := row.Scan(
 		&i.RoleID,
 		&i.RoleName,
+		&i.CompanyID,
 		&i.RoleSecurityLevel,
 		&i.RoleDescription,
 		&i.Permissions,
@@ -163,13 +154,7 @@ func (q *Queries) RoleFindForUpdate(ctx context.Context, roleID int32) (RoleFind
 
 const roleList = `-- name: RoleList :many
 select  
-	role_id ,
-	role_name ,
-	role_security_level ,
-	role_description ,
-	created_at ,
-	updated_at ,
-	deleted_at 
+	role_id, company_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at
 
 from accounts_schema.role
 `
@@ -185,6 +170,7 @@ func (q *Queries) RoleList(ctx context.Context) ([]AccountsSchemaRole, error) {
 		var i AccountsSchemaRole
 		if err := rows.Scan(
 			&i.RoleID,
+			&i.CompanyID,
 			&i.RoleName,
 			&i.RoleSecurityLevel,
 			&i.RoleDescription,

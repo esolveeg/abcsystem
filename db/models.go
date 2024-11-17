@@ -35,6 +35,7 @@ type AccountsSchemaPermission struct {
 
 type AccountsSchemaRole struct {
 	RoleID            int32            `json:"role_id"`
+	CompanyID         pgtype.Int4      `json:"company_id"`
 	RoleName          string           `json:"role_name"`
 	RoleSecurityLevel int32            `json:"role_security_level"`
 	RoleDescription   pgtype.Text      `json:"role_description"`
@@ -51,6 +52,7 @@ type AccountsSchemaRolePermission struct {
 type AccountsSchemaUser struct {
 	UserID       int32            `json:"user_id"`
 	UserName     string           `json:"user_name"`
+	CompanyID    pgtype.Int4      `json:"company_id"`
 	UserTypeID   int32            `json:"user_type_id"`
 	UserPhone    pgtype.Text      `json:"user_phone"`
 	UserEmail    string           `json:"user_email"`

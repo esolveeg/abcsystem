@@ -15,6 +15,7 @@ var (
 
 type Payload struct {
 	ID                uuid.UUID `json:"id"`
+	TenantId          int32     `json:"tenant_id"`
 	UserId            int32     `json:"user_id"`
 	UserSecurityLevel int32     `json:"user_security_level"`
 	Username          string    `json:"username"`
@@ -23,16 +24,17 @@ type Payload struct {
 	ExpiredAt         time.Time `json:"expired_at"`
 }
 
-func NewPayload(username string, userID int32, userSecurityLevel int32, duration time.Duration) (*Payload, error) {
-	tokenID, err := uuid.NewRandom()
+func NewPayload(username string, userId int32, userSecurityLevel int32, tenantId int32, duration time.Duration) (*Payload, error) {
+	tokenId, err := uuid.NewRandom()
 	if err != nil {
 		return nil, err
 	}
 
 	payload := &Payload{
-		ID:                tokenID,
+		ID:                tokenId,
 		UserSecurityLevel: userSecurityLevel,
-		UserId:            userID,
+		TenantId:          tenantId,
+		UserId:            userId,
 		Username:          username,
 		IssuedAt:          time.Now(),
 		ExpiredAt:         time.Now().Add(duration),

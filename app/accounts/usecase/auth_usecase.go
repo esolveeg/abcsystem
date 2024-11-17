@@ -12,8 +12,8 @@ import (
 	"github.com/supabase-community/auth-go/types"
 )
 
-func (u *AccountsUsecase) userGenerateTokens(username string, userID int32, userSecurityLevel int32) (*devkitv1.LoginInfo, error) {
-	accessToken, accessPayload, err := u.tokenMaker.CreateToken(username, userID, userSecurityLevel, u.tokenDuration)
+func (u *AccountsUsecase) userGenerateTokens(username string, userId int32, tenantId int32, userSecurityLevel int32) (*devkitv1.LoginInfo, error) {
+	accessToken, accessPayload, err := u.tokenMaker.CreateToken(username, userId, userSecurityLevel, tenantId, u.tokenDuration)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (u *AccountsUsecase) AuthRegister(ctx context.Context, req *connect.Request
 	if err != nil {
 		return nil, err
 	}
-	loginInfo, err := u.userGenerateTokens(user.User.UserEmail, user.User.UserId, user.User.UserSecurityLevel)
+	loginInfo, err := u.userGenerateTokens(user.User.UserEmail, user.User.UserId, user.User.UserSecurityLevel, user.User.CompanyId)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +70,7 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 	if err != nil {
 		return nil, err
 	}
-	loginInfo, err := u.userGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.UserSecurityLevel)
+	loginInfo, err := u.userGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.UserSecurityLevel, response.User.CompanyId)
 	if err != nil {
 		return nil, err
 	}

@@ -45,16 +45,8 @@ menu_key;
 
 -- name: UserFind :one
 SELECT
-    user_id,
-    user_name,
-    user_type_id,
-    user_phone,
-    user_email,
-    user_password,
-    created_at,
-    updated_at,
-    deleted_at
-FROM
+*
+    FROM
     accounts_schema.user
 WHERE deleted_at is null and (
     user_email = sqlc.arg('search_key')
@@ -62,31 +54,16 @@ WHERE deleted_at is null and (
     OR user_id = sqlc.arg('user_id'));
 -- name: UserList :many
 SELECT  
-    user_id,
-    user_name,
-    user_type_id,
-    user_phone,
-    user_email,
-    user_password,
-    created_at,
-    updated_at,
-    deleted_at
-FROM accounts_schema.user;
+*
+    FROM accounts_schema.user;
 
 -- name: UserCreateUpdate :one
 SELECT  
-    user_id,
-    user_name,
-    user_type_id,
-    user_phone,
-    user_email,
-    user_password,
-    created_at,
-    updated_at,
-    deleted_at
+    *
 FROM accounts_schema.user_create_update(
     in_user_id => sqlc.arg('user_id'),
     in_user_name => sqlc.arg('user_name'),
+    in_company_id => sqlc.arg('company_id'),
     in_caller_id => sqlc.arg('caller_id'),
     in_user_type_id => sqlc.arg('user_type_id'),
     in_user_phone => sqlc.arg('user_phone'),
@@ -103,21 +80,14 @@ select
     u.user_name,
     u.user_type_id,
     u.user_phone,
+    u.company_id,
     u.user_email, 
     r.roles::int[] roles
 from accounts_schema.user u
 join user_roles r on u.user_id = r.user_id;
 
 -- name: UserDeleteRestore :one
-SELECT user_id,
-    user_name,
-    user_type_id,
-    user_phone,
-    user_email,
-    user_password,
-    created_at,
-    updated_at,
-    deleted_at FROM accounts_schema.user_delete_restore(in_user_id => sqlc.arg(user_id) , in_caller_id => sqlc.arg(caller_id));
+SELECT * FROM accounts_schema.user_delete_restore(in_user_id => sqlc.arg(user_id) , in_caller_id => sqlc.arg(caller_id));
 
 -- name: UserPermissionsMap :many
 select permission_group::varchar(200), permissions::jsonb from accounts_schema.user_permissions_list_map(in_user_id => sqlc.arg('user_id'));
@@ -125,16 +95,7 @@ select permission_group::varchar(200), permissions::jsonb from accounts_schema.u
 
 -- name: UserDelete :one
 SELECT 
-    user_id,
-    user_name,
-    user_type_id,
-    user_phone,
-    user_email,
-    user_password,
-    created_at,
-    updated_at,
-    deleted_at
-    FROM accounts_schema.user_delete(in_user_id => sqlc.arg('user_id'), in_caller_id => sqlc.arg('caller_id'));
+*    FROM accounts_schema.user_delete(in_user_id => sqlc.arg('user_id'), in_caller_id => sqlc.arg('caller_id'));
 
 -- name: UserListInput :many
 select 

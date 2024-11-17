@@ -4,6 +4,7 @@ import (
 	// USECASE_IMPORTS
 	"github.com/bufbuild/protovalidate-go"
 	accountsUsecase "github.com/darwishdev/devkit-api/app/accounts/usecase"
+	companyUsecase "github.com/darwishdev/devkit-api/app/company/usecase"
 	publicUsecase "github.com/darwishdev/devkit-api/app/public/usecase"
 	"github.com/darwishdev/devkit-api/config"
 	"github.com/darwishdev/devkit-api/db"
@@ -24,6 +25,7 @@ type Api struct {
 	tokenMaker      auth.Maker
 	sqlSeeder       sqlseeder.SeederInterface
 	publicUsecase   publicUsecase.PublicUsecaseInterface
+	companyUsecase  companyUsecase.CompanyUsecaseInterface
 	// USECASE_FIELDS
 
 	supaapi     supaapigo.Supaapi
@@ -50,11 +52,13 @@ func NewApi(config config.Config, store db.Store, tokenMaker auth.Maker, redisCl
 	sqlSeeder := sqlseeder.NewSeeder(sqlseeder.SeederConfig{HashFunc: HashFunc})
 	// USECASE_INSTANTIATIONS
 
+	companyUsecase := companyUsecase.NewCompanyUsecase(store)
 	accountsUsecase := accountsUsecase.NewAccountsUsecase(store, supaapi, redisClient, tokenMaker, config.AccessTokenDuration)
 	publicUsecase := publicUsecase.NewPublicUsecase(store, supaapi, redisClient, resendClient)
 	return &Api{
 		// USECASE_INJECTIONS
 		accountsUsecase: accountsUsecase,
+		companyUsecase:  companyUsecase,
 		store:           store,
 		redisClient:     redisClient,
 		tokenMaker:      tokenMaker,

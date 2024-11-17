@@ -8,6 +8,7 @@ import (
 func (a *AccountsAdapter) RoleFindForUpdateUpdateGrpcFromSql(resp *db.RoleFindForUpdateRow) *devkitv1.RoleCreateUpdateRequest {
 	return &devkitv1.RoleCreateUpdateRequest{
 		RoleId:          resp.RoleID,
+		CompanyId:       resp.CompanyID.Int32,
 		RoleName:        resp.RoleName,
 		RoleDescription: resp.RoleDescription.String,
 		Permissions:     resp.Permissions,
@@ -30,6 +31,7 @@ func (a *AccountsAdapter) RoleEntityGrpcFromSql(resp *db.AccountsSchemaRole) *de
 	return &devkitv1.AccountsSchemaRole{
 		RoleId:          int32(resp.RoleID),
 		RoleName:        resp.RoleName,
+		CompanyId:       resp.CompanyID.Int32,
 		RoleDescription: resp.RoleDescription.String,
 		CreatedAt:       db.TimeToString(resp.CreatedAt.Time),
 		DeletedAt:       db.TimeToString(resp.DeletedAt.Time),
@@ -39,6 +41,7 @@ func (a *AccountsAdapter) RoleEntityGrpcFromSql(resp *db.AccountsSchemaRole) *de
 func (a *AccountsAdapter) RoleCreateUpdateSqlFromGrpc(req *devkitv1.RoleCreateUpdateRequest) *db.RoleCreateUpdateParams {
 	resp := &db.RoleCreateUpdateParams{
 		RoleID:          req.RoleId,
+		CompanyID:       req.CompanyId,
 		RoleName:        req.RoleName,
 		RoleDescription: req.RoleDescription,
 		Permissions:     req.Permissions,

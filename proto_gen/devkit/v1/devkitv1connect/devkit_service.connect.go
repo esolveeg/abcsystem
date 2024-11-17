@@ -33,21 +33,12 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// DevkitServiceCompanyDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
-	// CompanyDeleteRestore RPC.
-	DevkitServiceCompanyDeleteRestoreProcedure = "/devkit.v1.DevkitService/CompanyDeleteRestore"
-	// DevkitServiceCompanyListProcedure is the fully-qualified name of the DevkitService's CompanyList
-	// RPC.
-	DevkitServiceCompanyListProcedure = "/devkit.v1.DevkitService/CompanyList"
-	// DevkitServiceCompanyCreateUpdateProcedure is the fully-qualified name of the DevkitService's
-	// CompanyCreateUpdate RPC.
-	DevkitServiceCompanyCreateUpdateProcedure = "/devkit.v1.DevkitService/CompanyCreateUpdate"
-	// DevkitServiceSettingUpdateProcedure is the fully-qualified name of the DevkitService's
-	// SettingUpdate RPC.
-	DevkitServiceSettingUpdateProcedure = "/devkit.v1.DevkitService/SettingUpdate"
 	// DevkitServiceSettingFindForUpdateProcedure is the fully-qualified name of the DevkitService's
 	// SettingFindForUpdate RPC.
 	DevkitServiceSettingFindForUpdateProcedure = "/devkit.v1.DevkitService/SettingFindForUpdate"
+	// DevkitServiceSettingUpdateProcedure is the fully-qualified name of the DevkitService's
+	// SettingUpdate RPC.
+	DevkitServiceSettingUpdateProcedure = "/devkit.v1.DevkitService/SettingUpdate"
 	// DevkitServiceIconListProcedure is the fully-qualified name of the DevkitService's IconList RPC.
 	DevkitServiceIconListProcedure = "/devkit.v1.DevkitService/IconList"
 	// DevkitServiceIconCreateUpdateBulkProcedure is the fully-qualified name of the DevkitService's
@@ -75,32 +66,32 @@ const (
 	DevkitServiceImportTableProcedure = "/devkit.v1.DevkitService/ImportTable"
 	// DevkitServiceEmailSendProcedure is the fully-qualified name of the DevkitService's EmailSend RPC.
 	DevkitServiceEmailSendProcedure = "/devkit.v1.DevkitService/EmailSend"
+	// DevkitServiceTranslationListProcedure is the fully-qualified name of the DevkitService's
+	// TranslationList RPC.
+	DevkitServiceTranslationListProcedure = "/devkit.v1.DevkitService/TranslationList"
 	// DevkitServiceTranslationCreateUpdateBulkProcedure is the fully-qualified name of the
 	// DevkitService's TranslationCreateUpdateBulk RPC.
 	DevkitServiceTranslationCreateUpdateBulkProcedure = "/devkit.v1.DevkitService/TranslationCreateUpdateBulk"
 	// DevkitServiceTranslationDeleteProcedure is the fully-qualified name of the DevkitService's
 	// TranslationDelete RPC.
 	DevkitServiceTranslationDeleteProcedure = "/devkit.v1.DevkitService/TranslationDelete"
-	// DevkitServiceTranslationListProcedure is the fully-qualified name of the DevkitService's
-	// TranslationList RPC.
-	DevkitServiceTranslationListProcedure = "/devkit.v1.DevkitService/TranslationList"
 	// DevkitServiceRoleListProcedure is the fully-qualified name of the DevkitService's RoleList RPC.
 	DevkitServiceRoleListProcedure = "/devkit.v1.DevkitService/RoleList"
-	// DevkitServiceRoleFindForUpdateProcedure is the fully-qualified name of the DevkitService's
-	// RoleFindForUpdate RPC.
-	DevkitServiceRoleFindForUpdateProcedure = "/devkit.v1.DevkitService/RoleFindForUpdate"
 	// DevkitServiceRoleListInputProcedure is the fully-qualified name of the DevkitService's
 	// RoleListInput RPC.
 	DevkitServiceRoleListInputProcedure = "/devkit.v1.DevkitService/RoleListInput"
+	// DevkitServiceRoleFindForUpdateProcedure is the fully-qualified name of the DevkitService's
+	// RoleFindForUpdate RPC.
+	DevkitServiceRoleFindForUpdateProcedure = "/devkit.v1.DevkitService/RoleFindForUpdate"
 	// DevkitServiceRoleCreateUpdateProcedure is the fully-qualified name of the DevkitService's
 	// RoleCreateUpdate RPC.
 	DevkitServiceRoleCreateUpdateProcedure = "/devkit.v1.DevkitService/RoleCreateUpdate"
-	// DevkitServiceRoleDeleteProcedure is the fully-qualified name of the DevkitService's RoleDelete
-	// RPC.
-	DevkitServiceRoleDeleteProcedure = "/devkit.v1.DevkitService/RoleDelete"
 	// DevkitServiceRoleDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
 	// RoleDeleteRestore RPC.
 	DevkitServiceRoleDeleteRestoreProcedure = "/devkit.v1.DevkitService/RoleDeleteRestore"
+	// DevkitServiceRoleDeleteProcedure is the fully-qualified name of the DevkitService's RoleDelete
+	// RPC.
+	DevkitServiceRoleDeleteProcedure = "/devkit.v1.DevkitService/RoleDelete"
 	// DevkitServiceUserListProcedure is the fully-qualified name of the DevkitService's UserList RPC.
 	DevkitServiceUserListProcedure = "/devkit.v1.DevkitService/UserList"
 	// DevkitServiceUserListInputProcedure is the fully-qualified name of the DevkitService's
@@ -112,12 +103,26 @@ const (
 	// DevkitServiceUserCreateUpdateProcedure is the fully-qualified name of the DevkitService's
 	// UserCreateUpdate RPC.
 	DevkitServiceUserCreateUpdateProcedure = "/devkit.v1.DevkitService/UserCreateUpdate"
-	// DevkitServiceUserDeleteProcedure is the fully-qualified name of the DevkitService's UserDelete
-	// RPC.
-	DevkitServiceUserDeleteProcedure = "/devkit.v1.DevkitService/UserDelete"
 	// DevkitServiceUserDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
 	// UserDeleteRestore RPC.
 	DevkitServiceUserDeleteRestoreProcedure = "/devkit.v1.DevkitService/UserDeleteRestore"
+	// DevkitServiceUserDeleteProcedure is the fully-qualified name of the DevkitService's UserDelete
+	// RPC.
+	DevkitServiceUserDeleteProcedure = "/devkit.v1.DevkitService/UserDelete"
+	// DevkitServiceAuthLoginProcedure is the fully-qualified name of the DevkitService's AuthLogin RPC.
+	DevkitServiceAuthLoginProcedure = "/devkit.v1.DevkitService/AuthLogin"
+	// DevkitServiceAuthRegisterProcedure is the fully-qualified name of the DevkitService's
+	// AuthRegister RPC.
+	DevkitServiceAuthRegisterProcedure = "/devkit.v1.DevkitService/AuthRegister"
+	// DevkitServiceAuthInviteProcedure is the fully-qualified name of the DevkitService's AuthInvite
+	// RPC.
+	DevkitServiceAuthInviteProcedure = "/devkit.v1.DevkitService/AuthInvite"
+	// DevkitServiceAuthAuthorizeProcedure is the fully-qualified name of the DevkitService's
+	// AuthAuthorize RPC.
+	DevkitServiceAuthAuthorizeProcedure = "/devkit.v1.DevkitService/AuthAuthorize"
+	// DevkitServiceAuthLoginProviderProcedure is the fully-qualified name of the DevkitService's
+	// AuthLoginProvider RPC.
+	DevkitServiceAuthLoginProviderProcedure = "/devkit.v1.DevkitService/AuthLoginProvider"
 	// DevkitServiceAuthLoginProviderCallbackProcedure is the fully-qualified name of the
 	// DevkitService's AuthLoginProviderCallback RPC.
 	DevkitServiceAuthLoginProviderCallbackProcedure = "/devkit.v1.DevkitService/AuthLoginProviderCallback"
@@ -127,30 +132,13 @@ const (
 	// DevkitServiceAuthResetPasswordEmailProcedure is the fully-qualified name of the DevkitService's
 	// AuthResetPasswordEmail RPC.
 	DevkitServiceAuthResetPasswordEmailProcedure = "/devkit.v1.DevkitService/AuthResetPasswordEmail"
-	// DevkitServiceAuthLoginProviderProcedure is the fully-qualified name of the DevkitService's
-	// AuthLoginProvider RPC.
-	DevkitServiceAuthLoginProviderProcedure = "/devkit.v1.DevkitService/AuthLoginProvider"
-	// DevkitServiceAuthInviteProcedure is the fully-qualified name of the DevkitService's AuthInvite
-	// RPC.
-	DevkitServiceAuthInviteProcedure = "/devkit.v1.DevkitService/AuthInvite"
-	// DevkitServiceAuthAuthorizeProcedure is the fully-qualified name of the DevkitService's
-	// AuthAuthorize RPC.
-	DevkitServiceAuthAuthorizeProcedure = "/devkit.v1.DevkitService/AuthAuthorize"
-	// DevkitServiceAuthLoginProcedure is the fully-qualified name of the DevkitService's AuthLogin RPC.
-	DevkitServiceAuthLoginProcedure = "/devkit.v1.DevkitService/AuthLogin"
-	// DevkitServiceAuthRegisterProcedure is the fully-qualified name of the DevkitService's
-	// AuthRegister RPC.
-	DevkitServiceAuthRegisterProcedure = "/devkit.v1.DevkitService/AuthRegister"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
 	devkitServiceServiceDescriptor                           = v1.File_devkit_v1_devkit_service_proto.Services().ByName("DevkitService")
-	devkitServiceCompanyDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("CompanyDeleteRestore")
-	devkitServiceCompanyListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("CompanyList")
-	devkitServiceCompanyCreateUpdateMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("CompanyCreateUpdate")
-	devkitServiceSettingUpdateMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("SettingUpdate")
 	devkitServiceSettingFindForUpdateMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("SettingFindForUpdate")
+	devkitServiceSettingUpdateMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("SettingUpdate")
 	devkitServiceIconListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("IconList")
 	devkitServiceIconCreateUpdateBulkMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("IconCreateUpdateBulk")
 	devkitServiceFileListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("FileList")
@@ -161,70 +149,70 @@ var (
 	devkitServiceBucketCreateUpdateMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("BucketCreateUpdate")
 	devkitServiceImportTableMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("ImportTable")
 	devkitServiceEmailSendMethodDescriptor                   = devkitServiceServiceDescriptor.Methods().ByName("EmailSend")
+	devkitServiceTranslationListMethodDescriptor             = devkitServiceServiceDescriptor.Methods().ByName("TranslationList")
 	devkitServiceTranslationCreateUpdateBulkMethodDescriptor = devkitServiceServiceDescriptor.Methods().ByName("TranslationCreateUpdateBulk")
 	devkitServiceTranslationDeleteMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("TranslationDelete")
-	devkitServiceTranslationListMethodDescriptor             = devkitServiceServiceDescriptor.Methods().ByName("TranslationList")
 	devkitServiceRoleListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("RoleList")
-	devkitServiceRoleFindForUpdateMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("RoleFindForUpdate")
 	devkitServiceRoleListInputMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("RoleListInput")
+	devkitServiceRoleFindForUpdateMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("RoleFindForUpdate")
 	devkitServiceRoleCreateUpdateMethodDescriptor            = devkitServiceServiceDescriptor.Methods().ByName("RoleCreateUpdate")
-	devkitServiceRoleDeleteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("RoleDelete")
 	devkitServiceRoleDeleteRestoreMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("RoleDeleteRestore")
+	devkitServiceRoleDeleteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("RoleDelete")
 	devkitServiceUserListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("UserList")
 	devkitServiceUserListInputMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("UserListInput")
 	devkitServiceUserFindForUpdateMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("UserFindForUpdate")
 	devkitServiceUserCreateUpdateMethodDescriptor            = devkitServiceServiceDescriptor.Methods().ByName("UserCreateUpdate")
-	devkitServiceUserDeleteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("UserDelete")
 	devkitServiceUserDeleteRestoreMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("UserDeleteRestore")
+	devkitServiceUserDeleteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("UserDelete")
+	devkitServiceAuthLoginMethodDescriptor                   = devkitServiceServiceDescriptor.Methods().ByName("AuthLogin")
+	devkitServiceAuthRegisterMethodDescriptor                = devkitServiceServiceDescriptor.Methods().ByName("AuthRegister")
+	devkitServiceAuthInviteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("AuthInvite")
+	devkitServiceAuthAuthorizeMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("AuthAuthorize")
+	devkitServiceAuthLoginProviderMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("AuthLoginProvider")
 	devkitServiceAuthLoginProviderCallbackMethodDescriptor   = devkitServiceServiceDescriptor.Methods().ByName("AuthLoginProviderCallback")
 	devkitServiceAuthResetPasswordMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("AuthResetPassword")
 	devkitServiceAuthResetPasswordEmailMethodDescriptor      = devkitServiceServiceDescriptor.Methods().ByName("AuthResetPasswordEmail")
-	devkitServiceAuthLoginProviderMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("AuthLoginProvider")
-	devkitServiceAuthInviteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("AuthInvite")
-	devkitServiceAuthAuthorizeMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("AuthAuthorize")
-	devkitServiceAuthLoginMethodDescriptor                   = devkitServiceServiceDescriptor.Methods().ByName("AuthLogin")
-	devkitServiceAuthRegisterMethodDescriptor                = devkitServiceServiceDescriptor.Methods().ByName("AuthRegister")
 )
 
 // DevkitServiceClient is a client for the devkit.v1.DevkitService service.
 type DevkitServiceClient interface {
-	// INJECT METHODS
-	CompanyDeleteRestore(context.Context, *connect.Request[v1.CompanyDeleteRestoreRequest]) (*connect.Response[v1.CompanyDeleteRestoreResponse], error)
-	CompanyList(context.Context, *connect.Request[v1.CompanyListRequest]) (*connect.Response[v1.CompanyListResponse], error)
-	CompanyCreateUpdate(context.Context, *connect.Request[v1.CompanyCreateUpdateRequest]) (*connect.Response[v1.CompanyCreateUpdateResponse], error)
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// public
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// settings
-	SettingUpdate(context.Context, *connect.Request[v1.SettingUpdateRequest]) (*connect.Response[v1.SettingUpdateResponse], error)
 	SettingFindForUpdate(context.Context, *connect.Request[v1.SettingFindForUpdateRequest]) (*connect.Response[v1.SettingFindForUpdateResponse], error)
+	SettingUpdate(context.Context, *connect.Request[v1.SettingUpdateRequest]) (*connect.Response[v1.SettingUpdateResponse], error)
 	// icons
 	IconList(context.Context, *connect.Request[v1.IconListRequest]) (*connect.Response[v1.IconListResponse], error)
 	IconCreateUpdateBulk(context.Context, *connect.Request[v1.IconCreateUpdateBulkRequest]) (*connect.Response[v1.IconCreateUpdateBulkResponse], error)
+	// files
 	FileList(context.Context, *connect.Request[v1.FileListRequest]) (*connect.Response[v1.FileListResponse], error)
 	FileCreate(context.Context, *connect.Request[v1.FileCreateRequest]) (*connect.Response[v1.FileCreateResponse], error)
 	FileCreateBulk(context.Context, *connect.Request[v1.FileCreateBulkRequest]) (*connect.Response[v1.FileCreateBulkResponse], error)
+	// rpc FileDeleteRestore(FileDeleteRestoreRequest) returns (FileDeleteRestoreResponse) {}
 	FileDelete(context.Context, *connect.Request[v1.FileDeleteRequest]) (*connect.Response[v1.FileDeleteResponse], error)
+	// buckets
 	BucketList(context.Context, *connect.Request[v1.BucketListRequest]) (*connect.Response[v1.BucketListResponse], error)
 	BucketCreateUpdate(context.Context, *connect.Request[v1.BucketCreateUpdateRequest]) (*connect.Response[v1.BucketCreateUpdateResponse], error)
+	// import
 	ImportTable(context.Context, *connect.Request[v1.ImportTableRequest]) (*connect.Response[v1.ImportTableResponse], error)
 	// emails
 	EmailSend(context.Context, *connect.Request[v1.EmailSendRequest]) (*connect.Response[v1.EmailSendResponse], error)
 	// translations
+	TranslationList(context.Context, *connect.Request[v1.TranslationListRequest]) (*connect.Response[v1.TranslationListResponse], error)
 	TranslationCreateUpdateBulk(context.Context, *connect.Request[v1.TranslationCreateUpdateBulkRequest]) (*connect.Response[v1.TranslationCreateUpdateBulkResponse], error)
 	TranslationDelete(context.Context, *connect.Request[v1.TranslationDeleteRequest]) (*connect.Response[v1.TranslationDeleteResponse], error)
-	TranslationList(context.Context, *connect.Request[v1.TranslationListRequest]) (*connect.Response[v1.TranslationListResponse], error)
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// accounts
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// roles
 	// *******************************************************************************************//
 	RoleList(context.Context, *connect.Request[v1.RoleListRequest]) (*connect.Response[v1.RoleListResponse], error)
-	RoleFindForUpdate(context.Context, *connect.Request[v1.RoleFindForUpdateRequest]) (*connect.Response[v1.RoleFindForUpdateResponse], error)
 	RoleListInput(context.Context, *connect.Request[v1.RoleListInputRequest]) (*connect.Response[v1.RoleListInputResponse], error)
+	RoleFindForUpdate(context.Context, *connect.Request[v1.RoleFindForUpdateRequest]) (*connect.Response[v1.RoleFindForUpdateResponse], error)
 	RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error)
-	RoleDelete(context.Context, *connect.Request[v1.RoleDeleteRequest]) (*connect.Response[v1.RoleDeleteResponse], error)
 	RoleDeleteRestore(context.Context, *connect.Request[v1.RoleDeleteRestoreRequest]) (*connect.Response[v1.RoleDeleteRestoreResponse], error)
+	RoleDelete(context.Context, *connect.Request[v1.RoleDeleteRequest]) (*connect.Response[v1.RoleDeleteResponse], error)
 	// *******************************************************************************************//
 	// users
 	// *******************************************************************************************//
@@ -232,19 +220,19 @@ type DevkitServiceClient interface {
 	UserListInput(context.Context, *connect.Request[v1.UserListInputRequest]) (*connect.Response[v1.UserListInputResponse], error)
 	UserFindForUpdate(context.Context, *connect.Request[v1.UserFindForUpdateRequest]) (*connect.Response[v1.UserFindForUpdateResponse], error)
 	UserCreateUpdate(context.Context, *connect.Request[v1.UserCreateUpdateRequest]) (*connect.Response[v1.UserCreateUpdateResponse], error)
-	UserDelete(context.Context, *connect.Request[v1.UserDeleteRequest]) (*connect.Response[v1.UserDeleteResponse], error)
 	UserDeleteRestore(context.Context, *connect.Request[v1.UserDeleteRestoreRequest]) (*connect.Response[v1.UserDeleteRestoreResponse], error)
+	UserDelete(context.Context, *connect.Request[v1.UserDeleteRequest]) (*connect.Response[v1.UserDeleteResponse], error)
 	// *******************************************************************************************//
 	// auth
 	// *******************************************************************************************//
+	AuthLogin(context.Context, *connect.Request[v1.AuthLoginRequest]) (*connect.Response[v1.AuthLoginResponse], error)
+	AuthRegister(context.Context, *connect.Request[v1.AuthRegisterRequest]) (*connect.Response[v1.AuthRegisterResponse], error)
+	AuthInvite(context.Context, *connect.Request[v1.AuthInviteRequest]) (*connect.Response[v1.AuthInviteResponse], error)
+	AuthAuthorize(context.Context, *connect.Request[v1.AuthAuthorizeRequest]) (*connect.Response[v1.AuthAuthorizeResponse], error)
+	AuthLoginProvider(context.Context, *connect.Request[v1.AuthLoginProviderRequest]) (*connect.Response[v1.AuthLoginProviderResponse], error)
 	AuthLoginProviderCallback(context.Context, *connect.Request[v1.AuthLoginProviderCallbackRequest]) (*connect.Response[v1.AuthLoginProviderCallbackResponse], error)
 	AuthResetPassword(context.Context, *connect.Request[v1.AuthResetPasswordRequest]) (*connect.Response[v1.AuthResetPasswordResponse], error)
 	AuthResetPasswordEmail(context.Context, *connect.Request[v1.AuthResetPasswordEmailRequest]) (*connect.Response[v1.AuthResetPasswordEmailResponse], error)
-	AuthLoginProvider(context.Context, *connect.Request[v1.AuthLoginProviderRequest]) (*connect.Response[v1.AuthLoginProviderResponse], error)
-	AuthInvite(context.Context, *connect.Request[v1.AuthInviteRequest]) (*connect.Response[v1.AuthInviteResponse], error)
-	AuthAuthorize(context.Context, *connect.Request[v1.AuthAuthorizeRequest]) (*connect.Response[v1.AuthAuthorizeResponse], error)
-	AuthLogin(context.Context, *connect.Request[v1.AuthLoginRequest]) (*connect.Response[v1.AuthLoginResponse], error)
-	AuthRegister(context.Context, *connect.Request[v1.AuthRegisterRequest]) (*connect.Response[v1.AuthRegisterResponse], error)
 }
 
 // NewDevkitServiceClient constructs a client for the devkit.v1.DevkitService service. By default,
@@ -257,36 +245,17 @@ type DevkitServiceClient interface {
 func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) DevkitServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &devkitServiceClient{
-		companyDeleteRestore: connect.NewClient[v1.CompanyDeleteRestoreRequest, v1.CompanyDeleteRestoreResponse](
+		settingFindForUpdate: connect.NewClient[v1.SettingFindForUpdateRequest, v1.SettingFindForUpdateResponse](
 			httpClient,
-			baseURL+DevkitServiceCompanyDeleteRestoreProcedure,
-			connect.WithSchema(devkitServiceCompanyDeleteRestoreMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		companyList: connect.NewClient[v1.CompanyListRequest, v1.CompanyListResponse](
-			httpClient,
-			baseURL+DevkitServiceCompanyListProcedure,
-			connect.WithSchema(devkitServiceCompanyListMethodDescriptor),
+			baseURL+DevkitServiceSettingFindForUpdateProcedure,
+			connect.WithSchema(devkitServiceSettingFindForUpdateMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
-			connect.WithClientOptions(opts...),
-		),
-		companyCreateUpdate: connect.NewClient[v1.CompanyCreateUpdateRequest, v1.CompanyCreateUpdateResponse](
-			httpClient,
-			baseURL+DevkitServiceCompanyCreateUpdateProcedure,
-			connect.WithSchema(devkitServiceCompanyCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		settingUpdate: connect.NewClient[v1.SettingUpdateRequest, v1.SettingUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceSettingUpdateProcedure,
 			connect.WithSchema(devkitServiceSettingUpdateMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		settingFindForUpdate: connect.NewClient[v1.SettingFindForUpdateRequest, v1.SettingFindForUpdateResponse](
-			httpClient,
-			baseURL+DevkitServiceSettingFindForUpdateProcedure,
-			connect.WithSchema(devkitServiceSettingFindForUpdateMethodDescriptor),
-			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		iconList: connect.NewClient[v1.IconListRequest, v1.IconListResponse](
@@ -352,6 +321,13 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(devkitServiceEmailSendMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		translationList: connect.NewClient[v1.TranslationListRequest, v1.TranslationListResponse](
+			httpClient,
+			baseURL+DevkitServiceTranslationListProcedure,
+			connect.WithSchema(devkitServiceTranslationListMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
 		translationCreateUpdateBulk: connect.NewClient[v1.TranslationCreateUpdateBulkRequest, v1.TranslationCreateUpdateBulkResponse](
 			httpClient,
 			baseURL+DevkitServiceTranslationCreateUpdateBulkProcedure,
@@ -364,24 +340,10 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(devkitServiceTranslationDeleteMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
-		translationList: connect.NewClient[v1.TranslationListRequest, v1.TranslationListResponse](
-			httpClient,
-			baseURL+DevkitServiceTranslationListProcedure,
-			connect.WithSchema(devkitServiceTranslationListMethodDescriptor),
-			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
-			connect.WithClientOptions(opts...),
-		),
 		roleList: connect.NewClient[v1.RoleListRequest, v1.RoleListResponse](
 			httpClient,
 			baseURL+DevkitServiceRoleListProcedure,
 			connect.WithSchema(devkitServiceRoleListMethodDescriptor),
-			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
-			connect.WithClientOptions(opts...),
-		),
-		roleFindForUpdate: connect.NewClient[v1.RoleFindForUpdateRequest, v1.RoleFindForUpdateResponse](
-			httpClient,
-			baseURL+DevkitServiceRoleFindForUpdateProcedure,
-			connect.WithSchema(devkitServiceRoleFindForUpdateMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
@@ -392,22 +354,29 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
+		roleFindForUpdate: connect.NewClient[v1.RoleFindForUpdateRequest, v1.RoleFindForUpdateResponse](
+			httpClient,
+			baseURL+DevkitServiceRoleFindForUpdateProcedure,
+			connect.WithSchema(devkitServiceRoleFindForUpdateMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
 		roleCreateUpdate: connect.NewClient[v1.RoleCreateUpdateRequest, v1.RoleCreateUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceRoleCreateUpdateProcedure,
 			connect.WithSchema(devkitServiceRoleCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
-		roleDelete: connect.NewClient[v1.RoleDeleteRequest, v1.RoleDeleteResponse](
-			httpClient,
-			baseURL+DevkitServiceRoleDeleteProcedure,
-			connect.WithSchema(devkitServiceRoleDeleteMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
 		roleDeleteRestore: connect.NewClient[v1.RoleDeleteRestoreRequest, v1.RoleDeleteRestoreResponse](
 			httpClient,
 			baseURL+DevkitServiceRoleDeleteRestoreProcedure,
 			connect.WithSchema(devkitServiceRoleDeleteRestoreMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		roleDelete: connect.NewClient[v1.RoleDeleteRequest, v1.RoleDeleteResponse](
+			httpClient,
+			baseURL+DevkitServiceRoleDeleteProcedure,
+			connect.WithSchema(devkitServiceRoleDeleteMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		userList: connect.NewClient[v1.UserListRequest, v1.UserListResponse](
@@ -437,16 +406,46 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(devkitServiceUserCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		userDeleteRestore: connect.NewClient[v1.UserDeleteRestoreRequest, v1.UserDeleteRestoreResponse](
+			httpClient,
+			baseURL+DevkitServiceUserDeleteRestoreProcedure,
+			connect.WithSchema(devkitServiceUserDeleteRestoreMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 		userDelete: connect.NewClient[v1.UserDeleteRequest, v1.UserDeleteResponse](
 			httpClient,
 			baseURL+DevkitServiceUserDeleteProcedure,
 			connect.WithSchema(devkitServiceUserDeleteMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
-		userDeleteRestore: connect.NewClient[v1.UserDeleteRestoreRequest, v1.UserDeleteRestoreResponse](
+		authLogin: connect.NewClient[v1.AuthLoginRequest, v1.AuthLoginResponse](
 			httpClient,
-			baseURL+DevkitServiceUserDeleteRestoreProcedure,
-			connect.WithSchema(devkitServiceUserDeleteRestoreMethodDescriptor),
+			baseURL+DevkitServiceAuthLoginProcedure,
+			connect.WithSchema(devkitServiceAuthLoginMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		authRegister: connect.NewClient[v1.AuthRegisterRequest, v1.AuthRegisterResponse](
+			httpClient,
+			baseURL+DevkitServiceAuthRegisterProcedure,
+			connect.WithSchema(devkitServiceAuthRegisterMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		authInvite: connect.NewClient[v1.AuthInviteRequest, v1.AuthInviteResponse](
+			httpClient,
+			baseURL+DevkitServiceAuthInviteProcedure,
+			connect.WithSchema(devkitServiceAuthInviteMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		authAuthorize: connect.NewClient[v1.AuthAuthorizeRequest, v1.AuthAuthorizeResponse](
+			httpClient,
+			baseURL+DevkitServiceAuthAuthorizeProcedure,
+			connect.WithSchema(devkitServiceAuthAuthorizeMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		authLoginProvider: connect.NewClient[v1.AuthLoginProviderRequest, v1.AuthLoginProviderResponse](
+			httpClient,
+			baseURL+DevkitServiceAuthLoginProviderProcedure,
+			connect.WithSchema(devkitServiceAuthLoginProviderMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		authLoginProviderCallback: connect.NewClient[v1.AuthLoginProviderCallbackRequest, v1.AuthLoginProviderCallbackResponse](
@@ -467,46 +466,13 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(devkitServiceAuthResetPasswordEmailMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
-		authLoginProvider: connect.NewClient[v1.AuthLoginProviderRequest, v1.AuthLoginProviderResponse](
-			httpClient,
-			baseURL+DevkitServiceAuthLoginProviderProcedure,
-			connect.WithSchema(devkitServiceAuthLoginProviderMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		authInvite: connect.NewClient[v1.AuthInviteRequest, v1.AuthInviteResponse](
-			httpClient,
-			baseURL+DevkitServiceAuthInviteProcedure,
-			connect.WithSchema(devkitServiceAuthInviteMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		authAuthorize: connect.NewClient[v1.AuthAuthorizeRequest, v1.AuthAuthorizeResponse](
-			httpClient,
-			baseURL+DevkitServiceAuthAuthorizeProcedure,
-			connect.WithSchema(devkitServiceAuthAuthorizeMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		authLogin: connect.NewClient[v1.AuthLoginRequest, v1.AuthLoginResponse](
-			httpClient,
-			baseURL+DevkitServiceAuthLoginProcedure,
-			connect.WithSchema(devkitServiceAuthLoginMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		authRegister: connect.NewClient[v1.AuthRegisterRequest, v1.AuthRegisterResponse](
-			httpClient,
-			baseURL+DevkitServiceAuthRegisterProcedure,
-			connect.WithSchema(devkitServiceAuthRegisterMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
 	}
 }
 
 // devkitServiceClient implements DevkitServiceClient.
 type devkitServiceClient struct {
-	companyDeleteRestore        *connect.Client[v1.CompanyDeleteRestoreRequest, v1.CompanyDeleteRestoreResponse]
-	companyList                 *connect.Client[v1.CompanyListRequest, v1.CompanyListResponse]
-	companyCreateUpdate         *connect.Client[v1.CompanyCreateUpdateRequest, v1.CompanyCreateUpdateResponse]
-	settingUpdate               *connect.Client[v1.SettingUpdateRequest, v1.SettingUpdateResponse]
 	settingFindForUpdate        *connect.Client[v1.SettingFindForUpdateRequest, v1.SettingFindForUpdateResponse]
+	settingUpdate               *connect.Client[v1.SettingUpdateRequest, v1.SettingUpdateResponse]
 	iconList                    *connect.Client[v1.IconListRequest, v1.IconListResponse]
 	iconCreateUpdateBulk        *connect.Client[v1.IconCreateUpdateBulkRequest, v1.IconCreateUpdateBulkResponse]
 	fileList                    *connect.Client[v1.FileListRequest, v1.FileListResponse]
@@ -517,54 +483,39 @@ type devkitServiceClient struct {
 	bucketCreateUpdate          *connect.Client[v1.BucketCreateUpdateRequest, v1.BucketCreateUpdateResponse]
 	importTable                 *connect.Client[v1.ImportTableRequest, v1.ImportTableResponse]
 	emailSend                   *connect.Client[v1.EmailSendRequest, v1.EmailSendResponse]
+	translationList             *connect.Client[v1.TranslationListRequest, v1.TranslationListResponse]
 	translationCreateUpdateBulk *connect.Client[v1.TranslationCreateUpdateBulkRequest, v1.TranslationCreateUpdateBulkResponse]
 	translationDelete           *connect.Client[v1.TranslationDeleteRequest, v1.TranslationDeleteResponse]
-	translationList             *connect.Client[v1.TranslationListRequest, v1.TranslationListResponse]
 	roleList                    *connect.Client[v1.RoleListRequest, v1.RoleListResponse]
-	roleFindForUpdate           *connect.Client[v1.RoleFindForUpdateRequest, v1.RoleFindForUpdateResponse]
 	roleListInput               *connect.Client[v1.RoleListInputRequest, v1.RoleListInputResponse]
+	roleFindForUpdate           *connect.Client[v1.RoleFindForUpdateRequest, v1.RoleFindForUpdateResponse]
 	roleCreateUpdate            *connect.Client[v1.RoleCreateUpdateRequest, v1.RoleCreateUpdateResponse]
-	roleDelete                  *connect.Client[v1.RoleDeleteRequest, v1.RoleDeleteResponse]
 	roleDeleteRestore           *connect.Client[v1.RoleDeleteRestoreRequest, v1.RoleDeleteRestoreResponse]
+	roleDelete                  *connect.Client[v1.RoleDeleteRequest, v1.RoleDeleteResponse]
 	userList                    *connect.Client[v1.UserListRequest, v1.UserListResponse]
 	userListInput               *connect.Client[v1.UserListInputRequest, v1.UserListInputResponse]
 	userFindForUpdate           *connect.Client[v1.UserFindForUpdateRequest, v1.UserFindForUpdateResponse]
 	userCreateUpdate            *connect.Client[v1.UserCreateUpdateRequest, v1.UserCreateUpdateResponse]
-	userDelete                  *connect.Client[v1.UserDeleteRequest, v1.UserDeleteResponse]
 	userDeleteRestore           *connect.Client[v1.UserDeleteRestoreRequest, v1.UserDeleteRestoreResponse]
+	userDelete                  *connect.Client[v1.UserDeleteRequest, v1.UserDeleteResponse]
+	authLogin                   *connect.Client[v1.AuthLoginRequest, v1.AuthLoginResponse]
+	authRegister                *connect.Client[v1.AuthRegisterRequest, v1.AuthRegisterResponse]
+	authInvite                  *connect.Client[v1.AuthInviteRequest, v1.AuthInviteResponse]
+	authAuthorize               *connect.Client[v1.AuthAuthorizeRequest, v1.AuthAuthorizeResponse]
+	authLoginProvider           *connect.Client[v1.AuthLoginProviderRequest, v1.AuthLoginProviderResponse]
 	authLoginProviderCallback   *connect.Client[v1.AuthLoginProviderCallbackRequest, v1.AuthLoginProviderCallbackResponse]
 	authResetPassword           *connect.Client[v1.AuthResetPasswordRequest, v1.AuthResetPasswordResponse]
 	authResetPasswordEmail      *connect.Client[v1.AuthResetPasswordEmailRequest, v1.AuthResetPasswordEmailResponse]
-	authLoginProvider           *connect.Client[v1.AuthLoginProviderRequest, v1.AuthLoginProviderResponse]
-	authInvite                  *connect.Client[v1.AuthInviteRequest, v1.AuthInviteResponse]
-	authAuthorize               *connect.Client[v1.AuthAuthorizeRequest, v1.AuthAuthorizeResponse]
-	authLogin                   *connect.Client[v1.AuthLoginRequest, v1.AuthLoginResponse]
-	authRegister                *connect.Client[v1.AuthRegisterRequest, v1.AuthRegisterResponse]
-}
-
-// CompanyDeleteRestore calls devkit.v1.DevkitService.CompanyDeleteRestore.
-func (c *devkitServiceClient) CompanyDeleteRestore(ctx context.Context, req *connect.Request[v1.CompanyDeleteRestoreRequest]) (*connect.Response[v1.CompanyDeleteRestoreResponse], error) {
-	return c.companyDeleteRestore.CallUnary(ctx, req)
-}
-
-// CompanyList calls devkit.v1.DevkitService.CompanyList.
-func (c *devkitServiceClient) CompanyList(ctx context.Context, req *connect.Request[v1.CompanyListRequest]) (*connect.Response[v1.CompanyListResponse], error) {
-	return c.companyList.CallUnary(ctx, req)
-}
-
-// CompanyCreateUpdate calls devkit.v1.DevkitService.CompanyCreateUpdate.
-func (c *devkitServiceClient) CompanyCreateUpdate(ctx context.Context, req *connect.Request[v1.CompanyCreateUpdateRequest]) (*connect.Response[v1.CompanyCreateUpdateResponse], error) {
-	return c.companyCreateUpdate.CallUnary(ctx, req)
-}
-
-// SettingUpdate calls devkit.v1.DevkitService.SettingUpdate.
-func (c *devkitServiceClient) SettingUpdate(ctx context.Context, req *connect.Request[v1.SettingUpdateRequest]) (*connect.Response[v1.SettingUpdateResponse], error) {
-	return c.settingUpdate.CallUnary(ctx, req)
 }
 
 // SettingFindForUpdate calls devkit.v1.DevkitService.SettingFindForUpdate.
 func (c *devkitServiceClient) SettingFindForUpdate(ctx context.Context, req *connect.Request[v1.SettingFindForUpdateRequest]) (*connect.Response[v1.SettingFindForUpdateResponse], error) {
 	return c.settingFindForUpdate.CallUnary(ctx, req)
+}
+
+// SettingUpdate calls devkit.v1.DevkitService.SettingUpdate.
+func (c *devkitServiceClient) SettingUpdate(ctx context.Context, req *connect.Request[v1.SettingUpdateRequest]) (*connect.Response[v1.SettingUpdateResponse], error) {
+	return c.settingUpdate.CallUnary(ctx, req)
 }
 
 // IconList calls devkit.v1.DevkitService.IconList.
@@ -617,6 +568,11 @@ func (c *devkitServiceClient) EmailSend(ctx context.Context, req *connect.Reques
 	return c.emailSend.CallUnary(ctx, req)
 }
 
+// TranslationList calls devkit.v1.DevkitService.TranslationList.
+func (c *devkitServiceClient) TranslationList(ctx context.Context, req *connect.Request[v1.TranslationListRequest]) (*connect.Response[v1.TranslationListResponse], error) {
+	return c.translationList.CallUnary(ctx, req)
+}
+
 // TranslationCreateUpdateBulk calls devkit.v1.DevkitService.TranslationCreateUpdateBulk.
 func (c *devkitServiceClient) TranslationCreateUpdateBulk(ctx context.Context, req *connect.Request[v1.TranslationCreateUpdateBulkRequest]) (*connect.Response[v1.TranslationCreateUpdateBulkResponse], error) {
 	return c.translationCreateUpdateBulk.CallUnary(ctx, req)
@@ -627,19 +583,9 @@ func (c *devkitServiceClient) TranslationDelete(ctx context.Context, req *connec
 	return c.translationDelete.CallUnary(ctx, req)
 }
 
-// TranslationList calls devkit.v1.DevkitService.TranslationList.
-func (c *devkitServiceClient) TranslationList(ctx context.Context, req *connect.Request[v1.TranslationListRequest]) (*connect.Response[v1.TranslationListResponse], error) {
-	return c.translationList.CallUnary(ctx, req)
-}
-
 // RoleList calls devkit.v1.DevkitService.RoleList.
 func (c *devkitServiceClient) RoleList(ctx context.Context, req *connect.Request[v1.RoleListRequest]) (*connect.Response[v1.RoleListResponse], error) {
 	return c.roleList.CallUnary(ctx, req)
-}
-
-// RoleFindForUpdate calls devkit.v1.DevkitService.RoleFindForUpdate.
-func (c *devkitServiceClient) RoleFindForUpdate(ctx context.Context, req *connect.Request[v1.RoleFindForUpdateRequest]) (*connect.Response[v1.RoleFindForUpdateResponse], error) {
-	return c.roleFindForUpdate.CallUnary(ctx, req)
 }
 
 // RoleListInput calls devkit.v1.DevkitService.RoleListInput.
@@ -647,19 +593,24 @@ func (c *devkitServiceClient) RoleListInput(ctx context.Context, req *connect.Re
 	return c.roleListInput.CallUnary(ctx, req)
 }
 
+// RoleFindForUpdate calls devkit.v1.DevkitService.RoleFindForUpdate.
+func (c *devkitServiceClient) RoleFindForUpdate(ctx context.Context, req *connect.Request[v1.RoleFindForUpdateRequest]) (*connect.Response[v1.RoleFindForUpdateResponse], error) {
+	return c.roleFindForUpdate.CallUnary(ctx, req)
+}
+
 // RoleCreateUpdate calls devkit.v1.DevkitService.RoleCreateUpdate.
 func (c *devkitServiceClient) RoleCreateUpdate(ctx context.Context, req *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error) {
 	return c.roleCreateUpdate.CallUnary(ctx, req)
 }
 
-// RoleDelete calls devkit.v1.DevkitService.RoleDelete.
-func (c *devkitServiceClient) RoleDelete(ctx context.Context, req *connect.Request[v1.RoleDeleteRequest]) (*connect.Response[v1.RoleDeleteResponse], error) {
-	return c.roleDelete.CallUnary(ctx, req)
-}
-
 // RoleDeleteRestore calls devkit.v1.DevkitService.RoleDeleteRestore.
 func (c *devkitServiceClient) RoleDeleteRestore(ctx context.Context, req *connect.Request[v1.RoleDeleteRestoreRequest]) (*connect.Response[v1.RoleDeleteRestoreResponse], error) {
 	return c.roleDeleteRestore.CallUnary(ctx, req)
+}
+
+// RoleDelete calls devkit.v1.DevkitService.RoleDelete.
+func (c *devkitServiceClient) RoleDelete(ctx context.Context, req *connect.Request[v1.RoleDeleteRequest]) (*connect.Response[v1.RoleDeleteResponse], error) {
+	return c.roleDelete.CallUnary(ctx, req)
 }
 
 // UserList calls devkit.v1.DevkitService.UserList.
@@ -682,14 +633,39 @@ func (c *devkitServiceClient) UserCreateUpdate(ctx context.Context, req *connect
 	return c.userCreateUpdate.CallUnary(ctx, req)
 }
 
+// UserDeleteRestore calls devkit.v1.DevkitService.UserDeleteRestore.
+func (c *devkitServiceClient) UserDeleteRestore(ctx context.Context, req *connect.Request[v1.UserDeleteRestoreRequest]) (*connect.Response[v1.UserDeleteRestoreResponse], error) {
+	return c.userDeleteRestore.CallUnary(ctx, req)
+}
+
 // UserDelete calls devkit.v1.DevkitService.UserDelete.
 func (c *devkitServiceClient) UserDelete(ctx context.Context, req *connect.Request[v1.UserDeleteRequest]) (*connect.Response[v1.UserDeleteResponse], error) {
 	return c.userDelete.CallUnary(ctx, req)
 }
 
-// UserDeleteRestore calls devkit.v1.DevkitService.UserDeleteRestore.
-func (c *devkitServiceClient) UserDeleteRestore(ctx context.Context, req *connect.Request[v1.UserDeleteRestoreRequest]) (*connect.Response[v1.UserDeleteRestoreResponse], error) {
-	return c.userDeleteRestore.CallUnary(ctx, req)
+// AuthLogin calls devkit.v1.DevkitService.AuthLogin.
+func (c *devkitServiceClient) AuthLogin(ctx context.Context, req *connect.Request[v1.AuthLoginRequest]) (*connect.Response[v1.AuthLoginResponse], error) {
+	return c.authLogin.CallUnary(ctx, req)
+}
+
+// AuthRegister calls devkit.v1.DevkitService.AuthRegister.
+func (c *devkitServiceClient) AuthRegister(ctx context.Context, req *connect.Request[v1.AuthRegisterRequest]) (*connect.Response[v1.AuthRegisterResponse], error) {
+	return c.authRegister.CallUnary(ctx, req)
+}
+
+// AuthInvite calls devkit.v1.DevkitService.AuthInvite.
+func (c *devkitServiceClient) AuthInvite(ctx context.Context, req *connect.Request[v1.AuthInviteRequest]) (*connect.Response[v1.AuthInviteResponse], error) {
+	return c.authInvite.CallUnary(ctx, req)
+}
+
+// AuthAuthorize calls devkit.v1.DevkitService.AuthAuthorize.
+func (c *devkitServiceClient) AuthAuthorize(ctx context.Context, req *connect.Request[v1.AuthAuthorizeRequest]) (*connect.Response[v1.AuthAuthorizeResponse], error) {
+	return c.authAuthorize.CallUnary(ctx, req)
+}
+
+// AuthLoginProvider calls devkit.v1.DevkitService.AuthLoginProvider.
+func (c *devkitServiceClient) AuthLoginProvider(ctx context.Context, req *connect.Request[v1.AuthLoginProviderRequest]) (*connect.Response[v1.AuthLoginProviderResponse], error) {
+	return c.authLoginProvider.CallUnary(ctx, req)
 }
 
 // AuthLoginProviderCallback calls devkit.v1.DevkitService.AuthLoginProviderCallback.
@@ -707,70 +683,45 @@ func (c *devkitServiceClient) AuthResetPasswordEmail(ctx context.Context, req *c
 	return c.authResetPasswordEmail.CallUnary(ctx, req)
 }
 
-// AuthLoginProvider calls devkit.v1.DevkitService.AuthLoginProvider.
-func (c *devkitServiceClient) AuthLoginProvider(ctx context.Context, req *connect.Request[v1.AuthLoginProviderRequest]) (*connect.Response[v1.AuthLoginProviderResponse], error) {
-	return c.authLoginProvider.CallUnary(ctx, req)
-}
-
-// AuthInvite calls devkit.v1.DevkitService.AuthInvite.
-func (c *devkitServiceClient) AuthInvite(ctx context.Context, req *connect.Request[v1.AuthInviteRequest]) (*connect.Response[v1.AuthInviteResponse], error) {
-	return c.authInvite.CallUnary(ctx, req)
-}
-
-// AuthAuthorize calls devkit.v1.DevkitService.AuthAuthorize.
-func (c *devkitServiceClient) AuthAuthorize(ctx context.Context, req *connect.Request[v1.AuthAuthorizeRequest]) (*connect.Response[v1.AuthAuthorizeResponse], error) {
-	return c.authAuthorize.CallUnary(ctx, req)
-}
-
-// AuthLogin calls devkit.v1.DevkitService.AuthLogin.
-func (c *devkitServiceClient) AuthLogin(ctx context.Context, req *connect.Request[v1.AuthLoginRequest]) (*connect.Response[v1.AuthLoginResponse], error) {
-	return c.authLogin.CallUnary(ctx, req)
-}
-
-// AuthRegister calls devkit.v1.DevkitService.AuthRegister.
-func (c *devkitServiceClient) AuthRegister(ctx context.Context, req *connect.Request[v1.AuthRegisterRequest]) (*connect.Response[v1.AuthRegisterResponse], error) {
-	return c.authRegister.CallUnary(ctx, req)
-}
-
 // DevkitServiceHandler is an implementation of the devkit.v1.DevkitService service.
 type DevkitServiceHandler interface {
-	// INJECT METHODS
-	CompanyDeleteRestore(context.Context, *connect.Request[v1.CompanyDeleteRestoreRequest]) (*connect.Response[v1.CompanyDeleteRestoreResponse], error)
-	CompanyList(context.Context, *connect.Request[v1.CompanyListRequest]) (*connect.Response[v1.CompanyListResponse], error)
-	CompanyCreateUpdate(context.Context, *connect.Request[v1.CompanyCreateUpdateRequest]) (*connect.Response[v1.CompanyCreateUpdateResponse], error)
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// public
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// settings
-	SettingUpdate(context.Context, *connect.Request[v1.SettingUpdateRequest]) (*connect.Response[v1.SettingUpdateResponse], error)
 	SettingFindForUpdate(context.Context, *connect.Request[v1.SettingFindForUpdateRequest]) (*connect.Response[v1.SettingFindForUpdateResponse], error)
+	SettingUpdate(context.Context, *connect.Request[v1.SettingUpdateRequest]) (*connect.Response[v1.SettingUpdateResponse], error)
 	// icons
 	IconList(context.Context, *connect.Request[v1.IconListRequest]) (*connect.Response[v1.IconListResponse], error)
 	IconCreateUpdateBulk(context.Context, *connect.Request[v1.IconCreateUpdateBulkRequest]) (*connect.Response[v1.IconCreateUpdateBulkResponse], error)
+	// files
 	FileList(context.Context, *connect.Request[v1.FileListRequest]) (*connect.Response[v1.FileListResponse], error)
 	FileCreate(context.Context, *connect.Request[v1.FileCreateRequest]) (*connect.Response[v1.FileCreateResponse], error)
 	FileCreateBulk(context.Context, *connect.Request[v1.FileCreateBulkRequest]) (*connect.Response[v1.FileCreateBulkResponse], error)
+	// rpc FileDeleteRestore(FileDeleteRestoreRequest) returns (FileDeleteRestoreResponse) {}
 	FileDelete(context.Context, *connect.Request[v1.FileDeleteRequest]) (*connect.Response[v1.FileDeleteResponse], error)
+	// buckets
 	BucketList(context.Context, *connect.Request[v1.BucketListRequest]) (*connect.Response[v1.BucketListResponse], error)
 	BucketCreateUpdate(context.Context, *connect.Request[v1.BucketCreateUpdateRequest]) (*connect.Response[v1.BucketCreateUpdateResponse], error)
+	// import
 	ImportTable(context.Context, *connect.Request[v1.ImportTableRequest]) (*connect.Response[v1.ImportTableResponse], error)
 	// emails
 	EmailSend(context.Context, *connect.Request[v1.EmailSendRequest]) (*connect.Response[v1.EmailSendResponse], error)
 	// translations
+	TranslationList(context.Context, *connect.Request[v1.TranslationListRequest]) (*connect.Response[v1.TranslationListResponse], error)
 	TranslationCreateUpdateBulk(context.Context, *connect.Request[v1.TranslationCreateUpdateBulkRequest]) (*connect.Response[v1.TranslationCreateUpdateBulkResponse], error)
 	TranslationDelete(context.Context, *connect.Request[v1.TranslationDeleteRequest]) (*connect.Response[v1.TranslationDeleteResponse], error)
-	TranslationList(context.Context, *connect.Request[v1.TranslationListRequest]) (*connect.Response[v1.TranslationListResponse], error)
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// accounts
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// roles
 	// *******************************************************************************************//
 	RoleList(context.Context, *connect.Request[v1.RoleListRequest]) (*connect.Response[v1.RoleListResponse], error)
-	RoleFindForUpdate(context.Context, *connect.Request[v1.RoleFindForUpdateRequest]) (*connect.Response[v1.RoleFindForUpdateResponse], error)
 	RoleListInput(context.Context, *connect.Request[v1.RoleListInputRequest]) (*connect.Response[v1.RoleListInputResponse], error)
+	RoleFindForUpdate(context.Context, *connect.Request[v1.RoleFindForUpdateRequest]) (*connect.Response[v1.RoleFindForUpdateResponse], error)
 	RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error)
-	RoleDelete(context.Context, *connect.Request[v1.RoleDeleteRequest]) (*connect.Response[v1.RoleDeleteResponse], error)
 	RoleDeleteRestore(context.Context, *connect.Request[v1.RoleDeleteRestoreRequest]) (*connect.Response[v1.RoleDeleteRestoreResponse], error)
+	RoleDelete(context.Context, *connect.Request[v1.RoleDeleteRequest]) (*connect.Response[v1.RoleDeleteResponse], error)
 	// *******************************************************************************************//
 	// users
 	// *******************************************************************************************//
@@ -778,19 +729,19 @@ type DevkitServiceHandler interface {
 	UserListInput(context.Context, *connect.Request[v1.UserListInputRequest]) (*connect.Response[v1.UserListInputResponse], error)
 	UserFindForUpdate(context.Context, *connect.Request[v1.UserFindForUpdateRequest]) (*connect.Response[v1.UserFindForUpdateResponse], error)
 	UserCreateUpdate(context.Context, *connect.Request[v1.UserCreateUpdateRequest]) (*connect.Response[v1.UserCreateUpdateResponse], error)
-	UserDelete(context.Context, *connect.Request[v1.UserDeleteRequest]) (*connect.Response[v1.UserDeleteResponse], error)
 	UserDeleteRestore(context.Context, *connect.Request[v1.UserDeleteRestoreRequest]) (*connect.Response[v1.UserDeleteRestoreResponse], error)
+	UserDelete(context.Context, *connect.Request[v1.UserDeleteRequest]) (*connect.Response[v1.UserDeleteResponse], error)
 	// *******************************************************************************************//
 	// auth
 	// *******************************************************************************************//
+	AuthLogin(context.Context, *connect.Request[v1.AuthLoginRequest]) (*connect.Response[v1.AuthLoginResponse], error)
+	AuthRegister(context.Context, *connect.Request[v1.AuthRegisterRequest]) (*connect.Response[v1.AuthRegisterResponse], error)
+	AuthInvite(context.Context, *connect.Request[v1.AuthInviteRequest]) (*connect.Response[v1.AuthInviteResponse], error)
+	AuthAuthorize(context.Context, *connect.Request[v1.AuthAuthorizeRequest]) (*connect.Response[v1.AuthAuthorizeResponse], error)
+	AuthLoginProvider(context.Context, *connect.Request[v1.AuthLoginProviderRequest]) (*connect.Response[v1.AuthLoginProviderResponse], error)
 	AuthLoginProviderCallback(context.Context, *connect.Request[v1.AuthLoginProviderCallbackRequest]) (*connect.Response[v1.AuthLoginProviderCallbackResponse], error)
 	AuthResetPassword(context.Context, *connect.Request[v1.AuthResetPasswordRequest]) (*connect.Response[v1.AuthResetPasswordResponse], error)
 	AuthResetPasswordEmail(context.Context, *connect.Request[v1.AuthResetPasswordEmailRequest]) (*connect.Response[v1.AuthResetPasswordEmailResponse], error)
-	AuthLoginProvider(context.Context, *connect.Request[v1.AuthLoginProviderRequest]) (*connect.Response[v1.AuthLoginProviderResponse], error)
-	AuthInvite(context.Context, *connect.Request[v1.AuthInviteRequest]) (*connect.Response[v1.AuthInviteResponse], error)
-	AuthAuthorize(context.Context, *connect.Request[v1.AuthAuthorizeRequest]) (*connect.Response[v1.AuthAuthorizeResponse], error)
-	AuthLogin(context.Context, *connect.Request[v1.AuthLoginRequest]) (*connect.Response[v1.AuthLoginResponse], error)
-	AuthRegister(context.Context, *connect.Request[v1.AuthRegisterRequest]) (*connect.Response[v1.AuthRegisterResponse], error)
 }
 
 // NewDevkitServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -799,36 +750,17 @@ type DevkitServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	devkitServiceCompanyDeleteRestoreHandler := connect.NewUnaryHandler(
-		DevkitServiceCompanyDeleteRestoreProcedure,
-		svc.CompanyDeleteRestore,
-		connect.WithSchema(devkitServiceCompanyDeleteRestoreMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServiceCompanyListHandler := connect.NewUnaryHandler(
-		DevkitServiceCompanyListProcedure,
-		svc.CompanyList,
-		connect.WithSchema(devkitServiceCompanyListMethodDescriptor),
+	devkitServiceSettingFindForUpdateHandler := connect.NewUnaryHandler(
+		DevkitServiceSettingFindForUpdateProcedure,
+		svc.SettingFindForUpdate,
+		connect.WithSchema(devkitServiceSettingFindForUpdateMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServiceCompanyCreateUpdateHandler := connect.NewUnaryHandler(
-		DevkitServiceCompanyCreateUpdateProcedure,
-		svc.CompanyCreateUpdate,
-		connect.WithSchema(devkitServiceCompanyCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceSettingUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceSettingUpdateProcedure,
 		svc.SettingUpdate,
 		connect.WithSchema(devkitServiceSettingUpdateMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServiceSettingFindForUpdateHandler := connect.NewUnaryHandler(
-		DevkitServiceSettingFindForUpdateProcedure,
-		svc.SettingFindForUpdate,
-		connect.WithSchema(devkitServiceSettingFindForUpdateMethodDescriptor),
-		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceIconListHandler := connect.NewUnaryHandler(
@@ -894,6 +826,13 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(devkitServiceEmailSendMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	devkitServiceTranslationListHandler := connect.NewUnaryHandler(
+		DevkitServiceTranslationListProcedure,
+		svc.TranslationList,
+		connect.WithSchema(devkitServiceTranslationListMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
 	devkitServiceTranslationCreateUpdateBulkHandler := connect.NewUnaryHandler(
 		DevkitServiceTranslationCreateUpdateBulkProcedure,
 		svc.TranslationCreateUpdateBulk,
@@ -906,24 +845,10 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(devkitServiceTranslationDeleteMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
-	devkitServiceTranslationListHandler := connect.NewUnaryHandler(
-		DevkitServiceTranslationListProcedure,
-		svc.TranslationList,
-		connect.WithSchema(devkitServiceTranslationListMethodDescriptor),
-		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
-		connect.WithHandlerOptions(opts...),
-	)
 	devkitServiceRoleListHandler := connect.NewUnaryHandler(
 		DevkitServiceRoleListProcedure,
 		svc.RoleList,
 		connect.WithSchema(devkitServiceRoleListMethodDescriptor),
-		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServiceRoleFindForUpdateHandler := connect.NewUnaryHandler(
-		DevkitServiceRoleFindForUpdateProcedure,
-		svc.RoleFindForUpdate,
-		connect.WithSchema(devkitServiceRoleFindForUpdateMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
@@ -934,22 +859,29 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
+	devkitServiceRoleFindForUpdateHandler := connect.NewUnaryHandler(
+		DevkitServiceRoleFindForUpdateProcedure,
+		svc.RoleFindForUpdate,
+		connect.WithSchema(devkitServiceRoleFindForUpdateMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
 	devkitServiceRoleCreateUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceRoleCreateUpdateProcedure,
 		svc.RoleCreateUpdate,
 		connect.WithSchema(devkitServiceRoleCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
-	devkitServiceRoleDeleteHandler := connect.NewUnaryHandler(
-		DevkitServiceRoleDeleteProcedure,
-		svc.RoleDelete,
-		connect.WithSchema(devkitServiceRoleDeleteMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
 	devkitServiceRoleDeleteRestoreHandler := connect.NewUnaryHandler(
 		DevkitServiceRoleDeleteRestoreProcedure,
 		svc.RoleDeleteRestore,
 		connect.WithSchema(devkitServiceRoleDeleteRestoreMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceRoleDeleteHandler := connect.NewUnaryHandler(
+		DevkitServiceRoleDeleteProcedure,
+		svc.RoleDelete,
+		connect.WithSchema(devkitServiceRoleDeleteMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceUserListHandler := connect.NewUnaryHandler(
@@ -979,16 +911,46 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(devkitServiceUserCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	devkitServiceUserDeleteRestoreHandler := connect.NewUnaryHandler(
+		DevkitServiceUserDeleteRestoreProcedure,
+		svc.UserDeleteRestore,
+		connect.WithSchema(devkitServiceUserDeleteRestoreMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	devkitServiceUserDeleteHandler := connect.NewUnaryHandler(
 		DevkitServiceUserDeleteProcedure,
 		svc.UserDelete,
 		connect.WithSchema(devkitServiceUserDeleteMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
-	devkitServiceUserDeleteRestoreHandler := connect.NewUnaryHandler(
-		DevkitServiceUserDeleteRestoreProcedure,
-		svc.UserDeleteRestore,
-		connect.WithSchema(devkitServiceUserDeleteRestoreMethodDescriptor),
+	devkitServiceAuthLoginHandler := connect.NewUnaryHandler(
+		DevkitServiceAuthLoginProcedure,
+		svc.AuthLogin,
+		connect.WithSchema(devkitServiceAuthLoginMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceAuthRegisterHandler := connect.NewUnaryHandler(
+		DevkitServiceAuthRegisterProcedure,
+		svc.AuthRegister,
+		connect.WithSchema(devkitServiceAuthRegisterMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceAuthInviteHandler := connect.NewUnaryHandler(
+		DevkitServiceAuthInviteProcedure,
+		svc.AuthInvite,
+		connect.WithSchema(devkitServiceAuthInviteMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceAuthAuthorizeHandler := connect.NewUnaryHandler(
+		DevkitServiceAuthAuthorizeProcedure,
+		svc.AuthAuthorize,
+		connect.WithSchema(devkitServiceAuthAuthorizeMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceAuthLoginProviderHandler := connect.NewUnaryHandler(
+		DevkitServiceAuthLoginProviderProcedure,
+		svc.AuthLoginProvider,
+		connect.WithSchema(devkitServiceAuthLoginProviderMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceAuthLoginProviderCallbackHandler := connect.NewUnaryHandler(
@@ -1009,48 +971,12 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(devkitServiceAuthResetPasswordEmailMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
-	devkitServiceAuthLoginProviderHandler := connect.NewUnaryHandler(
-		DevkitServiceAuthLoginProviderProcedure,
-		svc.AuthLoginProvider,
-		connect.WithSchema(devkitServiceAuthLoginProviderMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServiceAuthInviteHandler := connect.NewUnaryHandler(
-		DevkitServiceAuthInviteProcedure,
-		svc.AuthInvite,
-		connect.WithSchema(devkitServiceAuthInviteMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServiceAuthAuthorizeHandler := connect.NewUnaryHandler(
-		DevkitServiceAuthAuthorizeProcedure,
-		svc.AuthAuthorize,
-		connect.WithSchema(devkitServiceAuthAuthorizeMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServiceAuthLoginHandler := connect.NewUnaryHandler(
-		DevkitServiceAuthLoginProcedure,
-		svc.AuthLogin,
-		connect.WithSchema(devkitServiceAuthLoginMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServiceAuthRegisterHandler := connect.NewUnaryHandler(
-		DevkitServiceAuthRegisterProcedure,
-		svc.AuthRegister,
-		connect.WithSchema(devkitServiceAuthRegisterMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
 	return "/devkit.v1.DevkitService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
-		case DevkitServiceCompanyDeleteRestoreProcedure:
-			devkitServiceCompanyDeleteRestoreHandler.ServeHTTP(w, r)
-		case DevkitServiceCompanyListProcedure:
-			devkitServiceCompanyListHandler.ServeHTTP(w, r)
-		case DevkitServiceCompanyCreateUpdateProcedure:
-			devkitServiceCompanyCreateUpdateHandler.ServeHTTP(w, r)
-		case DevkitServiceSettingUpdateProcedure:
-			devkitServiceSettingUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceSettingFindForUpdateProcedure:
 			devkitServiceSettingFindForUpdateHandler.ServeHTTP(w, r)
+		case DevkitServiceSettingUpdateProcedure:
+			devkitServiceSettingUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceIconListProcedure:
 			devkitServiceIconListHandler.ServeHTTP(w, r)
 		case DevkitServiceIconCreateUpdateBulkProcedure:
@@ -1071,24 +997,24 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 			devkitServiceImportTableHandler.ServeHTTP(w, r)
 		case DevkitServiceEmailSendProcedure:
 			devkitServiceEmailSendHandler.ServeHTTP(w, r)
+		case DevkitServiceTranslationListProcedure:
+			devkitServiceTranslationListHandler.ServeHTTP(w, r)
 		case DevkitServiceTranslationCreateUpdateBulkProcedure:
 			devkitServiceTranslationCreateUpdateBulkHandler.ServeHTTP(w, r)
 		case DevkitServiceTranslationDeleteProcedure:
 			devkitServiceTranslationDeleteHandler.ServeHTTP(w, r)
-		case DevkitServiceTranslationListProcedure:
-			devkitServiceTranslationListHandler.ServeHTTP(w, r)
 		case DevkitServiceRoleListProcedure:
 			devkitServiceRoleListHandler.ServeHTTP(w, r)
-		case DevkitServiceRoleFindForUpdateProcedure:
-			devkitServiceRoleFindForUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceRoleListInputProcedure:
 			devkitServiceRoleListInputHandler.ServeHTTP(w, r)
+		case DevkitServiceRoleFindForUpdateProcedure:
+			devkitServiceRoleFindForUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceRoleCreateUpdateProcedure:
 			devkitServiceRoleCreateUpdateHandler.ServeHTTP(w, r)
-		case DevkitServiceRoleDeleteProcedure:
-			devkitServiceRoleDeleteHandler.ServeHTTP(w, r)
 		case DevkitServiceRoleDeleteRestoreProcedure:
 			devkitServiceRoleDeleteRestoreHandler.ServeHTTP(w, r)
+		case DevkitServiceRoleDeleteProcedure:
+			devkitServiceRoleDeleteHandler.ServeHTTP(w, r)
 		case DevkitServiceUserListProcedure:
 			devkitServiceUserListHandler.ServeHTTP(w, r)
 		case DevkitServiceUserListInputProcedure:
@@ -1097,26 +1023,26 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 			devkitServiceUserFindForUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceUserCreateUpdateProcedure:
 			devkitServiceUserCreateUpdateHandler.ServeHTTP(w, r)
-		case DevkitServiceUserDeleteProcedure:
-			devkitServiceUserDeleteHandler.ServeHTTP(w, r)
 		case DevkitServiceUserDeleteRestoreProcedure:
 			devkitServiceUserDeleteRestoreHandler.ServeHTTP(w, r)
+		case DevkitServiceUserDeleteProcedure:
+			devkitServiceUserDeleteHandler.ServeHTTP(w, r)
+		case DevkitServiceAuthLoginProcedure:
+			devkitServiceAuthLoginHandler.ServeHTTP(w, r)
+		case DevkitServiceAuthRegisterProcedure:
+			devkitServiceAuthRegisterHandler.ServeHTTP(w, r)
+		case DevkitServiceAuthInviteProcedure:
+			devkitServiceAuthInviteHandler.ServeHTTP(w, r)
+		case DevkitServiceAuthAuthorizeProcedure:
+			devkitServiceAuthAuthorizeHandler.ServeHTTP(w, r)
+		case DevkitServiceAuthLoginProviderProcedure:
+			devkitServiceAuthLoginProviderHandler.ServeHTTP(w, r)
 		case DevkitServiceAuthLoginProviderCallbackProcedure:
 			devkitServiceAuthLoginProviderCallbackHandler.ServeHTTP(w, r)
 		case DevkitServiceAuthResetPasswordProcedure:
 			devkitServiceAuthResetPasswordHandler.ServeHTTP(w, r)
 		case DevkitServiceAuthResetPasswordEmailProcedure:
 			devkitServiceAuthResetPasswordEmailHandler.ServeHTTP(w, r)
-		case DevkitServiceAuthLoginProviderProcedure:
-			devkitServiceAuthLoginProviderHandler.ServeHTTP(w, r)
-		case DevkitServiceAuthInviteProcedure:
-			devkitServiceAuthInviteHandler.ServeHTTP(w, r)
-		case DevkitServiceAuthAuthorizeProcedure:
-			devkitServiceAuthAuthorizeHandler.ServeHTTP(w, r)
-		case DevkitServiceAuthLoginProcedure:
-			devkitServiceAuthLoginHandler.ServeHTTP(w, r)
-		case DevkitServiceAuthRegisterProcedure:
-			devkitServiceAuthRegisterHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -1126,24 +1052,12 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 // UnimplementedDevkitServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedDevkitServiceHandler struct{}
 
-func (UnimplementedDevkitServiceHandler) CompanyDeleteRestore(context.Context, *connect.Request[v1.CompanyDeleteRestoreRequest]) (*connect.Response[v1.CompanyDeleteRestoreResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.CompanyDeleteRestore is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) CompanyList(context.Context, *connect.Request[v1.CompanyListRequest]) (*connect.Response[v1.CompanyListResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.CompanyList is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) CompanyCreateUpdate(context.Context, *connect.Request[v1.CompanyCreateUpdateRequest]) (*connect.Response[v1.CompanyCreateUpdateResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.CompanyCreateUpdate is not implemented"))
+func (UnimplementedDevkitServiceHandler) SettingFindForUpdate(context.Context, *connect.Request[v1.SettingFindForUpdateRequest]) (*connect.Response[v1.SettingFindForUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SettingFindForUpdate is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) SettingUpdate(context.Context, *connect.Request[v1.SettingUpdateRequest]) (*connect.Response[v1.SettingUpdateResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SettingUpdate is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) SettingFindForUpdate(context.Context, *connect.Request[v1.SettingFindForUpdateRequest]) (*connect.Response[v1.SettingFindForUpdateResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SettingFindForUpdate is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) IconList(context.Context, *connect.Request[v1.IconListRequest]) (*connect.Response[v1.IconListResponse], error) {
@@ -1186,6 +1100,10 @@ func (UnimplementedDevkitServiceHandler) EmailSend(context.Context, *connect.Req
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.EmailSend is not implemented"))
 }
 
+func (UnimplementedDevkitServiceHandler) TranslationList(context.Context, *connect.Request[v1.TranslationListRequest]) (*connect.Response[v1.TranslationListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TranslationList is not implemented"))
+}
+
 func (UnimplementedDevkitServiceHandler) TranslationCreateUpdateBulk(context.Context, *connect.Request[v1.TranslationCreateUpdateBulkRequest]) (*connect.Response[v1.TranslationCreateUpdateBulkResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TranslationCreateUpdateBulk is not implemented"))
 }
@@ -1194,32 +1112,28 @@ func (UnimplementedDevkitServiceHandler) TranslationDelete(context.Context, *con
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TranslationDelete is not implemented"))
 }
 
-func (UnimplementedDevkitServiceHandler) TranslationList(context.Context, *connect.Request[v1.TranslationListRequest]) (*connect.Response[v1.TranslationListResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TranslationList is not implemented"))
-}
-
 func (UnimplementedDevkitServiceHandler) RoleList(context.Context, *connect.Request[v1.RoleListRequest]) (*connect.Response[v1.RoleListResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleList is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) RoleFindForUpdate(context.Context, *connect.Request[v1.RoleFindForUpdateRequest]) (*connect.Response[v1.RoleFindForUpdateResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleFindForUpdate is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) RoleListInput(context.Context, *connect.Request[v1.RoleListInputRequest]) (*connect.Response[v1.RoleListInputResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleListInput is not implemented"))
 }
 
+func (UnimplementedDevkitServiceHandler) RoleFindForUpdate(context.Context, *connect.Request[v1.RoleFindForUpdateRequest]) (*connect.Response[v1.RoleFindForUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleFindForUpdate is not implemented"))
+}
+
 func (UnimplementedDevkitServiceHandler) RoleCreateUpdate(context.Context, *connect.Request[v1.RoleCreateUpdateRequest]) (*connect.Response[v1.RoleCreateUpdateResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleCreateUpdate is not implemented"))
 }
 
-func (UnimplementedDevkitServiceHandler) RoleDelete(context.Context, *connect.Request[v1.RoleDeleteRequest]) (*connect.Response[v1.RoleDeleteResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleDelete is not implemented"))
-}
-
 func (UnimplementedDevkitServiceHandler) RoleDeleteRestore(context.Context, *connect.Request[v1.RoleDeleteRestoreRequest]) (*connect.Response[v1.RoleDeleteRestoreResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleDeleteRestore is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) RoleDelete(context.Context, *connect.Request[v1.RoleDeleteRequest]) (*connect.Response[v1.RoleDeleteResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.RoleDelete is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) UserList(context.Context, *connect.Request[v1.UserListRequest]) (*connect.Response[v1.UserListResponse], error) {
@@ -1238,12 +1152,32 @@ func (UnimplementedDevkitServiceHandler) UserCreateUpdate(context.Context, *conn
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserCreateUpdate is not implemented"))
 }
 
+func (UnimplementedDevkitServiceHandler) UserDeleteRestore(context.Context, *connect.Request[v1.UserDeleteRestoreRequest]) (*connect.Response[v1.UserDeleteRestoreResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserDeleteRestore is not implemented"))
+}
+
 func (UnimplementedDevkitServiceHandler) UserDelete(context.Context, *connect.Request[v1.UserDeleteRequest]) (*connect.Response[v1.UserDeleteResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserDelete is not implemented"))
 }
 
-func (UnimplementedDevkitServiceHandler) UserDeleteRestore(context.Context, *connect.Request[v1.UserDeleteRestoreRequest]) (*connect.Response[v1.UserDeleteRestoreResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserDeleteRestore is not implemented"))
+func (UnimplementedDevkitServiceHandler) AuthLogin(context.Context, *connect.Request[v1.AuthLoginRequest]) (*connect.Response[v1.AuthLoginResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.AuthLogin is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) AuthRegister(context.Context, *connect.Request[v1.AuthRegisterRequest]) (*connect.Response[v1.AuthRegisterResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.AuthRegister is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) AuthInvite(context.Context, *connect.Request[v1.AuthInviteRequest]) (*connect.Response[v1.AuthInviteResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.AuthInvite is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) AuthAuthorize(context.Context, *connect.Request[v1.AuthAuthorizeRequest]) (*connect.Response[v1.AuthAuthorizeResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.AuthAuthorize is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) AuthLoginProvider(context.Context, *connect.Request[v1.AuthLoginProviderRequest]) (*connect.Response[v1.AuthLoginProviderResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.AuthLoginProvider is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) AuthLoginProviderCallback(context.Context, *connect.Request[v1.AuthLoginProviderCallbackRequest]) (*connect.Response[v1.AuthLoginProviderCallbackResponse], error) {
@@ -1256,24 +1190,4 @@ func (UnimplementedDevkitServiceHandler) AuthResetPassword(context.Context, *con
 
 func (UnimplementedDevkitServiceHandler) AuthResetPasswordEmail(context.Context, *connect.Request[v1.AuthResetPasswordEmailRequest]) (*connect.Response[v1.AuthResetPasswordEmailResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.AuthResetPasswordEmail is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) AuthLoginProvider(context.Context, *connect.Request[v1.AuthLoginProviderRequest]) (*connect.Response[v1.AuthLoginProviderResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.AuthLoginProvider is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) AuthInvite(context.Context, *connect.Request[v1.AuthInviteRequest]) (*connect.Response[v1.AuthInviteResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.AuthInvite is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) AuthAuthorize(context.Context, *connect.Request[v1.AuthAuthorizeRequest]) (*connect.Response[v1.AuthAuthorizeResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.AuthAuthorize is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) AuthLogin(context.Context, *connect.Request[v1.AuthLoginRequest]) (*connect.Response[v1.AuthLoginResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.AuthLogin is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) AuthRegister(context.Context, *connect.Request[v1.AuthRegisterRequest]) (*connect.Response[v1.AuthRegisterResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.AuthRegister is not implemented"))
 }

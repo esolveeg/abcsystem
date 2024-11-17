@@ -55,7 +55,7 @@ service DevkitService {
     }
     rpc FileCreate(FileCreateRequest) returns (FileCreateResponse) {}
     rpc FileCreateBulk(FileCreateBulkRequest) returns (FileCreateBulkResponse) {}
-    rpc FileDeleteRestore(FileDeleteRestoreRequest) returns (FileDeleteRestoreResponse) {}
+  //  rpc FileDeleteRestore(FileDeleteRestoreRequest) returns (FileDeleteRestoreResponse) {}
     rpc FileDelete(FileDeleteRequest) returns (FileDeleteResponse) {}
 
     // buckets
@@ -88,7 +88,7 @@ service DevkitService {
     }
     rpc RoleListInput(RoleListInputRequest) returns (RoleListInputResponse)  {
         option idempotency_level = NO_SIDE_EFFECTS;
-        option (skip_autcchorization) = true;
+        option (skip_authorization) = true;
     }
     rpc RoleFindForUpdate(RoleFindForUpdateRequest) returns (RoleFindForUpdateResponse)  {
         option idempotency_level = NO_SIDE_EFFECTS;
