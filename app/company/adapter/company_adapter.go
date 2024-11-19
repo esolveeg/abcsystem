@@ -2,7 +2,7 @@ package adapter
 
 import (
 	"github.com/darwishdev/devkit-api/db"
-	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
 func (a *CompanyAdapter) CompanyEntityGrpcFromSql(resp *db.CompaniesSchemaCompany) *devkitv1.CompaniesSchemaCompany {

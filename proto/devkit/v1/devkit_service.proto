@@ -1,146 +1,176 @@
 syntax = "proto3";
-
-// INJECT IMPORTS
-
-import "devkit/v1/service_options.proto";
-import "devkit/v1/accounts_user.proto";
-import "devkit/v1/accounts_auth.proto";
-import "devkit/v1/public_email.proto";
-import "devkit/v1/public_translation.proto";
-import "devkit/v1/public_setting.proto";
-import "devkit/v1/public_icon.proto";
-import "devkit/v1/public_storage.proto";
-import "devkit/v1/accounts_role.proto";
 package devkit.v1;
 
-// The `DevkitService` defines the structure for our gRPC API. It is organized into domains such as `public` and `accounts`, 
+import "devkit/v1/accounts_auth.proto";
+import "devkit/v1/accounts_role.proto";
+import "devkit/v1/accounts_user.proto";
+import "devkit/v1/company_company.proto";
+import "devkit/v1/company_page.proto";
+import "devkit/v1/company_partial.proto";
+// INJECT IMPORTS
+import "devkit/v1/company_section.proto";
+import "devkit/v1/public_email.proto";
+import "devkit/v1/public_icon.proto";
+import "devkit/v1/public_setting.proto";
+import "devkit/v1/public_storage.proto";
+import "devkit/v1/public_translation.proto";
+import "devkit/v1/service_options.proto";
+
+// The `DevkitService` defines the structure for our gRPC API. It is organized into domains such as `public` and `accounts`,
 // which correspond to folders under `app/` and represent schemas in the database. Each domain operates on its specific schema,
-// ensuring a clear separation of concerns. 
-// 
+// ensuring a clear separation of concerns.
+//
 // Naming conventions:
 // - Each endpoint's name starts with the corresponding table name (in singular form) and reflects the feature it implements.
 // - SQL table names are always singular, aligning with endpoint naming.
-// - Endpoints requiring authorization are represented by a record in `accounts_schema.permission` to allow the authorization 
+// - Endpoints requiring authorization are represented by a record in `accounts_schema.permission` to allow the authorization
 //   interceptor to function properly.
 //
 // Special Options:
-// - `option idempotency_level = NO_SIDE_EFFECTS`: Marks an endpoint as safe for GET requests because it does not modify data 
+// - `option idempotency_level = NO_SIDE_EFFECTS`: Marks an endpoint as safe for GET requests because it does not modify data
 //   sources; it only reads data.
-// - `option (skip_authentication) = true`: Exempts the endpoint from authentication and authorization checks, allowing it to be 
+// - `option (skip_authentication) = true`: Exempts the endpoint from authentication and authorization checks, allowing it to be
 //   accessed without a token in the header.
 // - `option (skip_authorization) = true`: Skips only the authorization checks, while authentication is still enforced.
 
 service DevkitService {
-	// INJECT METHODS
+  // INJECT METHODS
+  rpc PartialDeleteRestore(PartialDeleteRestoreRequest) returns (PartialDeleteRestoreResponse) {}
+  rpc PartialCreateUpdate(PartialCreateUpdateRequest) returns (PartialCreateUpdateResponse) {}
+  rpc PartialList(PartialListRequest) returns (PartialListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-// public 
-//////////////////////////////////////////////////////////////////////////////////////////////
-    // settings
-    rpc SettingFindForUpdate(SettingFindForUpdateRequest) returns (SettingFindForUpdateResponse)  {
-        option idempotency_level = NO_SIDE_EFFECTS;
-    }
-    rpc SettingUpdate(SettingUpdateRequest) returns (SettingUpdateResponse) {}
+  rpc PageDeleteRestore(PageDeleteRestoreRequest) returns (PageDeleteRestoreResponse) {}
+  rpc PageCreateUpdate(PageCreateUpdateRequest) returns (PageCreateUpdateResponse) {}
+  rpc PageList(PageListRequest) returns (PageListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
 
-    // icons
-    rpc IconList(IconListRequest) returns (IconListResponse)  {
-        option idempotency_level = NO_SIDE_EFFECTS;
-        option (skip_authentication) = true;
-    }
-    rpc IconCreateUpdateBulk(IconCreateUpdateBulkRequest) returns (IconCreateUpdateBulkResponse)  {} 
+  rpc SectionDeleteRestore(SectionDeleteRestoreRequest) returns (SectionDeleteRestoreResponse) {}
 
-    // files
-    rpc FileList(FileListRequest) returns (FileListResponse) {
-        option idempotency_level = NO_SIDE_EFFECTS;
-    }
-    rpc FileCreate(FileCreateRequest) returns (FileCreateResponse) {}
-    rpc FileCreateBulk(FileCreateBulkRequest) returns (FileCreateBulkResponse) {}
+  rpc SectionCreateUpdate(SectionCreateUpdateRequest) returns (SectionCreateUpdateResponse) {}
+
+  rpc SectionList(SectionListRequest) returns (SectionListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+
+  rpc CompanyDeleteRestore(CompanyDeleteRestoreRequest) returns (CompanyDeleteRestoreResponse) {}
+  rpc CompanyList(CompanyListRequest) returns (CompanyListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc CompanyCreateUpdate(CompanyCreateUpdateRequest) returns (CompanyCreateUpdateResponse) {}
+
+  //////////////////////////////////////////////////////////////////////////////////////////////
+  // public
+  //////////////////////////////////////////////////////////////////////////////////////////////
+  // settings
+  rpc SettingFindForUpdate(SettingFindForUpdateRequest) returns (SettingFindForUpdateResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc SettingUpdate(SettingUpdateRequest) returns (SettingUpdateResponse) {}
+
+  // icons
+  rpc IconList(IconListRequest) returns (IconListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authentication) = true;
+  }
+  rpc IconCreateUpdateBulk(IconCreateUpdateBulkRequest) returns (IconCreateUpdateBulkResponse) {}
+
+  // files
+  rpc FileList(FileListRequest) returns (FileListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc FileCreate(FileCreateRequest) returns (FileCreateResponse) {}
+  rpc FileCreateBulk(FileCreateBulkRequest) returns (FileCreateBulkResponse) {}
   //  rpc FileDeleteRestore(FileDeleteRestoreRequest) returns (FileDeleteRestoreResponse) {}
-    rpc FileDelete(FileDeleteRequest) returns (FileDeleteResponse) {}
+  rpc FileDelete(FileDeleteRequest) returns (FileDeleteResponse) {}
 
-    // buckets
-    rpc BucketList(BucketListRequest) returns (BucketListResponse)  {
-        option idempotency_level = NO_SIDE_EFFECTS;
-    }
-    rpc BucketCreateUpdate(BucketCreateUpdateRequest) returns (BucketCreateUpdateResponse) {}
+  // buckets
+  rpc BucketList(BucketListRequest) returns (BucketListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc BucketCreateUpdate(BucketCreateUpdateRequest) returns (BucketCreateUpdateResponse) {}
 
-    // import
-    rpc ImportTable(ImportTableRequest) returns (ImportTableResponse) {}
+  // import
+  rpc ImportTable(ImportTableRequest) returns (ImportTableResponse) {}
 
-    // emails
-    rpc EmailSend(EmailSendRequest) returns (EmailSendResponse) {}
+  // emails
+  rpc EmailSend(EmailSendRequest) returns (EmailSendResponse) {}
 
-    // translations
-    rpc TranslationList(TranslationListRequest) returns (TranslationListResponse)  {
-        option idempotency_level = NO_SIDE_EFFECTS;
-        option (skip_authentication) = true;
-    }
-    rpc TranslationCreateUpdateBulk(TranslationCreateUpdateBulkRequest) returns (TranslationCreateUpdateBulkResponse) {}
-    rpc TranslationDelete(TranslationDeleteRequest) returns (TranslationDeleteResponse) {}
+  // translations
+  rpc TranslationList(TranslationListRequest) returns (TranslationListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authentication) = true;
+  }
+  rpc TranslationCreateUpdateBulk(TranslationCreateUpdateBulkRequest) returns (TranslationCreateUpdateBulkResponse) {}
+  rpc TranslationDelete(TranslationDeleteRequest) returns (TranslationDeleteResponse) {}
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-// accounts
-//////////////////////////////////////////////////////////////////////////////////////////////
-    // roles
-//*******************************************************************************************//
-    rpc RoleList(RoleListRequest) returns (RoleListResponse) {
-        option idempotency_level = NO_SIDE_EFFECTS;
-    }
-    rpc RoleListInput(RoleListInputRequest) returns (RoleListInputResponse)  {
-        option idempotency_level = NO_SIDE_EFFECTS;
-        option (skip_authorization) = true;
-    }
-    rpc RoleFindForUpdate(RoleFindForUpdateRequest) returns (RoleFindForUpdateResponse)  {
-        option idempotency_level = NO_SIDE_EFFECTS;
-        option (skip_authorization) = true;
-    }
-    rpc RoleCreateUpdate(RoleCreateUpdateRequest) returns (RoleCreateUpdateResponse) {}
-    rpc RoleDeleteRestore(RoleDeleteRestoreRequest) returns (RoleDeleteRestoreResponse) {}
-    rpc RoleDelete(RoleDeleteRequest) returns (RoleDeleteResponse) {}
+  //////////////////////////////////////////////////////////////////////////////////////////////
+  // accounts
+  //////////////////////////////////////////////////////////////////////////////////////////////
+  // roles
+  //*******************************************************************************************//
+  rpc RoleList(RoleListRequest) returns (RoleListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc RoleListInput(RoleListInputRequest) returns (RoleListInputResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authorization) = true;
+  }
+  rpc RoleFindForUpdate(RoleFindForUpdateRequest) returns (RoleFindForUpdateResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authorization) = true;
+  }
+  rpc RoleCreateUpdate(RoleCreateUpdateRequest) returns (RoleCreateUpdateResponse) {}
+  rpc RoleDeleteRestore(RoleDeleteRestoreRequest) returns (RoleDeleteRestoreResponse) {}
+  rpc RoleDelete(RoleDeleteRequest) returns (RoleDeleteResponse) {}
 
-//*******************************************************************************************//
-    // users
-//*******************************************************************************************//
-    rpc UserList(UserListRequest) returns (UserListResponse)  {
-        option idempotency_level = NO_SIDE_EFFECTS;
-    }
-    rpc UserListInput(UserListInputRequest) returns (UserListInputResponse)  {
-        option idempotency_level = NO_SIDE_EFFECTS;
-        option (skip_authorization) = true;
-    }
-    rpc UserFindForUpdate(UserFindForUpdateRequest) returns (UserFindForUpdateResponse)  {
-        option idempotency_level = NO_SIDE_EFFECTS;
-        option (skip_authorization) = true;
-    }
-    rpc UserCreateUpdate(UserCreateUpdateRequest) returns (UserCreateUpdateResponse) {}
-    rpc UserDeleteRestore(UserDeleteRestoreRequest) returns (UserDeleteRestoreResponse) {}
-    rpc UserDelete(UserDeleteRequest) returns (UserDeleteResponse) {}
+  //*******************************************************************************************//
+  // users
+  //*******************************************************************************************//
+  rpc UserList(UserListRequest) returns (UserListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc UserListInput(UserListInputRequest) returns (UserListInputResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authorization) = true;
+  }
+  rpc UserFindForUpdate(UserFindForUpdateRequest) returns (UserFindForUpdateResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authorization) = true;
+  }
+  rpc UserCreateUpdate(UserCreateUpdateRequest) returns (UserCreateUpdateResponse) {}
+  rpc UserDeleteRestore(UserDeleteRestoreRequest) returns (UserDeleteRestoreResponse) {}
+  rpc UserDelete(UserDeleteRequest) returns (UserDeleteResponse) {}
 
-//*******************************************************************************************//
-    // auth
-//*******************************************************************************************//
-    rpc AuthLogin(AuthLoginRequest) returns (AuthLoginResponse) {
-        option (skip_authentication) = true;
-    }
-    rpc AuthRegister(AuthRegisterRequest) returns (AuthRegisterResponse) {
-        option (skip_authentication) = true;
-    }
-    rpc AuthInvite(AuthInviteRequest) returns (AuthInviteResponse) {}
-    rpc AuthAuthorize(AuthAuthorizeRequest) returns (AuthAuthorizeResponse) {
-        option (skip_authorization) = true;
-    }
-    rpc AuthLoginProvider(AuthLoginProviderRequest) returns (AuthLoginProviderResponse) {
-        option (skip_authentication) = true;
-    }
-    rpc AuthLoginProviderCallback(AuthLoginProviderCallbackRequest) returns (AuthLoginProviderCallbackResponse) {
-        option (skip_authentication) = true;
-    }
-    rpc AuthResetPassword(AuthResetPasswordRequest) returns (AuthResetPasswordResponse) {
-        option (skip_authentication) = true;
-    }
-    rpc AuthResetPasswordEmail(AuthResetPasswordEmailRequest) returns (AuthResetPasswordEmailResponse) {
-        option (skip_authentication) = true;
-    }
+  //*******************************************************************************************//
+  // auth
+  //*******************************************************************************************//
+  rpc AuthLogin(AuthLoginRequest) returns (AuthLoginResponse) {
+    option (skip_authentication) = true;
+  }
+  rpc AuthRegister(AuthRegisterRequest) returns (AuthRegisterResponse) {
+    option (skip_authentication) = true;
+  }
+  rpc AuthInvite(AuthInviteRequest) returns (AuthInviteResponse) {}
+  rpc AuthAuthorize(AuthAuthorizeRequest) returns (AuthAuthorizeResponse) {
+    option (skip_authorization) = true;
+  }
+  rpc AuthLoginProvider(AuthLoginProviderRequest) returns (AuthLoginProviderResponse) {
+    option (skip_authentication) = true;
+  }
+  rpc AuthLoginProviderCallback(AuthLoginProviderCallbackRequest) returns (AuthLoginProviderCallbackResponse) {
+    option (skip_authentication) = true;
+  }
+  rpc AuthResetPassword(AuthResetPasswordRequest) returns (AuthResetPasswordResponse) {
+    option (skip_authentication) = true;
+  }
+  rpc AuthResetPasswordEmail(AuthResetPasswordEmailRequest) returns (AuthResetPasswordEmailResponse) {
+    option (skip_authentication) = true;
+  }
 
+  //*******************************************************************************************//
+  // company
+  //*******************************************************************************************//
 }
-

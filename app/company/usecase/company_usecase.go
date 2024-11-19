@@ -21,7 +21,7 @@ func (u *CompanyUsecase) CompanyCreateUpdate(ctx context.Context, req *connect.R
 }
 
 func (u *CompanyUsecase) CompanyList(ctx context.Context, req *connect.Request[devkitv1.CompanyListRequest]) (*devkitv1.CompanyListResponse, error) {
-	record, err := u.repo.CompanyList(ctx)
+	record, err := u.repo.CompanyList(ctx, 0)
 	if err != nil {
 		return nil, err
 	}

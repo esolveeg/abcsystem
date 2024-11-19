@@ -1,0 +1,63 @@
+syntax = "proto3";
+package devkit.v1;
+
+import "buf/validate/validate.proto";
+import "devkit/v1/client.proto";
+import "google/protobuf/timestamp.proto";
+
+// message yourmessage {
+// }
+// INJECT MESSAGES
+
+message CompaniesSchemaSection {
+  int32 section_id = 1;
+  string section_name = 2;
+  string section_name_ar = 3;
+  string section_description = 4;
+  string section_description_ar = 5;
+  repeated string section_images = 6;
+  int32 company_id = 7;
+  string section_background = 9; // updated to match the 'section_background' column in the table
+  string section_icon = 10; // no change, it's correct as per table
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+  google.protobuf.Timestamp deleted_at = 13;
+}
+
+message SectionListRequest {}
+
+message SectionListResponse {
+  repeated CompaniesSchemaSection records = 1;
+  repeated CompaniesSchemaSection deleted_records = 2;
+  AvailableOptions options = 3;
+}
+
+message SectionCreateUpdateRequest {
+  int32 section_id = 1;
+  string section_name = 2 [
+    (buf.validate.field).string.min_len = 2,
+    (buf.validate.field).string.max_len = 200
+  ];
+  string section_name_ar = 3 [(buf.validate.field).string.max_len = 200];
+  string section_description = 4;
+  string section_description_ar = 5;
+  repeated string section_images = 6;
+  int32 company_id = 7;
+  string section_background = 9 [(buf.validate.field).string.max_len = 500]; // updated to match the 'section_background' column in the table
+  string section_icon = 10 [(buf.validate.field).string.max_len = 500]; // no change, it's correct as per table
+}
+
+message SectionCreateUpdateResponse {
+  CompaniesSchemaSection record = 1;
+}
+
+message SectionDeleteRestoreRequest {
+  repeated int32 records = 1 [(buf.validate.field).repeated = {
+    unique: true
+    max_items: 500
+  }];
+}
+
+message SectionDeleteRestoreResponse {
+  repeated CompaniesSchemaSection records = 1;
+}

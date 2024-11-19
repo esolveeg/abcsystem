@@ -2,8 +2,9 @@ package api
 
 import (
 	// INJECT IMPORTS
-	"connectrpc.com/connect"
 	"context"
+
+	"connectrpc.com/connect"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 

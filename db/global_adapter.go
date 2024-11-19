@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgtype"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func StringToPgtext(str string) pgtype.Text {
@@ -21,7 +22,9 @@ func PgtimeToString(pgTime pgtype.Time) string {
 func TimeToString(time time.Time) string {
 	return time.Format("2006-01-02 15:04:05")
 }
-
+func TimeToProtoTimeStamp(time time.Time) *timestamppb.Timestamp {
+	return timestamppb.New(time)
+}
 func StringToPgdate(strDate string) pgtype.Date {
 	parsedTime, _ := time.Parse("2006-01-02", strDate)
 	year, month, day := parsedTime.Date()

@@ -12,17 +12,10 @@ import (
 )
 
 const roleCreateUpdate = `-- name: RoleCreateUpdate :one
-select  
+SELECT
 	role_id, company_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at
-from accounts_schema.role_create_update(
-in_role_id => $1,
-in_role_name => $2,
-in_company_id => $3,
-in_role_security_level => $4,
-in_caller_id => $5,
-in_role_description => $6,
-in_permissions => $7::int[]
-)
+FROM
+	accounts_schema.role_create_update (in_role_id => $1, in_role_name => $2, in_company_id => $3, in_role_security_level => $4, in_caller_id => $5, in_role_description => $6, in_permissions => $7::int[])
 `
 
 type RoleCreateUpdateParams struct {
@@ -60,9 +53,10 @@ func (q *Queries) RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdatePara
 }
 
 const roleDelete = `-- name: RoleDelete :one
-SELECT 
+SELECT
 	role_id, company_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at
-FROM accounts_schema.role_delete(in_role_id => $1 , in_caller_id => $2)
+FROM
+	accounts_schema.role_delete (in_role_id => $1, in_caller_id => $2)
 `
 
 type RoleDeleteParams struct {
@@ -87,9 +81,10 @@ func (q *Queries) RoleDelete(ctx context.Context, arg RoleDeleteParams) (Account
 }
 
 const roleDeleteRestore = `-- name: RoleDeleteRestore :one
-SELECT 
-	role_id, company_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at  
-FROM accounts_schema.role_delete_restore(in_role_id => $1 , in_caller_id => $2)
+SELECT
+	role_id, company_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at
+FROM
+	accounts_schema.role_delete_restore (in_role_id => $1, in_caller_id => $2)
 `
 
 type RoleDeleteRestoreParams struct {
@@ -114,19 +109,27 @@ func (q *Queries) RoleDeleteRestore(ctx context.Context, arg RoleDeleteRestorePa
 }
 
 const roleFindForUpdate = `-- name: RoleFindForUpdate :one
-with permissions as (
-	select p.role_id , array_agg(p.permission_id)::int[] permissions from accounts_schema.role_permission p where p.role_id = $1 group by p.role_id
+WITH permissions AS (
+	SELECT
+		p.role_id,
+		array_agg(p.permission_id)::int[] permissions
+	FROM
+		accounts_schema.role_permission p
+	WHERE
+		p.role_id = $1
+	GROUP BY
+		p.role_id
 )
-select  
-r.role_id ,
-r.role_name ,
-r.company_id,
-r.role_security_level ,
-r.role_description ,
-p.permissions permissions
-	from accounts_schema.role r
- join permissions p 
-on r.role_id = p.role_id
+SELECT
+	r.role_id,
+	r.role_name,
+	r.company_id,
+	r.role_security_level,
+	r.role_description,
+	p.permissions permissions
+FROM
+	accounts_schema.role r
+	JOIN permissions p ON r.role_id = p.role_id
 `
 
 type RoleFindForUpdateRow struct {
@@ -153,10 +156,10 @@ func (q *Queries) RoleFindForUpdate(ctx context.Context, roleID int32) (RoleFind
 }
 
 const roleList = `-- name: RoleList :many
-select  
+SELECT
 	role_id, company_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at
-
-from accounts_schema.role
+FROM
+	accounts_schema.role
 `
 
 func (q *Queries) RoleList(ctx context.Context) ([]AccountsSchemaRole, error) {
@@ -189,13 +192,14 @@ func (q *Queries) RoleList(ctx context.Context) ([]AccountsSchemaRole, error) {
 }
 
 const roleListInput = `-- name: RoleListInput :many
-select 
-role_id value,
-role_name label,
-concat("level: " , role_security_level::varchar)::varchar note
-from accounts_schema.role 
-where 
-role_security_level <= accounts_schema.user_security_level_find($1)
+SELECT
+	role_id value,
+	role_name label,
+	concat("level: ", role_security_level::varchar)::varchar note
+FROM
+	accounts_schema.role
+WHERE
+	role_security_level <= accounts_schema.user_security_level_find ($1)
 `
 
 type RoleListInputRow struct {

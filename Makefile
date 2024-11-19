@@ -31,6 +31,13 @@ seed_storage:
 seed_accounts:
 	devkit seed accounts_schema --file-path seeds/schemas/accounts.xlsx -e
 
+seed_companies:
+	devkit seed companies_schema --file-path seeds/schemas/companies.xlsx -e
+
+seed_companies_accounts:
+	devkit seed accounts_schema --file-path seeds/schemas/companies_accounts.xlsx -e
+
+
 seed_super_user:
 	devkit seed super-user -e admin@devkit.com -n "super admin user"
 
@@ -38,7 +45,7 @@ supabase_reset:
 	supabase db reset 
 			
 rdb:
-	make supabase_reset seed_super_user seed_accounts seed_storage	
+	make supabase_reset seed_super_user seed_accounts seed_storage seed_companies seed_companies_accounts
 run:
 	go run main.go
 buf:

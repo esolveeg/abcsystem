@@ -13,6 +13,7 @@ import (
 )
 
 func (u *AccountsUsecase) userGenerateTokens(username string, userId int32, tenantId int32, userSecurityLevel int32) (*devkitv1.LoginInfo, error) {
+
 	accessToken, accessPayload, err := u.tokenMaker.CreateToken(username, userId, userSecurityLevel, tenantId, u.tokenDuration)
 	if err != nil {
 		return nil, err
@@ -70,7 +71,10 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 	if err != nil {
 		return nil, err
 	}
-	loginInfo, err := u.userGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.UserSecurityLevel, response.User.CompanyId)
+	log.Debug().Interface("resp", response.User).Msg("auth")
+
+	// log.Debug().Interface("tentatis", tenantId).Msg("show me the real tenant")
+	loginInfo, err := u.userGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.CompanyId, response.User.UserSecurityLevel)
 	if err != nil {
 		return nil, err
 	}

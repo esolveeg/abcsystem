@@ -34,7 +34,7 @@ func (s *Server) proccessProcedureName(procName string) (string, string) {
 }
 
 // this function should handle the create update request and chech for the record id on the request to pass either [create , update]
-// ass permission variation
+// as permission variation
 func (s *Server) createUpdateMethodPermissionName(msgReflect protoreflect.Message, group string) string {
 	recordIdKey := "record_id"
 	permissionName := fmt.Sprintf("%s_create", group)
@@ -104,7 +104,32 @@ func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 				}
 				// Inject the callerID into the context
 				ctx = contextkeys.WithCallerID(ctx, payload.UserId)
-				ctx = contextkeys.WithiTenantID(ctx, payload.TenantId)
+				if payload.TenantId > 0 {
+					ctx = contextkeys.WithiTenantID(ctx, payload.TenantId)
+
+					message, ok := req.Any().(protoreflect.ProtoMessage)
+					if !ok {
+						return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("request is not a ProtoMessage"))
+					}
+					msgReflect := message.ProtoReflect()
+					field := msgReflect.Descriptor().Fields().ByName(protoreflect.Name("company_id"))
+					if field == nil {
+						log.Debug().Msg("company not passed")
+					} else {
+						if msgReflect.Has(field) {
+							companyIDValue := msgReflect.Get(field)
+							companyID := companyIDValue.Int() // assuming role_id is an int32 or int64 field
+							if companyID > 0 {
+								if companyID != int64(payload.TenantId) {
+									return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("this user attached to TenantId number %d , not allowed to take any actions under another tenant %d", payload.TenantId, companyID))
+								}
+								log.Debug().Int("cccc", int(companyID)).Msg("companypassed")
+							}
+						}
+
+					}
+
+				}
 				skipAuthorization, ok := proto.GetExtension(options, devkitv1.E_SkipAuthorization).(bool)
 				if skipAuthorization && ok {
 					return next(ctx, req)

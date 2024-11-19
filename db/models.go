@@ -94,6 +94,68 @@ type CompaniesSchemaCompany struct {
 	DeletedAt               pgtype.Timestamp `json:"deleted_at"`
 }
 
+type CompaniesSchemaPage struct {
+	PageID              int32            `json:"page_id"`
+	PageName            string           `json:"page_name"`
+	PageNameAr          pgtype.Text      `json:"page_name_ar"`
+	PageDescription     pgtype.Text      `json:"page_description"`
+	PageDescriptionAr   pgtype.Text      `json:"page_description_ar"`
+	PageBreadcrumb      pgtype.Text      `json:"page_breadcrumb"`
+	CompanyID           pgtype.Int4      `json:"company_id"`
+	PageRoute           string           `json:"page_route"`
+	PageCoverImage      pgtype.Text      `json:"page_cover_image"`
+	PageCoverVideo      pgtype.Text      `json:"page_cover_video"`
+	PageKeyWords        pgtype.Text      `json:"page_key_words"`
+	PageMetaDescription pgtype.Text      `json:"page_meta_description"`
+	PageIcon            pgtype.Text      `json:"page_icon"`
+	CreatedAt           pgtype.Timestamp `json:"created_at"`
+	UpdatedAt           pgtype.Timestamp `json:"updated_at"`
+	DeletedAt           pgtype.Timestamp `json:"deleted_at"`
+}
+
+type CompaniesSchemaPageSection struct {
+	PageID        int32       `json:"page_id"`
+	SectionID     int32       `json:"section_id"`
+	PartialTypeID int32       `json:"partial_type_id"`
+	IsFeatured    pgtype.Bool `json:"is_featured"`
+}
+
+type CompaniesSchemaPartial struct {
+	PartialID      int32            `json:"partial_id"`
+	PartialName    string           `json:"partial_name"`
+	PartialTypeID  int32            `json:"partial_type_id"`
+	CompanyID      pgtype.Int4      `json:"company_id"`
+	PartialImage   pgtype.Text      `json:"partial_image"`
+	PartialImages  pgtype.Text      `json:"partial_images"`
+	PartialVideo   pgtype.Text      `json:"partial_video"`
+	IsFeatured     pgtype.Bool      `json:"is_featured"`
+	PartialBrief   pgtype.Text      `json:"partial_brief"`
+	PartialContent pgtype.Text      `json:"partial_content"`
+	CreatedAt      pgtype.Timestamp `json:"created_at"`
+	UpdatedAt      pgtype.Timestamp `json:"updated_at"`
+	DeletedAt      pgtype.Timestamp `json:"deleted_at"`
+}
+
+type CompaniesSchemaPartialType struct {
+	PartialTypeID   int32  `json:"partial_type_id"`
+	PartialTypeName string `json:"partial_type_name"`
+}
+
+type CompaniesSchemaSection struct {
+	SectionID            int32            `json:"section_id"`
+	SectionName          string           `json:"section_name"`
+	SectionNameAr        pgtype.Text      `json:"section_name_ar"`
+	SectionDescription   pgtype.Text      `json:"section_description"`
+	SectionDescriptionAr pgtype.Text      `json:"section_description_ar"`
+	CompanyID            pgtype.Int4      `json:"company_id"`
+	SectionBackground    pgtype.Text      `json:"section_background"`
+	SectionImages        pgtype.Text      `json:"section_images"`
+	SectionIcon          pgtype.Text      `json:"section_icon"`
+	CreatedAt            pgtype.Timestamp `json:"created_at"`
+	UpdatedAt            pgtype.Timestamp `json:"updated_at"`
+	DeletedAt            pgtype.Timestamp `json:"deleted_at"`
+}
+
 type Icon struct {
 	IconID      int32  `json:"icon_id"`
 	IconName    string `json:"icon_name"`
