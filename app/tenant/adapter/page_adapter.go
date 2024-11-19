@@ -7,15 +7,15 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (a *CompanyAdapter) PageEntityGrpcFromSql(resp *db.CompaniesSchemaPage) *devkitv1.CompaniesSchemaPage {
-	return &devkitv1.CompaniesSchemaPage{
+func (a *TenantAdapter) PageEntityGrpcFromSql(resp *db.TenantsSchemaPage) *devkitv1.TenantsSchemaPage {
+	return &devkitv1.TenantsSchemaPage{
 		PageId:              int32(resp.PageID),
 		PageName:            resp.PageName,
 		PageNameAr:          resp.PageNameAr.String,
 		PageDescription:     resp.PageDescription.String,
 		PageDescriptionAr:   resp.PageDescriptionAr.String,
 		PageBreadcrumb:      resp.PageBreadcrumb.String,
-		CompanyId:           int32(resp.CompanyID.Int32), // Handle nullable int
+		TenantId:           int32(resp.TenantID.Int32), // Handle nullable int
 		PageRoute:           resp.PageRoute,
 		PageCoverImage:      resp.PageCoverImage.String,
 		PageCoverVideo:      resp.PageCoverVideo.String,
@@ -28,17 +28,17 @@ func (a *CompanyAdapter) PageEntityGrpcFromSql(resp *db.CompaniesSchemaPage) *de
 	}
 }
 
-func (a *CompanyAdapter) PageEntityListGrpcFromSql(resp *[]db.CompaniesSchemaPage) *[]*devkitv1.CompaniesSchemaPage {
-	records := make([]*devkitv1.CompaniesSchemaPage, 0)
+func (a *TenantAdapter) PageEntityListGrpcFromSql(resp *[]db.TenantsSchemaPage) *[]*devkitv1.TenantsSchemaPage {
+	records := make([]*devkitv1.TenantsSchemaPage, 0)
 	for _, v := range *resp {
 		record := a.PageEntityGrpcFromSql(&v)
 		records = append(records, record)
 	}
 	return &records
 }
-func (a *CompanyAdapter) PageListGrpcFromSql(resp *[]db.CompaniesSchemaPage) *devkitv1.PageListResponse {
-	records := make([]*devkitv1.CompaniesSchemaPage, 0)
-	deletedRecords := make([]*devkitv1.CompaniesSchemaPage, 0)
+func (a *TenantAdapter) PageListGrpcFromSql(resp *[]db.TenantsSchemaPage) *devkitv1.PageListResponse {
+	records := make([]*devkitv1.TenantsSchemaPage, 0)
+	deletedRecords := make([]*devkitv1.TenantsSchemaPage, 0)
 	for _, v := range *resp {
 		record := a.PageEntityGrpcFromSql(&v)
 		if v.DeletedAt.Valid {
@@ -53,7 +53,7 @@ func (a *CompanyAdapter) PageListGrpcFromSql(resp *[]db.CompaniesSchemaPage) *de
 	}
 }
 
-func (a *CompanyAdapter) PageCreateUpdateSqlFromGrpc(req *devkitv1.PageCreateUpdateRequest) *db.PageCreateUpdateParams {
+func (a *TenantAdapter) PageCreateUpdateSqlFromGrpc(req *devkitv1.PageCreateUpdateRequest) *db.PageCreateUpdateParams {
 	return &db.PageCreateUpdateParams{
 		PageID:              req.GetPageId(),
 		PageName:            req.GetPageName(),
@@ -61,7 +61,7 @@ func (a *CompanyAdapter) PageCreateUpdateSqlFromGrpc(req *devkitv1.PageCreateUpd
 		PageDescription:     req.GetPageDescription(),
 		PageDescriptionAr:   req.GetPageDescriptionAr(),
 		PageBreadcrumb:      req.GetPageBreadcrumb(),
-		CompanyID:           req.GetCompanyId(),
+		TenantID:           req.GetTenantId(),
 		PageRoute:           req.GetPageRoute(),
 		PageCoverImage:      req.GetPageCoverImage(),
 		PageCoverVideo:      req.GetPageCoverVideo(),

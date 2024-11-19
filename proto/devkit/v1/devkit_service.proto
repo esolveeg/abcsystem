@@ -4,11 +4,11 @@ package devkit.v1;
 import "devkit/v1/accounts_auth.proto";
 import "devkit/v1/accounts_role.proto";
 import "devkit/v1/accounts_user.proto";
-import "devkit/v1/company_company.proto";
-import "devkit/v1/company_page.proto";
-import "devkit/v1/company_partial.proto";
+import "devkit/v1/tenant_tenant.proto";
+import "devkit/v1/tenant_page.proto";
+import "devkit/v1/tenant_partial.proto";
 // INJECT IMPORTS
-import "devkit/v1/company_section.proto";
+import "devkit/v1/tenant_section.proto";
 import "devkit/v1/public_email.proto";
 import "devkit/v1/public_icon.proto";
 import "devkit/v1/public_setting.proto";
@@ -55,11 +55,11 @@ service DevkitService {
     option idempotency_level = NO_SIDE_EFFECTS;
   }
 
-  rpc CompanyDeleteRestore(CompanyDeleteRestoreRequest) returns (CompanyDeleteRestoreResponse) {}
-  rpc CompanyList(CompanyListRequest) returns (CompanyListResponse) {
+  rpc TenantDeleteRestore(TenantDeleteRestoreRequest) returns (TenantDeleteRestoreResponse) {}
+  rpc TenantList(TenantListRequest) returns (TenantListResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
   }
-  rpc CompanyCreateUpdate(CompanyCreateUpdateRequest) returns (CompanyCreateUpdateResponse) {}
+  rpc TenantCreateUpdate(TenantCreateUpdateRequest) returns (TenantCreateUpdateResponse) {}
 
   //////////////////////////////////////////////////////////////////////////////////////////////
   // public
@@ -171,6 +171,6 @@ service DevkitService {
   }
 
   //*******************************************************************************************//
-  // company
+  // tenant
   //*******************************************************************************************//
 }

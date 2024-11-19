@@ -29,6 +29,7 @@ func NewPayload(username string, userId int32, userSecurityLevel int32, tenantId
 	if err != nil {
 		return nil, err
 	}
+
 	payload := &Payload{
 		ID:                tokenId,
 		UserSecurityLevel: userSecurityLevel,

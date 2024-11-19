@@ -251,7 +251,7 @@ $$;
 -- Possible Errors:
 -- - If the caller’s security level is lower than the new or updated role’s security level, an exception is raised.
 -- - The function will propagate any exceptions raised from check_caller_security_level.
-CREATE OR REPLACE FUNCTION accounts_schema.role_create_update (in_role_id int, in_caller_id int, in_company_id int, in_role_security_level int, in_role_name varchar(200), in_role_description varchar(200), in_permissions int[])
+CREATE OR REPLACE FUNCTION accounts_schema.role_create_update (in_role_id int, in_caller_id int, in_tenant_id int, in_role_security_level int, in_role_name varchar(200), in_role_description varchar(200), in_permissions int[])
 	RETURNS SETOF accounts_schema.role
 	LANGUAGE plpgsql
 	AS $$
@@ -275,7 +275,7 @@ BEGIN
 			accounts_schema.role
 		SET
 			role_name = is_null_replace (in_role_name, role_name),
-			company_id = (is_null (in_company_id, NULL)),
+			tenant_id = (is_null (in_tenant_id, NULL)),
 			role_description = is_null_replace (in_role_description, role_description),
 			role_security_level = in_role_security_level,
 			updated_at = NOW()
@@ -295,12 +295,12 @@ BEGIN
 		INSERT INTO accounts_schema.role (
 			role_name,
 			role_security_level,
-			company_id,
+			tenant_id,
 			role_description)
 		VALUES (
 			in_role_name,
 			is_null (
-				in_company_id, NULL),
+				in_tenant_id, NULL),
 			in_role_security_level,
 			in_role_description)
 	RETURNING
@@ -316,7 +316,7 @@ BEGIN
 	SELECT
 		role_id,
 		role_name,
-		company_id,
+		tenant_id,
 		role_security_level,
 		role_description,
 		created_at,
@@ -336,7 +336,7 @@ $$;
 -- Possible Errors:
 -- - If the caller’s security level is lower than the highest security level of the roles being assigned to the user, an exception is raised.
 -- - The function will propagate any exceptions raised from check_caller_security_level.
-CREATE OR REPLACE FUNCTION accounts_schema.user_create_update (in_user_id int, in_user_name varchar(200), in_caller_id int, in_company_id int, in_user_type_id int, in_user_phone varchar(200), in_user_email varchar(200), in_user_password varchar(200), in_roles int[])
+CREATE OR REPLACE FUNCTION accounts_schema.user_create_update (in_user_id int, in_user_name varchar(200), in_caller_id int, in_tenant_id int, in_user_type_id int, in_user_phone varchar(200), in_user_email varchar(200), in_user_password varchar(200), in_roles int[])
 	RETURNS SETOF accounts_schema.user
 	LANGUAGE plpgsql
 	AS $$
@@ -368,7 +368,7 @@ BEGIN
 		SET
 			user_name = is_null_replace (in_user_name, user_name),
 			user_type_id = is_null_replace (in_user_type_id, user_type_id),
-			company_id = is_null (in_company_id, NULL),
+			tenant_id = is_null (in_tenant_id, NULL),
 			user_email = is_null_replace (in_user_email, user_email),
 			user_phone = is_null_replace (in_user_phone, user_phone),
 			user_password = is_null_replace (in_user_password, user_password),
@@ -389,14 +389,14 @@ BEGIN
 		INSERT INTO accounts_schema.user (
 			user_name,
 			user_type_id,
-			company_id,
+			tenant_id,
 			user_phone,
 			user_email,
 			user_password)
 		VALUES (
 			in_user_name,
 			in_user_type_id,
-			in_company_id,
+			in_tenant_id,
 			in_user_phone,
 			in_user_email,
 			in_user_password)
@@ -415,7 +415,7 @@ BEGIN
 		user_name,
 		user_type_id,
 		user_phone,
-		company_id,
+		tenant_id,
 		user_email,
 		user_password,
 		created_at,

@@ -37,7 +37,7 @@ INSERT INTO accounts_schema.user_type (
 VALUES (
 	'admin'),
 (
-	'company');
+	'tenant');
 
 INSERT INTO setting (
 	input_type_id,
@@ -48,7 +48,7 @@ VALUES (
 	'site_name',
 	'Abc Hotels');
 
-INSERT INTO companies_schema.partial_type (
+INSERT INTO tenants_schema.partial_type (
 	partial_type_name)
 VALUES (
 	'project'),

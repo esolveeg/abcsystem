@@ -11,7 +11,7 @@ func (a *AccountsAdapter) UserEntityGrpcFromSql(resp *db.AccountsSchemaUser) *de
 		UserId:     int32(resp.UserID),
 		UserName:   resp.UserName,
 		UserTypeId: resp.UserTypeID,
-		CompanyId:  resp.CompanyID.Int32,
+		TenantId:  resp.TenantID.Int32,
 		UserPhone:  resp.UserPhone.String,
 		UserEmail:  resp.UserEmail, // User's email, unique in DB
 		CreatedAt:  db.TimeToString(resp.CreatedAt.Time),
@@ -35,7 +35,7 @@ func (a *AccountsAdapter) UserCreateUpdateSqlFromGrpc(req *devkitv1.UserCreateUp
 func (a *AccountsAdapter) UserFindForUpdateUpdateGrpcFromSql(resp *db.UserFindForUpdateRow) *devkitv1.UserCreateUpdateRequest {
 	return &devkitv1.UserCreateUpdateRequest{
 		UserId:     resp.UserID,
-		CompanyId:  resp.CompanyID.Int32,
+		TenantId:  resp.TenantID.Int32,
 		UserName:   resp.UserName,
 		UserTypeId: resp.UserTypeID,
 		UserPhone:  resp.UserPhone.String,

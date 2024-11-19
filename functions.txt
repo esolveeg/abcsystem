@@ -1,7 +1,7 @@
 is_null_replace
-companies_schema.partial_create_update
+tenants_schema.partial_create_update
 sqlc.arg
 iif
-companies_schema.section_create_update
-companies_schema.company_create_update
-companies_schema.page_create_update
+tenants_schema.section_create_update
+tenants_schema.tenant_create_update
+tenants_schema.page_create_update

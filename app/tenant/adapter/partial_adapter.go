@@ -7,12 +7,12 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (a *CompanyAdapter) PartialEntityGrpcFromSql(resp *db.CompaniesSchemaPartial) *devkitv1.CompaniesSchemaPartial {
-	return &devkitv1.CompaniesSchemaPartial{
+func (a *TenantAdapter) PartialEntityGrpcFromSql(resp *db.TenantsSchemaPartial) *devkitv1.TenantsSchemaPartial {
+	return &devkitv1.TenantsSchemaPartial{
 		PartialId:      int32(resp.PartialID),
 		PartialName:    resp.PartialName,
 		PartialTypeId:  resp.PartialTypeID,
-		CompanyId:      int32(resp.CompanyID.Int32),
+		TenantId:      int32(resp.TenantID.Int32),
 		PartialImage:   resp.PartialImage.String,
 		PartialImages:  strings.Split(resp.PartialImages.String, ","),
 		PartialVideo:   resp.PartialVideo.String,
@@ -25,8 +25,8 @@ func (a *CompanyAdapter) PartialEntityGrpcFromSql(resp *db.CompaniesSchemaPartia
 	}
 }
 
-func (a *CompanyAdapter) PartialEntityListGrpcFromSql(resp *[]db.CompaniesSchemaPartial) *[]*devkitv1.CompaniesSchemaPartial {
-	records := make([]*devkitv1.CompaniesSchemaPartial, 0)
+func (a *TenantAdapter) PartialEntityListGrpcFromSql(resp *[]db.TenantsSchemaPartial) *[]*devkitv1.TenantsSchemaPartial {
+	records := make([]*devkitv1.TenantsSchemaPartial, 0)
 	for _, v := range *resp {
 		record := a.PartialEntityGrpcFromSql(&v)
 		records = append(records, record)
@@ -34,9 +34,9 @@ func (a *CompanyAdapter) PartialEntityListGrpcFromSql(resp *[]db.CompaniesSchema
 	return &records
 }
 
-func (a *CompanyAdapter) PartialListGrpcFromSql(resp *[]db.CompaniesSchemaPartial) *devkitv1.PartialListResponse {
-	records := make([]*devkitv1.CompaniesSchemaPartial, 0)
-	deletedRecords := make([]*devkitv1.CompaniesSchemaPartial, 0)
+func (a *TenantAdapter) PartialListGrpcFromSql(resp *[]db.TenantsSchemaPartial) *devkitv1.PartialListResponse {
+	records := make([]*devkitv1.TenantsSchemaPartial, 0)
+	deletedRecords := make([]*devkitv1.TenantsSchemaPartial, 0)
 	for _, v := range *resp {
 		record := a.PartialEntityGrpcFromSql(&v)
 		if v.DeletedAt.Valid {
@@ -51,12 +51,12 @@ func (a *CompanyAdapter) PartialListGrpcFromSql(resp *[]db.CompaniesSchemaPartia
 	}
 }
 
-func (a *CompanyAdapter) PartialCreateUpdateSqlFromGrpc(req *devkitv1.PartialCreateUpdateRequest) *db.PartialCreateUpdateParams {
+func (a *TenantAdapter) PartialCreateUpdateSqlFromGrpc(req *devkitv1.PartialCreateUpdateRequest) *db.PartialCreateUpdateParams {
 	return &db.PartialCreateUpdateParams{
 		PartialID:      req.GetPartialId(),
 		PartialName:    req.GetPartialName(),
 		PartialTypeID:  req.GetPartialTypeId(),
-		CompanyID:      req.GetCompanyId(),
+		TenantID:      req.GetTenantId(),
 		PartialImage:   req.GetPartialImage(),
 		PartialImages:  strings.Join(req.GetPartialImages(), ","),
 		PartialVideo:   req.GetPartialVideo(),

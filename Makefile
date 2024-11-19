@@ -15,7 +15,6 @@ include config/shared.env
 
 
 
-
 mign : 
 	supabase migration new $(name)
 testdb:
@@ -31,11 +30,11 @@ seed_storage:
 seed_accounts:
 	devkit seed accounts_schema --file-path seeds/schemas/accounts.xlsx -e
 
-seed_companies:
-	devkit seed companies_schema --file-path seeds/schemas/companies.xlsx -e
+seed_tenants:
+	devkit seed tenants_schema --file-path seeds/schemas/tenants.xlsx -e
 
-seed_companies_accounts:
-	devkit seed accounts_schema --file-path seeds/schemas/companies_accounts.xlsx -e
+seed_tenants_accounts:
+	devkit seed accounts_schema --file-path seeds/schemas/tenant_accounts.xlsx -e
 
 
 seed_super_user:
@@ -45,11 +44,11 @@ supabase_reset:
 	supabase db reset 
 			
 rdb:
-	make supabase_reset seed_super_user seed_accounts seed_storage seed_companies seed_companies_accounts
+	make supabase_reset seed_super_user seed_accounts seed_storage seed_tenants seed_tenants_accounts
 run:
 	go run main.go
 buf:
-	cd proto && buf lint && buf generate 
+	rm -rf proto_gen/devkit/v1/*.pb.go && cd proto && buf lint && buf generate 
 sqlc:
 	rm -rf db/*.sql.go && sqlc generate	
 gen:

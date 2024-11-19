@@ -9,14 +9,14 @@ import "google/protobuf/timestamp.proto";
 // }
 // INJECT MESSAGES
 
-message CompaniesSchemaPage {
+message TenantsSchemaPage {
   int32 page_id = 1;
   string page_name = 2;
   string page_name_ar = 3;
   string page_description = 4;
   string page_description_ar = 5;
   string page_breadcrumb = 6;
-  int32 company_id = 7;
+  int32 tenant_id = 7;
   string page_route = 8;
   string page_cover_image = 9;
   string page_cover_video = 10;
@@ -31,8 +31,8 @@ message CompaniesSchemaPage {
 message PageListRequest {}
 
 message PageListResponse {
-  repeated CompaniesSchemaPage records = 1;
-  repeated CompaniesSchemaPage deleted_records = 2;
+  repeated TenantsSchemaPage records = 1;
+  repeated TenantsSchemaPage deleted_records = 2;
   AvailableOptions options = 3;
 }
 
@@ -46,7 +46,7 @@ message PageCreateUpdateRequest {
   string page_description = 4;
   string page_description_ar = 5;
   string page_breadcrumb = 6 [(buf.validate.field).string.max_len = 200];
-  int32 company_id = 7;
+  int32 tenant_id = 7;
   string page_route = 8 [(buf.validate.field).string.max_len = 200];
   string page_cover_image = 9 [(buf.validate.field).string.max_len = 500];
   string page_cover_video = 10 [(buf.validate.field).string.max_len = 500];
@@ -56,7 +56,7 @@ message PageCreateUpdateRequest {
 }
 
 message PageCreateUpdateResponse {
-  CompaniesSchemaPage record = 1;
+  TenantsSchemaPage record = 1;
 }
 
 message PageDeleteRestoreRequest {
@@ -67,5 +67,5 @@ message PageDeleteRestoreRequest {
 }
 
 message PageDeleteRestoreResponse {
-  repeated CompaniesSchemaPage records = 1;
+  repeated TenantsSchemaPage records = 1;
 }

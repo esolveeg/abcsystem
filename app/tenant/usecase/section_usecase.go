@@ -7,8 +7,8 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (u *CompanyUsecase) SectionList(ctx context.Context, req *connect.Request[devkitv1.SectionListRequest]) (*devkitv1.SectionListResponse, error) {
-	record, err := u.repo.SectionList(ctx)
+func (u *TenantUsecase) SectionList(ctx context.Context, req *connect.Request[devkitv1.SectionListRequest]) (*devkitv1.SectionListResponse, error) {
+	record, err := u.repo.SectionList(ctx, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -17,7 +17,7 @@ func (u *CompanyUsecase) SectionList(ctx context.Context, req *connect.Request[d
 
 }
 
-func (u *CompanyUsecase) SectionCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.SectionCreateUpdateRequest]) (*devkitv1.SectionCreateUpdateResponse, error) {
+func (u *TenantUsecase) SectionCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.SectionCreateUpdateRequest]) (*devkitv1.SectionCreateUpdateResponse, error) {
 	sqlReq := u.adapter.SectionCreateUpdateSqlFromGrpc(req.Msg)
 	record, err := u.repo.SectionCreateUpdate(ctx, sqlReq)
 	if err != nil {
@@ -28,7 +28,7 @@ func (u *CompanyUsecase) SectionCreateUpdate(ctx context.Context, req *connect.R
 
 }
 
-func (u *CompanyUsecase) SectionDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.SectionDeleteRestoreRequest]) (*devkitv1.SectionDeleteRestoreResponse, error) {
+func (u *TenantUsecase) SectionDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.SectionDeleteRestoreRequest]) (*devkitv1.SectionDeleteRestoreResponse, error) {
 	record, err := u.repo.SectionDeleteRestore(ctx, &req.Msg.Records)
 	if err != nil {
 		return nil, err

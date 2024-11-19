@@ -9,7 +9,7 @@ import (
 )
 
 func (api *Api) SectionList(ctx context.Context, req *connect.Request[devkitv1.SectionListRequest]) (*connect.Response[devkitv1.SectionListResponse], error) {
-	resp, err := api.companyUsecase.SectionList(ctx, req)
+	resp, err := api.tenantUsecase.SectionList(ctx, req)
 	if err != nil {
 		return nil, err
 	}
@@ -17,14 +17,14 @@ func (api *Api) SectionList(ctx context.Context, req *connect.Request[devkitv1.S
 }
 
 func (api *Api) SectionCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.SectionCreateUpdateRequest]) (*connect.Response[devkitv1.SectionCreateUpdateResponse], error) {
-	resp, err := api.companyUsecase.SectionCreateUpdate(ctx, req)
+	resp, err := api.tenantUsecase.SectionCreateUpdate(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 	return connect.NewResponse(resp), nil
 }
 func (api *Api) SectionDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.SectionDeleteRestoreRequest]) (*connect.Response[devkitv1.SectionDeleteRestoreResponse], error) {
-	resp, err := api.companyUsecase.SectionDeleteRestore(ctx, req)
+	resp, err := api.tenantUsecase.SectionDeleteRestore(ctx, req)
 	if err != nil {
 		return nil, err
 	}

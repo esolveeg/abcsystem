@@ -13,7 +13,6 @@ import (
 )
 
 func (u *AccountsUsecase) userGenerateTokens(username string, userId int32, tenantId int32, userSecurityLevel int32) (*devkitv1.LoginInfo, error) {
-
 	accessToken, accessPayload, err := u.tokenMaker.CreateToken(username, userId, userSecurityLevel, tenantId, u.tokenDuration)
 	if err != nil {
 		return nil, err
@@ -50,7 +49,7 @@ func (u *AccountsUsecase) AuthRegister(ctx context.Context, req *connect.Request
 	if err != nil {
 		return nil, err
 	}
-	loginInfo, err := u.userGenerateTokens(user.User.UserEmail, user.User.UserId, user.User.UserSecurityLevel, user.User.CompanyId)
+	loginInfo, err := u.userGenerateTokens(user.User.UserEmail, user.User.UserId, user.User.UserSecurityLevel, user.User.TenantId)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +73,7 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 	log.Debug().Interface("resp", response.User).Msg("auth")
 
 	// log.Debug().Interface("tentatis", tenantId).Msg("show me the real tenant")
-	loginInfo, err := u.userGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.CompanyId, response.User.UserSecurityLevel)
+	loginInfo, err := u.userGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.TenantId, response.User.UserSecurityLevel)
 	if err != nil {
 		return nil, err
 	}

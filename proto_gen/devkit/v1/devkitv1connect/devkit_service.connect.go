@@ -59,15 +59,15 @@ const (
 	// DevkitServiceSectionListProcedure is the fully-qualified name of the DevkitService's SectionList
 	// RPC.
 	DevkitServiceSectionListProcedure = "/devkit.v1.DevkitService/SectionList"
-	// DevkitServiceCompanyDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
-	// CompanyDeleteRestore RPC.
-	DevkitServiceCompanyDeleteRestoreProcedure = "/devkit.v1.DevkitService/CompanyDeleteRestore"
-	// DevkitServiceCompanyListProcedure is the fully-qualified name of the DevkitService's CompanyList
+	// DevkitServiceTenantDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
+	// TenantDeleteRestore RPC.
+	DevkitServiceTenantDeleteRestoreProcedure = "/devkit.v1.DevkitService/TenantDeleteRestore"
+	// DevkitServiceTenantListProcedure is the fully-qualified name of the DevkitService's TenantList
 	// RPC.
-	DevkitServiceCompanyListProcedure = "/devkit.v1.DevkitService/CompanyList"
-	// DevkitServiceCompanyCreateUpdateProcedure is the fully-qualified name of the DevkitService's
-	// CompanyCreateUpdate RPC.
-	DevkitServiceCompanyCreateUpdateProcedure = "/devkit.v1.DevkitService/CompanyCreateUpdate"
+	DevkitServiceTenantListProcedure = "/devkit.v1.DevkitService/TenantList"
+	// DevkitServiceTenantCreateUpdateProcedure is the fully-qualified name of the DevkitService's
+	// TenantCreateUpdate RPC.
+	DevkitServiceTenantCreateUpdateProcedure = "/devkit.v1.DevkitService/TenantCreateUpdate"
 	// DevkitServiceSettingFindForUpdateProcedure is the fully-qualified name of the DevkitService's
 	// SettingFindForUpdate RPC.
 	DevkitServiceSettingFindForUpdateProcedure = "/devkit.v1.DevkitService/SettingFindForUpdate"
@@ -181,9 +181,9 @@ var (
 	devkitServiceSectionDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("SectionDeleteRestore")
 	devkitServiceSectionCreateUpdateMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("SectionCreateUpdate")
 	devkitServiceSectionListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("SectionList")
-	devkitServiceCompanyDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("CompanyDeleteRestore")
-	devkitServiceCompanyListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("CompanyList")
-	devkitServiceCompanyCreateUpdateMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("CompanyCreateUpdate")
+	devkitServiceTenantDeleteRestoreMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("TenantDeleteRestore")
+	devkitServiceTenantListMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("TenantList")
+	devkitServiceTenantCreateUpdateMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("TenantCreateUpdate")
 	devkitServiceSettingFindForUpdateMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("SettingFindForUpdate")
 	devkitServiceSettingUpdateMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("SettingUpdate")
 	devkitServiceIconListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("IconList")
@@ -233,9 +233,9 @@ type DevkitServiceClient interface {
 	SectionDeleteRestore(context.Context, *connect.Request[v1.SectionDeleteRestoreRequest]) (*connect.Response[v1.SectionDeleteRestoreResponse], error)
 	SectionCreateUpdate(context.Context, *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error)
 	SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error)
-	CompanyDeleteRestore(context.Context, *connect.Request[v1.CompanyDeleteRestoreRequest]) (*connect.Response[v1.CompanyDeleteRestoreResponse], error)
-	CompanyList(context.Context, *connect.Request[v1.CompanyListRequest]) (*connect.Response[v1.CompanyListResponse], error)
-	CompanyCreateUpdate(context.Context, *connect.Request[v1.CompanyCreateUpdateRequest]) (*connect.Response[v1.CompanyCreateUpdateResponse], error)
+	TenantDeleteRestore(context.Context, *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error)
+	TenantList(context.Context, *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error)
+	TenantCreateUpdate(context.Context, *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error)
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// public
 	// ////////////////////////////////////////////////////////////////////////////////////////////
@@ -362,23 +362,23 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
-		companyDeleteRestore: connect.NewClient[v1.CompanyDeleteRestoreRequest, v1.CompanyDeleteRestoreResponse](
+		tenantDeleteRestore: connect.NewClient[v1.TenantDeleteRestoreRequest, v1.TenantDeleteRestoreResponse](
 			httpClient,
-			baseURL+DevkitServiceCompanyDeleteRestoreProcedure,
-			connect.WithSchema(devkitServiceCompanyDeleteRestoreMethodDescriptor),
+			baseURL+DevkitServiceTenantDeleteRestoreProcedure,
+			connect.WithSchema(devkitServiceTenantDeleteRestoreMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
-		companyList: connect.NewClient[v1.CompanyListRequest, v1.CompanyListResponse](
+		tenantList: connect.NewClient[v1.TenantListRequest, v1.TenantListResponse](
 			httpClient,
-			baseURL+DevkitServiceCompanyListProcedure,
-			connect.WithSchema(devkitServiceCompanyListMethodDescriptor),
+			baseURL+DevkitServiceTenantListProcedure,
+			connect.WithSchema(devkitServiceTenantListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
-		companyCreateUpdate: connect.NewClient[v1.CompanyCreateUpdateRequest, v1.CompanyCreateUpdateResponse](
+		tenantCreateUpdate: connect.NewClient[v1.TenantCreateUpdateRequest, v1.TenantCreateUpdateResponse](
 			httpClient,
-			baseURL+DevkitServiceCompanyCreateUpdateProcedure,
-			connect.WithSchema(devkitServiceCompanyCreateUpdateMethodDescriptor),
+			baseURL+DevkitServiceTenantCreateUpdateProcedure,
+			connect.WithSchema(devkitServiceTenantCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		settingFindForUpdate: connect.NewClient[v1.SettingFindForUpdateRequest, v1.SettingFindForUpdateResponse](
@@ -616,9 +616,9 @@ type devkitServiceClient struct {
 	sectionDeleteRestore        *connect.Client[v1.SectionDeleteRestoreRequest, v1.SectionDeleteRestoreResponse]
 	sectionCreateUpdate         *connect.Client[v1.SectionCreateUpdateRequest, v1.SectionCreateUpdateResponse]
 	sectionList                 *connect.Client[v1.SectionListRequest, v1.SectionListResponse]
-	companyDeleteRestore        *connect.Client[v1.CompanyDeleteRestoreRequest, v1.CompanyDeleteRestoreResponse]
-	companyList                 *connect.Client[v1.CompanyListRequest, v1.CompanyListResponse]
-	companyCreateUpdate         *connect.Client[v1.CompanyCreateUpdateRequest, v1.CompanyCreateUpdateResponse]
+	tenantDeleteRestore         *connect.Client[v1.TenantDeleteRestoreRequest, v1.TenantDeleteRestoreResponse]
+	tenantList                  *connect.Client[v1.TenantListRequest, v1.TenantListResponse]
+	tenantCreateUpdate          *connect.Client[v1.TenantCreateUpdateRequest, v1.TenantCreateUpdateResponse]
 	settingFindForUpdate        *connect.Client[v1.SettingFindForUpdateRequest, v1.SettingFindForUpdateResponse]
 	settingUpdate               *connect.Client[v1.SettingUpdateRequest, v1.SettingUpdateResponse]
 	iconList                    *connect.Client[v1.IconListRequest, v1.IconListResponse]
@@ -701,19 +701,19 @@ func (c *devkitServiceClient) SectionList(ctx context.Context, req *connect.Requ
 	return c.sectionList.CallUnary(ctx, req)
 }
 
-// CompanyDeleteRestore calls devkit.v1.DevkitService.CompanyDeleteRestore.
-func (c *devkitServiceClient) CompanyDeleteRestore(ctx context.Context, req *connect.Request[v1.CompanyDeleteRestoreRequest]) (*connect.Response[v1.CompanyDeleteRestoreResponse], error) {
-	return c.companyDeleteRestore.CallUnary(ctx, req)
+// TenantDeleteRestore calls devkit.v1.DevkitService.TenantDeleteRestore.
+func (c *devkitServiceClient) TenantDeleteRestore(ctx context.Context, req *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error) {
+	return c.tenantDeleteRestore.CallUnary(ctx, req)
 }
 
-// CompanyList calls devkit.v1.DevkitService.CompanyList.
-func (c *devkitServiceClient) CompanyList(ctx context.Context, req *connect.Request[v1.CompanyListRequest]) (*connect.Response[v1.CompanyListResponse], error) {
-	return c.companyList.CallUnary(ctx, req)
+// TenantList calls devkit.v1.DevkitService.TenantList.
+func (c *devkitServiceClient) TenantList(ctx context.Context, req *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error) {
+	return c.tenantList.CallUnary(ctx, req)
 }
 
-// CompanyCreateUpdate calls devkit.v1.DevkitService.CompanyCreateUpdate.
-func (c *devkitServiceClient) CompanyCreateUpdate(ctx context.Context, req *connect.Request[v1.CompanyCreateUpdateRequest]) (*connect.Response[v1.CompanyCreateUpdateResponse], error) {
-	return c.companyCreateUpdate.CallUnary(ctx, req)
+// TenantCreateUpdate calls devkit.v1.DevkitService.TenantCreateUpdate.
+func (c *devkitServiceClient) TenantCreateUpdate(ctx context.Context, req *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error) {
+	return c.tenantCreateUpdate.CallUnary(ctx, req)
 }
 
 // SettingFindForUpdate calls devkit.v1.DevkitService.SettingFindForUpdate.
@@ -903,9 +903,9 @@ type DevkitServiceHandler interface {
 	SectionDeleteRestore(context.Context, *connect.Request[v1.SectionDeleteRestoreRequest]) (*connect.Response[v1.SectionDeleteRestoreResponse], error)
 	SectionCreateUpdate(context.Context, *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error)
 	SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error)
-	CompanyDeleteRestore(context.Context, *connect.Request[v1.CompanyDeleteRestoreRequest]) (*connect.Response[v1.CompanyDeleteRestoreResponse], error)
-	CompanyList(context.Context, *connect.Request[v1.CompanyListRequest]) (*connect.Response[v1.CompanyListResponse], error)
-	CompanyCreateUpdate(context.Context, *connect.Request[v1.CompanyCreateUpdateRequest]) (*connect.Response[v1.CompanyCreateUpdateResponse], error)
+	TenantDeleteRestore(context.Context, *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error)
+	TenantList(context.Context, *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error)
+	TenantCreateUpdate(context.Context, *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error)
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// public
 	// ////////////////////////////////////////////////////////////////////////////////////////////
@@ -1028,23 +1028,23 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
-	devkitServiceCompanyDeleteRestoreHandler := connect.NewUnaryHandler(
-		DevkitServiceCompanyDeleteRestoreProcedure,
-		svc.CompanyDeleteRestore,
-		connect.WithSchema(devkitServiceCompanyDeleteRestoreMethodDescriptor),
+	devkitServiceTenantDeleteRestoreHandler := connect.NewUnaryHandler(
+		DevkitServiceTenantDeleteRestoreProcedure,
+		svc.TenantDeleteRestore,
+		connect.WithSchema(devkitServiceTenantDeleteRestoreMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
-	devkitServiceCompanyListHandler := connect.NewUnaryHandler(
-		DevkitServiceCompanyListProcedure,
-		svc.CompanyList,
-		connect.WithSchema(devkitServiceCompanyListMethodDescriptor),
+	devkitServiceTenantListHandler := connect.NewUnaryHandler(
+		DevkitServiceTenantListProcedure,
+		svc.TenantList,
+		connect.WithSchema(devkitServiceTenantListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
-	devkitServiceCompanyCreateUpdateHandler := connect.NewUnaryHandler(
-		DevkitServiceCompanyCreateUpdateProcedure,
-		svc.CompanyCreateUpdate,
-		connect.WithSchema(devkitServiceCompanyCreateUpdateMethodDescriptor),
+	devkitServiceTenantCreateUpdateHandler := connect.NewUnaryHandler(
+		DevkitServiceTenantCreateUpdateProcedure,
+		svc.TenantCreateUpdate,
+		connect.WithSchema(devkitServiceTenantCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceSettingFindForUpdateHandler := connect.NewUnaryHandler(
@@ -1288,12 +1288,12 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 			devkitServiceSectionCreateUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceSectionListProcedure:
 			devkitServiceSectionListHandler.ServeHTTP(w, r)
-		case DevkitServiceCompanyDeleteRestoreProcedure:
-			devkitServiceCompanyDeleteRestoreHandler.ServeHTTP(w, r)
-		case DevkitServiceCompanyListProcedure:
-			devkitServiceCompanyListHandler.ServeHTTP(w, r)
-		case DevkitServiceCompanyCreateUpdateProcedure:
-			devkitServiceCompanyCreateUpdateHandler.ServeHTTP(w, r)
+		case DevkitServiceTenantDeleteRestoreProcedure:
+			devkitServiceTenantDeleteRestoreHandler.ServeHTTP(w, r)
+		case DevkitServiceTenantListProcedure:
+			devkitServiceTenantListHandler.ServeHTTP(w, r)
+		case DevkitServiceTenantCreateUpdateProcedure:
+			devkitServiceTenantCreateUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceSettingFindForUpdateProcedure:
 			devkitServiceSettingFindForUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceSettingUpdateProcedure:
@@ -1409,16 +1409,16 @@ func (UnimplementedDevkitServiceHandler) SectionList(context.Context, *connect.R
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SectionList is not implemented"))
 }
 
-func (UnimplementedDevkitServiceHandler) CompanyDeleteRestore(context.Context, *connect.Request[v1.CompanyDeleteRestoreRequest]) (*connect.Response[v1.CompanyDeleteRestoreResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.CompanyDeleteRestore is not implemented"))
+func (UnimplementedDevkitServiceHandler) TenantDeleteRestore(context.Context, *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TenantDeleteRestore is not implemented"))
 }
 
-func (UnimplementedDevkitServiceHandler) CompanyList(context.Context, *connect.Request[v1.CompanyListRequest]) (*connect.Response[v1.CompanyListResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.CompanyList is not implemented"))
+func (UnimplementedDevkitServiceHandler) TenantList(context.Context, *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TenantList is not implemented"))
 }
 
-func (UnimplementedDevkitServiceHandler) CompanyCreateUpdate(context.Context, *connect.Request[v1.CompanyCreateUpdateRequest]) (*connect.Response[v1.CompanyCreateUpdateResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.CompanyCreateUpdate is not implemented"))
+func (UnimplementedDevkitServiceHandler) TenantCreateUpdate(context.Context, *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TenantCreateUpdate is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) SettingFindForUpdate(context.Context, *connect.Request[v1.SettingFindForUpdateRequest]) (*connect.Response[v1.SettingFindForUpdateResponse], error) {

@@ -31,6 +31,7 @@ func (tracer *DbTracer) TraceQueryStart(
 			Msg("DB Call Start")
 
 	}
+
 	return ctx
 }
 

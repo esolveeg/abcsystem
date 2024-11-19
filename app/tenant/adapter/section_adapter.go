@@ -7,14 +7,14 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (a *CompanyAdapter) SectionEntityGrpcFromSql(resp *db.CompaniesSchemaSection) *devkitv1.CompaniesSchemaSection {
-	return &devkitv1.CompaniesSchemaSection{
+func (a *TenantAdapter) SectionEntityGrpcFromSql(resp *db.TenantsSchemaSection) *devkitv1.TenantsSchemaSection {
+	return &devkitv1.TenantsSchemaSection{
 		SectionId:            int32(resp.SectionID),
 		SectionName:          resp.SectionName,
 		SectionNameAr:        resp.SectionNameAr.String,
 		SectionDescription:   resp.SectionDescription.String,
 		SectionDescriptionAr: resp.SectionDescriptionAr.String,
-		CompanyId:            int32(resp.CompanyID.Int32),   // Handle nullable int
+		TenantId:            int32(resp.TenantID.Int32),   // Handle nullable int
 		SectionBackground:    resp.SectionBackground.String, // updated
 		SectionIcon:          resp.SectionIcon.String,
 		CreatedAt:            db.TimeToProtoTimeStamp(resp.CreatedAt.Time),
@@ -24,17 +24,17 @@ func (a *CompanyAdapter) SectionEntityGrpcFromSql(resp *db.CompaniesSchemaSectio
 	}
 }
 
-func (a *CompanyAdapter) SectionEntityListGrpcFromSql(resp *[]db.CompaniesSchemaSection) *[]*devkitv1.CompaniesSchemaSection {
-	records := make([]*devkitv1.CompaniesSchemaSection, 0)
+func (a *TenantAdapter) SectionEntityListGrpcFromSql(resp *[]db.TenantsSchemaSection) *[]*devkitv1.TenantsSchemaSection {
+	records := make([]*devkitv1.TenantsSchemaSection, 0)
 	for _, v := range *resp {
 		record := a.SectionEntityGrpcFromSql(&v)
 		records = append(records, record)
 	}
 	return &records
 }
-func (a *CompanyAdapter) SectionListGrpcFromSql(resp *[]db.CompaniesSchemaSection) *devkitv1.SectionListResponse {
-	records := make([]*devkitv1.CompaniesSchemaSection, 0)
-	deletedRecords := make([]*devkitv1.CompaniesSchemaSection, 0)
+func (a *TenantAdapter) SectionListGrpcFromSql(resp *[]db.TenantsSchemaSection) *devkitv1.SectionListResponse {
+	records := make([]*devkitv1.TenantsSchemaSection, 0)
+	deletedRecords := make([]*devkitv1.TenantsSchemaSection, 0)
 	for _, v := range *resp {
 		record := a.SectionEntityGrpcFromSql(&v)
 		if v.DeletedAt.Valid {
@@ -49,14 +49,14 @@ func (a *CompanyAdapter) SectionListGrpcFromSql(resp *[]db.CompaniesSchemaSectio
 	}
 }
 
-func (a *CompanyAdapter) SectionCreateUpdateSqlFromGrpc(req *devkitv1.SectionCreateUpdateRequest) *db.SectionCreateUpdateParams {
+func (a *TenantAdapter) SectionCreateUpdateSqlFromGrpc(req *devkitv1.SectionCreateUpdateRequest) *db.SectionCreateUpdateParams {
 	return &db.SectionCreateUpdateParams{
 		SectionID:            req.GetSectionId(),
 		SectionName:          req.GetSectionName(),
 		SectionNameAr:        req.GetSectionNameAr(),
 		SectionDescription:   req.GetSectionDescription(),
 		SectionDescriptionAr: req.GetSectionDescriptionAr(),
-		CompanyID:            req.GetCompanyId(),
+		TenantID:            req.GetTenantId(),
 		SectionBackground:    req.GetSectionBackground(),
 		SectionIcon:          req.GetSectionIcon(),
 		SectionImages:        strings.Join(req.GetSectionImages(), ",")}

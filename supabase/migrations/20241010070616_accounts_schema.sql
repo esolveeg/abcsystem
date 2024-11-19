@@ -13,8 +13,8 @@ create table accounts_schema.permission(
 -- Roles table: Defines roles that can be assigned to users, each with an associated security level
 create table accounts_schema.role(
 	role_id serial primary key,
-	company_id int,
-	FOREIGN KEY (company_id) REFERENCES companies_schema.company(company_id),
+	tenant_id int,
+	FOREIGN KEY (tenant_id) REFERENCES tenants_schema.tenant(tenant_id),
 	role_name varchar(200) not null,
 	role_security_level int NOT NULL,  -- Security level of the role (higher value = more privilege) like super admin : 100 , moderator 10 , sales agent 1,
 	role_description varchar(200),
@@ -42,8 +42,8 @@ create table accounts_schema.user_type(
 create table accounts_schema.user(
 	user_id serial primary key,
 	user_name varchar(200) not null,
-	company_id int,
-	FOREIGN KEY (company_id) REFERENCES companies_schema.company(company_id),
+	tenant_id int,
+	FOREIGN KEY (tenant_id) REFERENCES tenants_schema.tenant(tenant_id),
 	user_type_id int NOT NULL,
 	FOREIGN KEY (user_type_id) REFERENCES accounts_schema.user_type  (user_type_id),
 	user_phone varchar(200) unique,

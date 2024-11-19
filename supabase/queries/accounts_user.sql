@@ -76,7 +76,7 @@ FROM
 SELECT
     *
 FROM
-    accounts_schema.user_create_update (in_user_id => sqlc.arg ('user_id'), in_user_name => sqlc.arg ('user_name'), in_company_id => sqlc.arg ('company_id'), in_caller_id => sqlc.arg ('caller_id'), in_user_type_id => sqlc.arg ('user_type_id'), in_user_phone => sqlc.arg ('user_phone'), in_user_email => sqlc.arg ('user_email'), in_user_password => sqlc.arg ('user_password'), in_roles => sqlc.arg ('roles')::int[]);
+    accounts_schema.user_create_update (in_user_id => sqlc.arg ('user_id'), in_user_name => sqlc.arg ('user_name'), in_tenant_id => sqlc.arg ('tenant_id'), in_caller_id => sqlc.arg ('caller_id'), in_user_type_id => sqlc.arg ('user_type_id'), in_user_phone => sqlc.arg ('user_phone'), in_user_email => sqlc.arg ('user_email'), in_user_password => sqlc.arg ('user_password'), in_roles => sqlc.arg ('roles')::int[]);
 
 -- name: UserFindForUpdate :one
 WITH user_roles AS (
@@ -95,7 +95,7 @@ SELECT
     u.user_name,
     u.user_type_id,
     u.user_phone,
-    u.company_id,
+    u.tenant_id,
     u.user_email,
     r.roles::int[] roles
 FROM

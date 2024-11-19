@@ -1,29 +1,29 @@
 
 
-INSERT INTO companies_schema.company ( 
-  company_id,  
-  company_phone,  
-  company_email,  
-  company_logo_dark,  
-  company_description,  
-  company_logo,  
-  company_logo_dark_vertical,  
-  company_name,  
-  company_name_ar,  
-  company_address_ar,  
-  company_description_ar,  
-  company_values,  
-  company_address,  
-  company_logo_vertical,  
-  company_mission,  
-  company_vision
+INSERT INTO tenants_schema.tenant ( 
+  tenant_id,  
+  tenant_phone,  
+  tenant_email,  
+  tenant_logo_dark,  
+  tenant_description,  
+  tenant_logo,  
+  tenant_logo_dark_vertical,  
+  tenant_name,  
+  tenant_name_ar,  
+  tenant_address_ar,  
+  tenant_description_ar,  
+  tenant_values,  
+  tenant_address,  
+  tenant_logo_vertical,  
+  tenant_mission,  
+  tenant_vision
 ) VALUES
   (
           '1', 
           '123456789', 
           'info@techcorp.com', 
           'logo_dark.png', 
-          'Leading technology solutions company', 
+          'Leading technology solutions tenant', 
           'logo.png', 
           'logo_dark_vertical.png', 
           'ABC Hotels', 
@@ -39,7 +39,7 @@ INSERT INTO companies_schema.company (
 	
 
 
-INSERT INTO companies_schema.page ( 
+INSERT INTO tenants_schema.page ( 
   page_cover_image,  
   page_cover_video,  
   page_key_words,  
@@ -51,12 +51,12 @@ INSERT INTO companies_schema.page (
   page_icon,  
   page_name,  
   page_description_ar,  
-  company_id
+  tenant_id
 ) VALUES
   (
           'home_cover.png', 
           'home_video.mp4', 
-          'landing,homepage,company', 
+          'landing,homepage,tenant', 
           'الصفحة الرئيسية', 
           'The main landing page', 
           'home', 
@@ -65,35 +65,35 @@ INSERT INTO companies_schema.page (
           'home', 
           'Home', 
           'الصفحة الرئيسية الفعلية', 
-          (SELECT company_id FROM companies_schema.company WHERE company_name = 'ABC Hotels')
+          (SELECT tenant_id FROM tenants_schema.tenant WHERE tenant_name = 'ABC Hotels')
   ), 
   (
           'about_cover.png', 
           'about_video.mp4', 
-          'about,company,info', 
+          'about,tenant,info', 
           'من نحن', 
-          'About our company', 
+          'About our tenant', 
           'about', 
           '/about', 
           'Learn more about us', 
           'about', 
           'About', 
           'عن شركتنا', 
-          (SELECT company_id FROM companies_schema.company WHERE company_name = 'ABC Hotels')
+          (SELECT tenant_id FROM tenants_schema.tenant WHERE tenant_name = 'ABC Hotels')
   ), 
   (
           'blog_cover.png', 
           'blog_video.mp4', 
           'blog,articles,news', 
           'المدونة', 
-          'The company blog', 
+          'The tenant blog', 
           'blog', 
           '/blog', 
           'Read our latest articles', 
           'blog', 
           'Blog', 
           'مدونة الشركة', 
-          (SELECT company_id FROM companies_schema.company WHERE company_name = 'ABC Hotels')
+          (SELECT tenant_id FROM tenants_schema.tenant WHERE tenant_name = 'ABC Hotels')
   ), 
   (
           'projects_cover.png', 
@@ -107,7 +107,7 @@ INSERT INTO companies_schema.page (
           'projects', 
           'Projects', 
           'مشاريعنا', 
-          (SELECT company_id FROM companies_schema.company WHERE company_name = 'ABC Hotels')
+          (SELECT tenant_id FROM tenants_schema.tenant WHERE tenant_name = 'ABC Hotels')
   ), 
   (
           'services_cover.png', 
@@ -121,7 +121,7 @@ INSERT INTO companies_schema.page (
           'services', 
           'Services', 
           'الخدمات التي نقدمها', 
-          (SELECT company_id FROM companies_schema.company WHERE company_name = 'ABC Hotels')
+          (SELECT tenant_id FROM tenants_schema.tenant WHERE tenant_name = 'ABC Hotels')
   ), 
   (
           'contact_cover.png', 
@@ -135,6 +135,6 @@ INSERT INTO companies_schema.page (
           'contact', 
           'Contact', 
           'صفحة اتصل بنا', 
-          (SELECT company_id FROM companies_schema.company WHERE company_name = 'ABC Hotels')
+          (SELECT tenant_id FROM tenants_schema.tenant WHERE tenant_name = 'ABC Hotels')
   );
 	
