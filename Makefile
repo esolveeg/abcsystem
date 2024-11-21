@@ -47,6 +47,8 @@ rdb:
 	make supabase_reset seed_super_user seed_accounts seed_storage seed_tenants seed_tenants_accounts
 run:
 	go run main.go
+buf_push:
+	cd proto && buf push
 buf:
 	rm -rf proto_gen/devkit/v1/*.pb.go && cd proto && buf lint && buf generate 
 sqlc:

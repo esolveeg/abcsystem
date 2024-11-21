@@ -1,18 +1,17 @@
-version: v1
+version: v2
+clean: true
 managed:
-  enabled: true 
-  go_package_prefix:
-    default: github.com/darwishdev/devkit-api/proto_gen
-    except:
-      - buf.build/bufbuild/protovalidate
-
-
-
+  enabled: true
+  disable:
+    - file_option: go_package
+      module: buf.build/bufbuild/protovalidate
+  override:
+    - file_option: go_package_prefix
+      value: github.com/darwishdev/devkit-api/proto_gen
 plugins:
-  - name: go
+  - local: protoc-gen-go
     out: ../proto_gen
     opt: paths=source_relative
-  - name: connect-go
-    out: ../proto_gen
-    opt: paths=source_relative
-
+  - local: protoc-gen-es
+    out: ../proto_gen/
+    opt: target=ts
