@@ -8,10 +8,13 @@ import (
 )
 
 type PublicAdapterInterface interface {
+	IconFindSqlFromGrpc(icon *devkitv1.IconFindRequest) *db.IconFindParams
+	IconGrpcFromSql(icon *db.Icon) *devkitv1.Icon
 	IconCreateUpdateBulkSqlFromGrpc(req *devkitv1.IconCreateUpdateBulkRequest) db.IconCreateUpdateBulkParams
 	EmailSendResendFromGrpc(req *devkitv1.EmailSendRequest) resend.SendEmailRequest
 	TranslationCreateUpdateBulkGrpcFromSql(resp []db.TranslationCreateUpdateBulkRow) devkitv1.TranslationListResponse
 	TranslationListGrpcFromSql(resp []db.Translation) devkitv1.TranslationListResponse
+	TranslationFindLocaleGrpcFromSql(resp []db.Translation, locale string) devkitv1.TranslationFindLocaleResponse
 	TranslationGrpcFromSql(resp *db.Translation) *devkitv1.Translation
 	TranslationCreateUpdateBulkSqlFromGrpc(req *devkitv1.TranslationCreateUpdateBulkRequest) *db.TranslationCreateUpdateBulkParams
 	FileDeleteGrpcFromSupa(resp []storage_go.FileUploadResponse) *devkitv1.FileDeleteResponse

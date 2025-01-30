@@ -10,6 +10,7 @@ import (
 
 type Querier interface {
 	IconCreateUpdateBulk(ctx context.Context, arg IconCreateUpdateBulkParams) ([]Icon, error)
+	IconFind(ctx context.Context, arg IconFindParams) (Icon, error)
 	IconList(ctx context.Context) ([]Icon, error)
 	PageCreateUpdate(ctx context.Context, arg PageCreateUpdateParams) (TenantsSchemaPage, error)
 	PageDeleteRestore(ctx context.Context, records []int32) ([]TenantsSchemaPage, error)
@@ -21,7 +22,7 @@ type Querier interface {
 	RoleDelete(ctx context.Context, arg RoleDeleteParams) (AccountsSchemaRole, error)
 	RoleDeleteRestore(ctx context.Context, arg RoleDeleteRestoreParams) (AccountsSchemaRole, error)
 	RoleFindForUpdate(ctx context.Context, roleID int32) (RoleFindForUpdateRow, error)
-	RoleList(ctx context.Context) ([]AccountsSchemaRole, error)
+	RoleList(ctx context.Context, arg RoleListParams) ([]RoleListRow, error)
 	RoleListInput(ctx context.Context, callerID int32) ([]RoleListInputRow, error)
 	SectionCreateUpdate(ctx context.Context, arg SectionCreateUpdateParams) (TenantsSchemaSection, error)
 	SectionDeleteRestore(ctx context.Context, records []int32) ([]TenantsSchemaSection, error)

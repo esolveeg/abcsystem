@@ -5,19 +5,25 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/darwishdev/devkit-api/db"
-	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
-func (u *AccountsUsecase) RoleDelete(ctx context.Context, req *connect.Request[devkitv1.RoleDeleteRequest]) (*devkitv1.AccountsSchemaRole, error) {
-	params := db.RoleDeleteParams{
-		RoleID: req.Msg.Record,
+func (u *AccountsUsecase) RoleDelete(ctx context.Context, req *connect.Request[devkitv1.RoleDeleteRequest]) (*devkitv1.RoleDeleteResponse, error) {
+	response := make([]*devkitv1.AccountsSchemaRole, 0)
+	for _, role := range req.Msg.Records {
+		params := db.RoleDeleteParams{
+			RoleID: role,
+		}
+		deletedRole, err := u.repo.RoleDelete(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+
+		response = append(response, u.adapter.RoleEntityGrpcFromSql(deletedRole))
 	}
-	user, err := u.repo.RoleDelete(ctx, params)
-	if err != nil {
-		return nil, err
-	}
-	resp := u.adapter.RoleEntityGrpcFromSql(user)
-	return resp, nil
+	return &devkitv1.RoleDeleteResponse{
+		Records: response,
+	}, nil
 }
 func (u *AccountsUsecase) RoleDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.RoleDeleteRestoreRequest]) (*devkitv1.RoleDeleteRestoreResponse, error) {
 	response := make([]*devkitv1.AccountsSchemaRole, 0)
@@ -54,13 +60,19 @@ func (u *AccountsUsecase) RoleListInput(ctx context.Context) (*devkitv1.RoleList
 	return response, nil
 }
 
-func (u *AccountsUsecase) RoleList(ctx context.Context) (*devkitv1.RoleListResponse, error) {
-	roles, err := u.repo.RoleList(ctx)
+func (u *AccountsUsecase) RoleList(ctx context.Context, req *connect.Request[devkitv1.RoleListRequest]) (*devkitv1.RoleListResponse, int32, error) {
+	roleListParams := u.adapter.RoleListSqlFromGrpc(req.Msg)
+	roles, err := u.repo.RoleList(ctx, *roleListParams)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
+	var totalCount int32
 	response := u.adapter.RoleListGrpcFromSql(roles)
-	return response, nil
+	r := *roles
+	if len(r) > 0 {
+		totalCount = int32(r[0].TotalCount)
+	}
+	return response, totalCount, nil
 }
 
 func (u *AccountsUsecase) RoleCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.RoleCreateUpdateRequest]) (*devkitv1.RoleCreateUpdateResponse, error) {

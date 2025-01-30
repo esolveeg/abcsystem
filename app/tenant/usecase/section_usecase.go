@@ -25,7 +25,6 @@ func (u *TenantUsecase) SectionCreateUpdate(ctx context.Context, req *connect.Re
 	}
 	resp := u.adapter.SectionEntityGrpcFromSql(record)
 	return &devkitv1.SectionCreateUpdateResponse{Record: resp}, nil
-
 }
 
 func (u *TenantUsecase) SectionDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.SectionDeleteRestoreRequest]) (*devkitv1.SectionDeleteRestoreResponse, error) {

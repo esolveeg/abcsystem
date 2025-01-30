@@ -10,7 +10,7 @@ import (
 	"github.com/darwishdev/devkit-api/db"
 	"github.com/darwishdev/devkit-api/pkg/auth"
 	"github.com/darwishdev/devkit-api/pkg/redisclient"
-	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	supaapigo "github.com/darwishdev/supaapi-go"
 )
 
@@ -26,12 +26,12 @@ type AccountsUsecaseInterface interface {
 	AuthLoginProvider(ctx context.Context, req *connect.Request[devkitv1.AuthLoginProviderRequest]) (*devkitv1.AuthLoginProviderResponse, error)
 	UserDelete(ctx context.Context, req *connect.Request[devkitv1.UserDeleteRequest]) (*devkitv1.AccountsSchemaUser, error)
 	AuthInvite(ctx context.Context, req *connect.Request[devkitv1.AuthInviteRequest]) (*devkitv1.AuthInviteResponse, error)
-	RoleDelete(ctx context.Context, req *connect.Request[devkitv1.RoleDeleteRequest]) (*devkitv1.AccountsSchemaRole, error)
+	RoleDelete(ctx context.Context, req *connect.Request[devkitv1.RoleDeleteRequest]) (*devkitv1.RoleDeleteResponse, error)
 	RoleDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.RoleDeleteRestoreRequest]) (*devkitv1.RoleDeleteRestoreResponse, error)
 	RoleFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.RoleFindForUpdateRequest]) (*devkitv1.RoleFindForUpdateResponse, error)
 	RoleListInput(ctx context.Context) (*devkitv1.RoleListInputResponse, error)
-	RoleList(ctx context.Context) (*devkitv1.RoleListResponse, error)
-	AppLogin(ctx context.Context, loginCode string) (*devkitv1.AuthLoginResponse, redisclient.PermissionsMap, error)
+	RoleList(ctx context.Context, req *connect.Request[devkitv1.RoleListRequest]) (*devkitv1.RoleListResponse, int32, error)
+	AppLogin(ctx context.Context, loginCode string, userId int32) (*devkitv1.AuthLoginResponse, redisclient.PermissionsMap, error)
 	AuthResetPassword(ctx context.Context, req *connect.Request[devkitv1.AuthResetPasswordRequest]) (*devkitv1.AuthResetPasswordResponse, error)
 	AuthResetPasswordEmail(ctx context.Context, req *connect.Request[devkitv1.AuthResetPasswordEmailRequest]) (*devkitv1.AuthResetPasswordEmailResponse, error)
 	RoleCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.RoleCreateUpdateRequest]) (*devkitv1.RoleCreateUpdateResponse, error)

@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package devkit.v1;
 
-
-
 message Translation {
   string translation_key = 1;
   string english_value = 2;
@@ -14,16 +12,19 @@ message TranslationCreateUpdateBulkRequest {
   repeated Translation records = 1;
 }
 
-
-message TranslationListRequest {
-}
+message TranslationListRequest {}
 
 message TranslationListResponse {
   repeated Translation translations = 1;
 }
-
+message TranslationFindLocaleRequest {
+  string locale = 1;
+}
+message TranslationFindLocaleResponse {
+  map<string, string> translations = 1;
+}
 message TranslationDeleteRequest {
-  repeated string keys = 1 ;
+  repeated string keys = 1;
 }
 
 message TranslationDeleteResponse {

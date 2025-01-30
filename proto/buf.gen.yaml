@@ -12,6 +12,6 @@ plugins:
   - local: protoc-gen-go
     out: ../proto_gen
     opt: paths=source_relative
-  - local: protoc-gen-es
+  - local: protoc-gen-connect-go
     out: ../proto_gen/
-    opt: target=ts
+    opt: paths=source_relative

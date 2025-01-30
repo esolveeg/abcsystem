@@ -19,10 +19,10 @@ type AccountsSchemaNavigationBarItem struct {
 	Label               string      `json:"label"`
 	LabelAr             pgtype.Text `json:"label_ar"`
 	Icon                pgtype.Text `json:"icon"`
-	Route               pgtype.Text `json:"route"`
 	NavigationBarID     pgtype.Int4 `json:"navigation_bar_id"`
 	ParentID            pgtype.Int4 `json:"parent_id"`
 	PermissionID        pgtype.Int4 `json:"permission_id"`
+	Route               pgtype.Text `json:"route"`
 }
 
 type AccountsSchemaPermission struct {

@@ -274,9 +274,10 @@ BEGIN
 		UPDATE
 			accounts_schema.role
 		SET
-			role_name = is_null_replace (in_role_name, role_name),
-			tenant_id = (is_null (in_tenant_id, NULL)),
-			role_description = is_null_replace (in_role_description, role_description),
+			role_name = is_null_replace(in_role_name, role_name),
+			tenant_id = iif(in_tenant_id = 0
+				OR in_tenant_id IS NULL, NULL, in_tenant_id),
+			role_description = is_null_replace(in_role_description, role_description),
 			role_security_level = in_role_security_level,
 			updated_at = NOW()
 		WHERE
@@ -299,9 +300,10 @@ BEGIN
 			role_description)
 		VALUES (
 			in_role_name,
-			is_null (
-				in_tenant_id, NULL),
 			in_role_security_level,
+			iif(
+				in_tenant_id = 0
+				OR in_tenant_id IS NULL, NULL, in_tenant_id),
 			in_role_description)
 	RETURNING
 		role_id INTO v_role_id;
@@ -315,8 +317,8 @@ BEGIN
 	RETURN query
 	SELECT
 		role_id,
-		role_name,
 		tenant_id,
+		role_name,
 		role_security_level,
 		role_description,
 		created_at,
@@ -325,7 +327,7 @@ BEGIN
 	FROM
 		accounts_schema.role
 	WHERE
-		role_id = is_null_replace (v_role_id, in_role_id);
+		role_id = is_null_replace(v_role_id, in_role_id);
 END
 $$;
 
@@ -366,12 +368,12 @@ BEGIN
 		UPDATE
 			accounts_schema.user
 		SET
-			user_name = is_null_replace (in_user_name, user_name),
-			user_type_id = is_null_replace (in_user_type_id, user_type_id),
+			user_name = is_null_replace(in_user_name, user_name),
+			user_type_id = is_null_replace(in_user_type_id, user_type_id),
 			tenant_id = is_null (in_tenant_id, NULL),
-			user_email = is_null_replace (in_user_email, user_email),
-			user_phone = is_null_replace (in_user_phone, user_phone),
-			user_password = is_null_replace (in_user_password, user_password),
+			user_email = is_null_replace(in_user_email, user_email),
+			user_phone = is_null_replace(in_user_phone, user_phone),
+			user_password = is_null_replace(in_user_password, user_password),
 			updated_at = NOW()
 		WHERE
 			user_id = in_user_id;
@@ -424,7 +426,7 @@ BEGIN
 	FROM
 		accounts_schema.user
 	WHERE
-		user_id = is_null_replace (v_user_id, in_user_id);
+		user_id = is_null_replace(v_user_id, in_user_id);
 END
 $$;
 
@@ -487,7 +489,7 @@ BEGIN
 	RETURN query UPDATE
 		accounts_schema.user
 	SET
-		deleted_at = IIF (deleted_at IS NULL, now(), NULL)
+		deleted_at = IIF(deleted_at IS NULL, now(), NULL)
 	WHERE
 		user_id = in_user_id
 	RETURNING
@@ -505,14 +507,14 @@ CREATE OR REPLACE FUNCTION accounts_schema.role_delete (in_role_id int, in_calle
 	AS $$
 BEGIN
 	BEGIN
-		SELECT
+		PERFORM
 			accounts_schema.check_caller_security_level (updated_user_id => 0, updated_role_id => in_role_id, caller_id => in_caller_id);
 	EXCEPTION
 		WHEN OTHERS THEN
 			RAISE;
 	END;
 	-- delete auth user
-	DELETE FROM role_permissions
+	DELETE FROM accounts_schema.role_permission
 	WHERE role_id = in_role_id;
 	RETURN query DELETE FROM accounts_schema.role
 	WHERE role_id = in_role_id
@@ -531,7 +533,7 @@ CREATE OR REPLACE FUNCTION accounts_schema.role_delete_restore (in_role_id int, 
 	AS $$
 BEGIN
 	BEGIN
-		SELECT
+		PERFORM
 			accounts_schema.check_caller_security_level (updated_user_id => 0, updated_role_id => in_role_id, caller_id => in_caller_id);
 	EXCEPTION
 		WHEN OTHERS THEN
@@ -541,7 +543,7 @@ BEGIN
 	RETURN query UPDATE
 		accounts_schema.role
 	SET
-		deleted_at = IIF (deleted_at IS NULL, now(), NULL)
+		deleted_at = IIF(deleted_at IS NULL, now(), NULL)
 	WHERE
 		role_id = in_role_id
 	RETURNING

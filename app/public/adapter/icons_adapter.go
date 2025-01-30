@@ -5,6 +5,13 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
+func (a *PublicAdapter) IconFindSqlFromGrpc(icon *devkitv1.IconFindRequest) *db.IconFindParams {
+	return &db.IconFindParams{
+		IconID:   icon.IconId,
+		IconName: icon.IconName,
+	}
+
+}
 func (a *PublicAdapter) IconGrpcFromSql(icon *db.Icon) *devkitv1.Icon {
 	return &devkitv1.Icon{
 		IconId:      icon.IconID,

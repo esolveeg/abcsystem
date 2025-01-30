@@ -15,6 +15,7 @@ import (
 type PublicUsecaseInterface interface {
 	TranslationList(ctx context.Context) (*devkitv1.TranslationListResponse, error)
 	TranslationCreateUpdateBulk(ctx context.Context, req *devkitv1.TranslationCreateUpdateBulkRequest) (*devkitv1.TranslationCreateUpdateBulkResponse, error)
+	TranslationFindLocale(ctx context.Context, req *devkitv1.TranslationFindLocaleRequest) (*devkitv1.TranslationFindLocaleResponse, error)
 	TranslationDelete(ctx context.Context, req *devkitv1.TranslationDeleteRequest) (*devkitv1.TranslationDeleteResponse, error)
 	FileDelete(ctx context.Context, req *devkitv1.FileDeleteRequest) (*devkitv1.FileDeleteResponse, error)
 	FileList(ctx context.Context, req *devkitv1.FileListRequest) (*devkitv1.FileListResponse, error)
@@ -24,6 +25,8 @@ type PublicUsecaseInterface interface {
 	SettingFindForUpdate(ctx context.Context, req *devkitv1.SettingFindForUpdateRequest) (*devkitv1.SettingFindForUpdateResponse, error)
 	FileCreate(ctx context.Context, req *devkitv1.FileCreateRequest) (*devkitv1.FileCreateResponse, error)
 	BucketCreateUpdate(ctx context.Context, req *devkitv1.BucketCreateUpdateRequest) (*devkitv1.BucketCreateUpdateResponse, error)
+
+	IconFind(ctx context.Context, req *devkitv1.IconFindRequest) (*devkitv1.IconFindResponse, error)
 	IconCreateUpdateBulk(ctx context.Context, req *devkitv1.IconCreateUpdateBulkRequest) (*devkitv1.IconListResponse, error)
 	IconList(ctx context.Context) (*devkitv1.IconListResponse, error)
 	FileCreateBuilk(ctx context.Context, req *devkitv1.FileCreateBulkRequest) (*devkitv1.FileCreateBulkResponse, error)

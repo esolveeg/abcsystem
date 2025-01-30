@@ -31,6 +31,7 @@ message UpdateHandler {
   string find_endpoint = 6;
   string find_request_property = 7;
 }
+
 message DeleteHandler {
   string endpoint = 1;
   string request_property = 2;
@@ -51,6 +52,7 @@ message ErrorHandler {
 message AvailableOptions {
   string title = 1;
   string description = 2;
+  int32 total_count = 8;
   CreateHandler create_handler = 3;
   UpdateHandler update_handler = 4;
   DeleteRestoreHandler delete_restore_handler = 5;
@@ -79,4 +81,15 @@ message DeleteRestoreRequest {
     unique: true
     max_items: 500
   }];
+}
+
+message PaginationParams {
+  string sort_column = 1;
+  string sort_function = 2 [(buf.validate.field) = {
+    string: {pattern: "^(ASC|DESC|asc|desc)$"}
+    ignore_empty: true
+  }];
+  int32 page_number = 3;
+  bool is_deleted = 5;
+  int32 page_size = 6;
 }

@@ -4,8 +4,8 @@ import (
 	// USECASE_IMPORTS
 	"github.com/bufbuild/protovalidate-go"
 	accountsUsecase "github.com/darwishdev/devkit-api/app/accounts/usecase"
-	tenantUsecase "github.com/darwishdev/devkit-api/app/tenant/usecase"
 	publicUsecase "github.com/darwishdev/devkit-api/app/public/usecase"
+	tenantUsecase "github.com/darwishdev/devkit-api/app/tenant/usecase"
 	"github.com/darwishdev/devkit-api/config"
 	"github.com/darwishdev/devkit-api/db"
 	"github.com/darwishdev/devkit-api/pkg/auth"
@@ -25,7 +25,7 @@ type Api struct {
 	tokenMaker      auth.Maker
 	sqlSeeder       sqlseeder.SeederInterface
 	publicUsecase   publicUsecase.PublicUsecaseInterface
-	tenantUsecase  tenantUsecase.TenantUsecaseInterface
+	tenantUsecase   tenantUsecase.TenantUsecaseInterface
 	// USECASE_FIELDS
 
 	supaapi     supaapigo.Supaapi
@@ -45,7 +45,7 @@ func NewApi(config config.Config, store db.Store, tokenMaker auth.Maker, redisCl
 	supaapi := supaapigo.NewSupaapi(supaapigo.SupaapiConfig{
 		ProjectRef:     config.DBProjectREF,
 		Env:            supaapigo.DEV,
-		Port:           config.SupaAPIPort,
+		Port:           config.SupabaseAPIPort,
 		ServiceRoleKey: config.SupabaseServiceRoleKey,
 		ApiKey:         config.SupabaseApiKey,
 	})
@@ -58,7 +58,7 @@ func NewApi(config config.Config, store db.Store, tokenMaker auth.Maker, redisCl
 	return &Api{
 		// USECASE_INJECTIONS
 		accountsUsecase: accountsUsecase,
-		tenantUsecase:  tenantUsecase,
+		tenantUsecase:   tenantUsecase,
 		store:           store,
 		redisClient:     redisClient,
 		tokenMaker:      tokenMaker,

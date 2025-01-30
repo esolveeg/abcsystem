@@ -157,29 +157,65 @@ func (q *Queries) RoleFindForUpdate(ctx context.Context, roleID int32) (RoleFind
 
 const roleList = `-- name: RoleList :many
 SELECT
-	role_id, tenant_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at
+	role_id::int,
+	role_name::varchar(200),
+	role_description::varchar(200),
+	created_at::timestamptz,
+	total_count::bigint
 FROM
-	accounts_schema.role
+	execute_dynamic_pagination (primary_key => 'role_id', query_base => CONCAT(FORMAT('SELECT role_id, role_name,role_description, created_at
+             FROM accounts_schema.role
+             WHERE role_name LIKE CONCAT(''%%'', %L, ''%%'')
+               AND role_description LIKE CONCAT(''%%'', %L, ''%%'')
+AND deleted_at IS ', $1::varchar(200), $2::text),  iif($3::boolean , 'not null'::varchar , 'null'::varchar)), sort_func => $4, page_number => $5, -- Page number
+		sort_column => is_null_replace($6::varchar, 'role_id'), page_size => $7) AS result (role_id int,
+		role_name varchar(200),
+		role_description varchar(200),
+		created_at timestamptz,
+		total_count bigint)
 `
 
-func (q *Queries) RoleList(ctx context.Context) ([]AccountsSchemaRole, error) {
-	rows, err := q.db.Query(ctx, roleList)
+type RoleListParams struct {
+	InRoleName        string `json:"in_role_name"`
+	InRoleDescription string `json:"in_role_description"`
+	InIsDeleted       bool   `json:"in_is_deleted"`
+	SortFunction      string `json:"sort_function"`
+	PageNumber        int32  `json:"page_number"`
+	SortColumn        string `json:"sort_column"`
+	PageSize          int32  `json:"page_size"`
+}
+
+type RoleListRow struct {
+	RoleID          int32              `json:"role_id"`
+	RoleName        string             `json:"role_name"`
+	RoleDescription string             `json:"role_description"`
+	CreatedAt       pgtype.Timestamptz `json:"created_at"`
+	TotalCount      int64              `json:"total_count"`
+}
+
+func (q *Queries) RoleList(ctx context.Context, arg RoleListParams) ([]RoleListRow, error) {
+	rows, err := q.db.Query(ctx, roleList,
+		arg.InRoleName,
+		arg.InRoleDescription,
+		arg.InIsDeleted,
+		arg.SortFunction,
+		arg.PageNumber,
+		arg.SortColumn,
+		arg.PageSize,
+	)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []AccountsSchemaRole{}
+	items := []RoleListRow{}
 	for rows.Next() {
-		var i AccountsSchemaRole
+		var i RoleListRow
 		if err := rows.Scan(
 			&i.RoleID,
-			&i.TenantID,
 			&i.RoleName,
-			&i.RoleSecurityLevel,
 			&i.RoleDescription,
 			&i.CreatedAt,
-			&i.UpdatedAt,
-			&i.DeletedAt,
+			&i.TotalCount,
 		); err != nil {
 			return nil, err
 		}

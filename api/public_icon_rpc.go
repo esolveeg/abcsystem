@@ -22,6 +22,16 @@ func (api *Api) IconCreateUpdateBulk(ctx context.Context, req *connect.Request[d
 	return connect.NewResponse(&devkitv1.IconCreateUpdateBulkResponse{}), nil
 }
 
+func (api *Api) IconFind(ctx context.Context, req *connect.Request[devkitv1.IconFindRequest]) (*connect.Response[devkitv1.IconFindResponse], error) {
+	if err := ctx.Err(); err != nil {
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+	resp, err := api.publicUsecase.IconFind(ctx, req.Msg)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(resp), nil
+}
 func (api *Api) IconList(ctx context.Context, req *connect.Request[devkitv1.IconListRequest]) (*connect.Response[devkitv1.IconListResponse], error) {
 	if err := ctx.Err(); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
