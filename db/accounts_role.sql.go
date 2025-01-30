@@ -12,27 +12,16 @@ import (
 )
 
 const roleCreateUpdate = `-- name: RoleCreateUpdate :one
-select  
-	role_id ,
-	role_name ,
-	role_security_level ,
-	role_description ,
-	created_at ,
-	updated_at ,
-deleted_at  
-from accounts_schema.role_create_update(
-in_role_id => $1,
-in_role_name => $2,
-in_role_security_level => $3,
-in_caller_id => $4,
-in_role_description => $5,
-in_permissions => $6::int[]
-)
+SELECT
+	role_id, tenant_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at
+FROM
+	accounts_schema.role_create_update (in_role_id => $1, in_role_name => $2, in_tenant_id => $3, in_role_security_level => $4, in_caller_id => $5, in_role_description => $6, in_permissions => $7::int[])
 `
 
 type RoleCreateUpdateParams struct {
 	RoleID            int32   `json:"role_id"`
 	RoleName          string  `json:"role_name"`
+	TenantID          int32   `json:"tenant_id"`
 	RoleSecurityLevel int32   `json:"role_security_level"`
 	CallerID          int32   `json:"caller_id"`
 	RoleDescription   string  `json:"role_description"`
@@ -43,6 +32,7 @@ func (q *Queries) RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdatePara
 	row := q.db.QueryRow(ctx, roleCreateUpdate,
 		arg.RoleID,
 		arg.RoleName,
+		arg.TenantID,
 		arg.RoleSecurityLevel,
 		arg.CallerID,
 		arg.RoleDescription,
@@ -51,6 +41,7 @@ func (q *Queries) RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdatePara
 	var i AccountsSchemaRole
 	err := row.Scan(
 		&i.RoleID,
+		&i.TenantID,
 		&i.RoleName,
 		&i.RoleSecurityLevel,
 		&i.RoleDescription,
@@ -62,15 +53,10 @@ func (q *Queries) RoleCreateUpdate(ctx context.Context, arg RoleCreateUpdatePara
 }
 
 const roleDelete = `-- name: RoleDelete :one
-SELECT 
-	role_id ,
-	role_name ,
-	role_security_level ,
-	role_description ,
-	created_at ,
-	updated_at ,
-	deleted_at  
-FROM accounts_schema.role_delete(in_role_id => $1 , in_caller_id => $2)
+SELECT
+	role_id, tenant_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at
+FROM
+	accounts_schema.role_delete (in_role_id => $1, in_caller_id => $2)
 `
 
 type RoleDeleteParams struct {
@@ -83,6 +69,7 @@ func (q *Queries) RoleDelete(ctx context.Context, arg RoleDeleteParams) (Account
 	var i AccountsSchemaRole
 	err := row.Scan(
 		&i.RoleID,
+		&i.TenantID,
 		&i.RoleName,
 		&i.RoleSecurityLevel,
 		&i.RoleDescription,
@@ -94,15 +81,10 @@ func (q *Queries) RoleDelete(ctx context.Context, arg RoleDeleteParams) (Account
 }
 
 const roleDeleteRestore = `-- name: RoleDeleteRestore :one
-SELECT 
-	role_id ,
-	role_name ,
-	role_security_level ,
-	role_description ,
-	created_at ,
-	updated_at ,
-deleted_at  
-FROM accounts_schema.role_delete_restore(in_role_id => $1 , in_caller_id => $2)
+SELECT
+	role_id, tenant_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at
+FROM
+	accounts_schema.role_delete_restore (in_role_id => $1, in_caller_id => $2)
 `
 
 type RoleDeleteRestoreParams struct {
@@ -115,6 +97,7 @@ func (q *Queries) RoleDeleteRestore(ctx context.Context, arg RoleDeleteRestorePa
 	var i AccountsSchemaRole
 	err := row.Scan(
 		&i.RoleID,
+		&i.TenantID,
 		&i.RoleName,
 		&i.RoleSecurityLevel,
 		&i.RoleDescription,
@@ -126,23 +109,33 @@ func (q *Queries) RoleDeleteRestore(ctx context.Context, arg RoleDeleteRestorePa
 }
 
 const roleFindForUpdate = `-- name: RoleFindForUpdate :one
-with permissions as (
-	select p.role_id , array_agg(p.permission_id)::int[] permissions from accounts_schema.role_permission p where p.role_id = $1 group by p.role_id
+WITH permissions AS (
+	SELECT
+		p.role_id,
+		array_agg(p.permission_id)::int[] permissions
+	FROM
+		accounts_schema.role_permission p
+	WHERE
+		p.role_id = $1
+	GROUP BY
+		p.role_id
 )
-select  
-r.role_id ,
-r.role_name ,
-r.role_security_level ,
-r.role_description ,
-p.permissions permissions
-	from accounts_schema.role r
- join permissions p 
-on r.role_id = p.role_id
+SELECT
+	r.role_id,
+	r.role_name,
+	r.tenant_id,
+	r.role_security_level,
+	r.role_description,
+	p.permissions permissions
+FROM
+	accounts_schema.role r
+	JOIN permissions p ON r.role_id = p.role_id
 `
 
 type RoleFindForUpdateRow struct {
 	RoleID            int32       `json:"role_id"`
 	RoleName          string      `json:"role_name"`
+	TenantID          pgtype.Int4 `json:"tenant_id"`
 	RoleSecurityLevel int32       `json:"role_security_level"`
 	RoleDescription   pgtype.Text `json:"role_description"`
 	Permissions       []int32     `json:"permissions"`
@@ -154,6 +147,7 @@ func (q *Queries) RoleFindForUpdate(ctx context.Context, roleID int32) (RoleFind
 	err := row.Scan(
 		&i.RoleID,
 		&i.RoleName,
+		&i.TenantID,
 		&i.RoleSecurityLevel,
 		&i.RoleDescription,
 		&i.Permissions,
@@ -162,35 +156,66 @@ func (q *Queries) RoleFindForUpdate(ctx context.Context, roleID int32) (RoleFind
 }
 
 const roleList = `-- name: RoleList :many
-select  
-	role_id ,
-	role_name ,
-	role_security_level ,
-	role_description ,
-	created_at ,
-	updated_at ,
-	deleted_at 
-
-from accounts_schema.role
+SELECT
+	role_id::int,
+	role_name::varchar(200),
+	role_description::varchar(200),
+	created_at::timestamptz,
+	total_count::bigint
+FROM
+	execute_dynamic_pagination (primary_key => 'role_id', query_base => CONCAT(FORMAT('SELECT role_id, role_name,role_description, created_at
+             FROM accounts_schema.role
+             WHERE role_name LIKE CONCAT(''%%'', %L, ''%%'')
+               AND role_description LIKE CONCAT(''%%'', %L, ''%%'')
+AND deleted_at IS ', $1::varchar(200), $2::text),  iif($3::boolean , 'not null'::varchar , 'null'::varchar)), sort_func => $4, page_number => $5, -- Page number
+		sort_column => is_null_replace($6::varchar, 'role_id'), page_size => $7) AS result (role_id int,
+		role_name varchar(200),
+		role_description varchar(200),
+		created_at timestamptz,
+		total_count bigint)
 `
 
-func (q *Queries) RoleList(ctx context.Context) ([]AccountsSchemaRole, error) {
-	rows, err := q.db.Query(ctx, roleList)
+type RoleListParams struct {
+	InRoleName        string `json:"in_role_name"`
+	InRoleDescription string `json:"in_role_description"`
+	InIsDeleted       bool   `json:"in_is_deleted"`
+	SortFunction      string `json:"sort_function"`
+	PageNumber        int32  `json:"page_number"`
+	SortColumn        string `json:"sort_column"`
+	PageSize          int32  `json:"page_size"`
+}
+
+type RoleListRow struct {
+	RoleID          int32              `json:"role_id"`
+	RoleName        string             `json:"role_name"`
+	RoleDescription string             `json:"role_description"`
+	CreatedAt       pgtype.Timestamptz `json:"created_at"`
+	TotalCount      int64              `json:"total_count"`
+}
+
+func (q *Queries) RoleList(ctx context.Context, arg RoleListParams) ([]RoleListRow, error) {
+	rows, err := q.db.Query(ctx, roleList,
+		arg.InRoleName,
+		arg.InRoleDescription,
+		arg.InIsDeleted,
+		arg.SortFunction,
+		arg.PageNumber,
+		arg.SortColumn,
+		arg.PageSize,
+	)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []AccountsSchemaRole{}
+	items := []RoleListRow{}
 	for rows.Next() {
-		var i AccountsSchemaRole
+		var i RoleListRow
 		if err := rows.Scan(
 			&i.RoleID,
 			&i.RoleName,
-			&i.RoleSecurityLevel,
 			&i.RoleDescription,
 			&i.CreatedAt,
-			&i.UpdatedAt,
-			&i.DeletedAt,
+			&i.TotalCount,
 		); err != nil {
 			return nil, err
 		}
@@ -203,13 +228,14 @@ func (q *Queries) RoleList(ctx context.Context) ([]AccountsSchemaRole, error) {
 }
 
 const roleListInput = `-- name: RoleListInput :many
-select 
-role_id value,
-role_name label,
-concat("level: " , role_security_level::varchar)::varchar note
-from accounts_schema.role 
-where 
-role_security_level <= accounts_schema.user_security_level_find($1)
+SELECT
+	role_id value,
+	role_name label,
+	concat("level: ", role_security_level::varchar)::varchar note
+FROM
+	accounts_schema.role
+WHERE
+	role_security_level <= accounts_schema.user_security_level_find ($1)
 `
 
 type RoleListInputRow struct {

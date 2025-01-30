@@ -6,6 +6,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -35,6 +36,7 @@ func (store *SQLStore) DbErrorParser(err error, errorHandler map[string]string) 
 		if pgErr.Code == "P0001" { // Custom SQLSTATE from RAISE EXCEPTION
 			return connect.NewError(connect.CodeInvalidArgument, fmt.Errorf(pgErr.Message))
 		}
+		log.Debug().Interface("er", pgErr.Code).Msg("parser")
 		fieldName := errorHandler[pgErr.ConstraintName]
 		var errResponse error
 		if fieldName != "" {

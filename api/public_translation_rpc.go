@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
 func (api *Api) TranslationDelete(ctx context.Context, req *connect.Request[devkitv1.TranslationDeleteRequest]) (*connect.Response[devkitv1.TranslationDeleteResponse], error) {
@@ -12,6 +12,14 @@ func (api *Api) TranslationDelete(ctx context.Context, req *connect.Request[devk
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
 	response, err := api.publicUsecase.TranslationDelete(ctx, req.Msg)
+	return connect.NewResponse(response), err
+}
+
+func (api *Api) TranslationFindLocale(ctx context.Context, req *connect.Request[devkitv1.TranslationFindLocaleRequest]) (*connect.Response[devkitv1.TranslationFindLocaleResponse], error) {
+	if err := ctx.Err(); err != nil {
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+	response, err := api.publicUsecase.TranslationFindLocale(ctx, req.Msg)
 	return connect.NewResponse(response), err
 }
 

@@ -448,7 +448,7 @@ create table accounts_schema.roles(
 	deleted_at timestamp 
 );
 
-CREATE TABLE accounts_schema.role_permissions(
+CREATE TABLE accounts_schema.role_permission(
 	role_id int NOT NULL,
 	FOREIGN KEY (role_id) REFERENCES accounts_schema.roles(role_id),
 	permission_id int NOT NULL,

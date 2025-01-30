@@ -1,0 +1,255 @@
+-- Example Query Using generate_dynamic_query
+CREATE OR REPLACE FUNCTION generate_dynamic_query (query_base text, sort_column text, sort_func text, primary_key text, page_number int, page_size int)
+	RETURNS text
+	AS $$
+DECLARE
+	from_clause text;
+	appended_count_clause text;
+	limit_offset_clause text;
+	final_query text;
+BEGIN
+	-- Call helper functions to generate each part of the query
+	from_clause := get_from (query_base);
+	appended_count_clause := append_count (query_base, sort_column);
+	limit_offset_clause := FORMAT('order by %s %s , %s %s LIMIT %s OFFSET %s', sort_column, sort_func, primary_key, sort_func, page_size, (page_number - 1) * page_size);
+	-- Build the final query dynamically
+	final_query := FORMAT('WITH count AS (
+            SELECT COUNT(*) FROM %s
+        ) %s %s', from_clause, -- Part from GetFrom
+		appended_count_clause, -- Part from AppendCount
+		limit_offset_clause -- Part from ConstructPaginator
+);
+	-- Return the final query
+	RETURN final_query;
+END;
+$$
+LANGUAGE plpgsql;
+
+-- SELECT
+-- generate_dynamic_query ('id', 'select role_id from accounts_schema.role', 'sort_func', 2, -- Page number
+-- 	'name', -- Sort column
+-- 	10 -- Page size
+-- );
+-- CREATE OR REPLACE FUNCTION generate_dynamic_query (primary_key text, query_base text, sort_func text, page_number int, sort_column text, page_size int)
+-- 	RETURNS text
+-- 	AS $$
+-- DECLARE
+-- 	from_clause text;
+-- 	appended_count_clause text;
+-- 	final_query text;
+-- 	limit_offset_clause text;
+-- BEGIN
+-- 	-- Call helper functions to generate each part of the query
+-- 	from_clause := get_from (query_base);
+-- 	appended_count_clause := append_count (query_base, sort_column);
+-- 	limit_offset_clause := FORMAT('LIMIT %s OFFSET %s', page_size, (page_number - 1) * page_size);
+-- 	-- Build the final query dynamically
+-- 	final_query := FORMAT('WITH count AS (
+--             SELECT COUNT(*) FROM %s
+--         ) %s %s', from_clause, -- Part from GetFrom
+-- 		appended_count_clause, -- Part from AppendCount
+-- 		limit_offset_clause -- Part from ConstructPaginator
+-- );
+-- 	-- Return the final query
+-- 	RETURN final_query;
+-- END;
+-- $$
+-- LANGUAGE plpgsql;
+-- -- SELECT
+-- 	*
+-- FROM
+-- generate_dynamic_query (query_base => 'SELECT role_id, role_name
+-- FROM accounts_schema.role r WHERE true ', primary_key => 'role_id', sort_column => 'role_id', sort_func => 'asc', sort_value => '1')
+-- -- SELECT
+-- 	role_id::int,
+-- 	role_name::varchar(200),
+-- 	total_count::bigint,
+-- 	deleted_at::varchar
+-- FROM
+-- 	execute_dynamic_pagination (query_base => 'SELECT role_id, role_name, deleted_at::varchar(200) FROM accounts_schema.role r WHERE r.deleted_at IS NULL', primary_key => 'role_id', sort_column => 'role_id', sort_func => 'asc', sort_value => 1) AS result (role_id INT,
+-- 		role_name VARCHAR(200),
+-- 		total_count BIGINT,
+-- 		deleted_at VARCHAR(200));
+-- SELECT
+-- construct_paginator ('created_at', '2024-01-01', 'desc', 'id');
+-- CREATE OR REPLACE FUNCTION execute_dynamic_pagination (primary_key text, query_base text, sort_func text, sort_value text, sort_column text)
+-- 	RETURNS SETOF RECORD
+-- 	AS $$
+-- DECLARE
+-- 	dynamic_query text;
+-- BEGIN
+-- 	-- Step 1: Generate the dynamic SQL query
+-- 	dynamic_query := generate_dynamic_query (primary_key, query_base, sort_func, sort_value, sort_column);
+-- 	-- Step 2: Execute the dynamic query
+-- 	RETURN QUERY EXECUTE dynamic_query;
+-- END;
+-- $$
+-- LANGUAGE plpgsql;
+-- -- WITH count AS (
+-- 	SELECT
+-- 		COUNT(*)
+-- 	FROM
+-- 		accounts_schema.role r
+-- 	WHERE
+-- 		r.deleted_at IS NULL
+-- )
+-- SELECT
+-- 	role_id,
+-- 	role_name,
+-- 	c.count count
+-- FROM
+-- 	accounts_schema.role r
+-- 	CROSS JOIN count c
+-- WHERE
+-- 	r.deleted_at IS NULL
+-- 	AND role_id < '16'
+-- ORDER BY
+-- 	role_id DESC,
+-- 	role_id DESC
+-- LIMIT 2
+-- -- SELECT
+-- generate_dynamic_query ('role_id', 'SELECT role_id, role_name FROM accounts_schema.role r WHERE r.deleted_at IS NULL', 'desc', '16', 'role_id');
+-- CREATE OR REPLACE FUNCTION generate_dynamic_query (primary_key text, query_base text, sort_func text, sort_value text, sort_column text)
+-- 	RETURNS text
+-- 	AS $$
+-- DECLARE
+-- 	from_clause text;
+-- 	append_count_clause text;
+-- 	construct_paginator_clause text;
+-- 	final_query text;
+-- BEGIN
+-- 	-- Call helper functions to generate each part of the query
+-- 	from_clause := get_from (query_base);
+-- 	append_count_clause := append_count (query_base, sort_column);
+-- 	construct_paginator_clause := construct_paginator (sort_column, sort_value, sort_func, primary_key);
+-- 	-- Build the final query dynamically
+-- 	final_query := FORMAT('WITH count AS (
+--             SELECT COUNT(*) FROM %s
+--         ) %s AND %s', from_clause, -- Part from GetFrom
+-- 		append_count_clause, -- Part from AppendCount
+-- 		construct_paginator_clause -- Part from ConstructPaginator
+-- );
+-- 	-- Return the final query
+-- 	RETURN final_query;
+-- END;
+-- $$
+-- LANGUAGE plpgsql;
+-- CREATE OR REPLACE FUNCTION construct_paginator (sort_column text, sort_value text, sort_func text, primary_key text)
+-- 	RETURNS text
+-- 	AS $$
+-- DECLARE
+-- 	OPERATOR TEXT;
+-- BEGIN
+-- 	-- Determine the operator based on the sort order
+-- 	IF LOWER(sort_func) = 'desc' THEN
+-- 		OPERATOR := '<';
+-- 	ELSE
+-- 		OPERATOR := '>';
+-- 	END IF;
+-- 	-- Construct and return the query string
+-- 	RETURN FORMAT('%I %s %L ORDER BY %I %s, %I %s LIMIT %s', sort_column, -- %I: Escapes column name
+-- 		OPERATOR, -- %s: Operator
+-- 		sort_value, -- %L: Escapes literals safely
+-- 		sort_column, -- %I: Sort column
+-- 		sort_func, -- %s: Sort direction (ASC/DESC)
+-- 		primary_key, -- %I: Primary key for tiebreaker
+-- 		sort_func, -- %s: Sort direction for primary key
+-- 		2 -- %s: Limit value
+-- );
+-- END;
+-- $$
+-- LANGUAGE plpgsql;
+-- CREATE OR REPLACE FUNCTION append_count (query_base text, sort_column text)
+-- 	RETURNS text
+-- 	AS $$
+-- DECLARE
+-- 	modified_query text;
+-- BEGIN
+-- 	-- Replace the first occurrence of 'from' with ',c.count count from'
+-- 	modified_query := REPLACE(LOWER(query_base), 'from', ', c.count count from');
+-- 	-- Replace the first occurrence of 'where' with 'cross join count c where'
+-- 	modified_query := Replace(modified_query, 'where', 'CROSS JOIN count c WHERE');
+-- 	RETURN modified_query;
+-- END;
+-- $$
+-- LANGUAGE plpgsql;
+-- CREATE OR REPLACE FUNCTION get_from (query_base text)
+-- 	RETURNS text
+-- 	AS $$
+-- DECLARE
+-- 	query_lower text;
+-- 	from_index int;
+-- BEGIN
+-- 	-- Convert the query to lowercase
+-- 	query_lower := LOWER(query_base);
+-- 	-- Find the position of 'from' in the query
+-- 	from_index := POSITION('from' IN query_lower);
+-- 	-- If 'from' is not found, return an empty string
+-- 	IF from_index = 0 THEN
+-- 		RETURN '';
+-- 	END IF;
+-- 	-- Return the substring after 'from'
+-- 	RETURN SUBSTRING(query_base FROM from_index + 4);
+-- 	-- Skip 'from'
+-- END;
+-- $$
+-- LANGUAGE plpgsql;
+-- DO $$
+-- DECLARE
+-- 	where_condition text;
+-- 	order_by_clause text;
+-- 	final_query text;
+-- BEGIN
+-- 	where_condition := generate_keyset_where ('role_id', 1);
+-- 	-- Generate the ORDER BY clause
+-- 	order_by_clause := generate_order_by ('role_id', 'desc');
+-- 	final_query := 'SELECT role_id,role_name,role_created_at FROM accounst_schema.role' || CASE WHEN where_condition != '' THEN
+-- 		' WHERE ' || where_condition
+-- 	ELSE
+-- 		''
+-- 	END || ' ' || order_by_clause || ' LIMIT 1';
+-- 	RAISE NOTICE 'Final Queru: %', (final_query);
+-- END;
+-- $$;
+-- WITH count AS (
+-- 	SELECT
+-- 		count(*)
+-- 	FROM
+-- 		accounts_schema.role r
+-- 	WHERE
+-- 		r.deleted_at IS NULL
+-- )
+-- SELECT
+-- 	role_id,
+-- 	role_name,
+-- 	c.count count
+-- FROM
+-- 	accounts_schema.role r
+-- 	CROSS JOIN count c
+-- WHERE
+-- 	r.deleted_at IS NULL
+-- 	AND role_id < 14
+-- ORDER BY
+-- 	role_id DESC,
+-- 	role_id DESC
+-- LIMIT 2
+-- WITH globals AS (
+-- 	SELECT
+-- 		count(*)
+-- 		count
+-- 	FROM
+-- 		accounts_schema.navigation_bar_item
+-- )
+-- SELECT
+-- 	i.*,
+-- 	g.count
+-- FROM
+-- 	accounts_schema.navigation_bar_item i
+-- 	CROSS JOIN globals g
+-- WHERE
+-- 	label < 'Dashboard'
+-- 	AND navigation_bar_item_id < 1000
+-- ORDER BY
+-- 	label DESC,
+-- 	navigation_bar_item_id DESC
+-- LIMIT 2

@@ -30,6 +30,14 @@ func (s *PublicUsecase) TranslationCreateUpdateBulk(ctx context.Context, req *de
 	}, nil
 }
 
+func (u *PublicUsecase) TranslationFindLocale(ctx context.Context, req *devkitv1.TranslationFindLocaleRequest) (*devkitv1.TranslationFindLocaleResponse, error) {
+	settings, err := u.repo.TranslationList(ctx)
+	if err != nil {
+		return nil, err
+	}
+	resp := u.adapter.TranslationFindLocaleGrpcFromSql(settings, req.Locale)
+	return &resp, nil
+}
 func (u *PublicUsecase) TranslationList(ctx context.Context) (*devkitv1.TranslationListResponse, error) {
 	settings, err := u.repo.TranslationList(ctx)
 

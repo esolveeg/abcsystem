@@ -55,3 +55,16 @@ func (a *PublicAdapter) TranslationListGrpcFromSql(resp []db.Translation) devkit
 		Translations: translations,
 	}
 }
+func (a *PublicAdapter) TranslationFindLocaleGrpcFromSql(resp []db.Translation, locale string) devkitv1.TranslationFindLocaleResponse {
+	translations := make(map[string]string, len(resp))
+	for _, t := range resp {
+		value := t.EnglishValue
+		if locale == "ar" {
+			value = t.ArabicValue
+		}
+		translations[t.TranslationKey] = value
+	}
+	return devkitv1.TranslationFindLocaleResponse{
+		Translations: translations,
+	}
+}

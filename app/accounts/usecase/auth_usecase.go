@@ -2,18 +2,19 @@ package usecase
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"connectrpc.com/connect"
 	"github.com/darwishdev/devkit-api/db"
 	"github.com/darwishdev/devkit-api/pkg/contextkeys"
 	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"github.com/rs/zerolog/log"
 	"github.com/supabase-community/auth-go/types"
 )
 
-func (u *AccountsUsecase) userGenerateTokens(username string, userID int32, userSecurityLevel int32) (*devkitv1.LoginInfo, error) {
-	accessToken, accessPayload, err := u.tokenMaker.CreateToken(username, userID, userSecurityLevel, u.tokenDuration)
+func (u *AccountsUsecase) userGenerateTokens(username string, userId int32, tenantId int32, userSecurityLevel int32) (*devkitv1.LoginInfo, error) {
+	accessToken, accessPayload, err := u.tokenMaker.CreateToken(username, userId, userSecurityLevel, tenantId, u.tokenDuration)
 	if err != nil {
 		return nil, err
 	}
@@ -23,10 +24,13 @@ func (u *AccountsUsecase) userGenerateTokens(username string, userID int32, user
 	}, nil
 }
 
-func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string) (*devkitv1.AuthLoginResponse, redisclient.PermissionsMap, error) {
-	user, err := u.repo.UserFind(ctx, db.UserFindParams{SearchKey: loginCode})
+func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string, userId int32) (*devkitv1.AuthLoginResponse, redisclient.PermissionsMap, error) {
+	user, err := u.repo.UserFind(ctx, db.UserFindParams{SearchKey: loginCode, UserID: userId})
 	if err != nil {
 		return nil, nil, err
+	}
+	if user == nil {
+		return nil, nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("user not found"))
 	}
 	permissions, err := u.repo.UserPermissionsMap(ctx, user.UserID)
 	if err != nil {
@@ -49,7 +53,7 @@ func (u *AccountsUsecase) AuthRegister(ctx context.Context, req *connect.Request
 	if err != nil {
 		return nil, err
 	}
-	loginInfo, err := u.userGenerateTokens(user.User.UserEmail, user.User.UserId, user.User.UserSecurityLevel)
+	loginInfo, err := u.userGenerateTokens(user.User.UserEmail, user.User.UserId, user.User.UserSecurityLevel, user.User.TenantId)
 	if err != nil {
 		return nil, err
 	}
@@ -63,14 +67,17 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 	userFindParams, supabaseRequest := u.adapter.AuthLoginSqlFromGrpc(req.Msg)
 	_, err := u.supaapi.AuthClient.Token(*supabaseRequest)
 	if err != nil {
-		log.Debug().Interface("supa err here", err).Msg("error")
+		if strings.Contains(strings.ToLower(err.Error()), "invalid login credentials") {
+			return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("invalid login"))
+		}
 		return nil, err
 	}
-	response, _, err := u.AppLogin(ctx, userFindParams.SearchKey)
+	response, _, err := u.AppLogin(ctx, userFindParams.SearchKey, 0)
 	if err != nil {
 		return nil, err
 	}
-	loginInfo, err := u.userGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.UserSecurityLevel)
+	// log.Debug().Interface("tentatis", tenantId).Msg("show me the real tenant")
+	loginInfo, err := u.userGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.TenantId, response.User.UserSecurityLevel)
 	if err != nil {
 		return nil, err
 	}
@@ -84,12 +91,13 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 		if err != nil {
 			return nil, err
 		}
-		navigations, err := u.adapter.UserNavigationBarFindGrpcFromSql(*navigationBar)
-		if err != nil {
-			return nil, err
+		if len(*navigationBar) > 0 {
+			navigations, err := u.adapter.UserNavigationBarFindGrpcFromSql(*navigationBar)
+			if err != nil {
+				return nil, err
+			}
+			response.NavigationBar = navigations
 		}
-
-		response.NavigationBar = navigations
 	}
 	return response, nil
 }
@@ -142,7 +150,7 @@ func (u *AccountsUsecase) AuthLoginProviderCallback(ctx context.Context, req *co
 	if err != nil {
 		return nil, err
 	}
-	resp, _, err := u.AppLogin(ctx, user.Email)
+	resp, _, err := u.AppLogin(ctx, user.Email, 0)
 	if err != nil {
 		return nil, err
 	}

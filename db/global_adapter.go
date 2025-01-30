@@ -4,12 +4,28 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgtype"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func StringToPgtext(str string) pgtype.Text {
 	return pgtype.Text{String: str, Valid: str != ""}
 }
+func StringToPgTimestamp(dateString string) pgtype.Timestamp {
+	if dateString == "" {
+		return pgtype.Timestamp{Valid: false}
+	}
+	t, err := time.Parse("2006-01-02 15:04:05", dateString)
+	if err != nil {
+		return pgtype.Timestamp{Valid: false}
+	}
 
+	// Create a pgtype.Timestamp from the time.Time object
+	pgTimestamp := pgtype.Timestamp{
+		Time:  t,
+		Valid: true,
+	}
+	return pgTimestamp
+}
 func PgtimeToString(pgTime pgtype.Time) string {
 	duration := time.Duration(pgTime.Microseconds) * time.Microsecond
 	// Convert duration to time.Time
@@ -21,7 +37,9 @@ func PgtimeToString(pgTime pgtype.Time) string {
 func TimeToString(time time.Time) string {
 	return time.Format("2006-01-02 15:04:05")
 }
-
+func TimeToProtoTimeStamp(time time.Time) *timestamppb.Timestamp {
+	return timestamppb.New(time)
+}
 func StringToPgdate(strDate string) pgtype.Date {
 	parsedTime, _ := time.Parse("2006-01-02", strDate)
 	year, month, day := parsedTime.Date()

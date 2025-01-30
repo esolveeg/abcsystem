@@ -1,18 +1,20 @@
 package api
 
 import (
-	"connectrpc.com/connect"
 	"context"
 	"fmt"
-	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+
+	"connectrpc.com/connect"
+	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
 func (api *Api) RoleList(ctx context.Context, req *connect.Request[devkitv1.RoleListRequest]) (*connect.Response[devkitv1.RoleListResponse], error) {
-	response, err := api.accountsUsecase.RoleList(ctx)
+	response, totalCount, err := api.accountsUsecase.RoleList(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 	response.Options = api.getAvailableOptions(req.Header())
+	response.Options.TotalCount = totalCount
 	return connect.NewResponse(response), nil
 }
 
@@ -32,7 +34,7 @@ func (api *Api) RoleDelete(ctx context.Context, req *connect.Request[devkitv1.Ro
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(&devkitv1.RoleDeleteResponse{Record: resp}), nil
+	return connect.NewResponse(resp), nil
 }
 func (api *Api) RoleDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.RoleDeleteRestoreRequest]) (*connect.Response[devkitv1.RoleDeleteRestoreResponse], error) {
 	resp, err := api.accountsUsecase.RoleDeleteRestore(ctx, req)

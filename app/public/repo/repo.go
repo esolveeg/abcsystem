@@ -9,6 +9,7 @@ import (
 type PublicRepoInterface interface {
 	IconCreateUpdateBulk(ctx context.Context, req db.IconCreateUpdateBulkParams) (*[]db.Icon, error)
 	IconList(ctx context.Context) (*[]db.Icon, error)
+	IconFind(ctx context.Context, req db.IconFindParams) (*db.Icon, error)
 	TranslationDelete(ctx context.Context, req []string) ([]db.Translation, error)
 	TranslationList(ctx context.Context) ([]db.Translation, error)
 	TranslationCreateUpdateBulk(ctx context.Context, req db.TranslationCreateUpdateBulkParams) ([]db.TranslationCreateUpdateBulkRow, error)

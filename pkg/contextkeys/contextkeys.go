@@ -11,11 +11,18 @@ type contectType string
 
 // callerIDKey is an unexported variable of the unique key type.
 var callerIDKey = contectType("CallerID")
+var tenantIDKey = contectType("TenantID")
 var permissionFunctionKey = contectType("PermissionFunction")
 
 // WithCallerID injects the caller ID into the context.
 func WithCallerID(ctx context.Context, callerID int32) context.Context {
 	return context.WithValue(ctx, callerIDKey, callerID)
+}
+
+// this method injects the tenant id on the context
+// this should be use later from the repo layer to access the tenant id of the logged in user
+func WithiTenantID(ctx context.Context, tenantID int32) context.Context {
+	return context.WithValue(ctx, tenantIDKey, tenantID)
 }
 
 // this method injects the permission name for this function this should check for skip authorization is false
@@ -35,4 +42,8 @@ func CallerID(ctx context.Context) (int32, bool) {
 func PermissionFunction(ctx context.Context) (string, bool) {
 	permissionFunction, ok := ctx.Value(permissionFunctionKey).(string)
 	return permissionFunction, ok
+}
+func TenantID(ctx context.Context) (int32, bool) {
+	tenantID, ok := ctx.Value(tenantIDKey).(int32)
+	return tenantID, ok
 }

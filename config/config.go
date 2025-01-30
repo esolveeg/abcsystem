@@ -14,29 +14,32 @@ type StateConfig struct {
 // Config stores all configuration of the application.
 // The values are read by viper from a config file or environment variable.
 type Config struct {
-	AccessTokenDuration time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
-	DBPort              uint32        `mapstructure:"DB_PORT"`
+	State string `mapstructure:"STATE"`
 
-	SupaAPIPort            uint32 `mapstructure:"SUPA_API_PORT"`
-	DBProjectREF           string `mapstructure:"DB_PROJECT_REF"`
+	ApiVersion     string `mapstructure:"API_VERSION"`
+	ApiServiceName string `mapstructure:"API_SERVICE_NAME"`
+
+	DBProjectREF string `mapstructure:"DB_PROJECT_REF"`
+	DBSource     string `mapstructure:"DB_SOURCE"`
+
+	GRPCServerAddress   string        `mapstructure:"GRPC_SERVER_ADDRESS"`
+	AccessTokenDuration time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
+	TokenSymmetricKey   string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
+	ClientBaseUrl       string        `mapstructure:"CLIENT_BASE_URL"`
+	DockerHubUser       string        `mapstructure:"DOCKERHUB_USER"`
+	AppName             string        `mapstructure:"APP_NAME"`
+	GitUser             string        `mapstructure:"GIT_USER"`
+
+	ResendApiKey  string `mapstructure:"RESEND_API_KEY"`
+	RedisAddress  string `mapstructure:"REDIS_ADDRESS"`
+	RedisPort     string `mapstructure:"REDIS_PORT"`
+	RedisHost     string `mapstructure:"REDIS_HOST"`
+	RedisPassword string `mapstructure:"REDIS_PASSWORD"`
+	RedisDatabase int    `mapstructure:"REDIS_DATABASE"`
+
+	SupabaseAPIPort        uint32 `mapstructure:"SUPABASE_API_PORT"`
 	SupabaseServiceRoleKey string `mapstructure:"SUPABASE_SERVICE_ROLE_KEY"`
 	SupabaseApiKey         string `mapstructure:"SUPABASE_API_KEY"`
-	State                  string `mapstructure:"STATE"`
-	DBSource               string `mapstructure:"DB_SOURCE"`
-	TokenSymmetricKey      string `mapstructure:"TOKEN_SYMMETRIC_KEY"`
-	ClientBaseUrl          string `mapstructure:"CLIENT_BASE_URL"`
-	DockerHubUser          string `mapstructure:"DOCKERHUB_USER"`
-	AppName                string `mapstructure:"APP_NAME"`
-	GitUser                string `mapstructure:"GIT_USER"`
-	ApiVersion             string `mapstructure:"API_VERSION"`
-	ApiServiceName         string `mapstructure:"API_SERVICE_NAME"`
-	ResendApiKey           string `mapstructure:"RESEND_API_KEY"`
-	RedisAddress           string `mapstructure:"REDIS_ADDRESS"`
-	RedisPort              string `mapstructure:"REDIS_PORT"`
-	RedisHost              string `mapstructure:"REDIS_HOST"`
-	RedisPassword          string `mapstructure:"REDIS_PASSWORD"`
-	RedisDatabase          int    `mapstructure:"REDIS_DATABASE"`
-	GRPCServerAddress      string `mapstructure:"GRPC_SERVER_ADDRESS"`
 }
 
 // LoadConfig reads configuration from file or environment variables.

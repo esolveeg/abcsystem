@@ -14,7 +14,6 @@ import (
 
 func (api *Api) authorizeRequestHeader(header http.Header) (*auth.Payload, error) {
 	return nil, nil
-
 }
 func (api *Api) authorizedUserPermissions(ctx context.Context, payload *auth.Payload) (redisclient.PermissionsMap, error) {
 	return nil, nil
@@ -34,6 +33,7 @@ func (api *Api) getAvailableOptions(header http.Header) *devkitv1.AvailableOptio
 		redirectRoute                string                     = strcase.ToCamel(fmt.Sprintf("%s_list", group))
 		update                       string                     = strcase.ToCamel(fmt.Sprintf("%s_update", group))
 		create                       string                     = strcase.ToCamel(fmt.Sprintf("%s_create", group))
+		createUpdate                 string                     = strcase.ToCamel(fmt.Sprintf("%s_create_update", group))
 		deleteKey                    string                     = strcase.ToCamel(fmt.Sprintf("%s_delete", group))
 		deleteRestore                string                     = strcase.ToCamel(fmt.Sprintf("%s_delete_restore", group))
 		result                       *devkitv1.AvailableOptions = &devkitv1.AvailableOptions{
@@ -48,18 +48,17 @@ func (api *Api) getAvailableOptions(header http.Header) *devkitv1.AvailableOptio
 		result.CreateHandler = &devkitv1.CreateHandler{
 			RedirectRoute: redirectRoute,
 			Title:         create,
-			Endpoint:      strcase.ToLowerCamel(create),
-			RouteName:     create,
+			Endpoint:      strcase.ToLowerCamel(createUpdate),
+			RouteName:     strcase.ToSnake(create),
 		}
 	}
 	isUpdatePermitted, ok := permittedActions[update]
 	if isUpdatePermitted && ok {
 		result.UpdateHandler = &devkitv1.UpdateHandler{
-
 			RedirectRoute:       redirectRoute,
 			Title:               update,
-			Endpoint:            strcase.ToLowerCamel(update),
-			RouteName:           update,
+			Endpoint:            strcase.ToLowerCamel(createUpdate),
+			RouteName:           strcase.ToSnake(update),
 			FindEndpoint:        findEndpoint,
 			FindRequestProperty: findRequestProperty,
 		}
