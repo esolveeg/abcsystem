@@ -31,6 +31,7 @@ type Querier interface {
 	SettingUpdate(ctx context.Context, arg SettingUpdateParams) (SettingUpdateRow, error)
 	TenantCreateUpdate(ctx context.Context, arg TenantCreateUpdateParams) (TenantsSchemaTenant, error)
 	TenantDeleteRestore(ctx context.Context, records []int32) ([]TenantsSchemaTenant, error)
+	TenantFind(ctx context.Context, tenantID int32) (TenantFindRow, error)
 	TenantList(ctx context.Context, tenantID int32) ([]TenantsSchemaTenant, error)
 	TranslationCreateUpdateBulk(ctx context.Context, arg TranslationCreateUpdateBulkParams) ([]TranslationCreateUpdateBulkRow, error)
 	TranslationDelete(ctx context.Context, keys []string) ([]Translation, error)

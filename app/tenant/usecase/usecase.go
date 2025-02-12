@@ -7,6 +7,7 @@ import (
 	"github.com/darwishdev/devkit-api/app/tenant/adapter"
 	"github.com/darwishdev/devkit-api/app/tenant/repo"
 	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
@@ -27,18 +28,21 @@ type TenantUsecaseInterface interface {
 
 	TenantDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.TenantDeleteRestoreRequest]) (*devkitv1.TenantDeleteRestoreResponse, error)
 	TenantList(ctx context.Context, req *connect.Request[devkitv1.TenantListRequest]) (*devkitv1.TenantListResponse, error)
+	TenantFind(ctx context.Context, req *connect.Request[devkitv1.TenantFindRequest]) (*devkitv1.TenantFindResponse, error)
 	TenantCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.TenantCreateUpdateRequest]) (*devkitv1.TenantCreateUpdateResponse, error)
 }
 type TenantUsecase struct {
-	store   db.Store
-	adapter adapter.TenantAdapterInterface
-	repo    repo.TenantRepoInterface
+	store       db.Store
+	adapter     adapter.TenantAdapterInterface
+	redisClient redisclient.RedisClientInterface
+	repo        repo.TenantRepoInterface
 }
 
-func NewTenantUsecase(store db.Store) TenantUsecaseInterface {
+func NewTenantUsecase(store db.Store, redisClient redisclient.RedisClientInterface) TenantUsecaseInterface {
 	return &TenantUsecase{
-		store:   store,
-		adapter: adapter.NewTenantAdapter(),
-		repo:    repo.NewTenantRepo(store),
+		store:       store,
+		redisClient: redisClient,
+		adapter:     adapter.NewTenantAdapter(),
+		repo:        repo.NewTenantRepo(store),
 	}
 }

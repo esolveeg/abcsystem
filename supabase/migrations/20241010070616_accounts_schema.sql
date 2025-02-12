@@ -64,7 +64,9 @@ CREATE TABLE accounts_schema.user_role (
 -- Navigation Bar Table: Represents different navigation menus within the application
 CREATE TABLE accounts_schema.navigation_bar (
 	navigation_bar_id serial PRIMARY KEY,
-	navigation_bar_name varchar(200) UNIQUE NOT NULL
+	navigation_bar_name varchar(200) UNIQUE NOT NULL,
+	tenant_id int,
+	FOREIGN KEY (tenant_id) REFERENCES tenants_schema.tenant (tenant_id)
 );
 
 -- Navigation Bar Items Table: Represents individual items or links in a navigation bar
@@ -74,11 +76,15 @@ CREATE TABLE accounts_schema.navigation_bar_item (
 	label varchar(200) NOT NULL, -- Display label for the item,
 	label_ar varchar(200), -- Display label in Arabic (for localization)
 	icon varchar(200), -- icon to show on this item on the front end , it could match icon_name from icons table or could be any string from diffrent icon library,
+	tenant_id int,
+	FOREIGN KEY (tenant_id) REFERENCES tenants_schema.tenant (tenant_id),
+	partial_type_id int,
+	FOREIGN KEY (partial_type_id) REFERENCES tenants_schema.partial_type (partial_type_id),
+	parent_id int, -- Self-referential ID, allows item to belong to a parent item (for nested menus) if this is null the this item on the root level FOREIGN KEY (parent_id) REFERENCES accounts_schema.navigation_bar_item (navigation_bar_item_id),
 	navigation_bar_id int,
 	FOREIGN KEY (navigation_bar_id) REFERENCES accounts_schema.navigation_bar (navigation_bar_id),
-	parent_id int, -- Self-referential ID, allows item to belong to a parent item (for nested menus) if this is null the this item on the root level FOREIGN KEY (parent_id) REFERENCES accounts_schema.navigation_bar_item (navigation_bar_item_id),
 	permission_id int, -- Permission required to access this item
 	FOREIGN KEY (permission_id) REFERENCES accounts_schema.permission (permission_id),
-	"route" varchar(200) UNIQUE -- URL route associated with the item to help frontend create navigation bar component dynamically,
+	"route" varchar(200)
 );
 

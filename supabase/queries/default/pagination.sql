@@ -1,255 +1,188 @@
--- Example Query Using generate_dynamic_query
-CREATE OR REPLACE FUNCTION generate_dynamic_query (query_base text, sort_column text, sort_func text, primary_key text, page_number int, page_size int)
-	RETURNS text
-	AS $$
-DECLARE
-	from_clause text;
-	appended_count_clause text;
-	limit_offset_clause text;
-	final_query text;
-BEGIN
-	-- Call helper functions to generate each part of the query
-	from_clause := get_from (query_base);
-	appended_count_clause := append_count (query_base, sort_column);
-	limit_offset_clause := FORMAT('order by %s %s , %s %s LIMIT %s OFFSET %s', sort_column, sort_func, primary_key, sort_func, page_size, (page_number - 1) * page_size);
-	-- Build the final query dynamically
-	final_query := FORMAT('WITH count AS (
-            SELECT COUNT(*) FROM %s
-        ) %s %s', from_clause, -- Part from GetFrom
-		appended_count_clause, -- Part from AppendCount
-		limit_offset_clause -- Part from ConstructPaginator
-);
-	-- Return the final query
-	RETURN final_query;
-END;
-$$
-LANGUAGE plpgsql;
+WITH tenant AS (
+	SELECT
+		t.tenant_id,
+		t.tenant_name,
+		t.tenant_name_ar,
+		t.tenant_phone,
+		t.tenant_address,
+		t.tenant_address_ar,
+		t.tenant_description,
+		t.tenant_description_ar,
+		t.tenant_email,
+		t.tenant_logo,
+		t.tenant_logo_vertical,
+		t.tenant_logo_dark,
+		t.tenant_logo_dark_vertical,
+		t.tenant_values,
+		t.tenant_mission,
+		t.tenant_vision,
+		t.created_at,
+		t.updated_at,
+		t.deleted_at
+	FROM
+		tenants_schema.tenant t
+	WHERE
+		t.tenant_id = 1
+),
+tenant_navigations AS (
+	SELECT
+		n.navigation_bar_id,
+		n.navigation_bar_name,
+		n.tenant_id
+	FROM
+		accounts_schema.navigation_bar n
+		JOIN tenant t ON n.tenant_id = t.tenant_id
+),
+navigation_items AS (
+	SELECT
+		ni.navigation_bar_item_id,
+		ni.menu_key,
+		ni.label,
+		ni.label_ar,
+		ni.icon,
+		ni.tenant_id,
+		ni.partial_type_id,
+		ni.navigation_bar_id,
+		ni.route
+	FROM
+		accounts_schema.navigation_bar_item ni
+		JOIN tenant_navigations n ON ni.navigation_bar_id = n.navigation_bar_id
+),
+tenant_pages AS (
+	SELECT
+		p.page_id,
+		p.page_name,
+		p.page_name_ar,
+		p.page_description,
+		p.page_description_ar,
+		p.page_breadcrumb,
+		p.page_route,
+		p.page_cover_image,
+		p.page_cover_video,
+		p.page_key_words,
+		p.page_meta_description,
+		p.page_icon,
+		p.created_at,
+		p.updated_at,
+		p.deleted_at
+	FROM
+		tenants_schema.page p
+		JOIN tenant t ON p.tenant_id = t.tenant_id
+	WHERE
+		p.deleted_at IS NULL
+),
+page_sections AS (
+	SELECT
+		ps.page_id,
+		s.section_id,
+		s.section_name,
+		s.section_name_ar,
+		s.section_header,
+		s.section_header_ar,
+		s.section_button_label,
+		s.section_button_label_ar,
+		s.section_description,
+		s.section_description_ar,
+		s.tenant_id,
+		s.section_background,
+		s.section_images,
+		s.section_icon,
+		s.created_at,
+		s.updated_at,
+		s.deleted_at
+	FROM
+		tenants_schema.page_section ps
+		JOIN tenant_pages p ON ps.page_id = p.page_id
+		JOIN tenants_schema.section s ON ps.section_id = s.section_id
+	WHERE
+		s.deleted_at IS NULL
+),
+section_partials AS (
+	SELECT
+		partial_id,
+		p.partial_name,
+		p.partial_name_ar,
+		p.partial_type_id,
+		p.section_id,
+		p.partial_image,
+		p.partial_link,
+		p.partial_images,
+		p.partial_video,
+		p.is_featured,
+		p.partial_brief,
+		p.partial_brief_ar,
+		p.partial_content,
+		p.partial_content_ar,
+		p.partial_button_label,
+		p.partial_button_label_ar,
+		p.partial_button_icon,
+		p.partial_button_link,
+		p.partial_button_page_id,
+		p.partial_icons,
+		p.address,
+		p.partial_links,
+		p.created_at,
+		p.updated_at,
+		p.deleted_at
+	FROM
+		tenants_schema.partial p
+		JOIN page_sections ps ON ps.section_id = p.section_id
+	WHERE
+		p.deleted_at IS NULL
+)
+SELECT
+	t.tenant_id,
+	t.tenant_name,
+	t.tenant_name_ar,
+	t.tenant_phone,
+	t.tenant_address,
+	t.tenant_address_ar,
+	t.tenant_description,
+	t.tenant_description_ar,
+	t.tenant_email,
+	t.tenant_logo,
+	t.tenant_logo_vertical,
+	t.tenant_logo_dark,
+	t.tenant_logo_dark_vertical,
+	t.tenant_values,
+	t.tenant_mission,
+	t.tenant_vision,
+	t.created_at,
+	t.updated_at,
+	t.deleted_at,
+	COALESCE(pages.data, '[]'::json) AS pages,
+	COALESCE(navigations.data, '[]'::json) AS navigations
+FROM
+	tenant t
+	LEFT JOIN LATERAL (
+		SELECT
+			json_agg(json_build_object('page_id', p.page_id, 'page_name', p.page_name, 'page_name_ar', p.page_name_ar, 'page_description', p.page_description, 'page_description_ar', p.page_description_ar, 'page_breadcrumb', p.page_breadcrumb, 'page_route', p.page_route, 'page_cover_image', p.page_cover_image, 'page_cover_video', p.page_cover_video, 'page_key_words', p.page_key_words, 'page_meta_description', p.page_meta_description, 'page_icon', p.page_icon, 'created_at', p.created_at, 'updated_at', p.updated_at, 'deleted_at', p.deleted_at, 'sections', COALESCE(sections.data, '[]'::json))) AS data
+		FROM
+			tenant_pages p
+			LEFT JOIN LATERAL (
+				SELECT
+					json_agg(json_build_object('section_id', s.section_id, 'section_name', s.section_name, 'section_name_ar', s.section_name_ar, 'section_header', s.section_header, 'section_header_ar', s.section_header_ar, 'section_button_label', s.section_button_label, 'section_button_label_ar', s.section_button_label_ar, 'section_description', s.section_description, 'section_description_ar', s.section_description_ar, 'tenant_id', s.tenant_id, 'section_background', s.section_background, 'section_images', s.section_images, 'section_icon', s.section_icon, 'created_at', s.created_at, 'updated_at', s.updated_at, 'deleted_at', s.deleted_at, 'partials', COALESCE(partials.data, '[]'::json))) AS data
+				FROM
+					page_sections s
+					LEFT JOIN LATERAL (
+						SELECT
+							json_agg(json_build_object('partial_id', p.partial_id, 'partial_name', p.partial_name, 'partial_name_ar', p.partial_name_ar, 'partial_type_id', p.partial_type_id, 'section_id', p.section_id, 'partial_image', p.partial_image, 'partial_link', p.partial_link, 'partial_images', p.partial_images, 'partial_video', p.partial_video, 'is_featured', p.is_featured, 'partial_brief', p.partial_brief, 'partial_brief_ar', p.partial_brief_ar, 'partial_content', p.partial_content, 'partial_content_ar', p.partial_content_ar, 'partial_button_label', p.partial_button_label, 'partial_button_label_ar', p.partial_button_label_ar, 'partial_button_icon', p.partial_button_icon, 'partial_button_link', p.partial_button_link, 'partial_button_page_id', p.partial_button_page_id, 'partial_icons', p.partial_icons, 'address', p.address, 'partial_links', p.partial_links, 'created_at', p.created_at, 'updated_at', p.updated_at, 'deleted_at', p.deleted_at)) AS data
+						FROM
+							section_partials p
+						WHERE
+							p.section_id = s.section_id) partials ON TRUE) sections ON TRUE) pages ON TRUE
+	LEFT JOIN LATERAL (
+		SELECT
+			json_agg(json_build_object('navigation_bar_id', n.navigation_bar_id, 'navigation_bar_name', n.navigation_bar_name, 'items', COALESCE(items.data, '[]'::json))) AS data
+		FROM
+			tenant_navigations n
+			LEFT JOIN LATERAL (
+				SELECT
+					json_agg(json_build_object('navigation_bar_item_id', ni.navigation_bar_item_id, 'menu_key', ni.menu_key, 'label', ni.label, 'label_ar', ni.label_ar, 'icon', ni.icon, 'route', ni.route)) AS data
+				FROM
+					navigation_items ni
+				WHERE
+					ni.navigation_bar_id = n.navigation_bar_id) items ON TRUE) navigations ON TRUE
+WHERE
+	t.deleted_at IS NULL;
 
--- SELECT
--- generate_dynamic_query ('id', 'select role_id from accounts_schema.role', 'sort_func', 2, -- Page number
--- 	'name', -- Sort column
--- 	10 -- Page size
--- );
--- CREATE OR REPLACE FUNCTION generate_dynamic_query (primary_key text, query_base text, sort_func text, page_number int, sort_column text, page_size int)
--- 	RETURNS text
--- 	AS $$
--- DECLARE
--- 	from_clause text;
--- 	appended_count_clause text;
--- 	final_query text;
--- 	limit_offset_clause text;
--- BEGIN
--- 	-- Call helper functions to generate each part of the query
--- 	from_clause := get_from (query_base);
--- 	appended_count_clause := append_count (query_base, sort_column);
--- 	limit_offset_clause := FORMAT('LIMIT %s OFFSET %s', page_size, (page_number - 1) * page_size);
--- 	-- Build the final query dynamically
--- 	final_query := FORMAT('WITH count AS (
---             SELECT COUNT(*) FROM %s
---         ) %s %s', from_clause, -- Part from GetFrom
--- 		appended_count_clause, -- Part from AppendCount
--- 		limit_offset_clause -- Part from ConstructPaginator
--- );
--- 	-- Return the final query
--- 	RETURN final_query;
--- END;
--- $$
--- LANGUAGE plpgsql;
--- -- SELECT
--- 	*
--- FROM
--- generate_dynamic_query (query_base => 'SELECT role_id, role_name
--- FROM accounts_schema.role r WHERE true ', primary_key => 'role_id', sort_column => 'role_id', sort_func => 'asc', sort_value => '1')
--- -- SELECT
--- 	role_id::int,
--- 	role_name::varchar(200),
--- 	total_count::bigint,
--- 	deleted_at::varchar
--- FROM
--- 	execute_dynamic_pagination (query_base => 'SELECT role_id, role_name, deleted_at::varchar(200) FROM accounts_schema.role r WHERE r.deleted_at IS NULL', primary_key => 'role_id', sort_column => 'role_id', sort_func => 'asc', sort_value => 1) AS result (role_id INT,
--- 		role_name VARCHAR(200),
--- 		total_count BIGINT,
--- 		deleted_at VARCHAR(200));
--- SELECT
--- construct_paginator ('created_at', '2024-01-01', 'desc', 'id');
--- CREATE OR REPLACE FUNCTION execute_dynamic_pagination (primary_key text, query_base text, sort_func text, sort_value text, sort_column text)
--- 	RETURNS SETOF RECORD
--- 	AS $$
--- DECLARE
--- 	dynamic_query text;
--- BEGIN
--- 	-- Step 1: Generate the dynamic SQL query
--- 	dynamic_query := generate_dynamic_query (primary_key, query_base, sort_func, sort_value, sort_column);
--- 	-- Step 2: Execute the dynamic query
--- 	RETURN QUERY EXECUTE dynamic_query;
--- END;
--- $$
--- LANGUAGE plpgsql;
--- -- WITH count AS (
--- 	SELECT
--- 		COUNT(*)
--- 	FROM
--- 		accounts_schema.role r
--- 	WHERE
--- 		r.deleted_at IS NULL
--- )
--- SELECT
--- 	role_id,
--- 	role_name,
--- 	c.count count
--- FROM
--- 	accounts_schema.role r
--- 	CROSS JOIN count c
--- WHERE
--- 	r.deleted_at IS NULL
--- 	AND role_id < '16'
--- ORDER BY
--- 	role_id DESC,
--- 	role_id DESC
--- LIMIT 2
--- -- SELECT
--- generate_dynamic_query ('role_id', 'SELECT role_id, role_name FROM accounts_schema.role r WHERE r.deleted_at IS NULL', 'desc', '16', 'role_id');
--- CREATE OR REPLACE FUNCTION generate_dynamic_query (primary_key text, query_base text, sort_func text, sort_value text, sort_column text)
--- 	RETURNS text
--- 	AS $$
--- DECLARE
--- 	from_clause text;
--- 	append_count_clause text;
--- 	construct_paginator_clause text;
--- 	final_query text;
--- BEGIN
--- 	-- Call helper functions to generate each part of the query
--- 	from_clause := get_from (query_base);
--- 	append_count_clause := append_count (query_base, sort_column);
--- 	construct_paginator_clause := construct_paginator (sort_column, sort_value, sort_func, primary_key);
--- 	-- Build the final query dynamically
--- 	final_query := FORMAT('WITH count AS (
---             SELECT COUNT(*) FROM %s
---         ) %s AND %s', from_clause, -- Part from GetFrom
--- 		append_count_clause, -- Part from AppendCount
--- 		construct_paginator_clause -- Part from ConstructPaginator
--- );
--- 	-- Return the final query
--- 	RETURN final_query;
--- END;
--- $$
--- LANGUAGE plpgsql;
--- CREATE OR REPLACE FUNCTION construct_paginator (sort_column text, sort_value text, sort_func text, primary_key text)
--- 	RETURNS text
--- 	AS $$
--- DECLARE
--- 	OPERATOR TEXT;
--- BEGIN
--- 	-- Determine the operator based on the sort order
--- 	IF LOWER(sort_func) = 'desc' THEN
--- 		OPERATOR := '<';
--- 	ELSE
--- 		OPERATOR := '>';
--- 	END IF;
--- 	-- Construct and return the query string
--- 	RETURN FORMAT('%I %s %L ORDER BY %I %s, %I %s LIMIT %s', sort_column, -- %I: Escapes column name
--- 		OPERATOR, -- %s: Operator
--- 		sort_value, -- %L: Escapes literals safely
--- 		sort_column, -- %I: Sort column
--- 		sort_func, -- %s: Sort direction (ASC/DESC)
--- 		primary_key, -- %I: Primary key for tiebreaker
--- 		sort_func, -- %s: Sort direction for primary key
--- 		2 -- %s: Limit value
--- );
--- END;
--- $$
--- LANGUAGE plpgsql;
--- CREATE OR REPLACE FUNCTION append_count (query_base text, sort_column text)
--- 	RETURNS text
--- 	AS $$
--- DECLARE
--- 	modified_query text;
--- BEGIN
--- 	-- Replace the first occurrence of 'from' with ',c.count count from'
--- 	modified_query := REPLACE(LOWER(query_base), 'from', ', c.count count from');
--- 	-- Replace the first occurrence of 'where' with 'cross join count c where'
--- 	modified_query := Replace(modified_query, 'where', 'CROSS JOIN count c WHERE');
--- 	RETURN modified_query;
--- END;
--- $$
--- LANGUAGE plpgsql;
--- CREATE OR REPLACE FUNCTION get_from (query_base text)
--- 	RETURNS text
--- 	AS $$
--- DECLARE
--- 	query_lower text;
--- 	from_index int;
--- BEGIN
--- 	-- Convert the query to lowercase
--- 	query_lower := LOWER(query_base);
--- 	-- Find the position of 'from' in the query
--- 	from_index := POSITION('from' IN query_lower);
--- 	-- If 'from' is not found, return an empty string
--- 	IF from_index = 0 THEN
--- 		RETURN '';
--- 	END IF;
--- 	-- Return the substring after 'from'
--- 	RETURN SUBSTRING(query_base FROM from_index + 4);
--- 	-- Skip 'from'
--- END;
--- $$
--- LANGUAGE plpgsql;
--- DO $$
--- DECLARE
--- 	where_condition text;
--- 	order_by_clause text;
--- 	final_query text;
--- BEGIN
--- 	where_condition := generate_keyset_where ('role_id', 1);
--- 	-- Generate the ORDER BY clause
--- 	order_by_clause := generate_order_by ('role_id', 'desc');
--- 	final_query := 'SELECT role_id,role_name,role_created_at FROM accounst_schema.role' || CASE WHEN where_condition != '' THEN
--- 		' WHERE ' || where_condition
--- 	ELSE
--- 		''
--- 	END || ' ' || order_by_clause || ' LIMIT 1';
--- 	RAISE NOTICE 'Final Queru: %', (final_query);
--- END;
--- $$;
--- WITH count AS (
--- 	SELECT
--- 		count(*)
--- 	FROM
--- 		accounts_schema.role r
--- 	WHERE
--- 		r.deleted_at IS NULL
--- )
--- SELECT
--- 	role_id,
--- 	role_name,
--- 	c.count count
--- FROM
--- 	accounts_schema.role r
--- 	CROSS JOIN count c
--- WHERE
--- 	r.deleted_at IS NULL
--- 	AND role_id < 14
--- ORDER BY
--- 	role_id DESC,
--- 	role_id DESC
--- LIMIT 2
--- WITH globals AS (
--- 	SELECT
--- 		count(*)
--- 		count
--- 	FROM
--- 		accounts_schema.navigation_bar_item
--- )
--- SELECT
--- 	i.*,
--- 	g.count
--- FROM
--- 	accounts_schema.navigation_bar_item i
--- 	CROSS JOIN globals g
--- WHERE
--- 	label < 'Dashboard'
--- 	AND navigation_bar_item_id < 1000
--- ORDER BY
--- 	label DESC,
--- 	navigation_bar_item_id DESC
--- LIMIT 2

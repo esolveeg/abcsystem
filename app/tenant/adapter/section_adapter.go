@@ -12,15 +12,20 @@ func (a *TenantAdapter) SectionEntityGrpcFromSql(resp *db.TenantsSchemaSection) 
 		SectionId:            int32(resp.SectionID),
 		SectionName:          resp.SectionName,
 		SectionNameAr:        resp.SectionNameAr.String,
+		SectionHeader:        resp.SectionHeader.String,
+		SectionHeaderAr:      resp.SectionHeaderAr.String,
+		SectionButtonLabel:   resp.SectionButtonLabel.String,
+		SectionButtonLabelAr: resp.SectionButtonLabelAr.String,
+		SectionButtonPageId:  int32(resp.SectionButtonPageID.Int32),
 		SectionDescription:   resp.SectionDescription.String,
 		SectionDescriptionAr: resp.SectionDescriptionAr.String,
-		TenantId:            int32(resp.TenantID.Int32),   // Handle nullable int
-		SectionBackground:    resp.SectionBackground.String, // updated
+		TenantId:             int32(resp.TenantID.Int32),
+		SectionBackground:    resp.SectionBackground.String,
+		SectionImages:        strings.Split(resp.SectionImages.String, ","),
 		SectionIcon:          resp.SectionIcon.String,
 		CreatedAt:            db.TimeToProtoTimeStamp(resp.CreatedAt.Time),
 		UpdatedAt:            db.TimeToProtoTimeStamp(resp.UpdatedAt.Time),
 		DeletedAt:            db.TimeToProtoTimeStamp(resp.DeletedAt.Time),
-		SectionImages:        strings.Split(resp.SectionImages.String, ","),
 	}
 }
 
@@ -54,10 +59,16 @@ func (a *TenantAdapter) SectionCreateUpdateSqlFromGrpc(req *devkitv1.SectionCrea
 		SectionID:            req.GetSectionId(),
 		SectionName:          req.GetSectionName(),
 		SectionNameAr:        req.GetSectionNameAr(),
+		SectionHeader:        req.GetSectionHeader(),
+		SectionHeaderAr:      req.GetSectionHeaderAr(),
+		SectionButtonLabel:   req.GetSectionButtonLabel(),
+		SectionButtonLabelAr: req.GetSectionButtonLabelAr(),
+		SectionButtonPageID:  req.GetSectionButtonPageId(),
 		SectionDescription:   req.GetSectionDescription(),
 		SectionDescriptionAr: req.GetSectionDescriptionAr(),
-		TenantID:            req.GetTenantId(),
+		TenantID:             req.GetTenantId(),
 		SectionBackground:    req.GetSectionBackground(),
+		SectionImages:        strings.Join(req.GetSectionImages(), ","),
 		SectionIcon:          req.GetSectionIcon(),
-		SectionImages:        strings.Join(req.GetSectionImages(), ",")}
+	}
 }

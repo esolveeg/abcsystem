@@ -62,6 +62,9 @@ const (
 	// DevkitServiceTenantDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
 	// TenantDeleteRestore RPC.
 	DevkitServiceTenantDeleteRestoreProcedure = "/devkit.v1.DevkitService/TenantDeleteRestore"
+	// DevkitServiceTenantFindProcedure is the fully-qualified name of the DevkitService's TenantFind
+	// RPC.
+	DevkitServiceTenantFindProcedure = "/devkit.v1.DevkitService/TenantFind"
 	// DevkitServiceTenantListProcedure is the fully-qualified name of the DevkitService's TenantList
 	// RPC.
 	DevkitServiceTenantListProcedure = "/devkit.v1.DevkitService/TenantList"
@@ -187,6 +190,7 @@ var (
 	devkitServiceSectionCreateUpdateMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("SectionCreateUpdate")
 	devkitServiceSectionListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("SectionList")
 	devkitServiceTenantDeleteRestoreMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("TenantDeleteRestore")
+	devkitServiceTenantFindMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("TenantFind")
 	devkitServiceTenantListMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("TenantList")
 	devkitServiceTenantCreateUpdateMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("TenantCreateUpdate")
 	devkitServiceSettingFindForUpdateMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("SettingFindForUpdate")
@@ -241,6 +245,7 @@ type DevkitServiceClient interface {
 	SectionCreateUpdate(context.Context, *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error)
 	SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error)
 	TenantDeleteRestore(context.Context, *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error)
+	TenantFind(context.Context, *connect.Request[v1.TenantFindRequest]) (*connect.Response[v1.TenantFindResponse], error)
 	TenantList(context.Context, *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error)
 	TenantCreateUpdate(context.Context, *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error)
 	// ////////////////////////////////////////////////////////////////////////////////////////////
@@ -376,6 +381,13 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			httpClient,
 			baseURL+DevkitServiceTenantDeleteRestoreProcedure,
 			connect.WithSchema(devkitServiceTenantDeleteRestoreMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		tenantFind: connect.NewClient[v1.TenantFindRequest, v1.TenantFindResponse](
+			httpClient,
+			baseURL+DevkitServiceTenantFindProcedure,
+			connect.WithSchema(devkitServiceTenantFindMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		tenantList: connect.NewClient[v1.TenantListRequest, v1.TenantListResponse](
@@ -642,6 +654,7 @@ type devkitServiceClient struct {
 	sectionCreateUpdate         *connect.Client[v1.SectionCreateUpdateRequest, v1.SectionCreateUpdateResponse]
 	sectionList                 *connect.Client[v1.SectionListRequest, v1.SectionListResponse]
 	tenantDeleteRestore         *connect.Client[v1.TenantDeleteRestoreRequest, v1.TenantDeleteRestoreResponse]
+	tenantFind                  *connect.Client[v1.TenantFindRequest, v1.TenantFindResponse]
 	tenantList                  *connect.Client[v1.TenantListRequest, v1.TenantListResponse]
 	tenantCreateUpdate          *connect.Client[v1.TenantCreateUpdateRequest, v1.TenantCreateUpdateResponse]
 	settingFindForUpdate        *connect.Client[v1.SettingFindForUpdateRequest, v1.SettingFindForUpdateResponse]
@@ -731,6 +744,11 @@ func (c *devkitServiceClient) SectionList(ctx context.Context, req *connect.Requ
 // TenantDeleteRestore calls devkit.v1.DevkitService.TenantDeleteRestore.
 func (c *devkitServiceClient) TenantDeleteRestore(ctx context.Context, req *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error) {
 	return c.tenantDeleteRestore.CallUnary(ctx, req)
+}
+
+// TenantFind calls devkit.v1.DevkitService.TenantFind.
+func (c *devkitServiceClient) TenantFind(ctx context.Context, req *connect.Request[v1.TenantFindRequest]) (*connect.Response[v1.TenantFindResponse], error) {
+	return c.tenantFind.CallUnary(ctx, req)
 }
 
 // TenantList calls devkit.v1.DevkitService.TenantList.
@@ -941,6 +959,7 @@ type DevkitServiceHandler interface {
 	SectionCreateUpdate(context.Context, *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error)
 	SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error)
 	TenantDeleteRestore(context.Context, *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error)
+	TenantFind(context.Context, *connect.Request[v1.TenantFindRequest]) (*connect.Response[v1.TenantFindResponse], error)
 	TenantList(context.Context, *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error)
 	TenantCreateUpdate(context.Context, *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error)
 	// ////////////////////////////////////////////////////////////////////////////////////////////
@@ -1072,6 +1091,13 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		DevkitServiceTenantDeleteRestoreProcedure,
 		svc.TenantDeleteRestore,
 		connect.WithSchema(devkitServiceTenantDeleteRestoreMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceTenantFindHandler := connect.NewUnaryHandler(
+		DevkitServiceTenantFindProcedure,
+		svc.TenantFind,
+		connect.WithSchema(devkitServiceTenantFindMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceTenantListHandler := connect.NewUnaryHandler(
@@ -1345,6 +1371,8 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 			devkitServiceSectionListHandler.ServeHTTP(w, r)
 		case DevkitServiceTenantDeleteRestoreProcedure:
 			devkitServiceTenantDeleteRestoreHandler.ServeHTTP(w, r)
+		case DevkitServiceTenantFindProcedure:
+			devkitServiceTenantFindHandler.ServeHTTP(w, r)
 		case DevkitServiceTenantListProcedure:
 			devkitServiceTenantListHandler.ServeHTTP(w, r)
 		case DevkitServiceTenantCreateUpdateProcedure:
@@ -1470,6 +1498,10 @@ func (UnimplementedDevkitServiceHandler) SectionList(context.Context, *connect.R
 
 func (UnimplementedDevkitServiceHandler) TenantDeleteRestore(context.Context, *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TenantDeleteRestore is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) TenantFind(context.Context, *connect.Request[v1.TenantFindRequest]) (*connect.Response[v1.TenantFindResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TenantFind is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) TenantList(context.Context, *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error) {

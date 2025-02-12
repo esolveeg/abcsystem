@@ -31,12 +31,11 @@ seed_accounts:
 	devkit seed accounts_schema --file-path seeds/schemas/accounts.xlsx -e
 
 seed_tenants:
-	devkit seed tenants_schema --file-path seeds/schemas/tenants.xlsx -e
-
+	devkit seed tenants_schema --file-path seeds/schemas/tenants.xlsx -e 
 seed_public:
 	devkit seed public --file-path seeds/schemas/pub.xlsx -e
 seed_tenants_accounts:
-	devkit seed accounts_schema --file-path seeds/schemas/tenant_accounts.xlsx -e
+	devkit seed accounts_schema --file-path seeds/schemas/tenant_accounts_1.xlsx -e
 
 
 seed_super_user:

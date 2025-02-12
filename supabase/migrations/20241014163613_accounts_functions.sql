@@ -370,7 +370,7 @@ BEGIN
 		SET
 			user_name = is_null_replace(in_user_name, user_name),
 			user_type_id = is_null_replace(in_user_type_id, user_type_id),
-			tenant_id = is_null (in_tenant_id, NULL),
+			tenant_id = is_null_replace(in_tenant_id, NULL),
 			user_email = is_null_replace(in_user_email, user_email),
 			user_phone = is_null_replace(in_user_phone, user_phone),
 			user_password = is_null_replace(in_user_password, user_password),
@@ -479,7 +479,7 @@ CREATE OR REPLACE FUNCTION accounts_schema.user_delete_restore (in_user_id int, 
 	AS $$
 BEGIN
 	BEGIN
-		SELECT
+		PERFORM
 			accounts_schema.check_caller_security_level (updated_role_id => 0, updated_user_id => in_user_id, caller_id => in_caller_id);
 	EXCEPTION
 		WHEN OTHERS THEN

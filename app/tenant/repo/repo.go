@@ -20,6 +20,7 @@ type TenantRepoInterface interface {
 	PageList(ctx context.Context, tenantId int32) (*[]db.TenantsSchemaPage, error)
 	TenantDeleteRestore(ctx context.Context, req []int32) (*[]db.TenantsSchemaTenant, error)
 	TenantList(ctx context.Context, tenantId int32) (*[]db.TenantsSchemaTenant, error)
+	TenantFind(ctx context.Context, tenantId int32) (*db.TenantFindRow, error)
 	TenantCreateUpdate(ctx context.Context, req *db.TenantCreateUpdateParams) (*db.TenantsSchemaTenant, error)
 }
 

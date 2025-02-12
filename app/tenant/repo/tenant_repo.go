@@ -5,10 +5,24 @@ import (
 
 	"github.com/darwishdev/devkit-api/db"
 	"github.com/darwishdev/devkit-api/pkg/contextkeys"
+	"github.com/rs/zerolog/log"
 )
 
 func (repo *TenantRepo) TenantCreateUpdate(ctx context.Context, req *db.TenantCreateUpdateParams) (*db.TenantsSchemaTenant, error) {
 	resp, err := repo.store.TenantCreateUpdate(ctx, *req)
+	if err != nil {
+		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
+	}
+	return &resp, nil
+}
+
+func (repo *TenantRepo) TenantFind(ctx context.Context, tenantId int32) (*db.TenantFindRow, error) {
+	log.Debug().Interface("cache not found and db hitted for ", tenantId).Msg("cahchow not found")
+	tenateID, _ := contextkeys.TenantID(ctx)
+	if tenateID > 0 {
+		tenantId = tenateID
+	}
+	resp, err := repo.store.TenantFind(ctx, tenantId)
 	if err != nil {
 		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
 	}
