@@ -5,26 +5,29 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/darwishdev/devkit-api/db"
-	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"github.com/google/uuid"
 	"github.com/supabase-community/auth-go/types"
 )
 
-func (u *AccountsUsecase) UserDelete(ctx context.Context, req *connect.Request[devkitv1.UserDeleteRequest]) (*devkitv1.AccountsSchemaUser, error) {
-	params := db.UserDeleteParams{
-		UserID: req.Msg.RecordId,
+func (u *AccountsUsecase) UserDelete(ctx context.Context, req *connect.Request[devkitv1.UserDeleteRequest]) (*devkitv1.UserDeleteResponse, error) {
+	var resp []*devkitv1.AccountsSchemaUser
+	for _, recordId := range req.Msg.Records {
+		params := db.UserDeleteParams{
+			UserID: recordId,
+		}
+		user, err := u.repo.UserDelete(ctx, params)
+		if err != nil {
+			return nil, err
+		}
+		err = u.redisClient.AuthSessionDelete(ctx, recordId)
+		if err != nil {
+			return nil, err
+		}
+		are := u.adapter.UserEntityGrpcFromSql(user)
+		resp = append(resp, are)
 	}
-	user, err := u.repo.UserDelete(ctx, params)
-	if err != nil {
-		return nil, err
-	}
-	err = u.redisClient.AuthSessionDelete(ctx, req.Msg.RecordId)
-	if err != nil {
-		return nil, err
-	}
-
-	resp := u.adapter.UserEntityGrpcFromSql(user)
-	return resp, nil
+	return &devkitv1.UserDeleteResponse{Records: resp}, nil
 }
 
 func (u *AccountsUsecase) UserDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.UserDeleteRestoreRequest]) (*devkitv1.UserDeleteRestoreResponse, error) {

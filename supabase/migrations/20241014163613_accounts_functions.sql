@@ -1,6 +1,6 @@
---This function retrieves a list of permissions for a specific user (in_user_id)
+--this function retrieves a list of permissions for a specific user (in_user_id)
 -- by joining several tables: role_permission, role, user_role, and permission.
---It returns a table with columns: permission_id, permission_group, and permission_function.
+--it returns a table with columns: permission_id, permission_group, and permission_function.
 CREATE OR REPLACE FUNCTION accounts_schema.user_permissions_list (in_user_id int)
 	RETURNS TABLE (
 		permission_id int,
@@ -24,9 +24,9 @@ BEGIN
 END
 $$;
 
--- This function groups the permissions for a user into permission groups and returns a JSONB object
+-- this function groups the permissions for a user into permission groups and returns a jsonb object
 -- where the keys are permission_function, and the value is always true.
--- this endpoint result will be cached to be able to access the accessebility of certain user to a certain permission on O(1) constant time
+-- this endpoint result will be cached to be able to access the accessebility of certain user to a certain permission on o(1) constant time
 CREATE OR REPLACE FUNCTION accounts_schema.user_permissions_list_map (in_user_id int)
 	RETURNS TABLE (
 		permission_group varchar(200),
@@ -45,24 +45,24 @@ GROUP BY
 END
 $$;
 
--- Function: accounts_schema.permissions_populate
+-- function: accounts_schema.permissions_populate
 --
--- Purpose:
--- This function populates the `permission` table in the `accounts_schema` schema with predefined permissions for each table
--- in the schema, based on possible actions (create, update, delete, restore, find). It generates permission names,
+-- purpose:
+-- this function populates the `permission` table in the `accounts_schema` schema with predefined permissions for each table
+-- in the schema, based on possible actions (create, update, delete, restore, find). it generates permission names,
 -- descriptions, function names, and groups dynamically for each table that has a single primary key column (excluding
 -- tables with duplicate primary keys).
 --
--- Logic Overview:
--- 1. Defines a set of available actions (`create`, `update`, `delete_restore`, `delete`, `find`).
--- 2. Identifies tables in the schema that have a primary key and excludes tables that have duplicate primary keys which is bridge tables like role_permission or user_role.
--- 3. For each eligible table, generates permission entries (name, description, function, group) based on the table name
+-- logic overview:
+-- 1. defines a set of available actions (`create`, `update`, `delete_restore`, `delete`, `find`).
+-- 2. identifies tables in the schema that have a primary key and excludes tables that have duplicate primary keys which is bridge tables like role_permission or user_role.
+-- 3. for each eligible table, generates permission entries (name, description, function, group) based on the table name
 --    and available actions.
--- 4. Inserts the generated permissions into the `permission` table in the `accounts_schema`.
--- 5. Returns all the permissions from the `permission` table after insertion.
+-- 4. inserts the generated permissions into the `permission` table in the `accounts_schema`.
+-- 5. returns all the permissions from the `permission` table after insertion.
 --
--- The generated permission entries are named following a snake_case convention and are mapped to a camelCase function name.
--- Each permission also includes a description that follows the format "permission_to_<action>_on_table_<table_name>"
+-- the generated permission entries are named following a snake_case convention and are mapped to a camelcase function name.
+-- each permission also includes a description that follows the format "permission_to_<action>_on_table_<table_name>"
 -- and a group based on the table name.
 CREATE OR REPLACE FUNCTION accounts_schema.permissions_populate (execluded_tables varchar[], added_tables varchar[])
 	RETURNS SETOF accounts_schema.permission
@@ -97,7 +97,7 @@ primary_keys AS (
 		OR tc.table_schema = 'public')
 	AND tc.table_name != 'permission'
 	AND tc.table_name != ANY (execluded_tables)
-	AND tc.constraint_type = 'PRIMARY KEY'
+	AND lower(tc.constraint_type) = 'primary key'
 ),
 duplicate_keys AS (
 	SELECT
@@ -109,7 +109,7 @@ duplicate_keys AS (
 		table_schema,
 		table_name
 	HAVING
-		COUNT(DISTINCT primary_key_column) > 1
+		count(DISTINCT primary_key_column) > 1
 ),
 tables_to_handle AS (
 	SELECT
@@ -186,17 +186,17 @@ BEGIN
 END
 $$;
 
--- Function: accounts_schema.check_caller_security_level
--- Purpose: This function checks the security level of a user (caller_id) when they attempt actions involving roles or other users, such as updates.
--- Based on the provided arguments, it performs a security level check against either a specified role or user.
--- Polymorphic Behavior: If updated_role_id is provided (and updated_user_id is NULL), the function compares the caller’s security level with that of the target role.
--- Conversely, if updated_user_id is provided (and updated_role_id is NULL), it compares with the target user’s security level.
--- Usage:
--- - Call the function with updated_role_id for role-based security checks, or updated_user_id for user-based checks.
--- - Ensure at least one of updated_role_id or updated_user_id is provided; otherwise, an exception will be raised.
--- Expected Errors:
--- - If both updated_role_id and updated_user_id are NULL, an exception is raised as one identifier is required.
--- - If the caller’s security level is insufficient for the requested action (compared to either the role or user security level), an exception is raised indicating insufficient permissions.
+-- function: accounts_schema.check_caller_security_level
+-- purpose: this function checks the security level of a user (caller_id) when they attempt actions involving roles or other users, such as updates.
+-- based on the provided arguments, it performs a security level check against either a specified role or user.
+-- polymorphic behavior: if updated_role_id is provided (and updated_user_id is null), the function compares the caller’s security level with that of the target role.
+-- conversely, if updated_user_id is provided (and updated_role_id is null), it compares with the target user’s security level.
+-- usage:
+-- - call the function with updated_role_id for role-based security checks, or updated_user_id for user-based checks.
+-- - ensure at least one of updated_role_id or updated_user_id is provided; otherwise, an exception will be raised.
+-- expected errors:
+-- - if both updated_role_id and updated_user_id are null, an exception is raised as one identifier is required.
+-- - if the caller’s security level is insufficient for the requested action (compared to either the role or user security level), an exception is raised indicating insufficient permissions.
 CREATE OR REPLACE FUNCTION accounts_schema.check_caller_security_level (updated_role_id int, updated_user_id int, caller_id int)
 	RETURNS int
 	LANGUAGE plpgsql
@@ -207,6 +207,9 @@ DECLARE
 	v_updated_user_security_level int;
 	v_role_id int;
 BEGIN
+	IF caller_id = updated_user_id THEN
+		RAISE EXCEPTION 'caller id must be diffrent than user id';
+	END IF;
 	SELECT
 		accounts_schema.user_security_level_find (in_user_id => caller_id) INTO v_caller_security_level;
 	IF is_null (updated_role_id) AND is_null (updated_user_id) THEN
@@ -244,13 +247,13 @@ BEGIN
 END
 $$;
 
--- Function: accounts_schema.role_create_update
--- Purpose: This function allows the creation or updating of roles. It first verifies that the caller’s security level is high enough to perform the action on the target role.
--- If an in_role_id is provided, it updates the role’s information; otherwise, it creates a new role.
--- If permissions are provided, they are updated or inserted as necessary.
--- Possible Errors:
--- - If the caller’s security level is lower than the new or updated role’s security level, an exception is raised.
--- - The function will propagate any exceptions raised from check_caller_security_level.
+-- function: accounts_schema.role_create_update
+-- purpose: this function allows the creation or updating of roles. it first verifies that the caller’s security level is high enough to perform the action on the target role.
+-- if an in_role_id is provided, it updates the role’s information; otherwise, it creates a new role.
+-- if permissions are provided, they are updated or inserted as necessary.
+-- possible errors:
+-- - if the caller’s security level is lower than the new or updated role’s security level, an exception is raised.
+-- - the function will propagate any exceptions raised from check_caller_security_level.
 CREATE OR REPLACE FUNCTION accounts_schema.role_create_update (in_role_id int, in_caller_id int, in_tenant_id int, in_role_security_level int, in_role_name varchar(200), in_role_description varchar(200), in_permissions int[])
 	RETURNS SETOF accounts_schema.role
 	LANGUAGE plpgsql
@@ -275,11 +278,10 @@ BEGIN
 			accounts_schema.role
 		SET
 			role_name = is_null_replace(in_role_name, role_name),
-			tenant_id = iif(in_tenant_id = 0
-				OR in_tenant_id IS NULL, NULL, in_tenant_id),
+			tenant_id = nullable_foreign(in_tenant_id),
 			role_description = is_null_replace(in_role_description, role_description),
 			role_security_level = in_role_security_level,
-			updated_at = NOW()
+			updated_at = now()
 		WHERE
 			role_id = in_role_id;
 		IF NOT is_null (in_permissions) THEN
@@ -301,9 +303,8 @@ BEGIN
 		VALUES (
 			in_role_name,
 			in_role_security_level,
-			iif(
-				in_tenant_id = 0
-				OR in_tenant_id IS NULL, NULL, in_tenant_id),
+			nullable_foreign(
+				in_tenant_id),
 			in_role_description)
 	RETURNING
 		role_id INTO v_role_id;
@@ -331,13 +332,13 @@ BEGIN
 END
 $$;
 
--- Function: accounts_schema.user_create_update
--- Purpose: This function creates or updates a user’s information and roles. It validates that the caller’s security level allows the requested action on the user.
--- If in_user_id is provided, it updates the user’s details; otherwise, it creates a new user.
--- If roles are provided, the user’s roles are updated or assigned.
--- Possible Errors:
--- - If the caller’s security level is lower than the highest security level of the roles being assigned to the user, an exception is raised.
--- - The function will propagate any exceptions raised from check_caller_security_level.
+-- function: accounts_schema.user_create_update
+-- purpose: this function creates or updates a user’s information and roles. it validates that the caller’s security level allows the requested action on the user.
+-- if in_user_id is provided, it updates the user’s details; otherwise, it creates a new user.
+-- if roles are provided, the user’s roles are updated or assigned.
+-- possible errors:
+-- - if the caller’s security level is lower than the highest security level of the roles being assigned to the user, an exception is raised.
+-- - the function will propagate any exceptions raised from check_caller_security_level.
 CREATE OR REPLACE FUNCTION accounts_schema.user_create_update (in_user_id int, in_user_name varchar(200), in_caller_id int, in_tenant_id int, in_user_type_id int, in_user_phone varchar(200), in_user_email varchar(200), in_user_password varchar(200), in_roles int[])
 	RETURNS SETOF accounts_schema.user
 	LANGUAGE plpgsql
@@ -370,11 +371,11 @@ BEGIN
 		SET
 			user_name = is_null_replace(in_user_name, user_name),
 			user_type_id = is_null_replace(in_user_type_id, user_type_id),
-			tenant_id = is_null (in_tenant_id, NULL),
+			tenant_id = nullable_foreign(in_tenant_id),
 			user_email = is_null_replace(in_user_email, user_email),
 			user_phone = is_null_replace(in_user_phone, user_phone),
 			user_password = is_null_replace(in_user_password, user_password),
-			updated_at = NOW()
+			updated_at = now()
 		WHERE
 			user_id = in_user_id;
 		IF NOT is_null (in_roles) THEN
@@ -398,7 +399,8 @@ BEGIN
 		VALUES (
 			in_user_name,
 			in_user_type_id,
-			in_tenant_id,
+			nullable_foreign(
+				in_tenant_id),
 			in_user_phone,
 			in_user_email,
 			in_user_password)
@@ -413,16 +415,7 @@ BEGIN
 		END IF;
 	RETURN query
 	SELECT
-		user_id,
-		user_name,
-		user_type_id,
-		user_phone,
-		tenant_id,
-		user_email,
-		user_password,
-		created_at,
-		updated_at,
-		deleted_at
+		*
 	FROM
 		accounts_schema.user
 	WHERE
@@ -430,19 +423,19 @@ BEGIN
 END
 $$;
 
--- Function: accounts_schema.user_delete
--- Purpose: This function deletes a user and their associated records, including authentication data and assigned roles.
--- It checks the caller’s security level to ensure they have permission to delete the specified user.
--- Possible Errors:
--- - If the caller’s security level is lower than the user being deleted, an exception is raised.
--- - The function will propagate any exceptions raised from check_caller_security_level.
+-- function: accounts_schema.user_delete
+-- purpose: this function deletes a user and their associated records, including authentication data and assigned roles.
+-- it checks the caller’s security level to ensure they have permission to delete the specified user.
+-- possible errors:
+-- - if the caller’s security level is lower than the user being deleted, an exception is raised.
+-- - the function will propagate any exceptions raised from check_caller_security_level.
 CREATE OR REPLACE FUNCTION accounts_schema.user_delete (in_user_id int, in_caller_id int)
 	RETURNS SETOF accounts_schema.user
 	LANGUAGE plpgsql
 	AS $$
 BEGIN
 	BEGIN
-		SELECT
+		PERFORM
 			accounts_schema.check_caller_security_level (updated_role_id => 0, updated_user_id => in_user_id, caller_id => in_caller_id);
 	EXCEPTION
 		WHEN OTHERS THEN
@@ -469,27 +462,27 @@ BEGIN
 END
 $$;
 
--- Function: accounts_schema.user_delete_restore
--- Purpose: This function toggles a user’s deletion status between deleted and active.
--- Usage: Provide in_user_id and in_caller_id for security validation and status toggle.
--- Errors: Raises an exception if the caller’s security level is insufficient, or if check_caller_security_level fails.
+-- function: accounts_schema.user_delete_restore
+-- purpose: this function toggles a user’s deletion status between deleted and active.
+-- usage: provide in_user_id and in_caller_id for security validation and status toggle.
+-- errors: raises an exception if the caller’s security level is insufficient, or if check_caller_security_level fails.
 CREATE OR REPLACE FUNCTION accounts_schema.user_delete_restore (in_user_id int, in_caller_id int)
 	RETURNS SETOF accounts_schema.user
 	LANGUAGE plpgsql
 	AS $$
 BEGIN
 	BEGIN
-		SELECT
+		PERFORM
 			accounts_schema.check_caller_security_level (updated_role_id => 0, updated_user_id => in_user_id, caller_id => in_caller_id);
 	EXCEPTION
 		WHEN OTHERS THEN
-			-- Re-raise the exception caught from check_caller_security_level
+			-- re-raise the exception caught from check_caller_security_level
 			RAISE;
 	END;
 	RETURN query UPDATE
 		accounts_schema.user
 	SET
-		deleted_at = IIF(deleted_at IS NULL, now(), NULL)
+		deleted_at = iif(deleted_at IS NULL, now(), NULL)
 	WHERE
 		user_id = in_user_id
 	RETURNING
@@ -497,10 +490,10 @@ BEGIN
 END
 $$;
 
--- Function: accounts_schema.role_delete
--- Purpose: This function deletes a role and its associated permissions.
--- Usage: Call with the role ID and caller's ID for security validation.
--- Errors: Raises an exception if the caller’s security level is insufficient, or if check_caller_security_level fails.
+-- function: accounts_schema.role_delete
+-- purpose: this function deletes a role and its associated permissions.
+-- usage: call with the role id and caller's id for security validation.
+-- errors: raises an exception if the caller’s security level is insufficient, or if check_caller_security_level fails.
 CREATE OR REPLACE FUNCTION accounts_schema.role_delete (in_role_id int, in_caller_id int)
 	RETURNS SETOF accounts_schema.role
 	LANGUAGE plpgsql
@@ -523,10 +516,10 @@ BEGIN
 END
 $$;
 
--- Function: accounts_schema.role_delete_restore
--- Purpose: This function toggles a role’s deletion status between deleted and active.
--- Usage: Provide in_role_id and in_caller_id for security validation and status toggle.
--- Errors: Raises an exception if the caller’s security level is insufficient, or if check_caller_security_level fails.
+-- function: accounts_schema.role_delete_restore
+-- purpose: this function toggles a role’s deletion status between deleted and active.
+-- usage: provide in_role_id and in_caller_id for security validation and status toggle.
+-- errors: raises an exception if the caller’s security level is insufficient, or if check_caller_security_level fails.
 CREATE OR REPLACE FUNCTION accounts_schema.role_delete_restore (in_role_id int, in_caller_id int)
 	RETURNS SETOF accounts_schema.role
 	LANGUAGE plpgsql
@@ -537,13 +530,13 @@ BEGIN
 			accounts_schema.check_caller_security_level (updated_user_id => 0, updated_role_id => in_role_id, caller_id => in_caller_id);
 	EXCEPTION
 		WHEN OTHERS THEN
-			-- Re-raise the exception caught from check_caller_security_level
+			-- re-raise the exception caught from check_caller_security_level
 			RAISE;
 	END;
 	RETURN query UPDATE
 		accounts_schema.role
 	SET
-		deleted_at = IIF(deleted_at IS NULL, now(), NULL)
+		deleted_at = iif(deleted_at IS NULL, now(), NULL)
 	WHERE
 		role_id = in_role_id
 	RETURNING

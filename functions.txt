@@ -1,5 +1,6 @@
 is_null_replace
 tenants_schema.partial_create_update
+nullable_foreign
 sqlc.arg
 iif
 tenants_schema.section_create_update
