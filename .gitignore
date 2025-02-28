@@ -6,10 +6,13 @@ config/shared.env
 config/prod.env
 config/dev.env
 /proto_gen
+/proto_gen/*
 /db/querier.go
 /db/models.go
 /db/db.go
 /db/*.sql.go
+/db/models.go
+/db/querier.go
 /tmp
 /bin
 /supabse/.env

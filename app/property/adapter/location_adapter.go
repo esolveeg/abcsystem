@@ -9,15 +9,15 @@ func (a *PropertyAdapter) LocationEntityGrpcFromSql(resp *db.PropertiesSchemaLoc
 	return &devkitv1.PropertiesSchemaLocation{
 		LocationId:     int32(resp.LocationID),
 		LocationName:   resp.LocationName,
-		LocationNameAr: resp.LocationNameAr,
+		LocationNameAr: resp.LocationNameAr.String,
 		LocationImage:  resp.LocationImage.String,
 		CreatedAt:      db.TimeToString(resp.CreatedAt.Time),
 		UpdatedAt:      db.TimeToString(resp.UpdatedAt.Time),
 		DeletedAt:      db.TimeToString(resp.DeletedAt.Time),
 	}
 }
-func (a *PropertyAdapter) LocationListGrpcFromSql(resp []db.PropertiesSchemaLocation) *devkitv1.LocationListResponse {
 
+func (a *PropertyAdapter) LocationListGrpcFromSql(resp []db.PropertiesSchemaLocation) *devkitv1.LocationListResponse {
 	records := make([]*devkitv1.PropertiesSchemaLocation, 0)
 	deletedRecords := make([]*devkitv1.PropertiesSchemaLocation, 0)
 	for _, v := range resp {
@@ -45,5 +45,4 @@ func (a *PropertyAdapter) LocationListInputGrpcFromSql(resp []db.LocationListInp
 	return &devkitv1.LocationListInputResponse{
 		Options: records,
 	}
-
 }
