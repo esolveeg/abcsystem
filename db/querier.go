@@ -15,7 +15,7 @@ type Querier interface {
 	IconFind(ctx context.Context, arg IconFindParams) (Icon, error)
 	IconList(ctx context.Context) ([]Icon, error)
 	LocationList(ctx context.Context) ([]PropertiesSchemaLocation, error)
-	LocationListInput(ctx context.Context, cityID interface{}) ([]LocationListInputRow, error)
+	LocationListInput(ctx context.Context, arg LocationListInputParams) ([]LocationListInputRow, error)
 	PageCreateUpdate(ctx context.Context, arg PageCreateUpdateParams) (TenantsSchemaPage, error)
 	PageDeleteRestore(ctx context.Context, records []int32) ([]TenantsSchemaPage, error)
 	PageList(ctx context.Context, tenantID int32) ([]TenantsSchemaPage, error)

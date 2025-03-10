@@ -39,7 +39,7 @@ service DevkitService {
   // INJECT METHODS
   rpc CityListInput(CityListInputRequest) returns (CityListInputResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
-    option (skip_authorization) = true;
+    option (skip_authentication) = true;
   }
 
   rpc CityList(CityListRequest) returns (CityListResponse) {
@@ -48,7 +48,7 @@ service DevkitService {
 
   rpc LocationListInput(LocationListInputRequest) returns (LocationListInputResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
-    option (skip_authorization) = true;
+    option (skip_authentication) = true;
   }
 
   rpc LocationList(LocationListRequest) returns (LocationListResponse) {
@@ -78,12 +78,14 @@ service DevkitService {
   // buckets
   rpc BucketList(BucketListRequest) returns (BucketListResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authentication) = true;
   }
   rpc BucketCreateUpdate(BucketCreateUpdateRequest) returns (BucketCreateUpdateResponse) {}
 
   // files
   rpc FileList(FileListRequest) returns (FileListResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authentication) = true;
   }
   rpc FileCreate(FileCreateRequest) returns (FileCreateResponse) {}
   rpc FileCreateBulk(FileCreateBulkRequest) returns (FileCreateBulkResponse) {}

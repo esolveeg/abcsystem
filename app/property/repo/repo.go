@@ -11,7 +11,7 @@ type PropertyRepoInterface interface {
 	// INJECT INTERFACE
 	CityListInput(ctx context.Context) ([]db.CityListInputRow, error)
 	CityList(ctx context.Context) ([]db.PropertiesSchemaCity, error)
-	LocationListInput(ctx context.Context, req int32) ([]db.LocationListInputRow, error)
+	LocationListInput(ctx context.Context, req db.LocationListInputParams) ([]db.LocationListInputRow, error)
 	LocationList(ctx context.Context) ([]db.PropertiesSchemaLocation, error)
 }
 
