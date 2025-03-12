@@ -185,6 +185,64 @@ const (
 	DevkitServiceSectionListProcedure = "/devkit.v1.DevkitService/SectionList"
 )
 
+// These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
+var (
+	devkitServiceServiceDescriptor                           = v1.File_devkit_v1_devkit_service_proto.Services().ByName("DevkitService")
+	devkitServiceCityListInputMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("CityListInput")
+	devkitServiceCityListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("CityList")
+	devkitServiceLocationListInputMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("LocationListInput")
+	devkitServiceLocationListMethodDescriptor                = devkitServiceServiceDescriptor.Methods().ByName("LocationList")
+	devkitServiceSettingFindForUpdateMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("SettingFindForUpdate")
+	devkitServiceSettingUpdateMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("SettingUpdate")
+	devkitServiceIconListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("IconList")
+	devkitServiceIconFindMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("IconFind")
+	devkitServiceIconCreateUpdateBulkMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("IconCreateUpdateBulk")
+	devkitServiceBucketListMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("BucketList")
+	devkitServiceBucketCreateUpdateMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("BucketCreateUpdate")
+	devkitServiceFileListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("FileList")
+	devkitServiceFileCreateMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("FileCreate")
+	devkitServiceFileCreateBulkMethodDescriptor              = devkitServiceServiceDescriptor.Methods().ByName("FileCreateBulk")
+	devkitServiceFileDeleteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("FileDelete")
+	devkitServiceImportTableMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("ImportTable")
+	devkitServiceEmailSendMethodDescriptor                   = devkitServiceServiceDescriptor.Methods().ByName("EmailSend")
+	devkitServiceTranslationListMethodDescriptor             = devkitServiceServiceDescriptor.Methods().ByName("TranslationList")
+	devkitServiceTranslationFindLocaleMethodDescriptor       = devkitServiceServiceDescriptor.Methods().ByName("TranslationFindLocale")
+	devkitServiceTranslationCreateUpdateBulkMethodDescriptor = devkitServiceServiceDescriptor.Methods().ByName("TranslationCreateUpdateBulk")
+	devkitServiceTranslationDeleteMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("TranslationDelete")
+	devkitServiceRoleListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("RoleList")
+	devkitServiceRoleListInputMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("RoleListInput")
+	devkitServiceRoleFindForUpdateMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("RoleFindForUpdate")
+	devkitServiceRoleCreateUpdateMethodDescriptor            = devkitServiceServiceDescriptor.Methods().ByName("RoleCreateUpdate")
+	devkitServiceRoleDeleteRestoreMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("RoleDeleteRestore")
+	devkitServiceRoleDeleteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("RoleDelete")
+	devkitServiceUserListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("UserList")
+	devkitServiceUserListInputMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("UserListInput")
+	devkitServiceUserFindForUpdateMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("UserFindForUpdate")
+	devkitServiceUserCreateUpdateMethodDescriptor            = devkitServiceServiceDescriptor.Methods().ByName("UserCreateUpdate")
+	devkitServiceUserDeleteRestoreMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("UserDeleteRestore")
+	devkitServiceUserDeleteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("UserDelete")
+	devkitServiceAuthLoginMethodDescriptor                   = devkitServiceServiceDescriptor.Methods().ByName("AuthLogin")
+	devkitServiceAuthRegisterMethodDescriptor                = devkitServiceServiceDescriptor.Methods().ByName("AuthRegister")
+	devkitServiceAuthInviteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("AuthInvite")
+	devkitServiceAuthAuthorizeMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("AuthAuthorize")
+	devkitServiceAuthLoginProviderMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("AuthLoginProvider")
+	devkitServiceAuthLoginProviderCallbackMethodDescriptor   = devkitServiceServiceDescriptor.Methods().ByName("AuthLoginProviderCallback")
+	devkitServiceAuthResetPasswordEmailMethodDescriptor      = devkitServiceServiceDescriptor.Methods().ByName("AuthResetPasswordEmail")
+	devkitServiceAuthResetPasswordMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("AuthResetPassword")
+	devkitServiceTenantDeleteRestoreMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("TenantDeleteRestore")
+	devkitServiceTenantListMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("TenantList")
+	devkitServiceTenantCreateUpdateMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("TenantCreateUpdate")
+	devkitServicePartialDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("PartialDeleteRestore")
+	devkitServicePartialCreateUpdateMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("PartialCreateUpdate")
+	devkitServicePartialListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("PartialList")
+	devkitServicePageDeleteRestoreMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("PageDeleteRestore")
+	devkitServicePageCreateUpdateMethodDescriptor            = devkitServiceServiceDescriptor.Methods().ByName("PageCreateUpdate")
+	devkitServicePageListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("PageList")
+	devkitServiceSectionDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("SectionDeleteRestore")
+	devkitServiceSectionCreateUpdateMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("SectionCreateUpdate")
+	devkitServiceSectionListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("SectionList")
+)
+
 // DevkitServiceClient is a client for the devkit.v1.DevkitService service.
 type DevkitServiceClient interface {
 	// INJECT METHODS
@@ -275,345 +333,344 @@ type DevkitServiceClient interface {
 // http://api.acme.com or https://acme.com/grpc).
 func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) DevkitServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
-	devkitServiceMethods := v1.File_devkit_v1_devkit_service_proto.Services().ByName("DevkitService").Methods()
 	return &devkitServiceClient{
 		cityListInput: connect.NewClient[v1.CityListInputRequest, v1.CityListInputResponse](
 			httpClient,
 			baseURL+DevkitServiceCityListInputProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("CityListInput")),
+			connect.WithSchema(devkitServiceCityListInputMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		cityList: connect.NewClient[v1.CityListRequest, v1.CityListResponse](
 			httpClient,
 			baseURL+DevkitServiceCityListProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("CityList")),
+			connect.WithSchema(devkitServiceCityListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		locationListInput: connect.NewClient[v1.LocationListInputRequest, v1.LocationListInputResponse](
 			httpClient,
 			baseURL+DevkitServiceLocationListInputProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("LocationListInput")),
+			connect.WithSchema(devkitServiceLocationListInputMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		locationList: connect.NewClient[v1.LocationListRequest, v1.LocationListResponse](
 			httpClient,
 			baseURL+DevkitServiceLocationListProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("LocationList")),
+			connect.WithSchema(devkitServiceLocationListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		settingFindForUpdate: connect.NewClient[v1.SettingFindForUpdateRequest, v1.SettingFindForUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceSettingFindForUpdateProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("SettingFindForUpdate")),
+			connect.WithSchema(devkitServiceSettingFindForUpdateMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		settingUpdate: connect.NewClient[v1.SettingUpdateRequest, v1.SettingUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceSettingUpdateProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("SettingUpdate")),
+			connect.WithSchema(devkitServiceSettingUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		iconList: connect.NewClient[v1.IconListRequest, v1.IconListResponse](
 			httpClient,
 			baseURL+DevkitServiceIconListProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("IconList")),
+			connect.WithSchema(devkitServiceIconListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		iconFind: connect.NewClient[v1.IconFindRequest, v1.IconFindResponse](
 			httpClient,
 			baseURL+DevkitServiceIconFindProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("IconFind")),
+			connect.WithSchema(devkitServiceIconFindMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		iconCreateUpdateBulk: connect.NewClient[v1.IconCreateUpdateBulkRequest, v1.IconCreateUpdateBulkResponse](
 			httpClient,
 			baseURL+DevkitServiceIconCreateUpdateBulkProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("IconCreateUpdateBulk")),
+			connect.WithSchema(devkitServiceIconCreateUpdateBulkMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		bucketList: connect.NewClient[v1.BucketListRequest, v1.BucketListResponse](
 			httpClient,
 			baseURL+DevkitServiceBucketListProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("BucketList")),
+			connect.WithSchema(devkitServiceBucketListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		bucketCreateUpdate: connect.NewClient[v1.BucketCreateUpdateRequest, v1.BucketCreateUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceBucketCreateUpdateProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("BucketCreateUpdate")),
+			connect.WithSchema(devkitServiceBucketCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		fileList: connect.NewClient[v1.FileListRequest, v1.FileListResponse](
 			httpClient,
 			baseURL+DevkitServiceFileListProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("FileList")),
+			connect.WithSchema(devkitServiceFileListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		fileCreate: connect.NewClient[v1.FileCreateRequest, v1.FileCreateResponse](
 			httpClient,
 			baseURL+DevkitServiceFileCreateProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("FileCreate")),
+			connect.WithSchema(devkitServiceFileCreateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		fileCreateBulk: connect.NewClient[v1.FileCreateBulkRequest, v1.FileCreateBulkResponse](
 			httpClient,
 			baseURL+DevkitServiceFileCreateBulkProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("FileCreateBulk")),
+			connect.WithSchema(devkitServiceFileCreateBulkMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		fileDelete: connect.NewClient[v1.FileDeleteRequest, v1.FileDeleteResponse](
 			httpClient,
 			baseURL+DevkitServiceFileDeleteProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("FileDelete")),
+			connect.WithSchema(devkitServiceFileDeleteMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		importTable: connect.NewClient[v1.ImportTableRequest, v1.ImportTableResponse](
 			httpClient,
 			baseURL+DevkitServiceImportTableProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("ImportTable")),
+			connect.WithSchema(devkitServiceImportTableMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		emailSend: connect.NewClient[v1.EmailSendRequest, v1.EmailSendResponse](
 			httpClient,
 			baseURL+DevkitServiceEmailSendProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("EmailSend")),
+			connect.WithSchema(devkitServiceEmailSendMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		translationList: connect.NewClient[v1.TranslationListRequest, v1.TranslationListResponse](
 			httpClient,
 			baseURL+DevkitServiceTranslationListProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("TranslationList")),
+			connect.WithSchema(devkitServiceTranslationListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		translationFindLocale: connect.NewClient[v1.TranslationFindLocaleRequest, v1.TranslationFindLocaleResponse](
 			httpClient,
 			baseURL+DevkitServiceTranslationFindLocaleProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("TranslationFindLocale")),
+			connect.WithSchema(devkitServiceTranslationFindLocaleMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		translationCreateUpdateBulk: connect.NewClient[v1.TranslationCreateUpdateBulkRequest, v1.TranslationCreateUpdateBulkResponse](
 			httpClient,
 			baseURL+DevkitServiceTranslationCreateUpdateBulkProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("TranslationCreateUpdateBulk")),
+			connect.WithSchema(devkitServiceTranslationCreateUpdateBulkMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		translationDelete: connect.NewClient[v1.TranslationDeleteRequest, v1.TranslationDeleteResponse](
 			httpClient,
 			baseURL+DevkitServiceTranslationDeleteProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("TranslationDelete")),
+			connect.WithSchema(devkitServiceTranslationDeleteMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		roleList: connect.NewClient[v1.RoleListRequest, v1.RoleListResponse](
 			httpClient,
 			baseURL+DevkitServiceRoleListProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("RoleList")),
+			connect.WithSchema(devkitServiceRoleListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		roleListInput: connect.NewClient[v1.RoleListInputRequest, v1.RoleListInputResponse](
 			httpClient,
 			baseURL+DevkitServiceRoleListInputProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("RoleListInput")),
+			connect.WithSchema(devkitServiceRoleListInputMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		roleFindForUpdate: connect.NewClient[v1.RoleFindForUpdateRequest, v1.RoleFindForUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceRoleFindForUpdateProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("RoleFindForUpdate")),
+			connect.WithSchema(devkitServiceRoleFindForUpdateMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		roleCreateUpdate: connect.NewClient[v1.RoleCreateUpdateRequest, v1.RoleCreateUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceRoleCreateUpdateProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("RoleCreateUpdate")),
+			connect.WithSchema(devkitServiceRoleCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		roleDeleteRestore: connect.NewClient[v1.RoleDeleteRestoreRequest, v1.RoleDeleteRestoreResponse](
 			httpClient,
 			baseURL+DevkitServiceRoleDeleteRestoreProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("RoleDeleteRestore")),
+			connect.WithSchema(devkitServiceRoleDeleteRestoreMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		roleDelete: connect.NewClient[v1.RoleDeleteRequest, v1.RoleDeleteResponse](
 			httpClient,
 			baseURL+DevkitServiceRoleDeleteProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("RoleDelete")),
+			connect.WithSchema(devkitServiceRoleDeleteMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		userList: connect.NewClient[v1.UserListRequest, v1.UserListResponse](
 			httpClient,
 			baseURL+DevkitServiceUserListProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("UserList")),
+			connect.WithSchema(devkitServiceUserListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		userListInput: connect.NewClient[v1.UserListInputRequest, v1.UserListInputResponse](
 			httpClient,
 			baseURL+DevkitServiceUserListInputProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("UserListInput")),
+			connect.WithSchema(devkitServiceUserListInputMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		userFindForUpdate: connect.NewClient[v1.UserFindForUpdateRequest, v1.UserFindForUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceUserFindForUpdateProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("UserFindForUpdate")),
+			connect.WithSchema(devkitServiceUserFindForUpdateMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		userCreateUpdate: connect.NewClient[v1.UserCreateUpdateRequest, v1.UserCreateUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceUserCreateUpdateProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("UserCreateUpdate")),
+			connect.WithSchema(devkitServiceUserCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		userDeleteRestore: connect.NewClient[v1.UserDeleteRestoreRequest, v1.UserDeleteRestoreResponse](
 			httpClient,
 			baseURL+DevkitServiceUserDeleteRestoreProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("UserDeleteRestore")),
+			connect.WithSchema(devkitServiceUserDeleteRestoreMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		userDelete: connect.NewClient[v1.UserDeleteRequest, v1.UserDeleteResponse](
 			httpClient,
 			baseURL+DevkitServiceUserDeleteProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("UserDelete")),
+			connect.WithSchema(devkitServiceUserDeleteMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		authLogin: connect.NewClient[v1.AuthLoginRequest, v1.AuthLoginResponse](
 			httpClient,
 			baseURL+DevkitServiceAuthLoginProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("AuthLogin")),
+			connect.WithSchema(devkitServiceAuthLoginMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		authRegister: connect.NewClient[v1.AuthRegisterRequest, v1.AuthRegisterResponse](
 			httpClient,
 			baseURL+DevkitServiceAuthRegisterProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("AuthRegister")),
+			connect.WithSchema(devkitServiceAuthRegisterMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		authInvite: connect.NewClient[v1.AuthInviteRequest, v1.AuthInviteResponse](
 			httpClient,
 			baseURL+DevkitServiceAuthInviteProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("AuthInvite")),
+			connect.WithSchema(devkitServiceAuthInviteMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		authAuthorize: connect.NewClient[v1.AuthAuthorizeRequest, v1.AuthAuthorizeResponse](
 			httpClient,
 			baseURL+DevkitServiceAuthAuthorizeProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("AuthAuthorize")),
+			connect.WithSchema(devkitServiceAuthAuthorizeMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		authLoginProvider: connect.NewClient[v1.AuthLoginProviderRequest, v1.AuthLoginProviderResponse](
 			httpClient,
 			baseURL+DevkitServiceAuthLoginProviderProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("AuthLoginProvider")),
+			connect.WithSchema(devkitServiceAuthLoginProviderMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		authLoginProviderCallback: connect.NewClient[v1.AuthLoginProviderCallbackRequest, v1.AuthLoginProviderCallbackResponse](
 			httpClient,
 			baseURL+DevkitServiceAuthLoginProviderCallbackProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("AuthLoginProviderCallback")),
+			connect.WithSchema(devkitServiceAuthLoginProviderCallbackMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		authResetPasswordEmail: connect.NewClient[v1.AuthResetPasswordEmailRequest, v1.AuthResetPasswordEmailResponse](
 			httpClient,
 			baseURL+DevkitServiceAuthResetPasswordEmailProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("AuthResetPasswordEmail")),
+			connect.WithSchema(devkitServiceAuthResetPasswordEmailMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		authResetPassword: connect.NewClient[v1.AuthResetPasswordRequest, v1.AuthResetPasswordResponse](
 			httpClient,
 			baseURL+DevkitServiceAuthResetPasswordProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("AuthResetPassword")),
+			connect.WithSchema(devkitServiceAuthResetPasswordMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		tenantDeleteRestore: connect.NewClient[v1.TenantDeleteRestoreRequest, v1.TenantDeleteRestoreResponse](
 			httpClient,
 			baseURL+DevkitServiceTenantDeleteRestoreProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("TenantDeleteRestore")),
+			connect.WithSchema(devkitServiceTenantDeleteRestoreMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		tenantList: connect.NewClient[v1.TenantListRequest, v1.TenantListResponse](
 			httpClient,
 			baseURL+DevkitServiceTenantListProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("TenantList")),
+			connect.WithSchema(devkitServiceTenantListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		tenantCreateUpdate: connect.NewClient[v1.TenantCreateUpdateRequest, v1.TenantCreateUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceTenantCreateUpdateProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("TenantCreateUpdate")),
+			connect.WithSchema(devkitServiceTenantCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		partialDeleteRestore: connect.NewClient[v1.PartialDeleteRestoreRequest, v1.PartialDeleteRestoreResponse](
 			httpClient,
 			baseURL+DevkitServicePartialDeleteRestoreProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("PartialDeleteRestore")),
+			connect.WithSchema(devkitServicePartialDeleteRestoreMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		partialCreateUpdate: connect.NewClient[v1.PartialCreateUpdateRequest, v1.PartialCreateUpdateResponse](
 			httpClient,
 			baseURL+DevkitServicePartialCreateUpdateProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("PartialCreateUpdate")),
+			connect.WithSchema(devkitServicePartialCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		partialList: connect.NewClient[v1.PartialListRequest, v1.PartialListResponse](
 			httpClient,
 			baseURL+DevkitServicePartialListProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("PartialList")),
+			connect.WithSchema(devkitServicePartialListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		pageDeleteRestore: connect.NewClient[v1.PageDeleteRestoreRequest, v1.PageDeleteRestoreResponse](
 			httpClient,
 			baseURL+DevkitServicePageDeleteRestoreProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("PageDeleteRestore")),
+			connect.WithSchema(devkitServicePageDeleteRestoreMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		pageCreateUpdate: connect.NewClient[v1.PageCreateUpdateRequest, v1.PageCreateUpdateResponse](
 			httpClient,
 			baseURL+DevkitServicePageCreateUpdateProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("PageCreateUpdate")),
+			connect.WithSchema(devkitServicePageCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		pageList: connect.NewClient[v1.PageListRequest, v1.PageListResponse](
 			httpClient,
 			baseURL+DevkitServicePageListProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("PageList")),
+			connect.WithSchema(devkitServicePageListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
 		sectionDeleteRestore: connect.NewClient[v1.SectionDeleteRestoreRequest, v1.SectionDeleteRestoreResponse](
 			httpClient,
 			baseURL+DevkitServiceSectionDeleteRestoreProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("SectionDeleteRestore")),
+			connect.WithSchema(devkitServiceSectionDeleteRestoreMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		sectionCreateUpdate: connect.NewClient[v1.SectionCreateUpdateRequest, v1.SectionCreateUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceSectionCreateUpdateProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("SectionCreateUpdate")),
+			connect.WithSchema(devkitServiceSectionCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		sectionList: connect.NewClient[v1.SectionListRequest, v1.SectionListResponse](
 			httpClient,
 			baseURL+DevkitServiceSectionListProcedure,
-			connect.WithSchema(devkitServiceMethods.ByName("SectionList")),
+			connect.WithSchema(devkitServiceSectionListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
@@ -1029,344 +1086,343 @@ type DevkitServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	devkitServiceMethods := v1.File_devkit_v1_devkit_service_proto.Services().ByName("DevkitService").Methods()
 	devkitServiceCityListInputHandler := connect.NewUnaryHandler(
 		DevkitServiceCityListInputProcedure,
 		svc.CityListInput,
-		connect.WithSchema(devkitServiceMethods.ByName("CityListInput")),
+		connect.WithSchema(devkitServiceCityListInputMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceCityListHandler := connect.NewUnaryHandler(
 		DevkitServiceCityListProcedure,
 		svc.CityList,
-		connect.WithSchema(devkitServiceMethods.ByName("CityList")),
+		connect.WithSchema(devkitServiceCityListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceLocationListInputHandler := connect.NewUnaryHandler(
 		DevkitServiceLocationListInputProcedure,
 		svc.LocationListInput,
-		connect.WithSchema(devkitServiceMethods.ByName("LocationListInput")),
+		connect.WithSchema(devkitServiceLocationListInputMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceLocationListHandler := connect.NewUnaryHandler(
 		DevkitServiceLocationListProcedure,
 		svc.LocationList,
-		connect.WithSchema(devkitServiceMethods.ByName("LocationList")),
+		connect.WithSchema(devkitServiceLocationListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceSettingFindForUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceSettingFindForUpdateProcedure,
 		svc.SettingFindForUpdate,
-		connect.WithSchema(devkitServiceMethods.ByName("SettingFindForUpdate")),
+		connect.WithSchema(devkitServiceSettingFindForUpdateMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceSettingUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceSettingUpdateProcedure,
 		svc.SettingUpdate,
-		connect.WithSchema(devkitServiceMethods.ByName("SettingUpdate")),
+		connect.WithSchema(devkitServiceSettingUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceIconListHandler := connect.NewUnaryHandler(
 		DevkitServiceIconListProcedure,
 		svc.IconList,
-		connect.WithSchema(devkitServiceMethods.ByName("IconList")),
+		connect.WithSchema(devkitServiceIconListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceIconFindHandler := connect.NewUnaryHandler(
 		DevkitServiceIconFindProcedure,
 		svc.IconFind,
-		connect.WithSchema(devkitServiceMethods.ByName("IconFind")),
+		connect.WithSchema(devkitServiceIconFindMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceIconCreateUpdateBulkHandler := connect.NewUnaryHandler(
 		DevkitServiceIconCreateUpdateBulkProcedure,
 		svc.IconCreateUpdateBulk,
-		connect.WithSchema(devkitServiceMethods.ByName("IconCreateUpdateBulk")),
+		connect.WithSchema(devkitServiceIconCreateUpdateBulkMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceBucketListHandler := connect.NewUnaryHandler(
 		DevkitServiceBucketListProcedure,
 		svc.BucketList,
-		connect.WithSchema(devkitServiceMethods.ByName("BucketList")),
+		connect.WithSchema(devkitServiceBucketListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceBucketCreateUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceBucketCreateUpdateProcedure,
 		svc.BucketCreateUpdate,
-		connect.WithSchema(devkitServiceMethods.ByName("BucketCreateUpdate")),
+		connect.WithSchema(devkitServiceBucketCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceFileListHandler := connect.NewUnaryHandler(
 		DevkitServiceFileListProcedure,
 		svc.FileList,
-		connect.WithSchema(devkitServiceMethods.ByName("FileList")),
+		connect.WithSchema(devkitServiceFileListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceFileCreateHandler := connect.NewUnaryHandler(
 		DevkitServiceFileCreateProcedure,
 		svc.FileCreate,
-		connect.WithSchema(devkitServiceMethods.ByName("FileCreate")),
+		connect.WithSchema(devkitServiceFileCreateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceFileCreateBulkHandler := connect.NewUnaryHandler(
 		DevkitServiceFileCreateBulkProcedure,
 		svc.FileCreateBulk,
-		connect.WithSchema(devkitServiceMethods.ByName("FileCreateBulk")),
+		connect.WithSchema(devkitServiceFileCreateBulkMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceFileDeleteHandler := connect.NewUnaryHandler(
 		DevkitServiceFileDeleteProcedure,
 		svc.FileDelete,
-		connect.WithSchema(devkitServiceMethods.ByName("FileDelete")),
+		connect.WithSchema(devkitServiceFileDeleteMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceImportTableHandler := connect.NewUnaryHandler(
 		DevkitServiceImportTableProcedure,
 		svc.ImportTable,
-		connect.WithSchema(devkitServiceMethods.ByName("ImportTable")),
+		connect.WithSchema(devkitServiceImportTableMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceEmailSendHandler := connect.NewUnaryHandler(
 		DevkitServiceEmailSendProcedure,
 		svc.EmailSend,
-		connect.WithSchema(devkitServiceMethods.ByName("EmailSend")),
+		connect.WithSchema(devkitServiceEmailSendMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceTranslationListHandler := connect.NewUnaryHandler(
 		DevkitServiceTranslationListProcedure,
 		svc.TranslationList,
-		connect.WithSchema(devkitServiceMethods.ByName("TranslationList")),
+		connect.WithSchema(devkitServiceTranslationListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceTranslationFindLocaleHandler := connect.NewUnaryHandler(
 		DevkitServiceTranslationFindLocaleProcedure,
 		svc.TranslationFindLocale,
-		connect.WithSchema(devkitServiceMethods.ByName("TranslationFindLocale")),
+		connect.WithSchema(devkitServiceTranslationFindLocaleMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceTranslationCreateUpdateBulkHandler := connect.NewUnaryHandler(
 		DevkitServiceTranslationCreateUpdateBulkProcedure,
 		svc.TranslationCreateUpdateBulk,
-		connect.WithSchema(devkitServiceMethods.ByName("TranslationCreateUpdateBulk")),
+		connect.WithSchema(devkitServiceTranslationCreateUpdateBulkMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceTranslationDeleteHandler := connect.NewUnaryHandler(
 		DevkitServiceTranslationDeleteProcedure,
 		svc.TranslationDelete,
-		connect.WithSchema(devkitServiceMethods.ByName("TranslationDelete")),
+		connect.WithSchema(devkitServiceTranslationDeleteMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceRoleListHandler := connect.NewUnaryHandler(
 		DevkitServiceRoleListProcedure,
 		svc.RoleList,
-		connect.WithSchema(devkitServiceMethods.ByName("RoleList")),
+		connect.WithSchema(devkitServiceRoleListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceRoleListInputHandler := connect.NewUnaryHandler(
 		DevkitServiceRoleListInputProcedure,
 		svc.RoleListInput,
-		connect.WithSchema(devkitServiceMethods.ByName("RoleListInput")),
+		connect.WithSchema(devkitServiceRoleListInputMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceRoleFindForUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceRoleFindForUpdateProcedure,
 		svc.RoleFindForUpdate,
-		connect.WithSchema(devkitServiceMethods.ByName("RoleFindForUpdate")),
+		connect.WithSchema(devkitServiceRoleFindForUpdateMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceRoleCreateUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceRoleCreateUpdateProcedure,
 		svc.RoleCreateUpdate,
-		connect.WithSchema(devkitServiceMethods.ByName("RoleCreateUpdate")),
+		connect.WithSchema(devkitServiceRoleCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceRoleDeleteRestoreHandler := connect.NewUnaryHandler(
 		DevkitServiceRoleDeleteRestoreProcedure,
 		svc.RoleDeleteRestore,
-		connect.WithSchema(devkitServiceMethods.ByName("RoleDeleteRestore")),
+		connect.WithSchema(devkitServiceRoleDeleteRestoreMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceRoleDeleteHandler := connect.NewUnaryHandler(
 		DevkitServiceRoleDeleteProcedure,
 		svc.RoleDelete,
-		connect.WithSchema(devkitServiceMethods.ByName("RoleDelete")),
+		connect.WithSchema(devkitServiceRoleDeleteMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceUserListHandler := connect.NewUnaryHandler(
 		DevkitServiceUserListProcedure,
 		svc.UserList,
-		connect.WithSchema(devkitServiceMethods.ByName("UserList")),
+		connect.WithSchema(devkitServiceUserListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceUserListInputHandler := connect.NewUnaryHandler(
 		DevkitServiceUserListInputProcedure,
 		svc.UserListInput,
-		connect.WithSchema(devkitServiceMethods.ByName("UserListInput")),
+		connect.WithSchema(devkitServiceUserListInputMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceUserFindForUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceUserFindForUpdateProcedure,
 		svc.UserFindForUpdate,
-		connect.WithSchema(devkitServiceMethods.ByName("UserFindForUpdate")),
+		connect.WithSchema(devkitServiceUserFindForUpdateMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceUserCreateUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceUserCreateUpdateProcedure,
 		svc.UserCreateUpdate,
-		connect.WithSchema(devkitServiceMethods.ByName("UserCreateUpdate")),
+		connect.WithSchema(devkitServiceUserCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceUserDeleteRestoreHandler := connect.NewUnaryHandler(
 		DevkitServiceUserDeleteRestoreProcedure,
 		svc.UserDeleteRestore,
-		connect.WithSchema(devkitServiceMethods.ByName("UserDeleteRestore")),
+		connect.WithSchema(devkitServiceUserDeleteRestoreMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceUserDeleteHandler := connect.NewUnaryHandler(
 		DevkitServiceUserDeleteProcedure,
 		svc.UserDelete,
-		connect.WithSchema(devkitServiceMethods.ByName("UserDelete")),
+		connect.WithSchema(devkitServiceUserDeleteMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceAuthLoginHandler := connect.NewUnaryHandler(
 		DevkitServiceAuthLoginProcedure,
 		svc.AuthLogin,
-		connect.WithSchema(devkitServiceMethods.ByName("AuthLogin")),
+		connect.WithSchema(devkitServiceAuthLoginMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceAuthRegisterHandler := connect.NewUnaryHandler(
 		DevkitServiceAuthRegisterProcedure,
 		svc.AuthRegister,
-		connect.WithSchema(devkitServiceMethods.ByName("AuthRegister")),
+		connect.WithSchema(devkitServiceAuthRegisterMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceAuthInviteHandler := connect.NewUnaryHandler(
 		DevkitServiceAuthInviteProcedure,
 		svc.AuthInvite,
-		connect.WithSchema(devkitServiceMethods.ByName("AuthInvite")),
+		connect.WithSchema(devkitServiceAuthInviteMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceAuthAuthorizeHandler := connect.NewUnaryHandler(
 		DevkitServiceAuthAuthorizeProcedure,
 		svc.AuthAuthorize,
-		connect.WithSchema(devkitServiceMethods.ByName("AuthAuthorize")),
+		connect.WithSchema(devkitServiceAuthAuthorizeMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceAuthLoginProviderHandler := connect.NewUnaryHandler(
 		DevkitServiceAuthLoginProviderProcedure,
 		svc.AuthLoginProvider,
-		connect.WithSchema(devkitServiceMethods.ByName("AuthLoginProvider")),
+		connect.WithSchema(devkitServiceAuthLoginProviderMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceAuthLoginProviderCallbackHandler := connect.NewUnaryHandler(
 		DevkitServiceAuthLoginProviderCallbackProcedure,
 		svc.AuthLoginProviderCallback,
-		connect.WithSchema(devkitServiceMethods.ByName("AuthLoginProviderCallback")),
+		connect.WithSchema(devkitServiceAuthLoginProviderCallbackMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceAuthResetPasswordEmailHandler := connect.NewUnaryHandler(
 		DevkitServiceAuthResetPasswordEmailProcedure,
 		svc.AuthResetPasswordEmail,
-		connect.WithSchema(devkitServiceMethods.ByName("AuthResetPasswordEmail")),
+		connect.WithSchema(devkitServiceAuthResetPasswordEmailMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceAuthResetPasswordHandler := connect.NewUnaryHandler(
 		DevkitServiceAuthResetPasswordProcedure,
 		svc.AuthResetPassword,
-		connect.WithSchema(devkitServiceMethods.ByName("AuthResetPassword")),
+		connect.WithSchema(devkitServiceAuthResetPasswordMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceTenantDeleteRestoreHandler := connect.NewUnaryHandler(
 		DevkitServiceTenantDeleteRestoreProcedure,
 		svc.TenantDeleteRestore,
-		connect.WithSchema(devkitServiceMethods.ByName("TenantDeleteRestore")),
+		connect.WithSchema(devkitServiceTenantDeleteRestoreMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceTenantListHandler := connect.NewUnaryHandler(
 		DevkitServiceTenantListProcedure,
 		svc.TenantList,
-		connect.WithSchema(devkitServiceMethods.ByName("TenantList")),
+		connect.WithSchema(devkitServiceTenantListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceTenantCreateUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceTenantCreateUpdateProcedure,
 		svc.TenantCreateUpdate,
-		connect.WithSchema(devkitServiceMethods.ByName("TenantCreateUpdate")),
+		connect.WithSchema(devkitServiceTenantCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServicePartialDeleteRestoreHandler := connect.NewUnaryHandler(
 		DevkitServicePartialDeleteRestoreProcedure,
 		svc.PartialDeleteRestore,
-		connect.WithSchema(devkitServiceMethods.ByName("PartialDeleteRestore")),
+		connect.WithSchema(devkitServicePartialDeleteRestoreMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServicePartialCreateUpdateHandler := connect.NewUnaryHandler(
 		DevkitServicePartialCreateUpdateProcedure,
 		svc.PartialCreateUpdate,
-		connect.WithSchema(devkitServiceMethods.ByName("PartialCreateUpdate")),
+		connect.WithSchema(devkitServicePartialCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServicePartialListHandler := connect.NewUnaryHandler(
 		DevkitServicePartialListProcedure,
 		svc.PartialList,
-		connect.WithSchema(devkitServiceMethods.ByName("PartialList")),
+		connect.WithSchema(devkitServicePartialListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServicePageDeleteRestoreHandler := connect.NewUnaryHandler(
 		DevkitServicePageDeleteRestoreProcedure,
 		svc.PageDeleteRestore,
-		connect.WithSchema(devkitServiceMethods.ByName("PageDeleteRestore")),
+		connect.WithSchema(devkitServicePageDeleteRestoreMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServicePageCreateUpdateHandler := connect.NewUnaryHandler(
 		DevkitServicePageCreateUpdateProcedure,
 		svc.PageCreateUpdate,
-		connect.WithSchema(devkitServiceMethods.ByName("PageCreateUpdate")),
+		connect.WithSchema(devkitServicePageCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServicePageListHandler := connect.NewUnaryHandler(
 		DevkitServicePageListProcedure,
 		svc.PageList,
-		connect.WithSchema(devkitServiceMethods.ByName("PageList")),
+		connect.WithSchema(devkitServicePageListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceSectionDeleteRestoreHandler := connect.NewUnaryHandler(
 		DevkitServiceSectionDeleteRestoreProcedure,
 		svc.SectionDeleteRestore,
-		connect.WithSchema(devkitServiceMethods.ByName("SectionDeleteRestore")),
+		connect.WithSchema(devkitServiceSectionDeleteRestoreMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceSectionCreateUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceSectionCreateUpdateProcedure,
 		svc.SectionCreateUpdate,
-		connect.WithSchema(devkitServiceMethods.ByName("SectionCreateUpdate")),
+		connect.WithSchema(devkitServiceSectionCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceSectionListHandler := connect.NewUnaryHandler(
 		DevkitServiceSectionListProcedure,
 		svc.SectionList,
-		connect.WithSchema(devkitServiceMethods.ByName("SectionList")),
+		connect.WithSchema(devkitServiceSectionListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)

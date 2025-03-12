@@ -1,15 +1,12 @@
 syntax = "proto3";
-import "google/protobuf/struct.proto";
-import "buf/validate/validate.proto";
 
 package devkit.v1;
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
 message FileCreateRequest {
-  string path = 1 [
-  (buf.validate.field).string.min_len = 2
-  ];
-  string bucket_name = 2 [
-  (buf.validate.field).string.min_len = 2
-  ];
+  string path = 1 [(buf.validate.field).string.min_len = 2];
+  string bucket_name = 2 [(buf.validate.field).string.min_len = 2];
   bytes reader = 3;
   string file_type = 4;
 }
@@ -25,10 +22,8 @@ message FileCreateBulkResponse {
   repeated string path = 1;
 }
 
-message ImportTableRequest{
-  string table_name = 1 [
-  (buf.validate.field).string.min_len = 2
-  ];
+message ImportTableRequest {
+  string table_name = 1 [(buf.validate.field).string.min_len = 2];
   string schema_name = 2;
   string sheet_name = 3;
   bytes reader = 4;
@@ -47,10 +42,10 @@ message StorageBucket {
   // Optional fields
   string owner = 6;
   int64 file_size_limit = 7;
-  repeated string allowed_mime_types = 8; 
+  repeated string allowed_mime_types = 8;
 }
 
-message BucketCreateUpdateRequest{
+message BucketCreateUpdateRequest {
   string bucket_name = 1;
   bool is_pulic = 2;
   string file_size_limit = 3 [(buf.validate.field).string.pattern = "^[0-9]+$"];
@@ -58,14 +53,22 @@ message BucketCreateUpdateRequest{
   bool is_update = 5;
 }
 message BucketCreateUpdateResponse {
-   StorageBucket bucket = 1 ;
+  StorageBucket bucket = 1;
 }
-message BucketListRequest{
-}
+message BucketListRequest {}
 message BucketListResponse {
-  repeated StorageBucket buckets = 1 ;
+  repeated StorageBucket buckets = 1;
 }
 
+message FileMetadata {
+  string e_tag = 1;
+  int64 size = 2;
+  string mimetype = 3;
+  string cache_control = 4;
+  google.protobuf.Timestamp last_modified = 5;
+  int64 content_length = 6;
+  int32 http_status_code = 7;
+}
 message FileObject {
   string name = 1;
   string bucket_id = 2;
@@ -74,8 +77,8 @@ message FileObject {
   string updated_at = 5;
   string created_at = 6;
   string last_accessed_at = 7;
-  google.protobuf.Struct metadata = 8; // Use google.protobuf.Struct for dynamic metadata
-  StorageBucket buckets = 9; 
+  FileMetadata metadata = 8; // Use google.protobuf.Struct for dynamic metadata
+  StorageBucket buckets = 9;
 }
 
 message FileListRequest {
@@ -89,16 +92,12 @@ message FileListResponse {
   repeated FileObject files = 1;
 }
 
-
 message FileDeleteRequest {
-  string bucket_id = 1  [
-  (buf.validate.field).string.min_len = 2
-  ];
-  repeated  string files_paths = 2 [(buf.validate.field).repeated = {
-    unique: true,
-    max_items: 500,
+  string bucket_id = 1 [(buf.validate.field).string.min_len = 2];
+  repeated string files_paths = 2 [(buf.validate.field).repeated = {
+    unique: true
+    max_items: 500
   }];
-
 }
 
 message FileDeleteResponse {
