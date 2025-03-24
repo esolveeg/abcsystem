@@ -5,6 +5,7 @@ import (
 
 	"connectrpc.com/connect"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	"github.com/rs/zerolog/log"
 )
 
 func (u *TenantUsecase) PageList(ctx context.Context, req *connect.Request[devkitv1.PageListRequest]) (*devkitv1.PageListResponse, error) {
@@ -12,6 +13,7 @@ func (u *TenantUsecase) PageList(ctx context.Context, req *connect.Request[devki
 	if err != nil {
 		return nil, err
 	}
+
 	resp := u.adapter.PageListGrpcFromSql(record)
 	return resp, nil
 
@@ -25,6 +27,11 @@ func (u *TenantUsecase) PageCreateUpdate(ctx context.Context, req *connect.Reque
 		return nil, err
 	}
 	resp := u.adapter.PageEntityGrpcFromSql(record)
+
+	err = u.redisClient.TenantDelete(ctx, req.Msg.GetTenantId())
+	if err != nil {
+		log.Error().Str("message", "clear cache failed :").Err(err).Msg("Cache Clear Failed")
+	}
 	return &devkitv1.PageCreateUpdateResponse{Record: resp}, nil
 
 }
@@ -33,6 +40,14 @@ func (u *TenantUsecase) PageDeleteRestore(ctx context.Context, req *connect.Requ
 	record, err := u.repo.PageDeleteRestore(ctx, &req.Msg.Records)
 	if err != nil {
 		return nil, err
+	}
+	for _, r := range *record {
+		if r.TenantID.Valid {
+			err = u.redisClient.TenantDelete(ctx, r.TenantID.Int32)
+			if err != nil {
+				log.Error().Str("message", "clear cache failed :").Err(err).Msg("Cache Clear Failed")
+			}
+		}
 	}
 	resp := u.adapter.PageEntityListGrpcFromSql(record)
 	return &devkitv1.PageDeleteRestoreResponse{Records: *resp}, nil

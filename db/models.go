@@ -9,8 +9,9 @@ import (
 )
 
 type AccountsSchemaNavigationBar struct {
-	NavigationBarID   int32  `json:"navigation_bar_id"`
-	NavigationBarName string `json:"navigation_bar_name"`
+	NavigationBarID   int32       `json:"navigation_bar_id"`
+	NavigationBarName string      `json:"navigation_bar_name"`
+	TenantID          pgtype.Int4 `json:"tenant_id"`
 }
 
 type AccountsSchemaNavigationBarItem struct {
@@ -19,8 +20,10 @@ type AccountsSchemaNavigationBarItem struct {
 	Label               string      `json:"label"`
 	LabelAr             pgtype.Text `json:"label_ar"`
 	Icon                pgtype.Text `json:"icon"`
-	NavigationBarID     pgtype.Int4 `json:"navigation_bar_id"`
+	TenantID            pgtype.Int4 `json:"tenant_id"`
+	PartialTypeID       pgtype.Int4 `json:"partial_type_id"`
 	ParentID            pgtype.Int4 `json:"parent_id"`
+	NavigationBarID     pgtype.Int4 `json:"navigation_bar_id"`
 	PermissionID        pgtype.Int4 `json:"permission_id"`
 	Route               pgtype.Text `json:"route"`
 }
@@ -283,6 +286,7 @@ type TenantsSchemaPage struct {
 	PageDescriptionAr   pgtype.Text      `json:"page_description_ar"`
 	PageBreadcrumb      pgtype.Text      `json:"page_breadcrumb"`
 	TenantID            pgtype.Int4      `json:"tenant_id"`
+	PartialTypeID       pgtype.Int4      `json:"partial_type_id"`
 	PageRoute           string           `json:"page_route"`
 	PageCoverImage      pgtype.Text      `json:"page_cover_image"`
 	PageCoverVideo      pgtype.Text      `json:"page_cover_video"`
@@ -302,19 +306,31 @@ type TenantsSchemaPageSection struct {
 }
 
 type TenantsSchemaPartial struct {
-	PartialID      int32            `json:"partial_id"`
-	PartialName    string           `json:"partial_name"`
-	PartialTypeID  int32            `json:"partial_type_id"`
-	TenantID       pgtype.Int4      `json:"tenant_id"`
-	PartialImage   pgtype.Text      `json:"partial_image"`
-	PartialImages  pgtype.Text      `json:"partial_images"`
-	PartialVideo   pgtype.Text      `json:"partial_video"`
-	IsFeatured     pgtype.Bool      `json:"is_featured"`
-	PartialBrief   pgtype.Text      `json:"partial_brief"`
-	PartialContent pgtype.Text      `json:"partial_content"`
-	CreatedAt      pgtype.Timestamp `json:"created_at"`
-	UpdatedAt      pgtype.Timestamp `json:"updated_at"`
-	DeletedAt      pgtype.Timestamp `json:"deleted_at"`
+	PartialID            int32            `json:"partial_id"`
+	PartialName          string           `json:"partial_name"`
+	PartialNameAr        pgtype.Text      `json:"partial_name_ar"`
+	PartialTypeID        int32            `json:"partial_type_id"`
+	SectionID            int32            `json:"section_id"`
+	PartialImage         pgtype.Text      `json:"partial_image"`
+	PartialLink          pgtype.Text      `json:"partial_link"`
+	PartialImages        pgtype.Text      `json:"partial_images"`
+	PartialVideo         pgtype.Text      `json:"partial_video"`
+	IsFeatured           pgtype.Bool      `json:"is_featured"`
+	PartialBrief         pgtype.Text      `json:"partial_brief"`
+	PartialBriefAr       pgtype.Text      `json:"partial_brief_ar"`
+	PartialContent       pgtype.Text      `json:"partial_content"`
+	PartialContentAr     pgtype.Text      `json:"partial_content_ar"`
+	PartialButtonLabel   pgtype.Text      `json:"partial_button_label"`
+	PartialButtonLabelAr pgtype.Text      `json:"partial_button_label_ar"`
+	PartialButtonIcon    pgtype.Text      `json:"partial_button_icon"`
+	PartialButtonLink    pgtype.Text      `json:"partial_button_link"`
+	PartialButtonPageID  pgtype.Int4      `json:"partial_button_page_id"`
+	PartialIcons         pgtype.Text      `json:"partial_icons"`
+	Address              pgtype.Text      `json:"address"`
+	PartialLinks         []byte           `json:"partial_links"`
+	CreatedAt            pgtype.Timestamp `json:"created_at"`
+	UpdatedAt            pgtype.Timestamp `json:"updated_at"`
+	DeletedAt            pgtype.Timestamp `json:"deleted_at"`
 }
 
 type TenantsSchemaPartialType struct {
@@ -326,6 +342,11 @@ type TenantsSchemaSection struct {
 	SectionID            int32            `json:"section_id"`
 	SectionName          string           `json:"section_name"`
 	SectionNameAr        pgtype.Text      `json:"section_name_ar"`
+	SectionHeader        pgtype.Text      `json:"section_header"`
+	SectionHeaderAr      pgtype.Text      `json:"section_header_ar"`
+	SectionButtonLabel   pgtype.Text      `json:"section_button_label"`
+	SectionButtonLabelAr pgtype.Text      `json:"section_button_label_ar"`
+	SectionButtonPageID  pgtype.Int4      `json:"section_button_page_id"`
 	SectionDescription   pgtype.Text      `json:"section_description"`
 	SectionDescriptionAr pgtype.Text      `json:"section_description_ar"`
 	TenantID             pgtype.Int4      `json:"tenant_id"`

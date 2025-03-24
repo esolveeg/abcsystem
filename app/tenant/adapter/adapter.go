@@ -20,6 +20,7 @@ type TenantAdapterInterface interface {
 	PageEntityListGrpcFromSql(req *[]db.TenantsSchemaPage) *[]*devkitv1.TenantsSchemaPage
 	TenantDeleteRestoreGrpcFromSql(resp *[]db.TenantsSchemaTenant) *devkitv1.TenantDeleteRestoreResponse
 	TenantListGrpcFromSql(resp *[]db.TenantsSchemaTenant) *devkitv1.TenantListResponse
+	TenantFindGrpcFromSql(resp *db.TenantFindRow) *devkitv1.TenantFindResponse
 	TenantEntityGrpcFromSql(resp *db.TenantsSchemaTenant) *devkitv1.TenantsSchemaTenant
 	TenantCreateUpdateSqlFromGrpc(req *devkitv1.TenantCreateUpdateRequest) *db.TenantCreateUpdateParams
 }

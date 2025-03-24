@@ -3,12 +3,29 @@ package devkit.v1;
 
 import "buf/validate/validate.proto";
 import "devkit/v1/client.proto";
+import "devkit/v1/tenant_section.proto";
 import "google/protobuf/timestamp.proto";
 
 // message yourmessage {
 // }
 // INJECT MESSAGES
 
+message TenantsSchemaPageView {
+  int32 page_id = 1;
+  string page_name = 2;
+  string page_name_ar = 3;
+  string page_description = 4;
+  string page_description_ar = 5;
+  string page_breadcrumb = 6;
+  int32 tenant_id = 7;
+  string page_route = 8;
+  string page_cover_image = 9;
+  string page_cover_video = 10;
+  string page_key_words = 11;
+  string page_meta_description = 12;
+  string page_icon = 13;
+  repeated TenantsSchemaSectionView sections = 17;
+}
 message TenantsSchemaPage {
   int32 page_id = 1;
   string page_name = 2;

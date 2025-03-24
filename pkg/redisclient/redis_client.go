@@ -12,6 +12,12 @@ type RedisClientInterface interface {
 	AuthSessionCreate(ctx context.Context, userId int32, permissions *[]db.UserPermissionsMapRow) (PermissionsMap, error)
 	AuthSessionDelete(ctx context.Context, userId int32) error
 	AuthSessionFind(ctx context.Context, userId int32) (PermissionsMap, error)
+
+	TenantCreate(ctx context.Context, tenantId int32, tenant *db.TenantFindRow) (*db.TenantFindRow, error)
+	DeleteAllTenants(ctx context.Context) error
+	TenantDelete(ctx context.Context, tenantId int32) error
+	TenantDeleteBulk(ctx context.Context, tenantIds []int32) error
+	TenantFind(ctx context.Context, tenantId int32) (*db.TenantFindRow, error)
 }
 
 type RedisClient struct {

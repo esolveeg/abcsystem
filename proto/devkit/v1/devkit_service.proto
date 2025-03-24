@@ -54,6 +54,18 @@ service DevkitService {
   rpc LocationList(LocationListRequest) returns (LocationListResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
   }
+
+  rpc TenantDeleteRestore(TenantDeleteRestoreRequest) returns (TenantDeleteRestoreResponse) {}
+
+  rpc TenantFind(TenantFindRequest) returns (TenantFindResponse) {
+    option (skip_authentication) = true;
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc TenantList(TenantListRequest) returns (TenantListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc TenantCreateUpdate(TenantCreateUpdateRequest) returns (TenantCreateUpdateResponse) {}
+
   //////////////////////////////////////////////////////////////////////////////////////////////
   // public
   //////////////////////////////////////////////////////////////////////////////////////////////

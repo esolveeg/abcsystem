@@ -5,6 +5,7 @@ import (
 
 	"connectrpc.com/connect"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	"github.com/rs/zerolog/log"
 )
 
 func (u *TenantUsecase) SectionList(ctx context.Context, req *connect.Request[devkitv1.SectionListRequest]) (*devkitv1.SectionListResponse, error) {
@@ -12,6 +13,7 @@ func (u *TenantUsecase) SectionList(ctx context.Context, req *connect.Request[de
 	if err != nil {
 		return nil, err
 	}
+
 	resp := u.adapter.SectionListGrpcFromSql(record)
 	return resp, nil
 
@@ -24,6 +26,11 @@ func (u *TenantUsecase) SectionCreateUpdate(ctx context.Context, req *connect.Re
 		return nil, err
 	}
 	resp := u.adapter.SectionEntityGrpcFromSql(record)
+
+	err = u.redisClient.DeleteAllTenants(ctx)
+	if err != nil {
+		log.Error().Str("message", "clear cache failed :").Err(err).Msg("Cache Clear Failed")
+	}
 	return &devkitv1.SectionCreateUpdateResponse{Record: resp}, nil
 }
 
@@ -31,6 +38,11 @@ func (u *TenantUsecase) SectionDeleteRestore(ctx context.Context, req *connect.R
 	record, err := u.repo.SectionDeleteRestore(ctx, &req.Msg.Records)
 	if err != nil {
 		return nil, err
+	}
+
+	err = u.redisClient.DeleteAllTenants(ctx)
+	if err != nil {
+		log.Error().Str("message", "clear cache failed :").Err(err).Msg("Cache Clear Failed")
 	}
 	resp := u.adapter.SectionEntityListGrpcFromSql(record)
 	return &devkitv1.SectionDeleteRestoreResponse{Records: *resp}, nil

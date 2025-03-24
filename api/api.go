@@ -58,7 +58,7 @@ func NewApi(config config.Config, store db.Store, tokenMaker auth.Maker, redisCl
 propertyUsecase := propertyUsecase.NewPropertyUsecase(store)
 
 
-	tenantUsecase := tenantUsecase.NewTenantUsecase(store)
+	tenantUsecase := tenantUsecase.NewTenantUsecase(store, redisClient)
 	accountsUsecase := accountsUsecase.NewAccountsUsecase(store, supaapi, redisClient, tokenMaker, config.AccessTokenDuration)
 	publicUsecase := publicUsecase.NewPublicUsecase(store, supaapi, redisClient, resendClient)
 	return &Api{

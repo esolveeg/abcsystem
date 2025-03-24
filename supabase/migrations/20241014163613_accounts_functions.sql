@@ -371,7 +371,7 @@ BEGIN
 		SET
 			user_name = is_null_replace(in_user_name, user_name),
 			user_type_id = is_null_replace(in_user_type_id, user_type_id),
-			tenant_id = nullable_foreign(in_tenant_id),
+			tenant_id = is_null_replace(in_tenant_id, NULL),
 			user_email = is_null_replace(in_user_email, user_email),
 			user_phone = is_null_replace(in_user_phone, user_phone),
 			user_password = is_null_replace(in_user_password, user_password),

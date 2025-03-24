@@ -48,11 +48,3 @@ VALUES (
 	'site_name',
 	'Abc Hotels');
 
-INSERT INTO tenants_schema.partial_type (
-	partial_type_name)
-VALUES (
-	'project'),
-(
-	'service'),
-(
-	'testemonial')

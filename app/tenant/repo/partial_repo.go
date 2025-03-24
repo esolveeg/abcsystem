@@ -21,10 +21,6 @@ func (repo *TenantRepo) PartialList(ctx context.Context, tenantId int32) (*[]db.
 	return &resp, nil
 }
 func (repo *TenantRepo) PartialCreateUpdate(ctx context.Context, req *db.PartialCreateUpdateParams) (*db.TenantsSchemaPartial, error) {
-	loggedInUserTenantId, _ := contextkeys.TenantID(ctx)
-	if loggedInUserTenantId > 0 {
-		req.TenantID = loggedInUserTenantId
-	}
 	resp, err := repo.store.PartialCreateUpdate(ctx, *req)
 
 	if err != nil {

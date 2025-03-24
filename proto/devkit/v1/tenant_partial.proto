@@ -10,17 +10,29 @@ import "google/protobuf/timestamp.proto";
 message TenantsSchemaPartial {
   int32 partial_id = 1;
   string partial_name = 2;
-  int32 partial_type_id = 3;
-  int32 tenant_id = 4;
-  string partial_image = 5;
-  repeated string partial_images = 6;
-  string partial_video = 7;
-  bool is_featured = 8;
-  string partial_brief = 9;
-  string partial_content = 10;
-  google.protobuf.Timestamp created_at = 11;
-  google.protobuf.Timestamp updated_at = 12;
-  google.protobuf.Timestamp deleted_at = 13;
+  string partial_name_ar = 3;
+  string partial_link = 4;
+  string address = 5;
+  string partial_button_link = 6;
+  string partial_button_label = 7;
+  string partial_button_label_ar = 8;
+  string partial_button_icon = 9;
+  int32 partial_button_page_id = 10;
+  int32 partial_type_id = 11;
+  int32 section_id = 12;
+  string partial_image = 13;
+  repeated string partial_images = 14;
+  map<string, string> partial_links = 15;
+  repeated string partial_icons = 16;
+  string partial_video = 17;
+  bool is_featured = 18;
+  string partial_brief = 19;
+  string partial_brief_ar = 20;
+  string partial_content = 21;
+  string partial_content_ar = 22;
+  google.protobuf.Timestamp created_at = 23;
+  google.protobuf.Timestamp updated_at = 24;
+  google.protobuf.Timestamp deleted_at = 25;
 }
 
 message PartialListRequest {}
@@ -37,14 +49,26 @@ message PartialCreateUpdateRequest {
     (buf.validate.field).string.min_len = 2,
     (buf.validate.field).string.max_len = 200
   ];
-  int32 partial_type_id = 3 [(buf.validate.field).int32.gte = 1];
-  int32 tenant_id = 4;
-  string partial_image = 5 [(buf.validate.field).string.max_len = 500];
-  repeated string partial_images = 6;
-  string partial_video = 7 [(buf.validate.field).string.max_len = 500];
-  bool is_featured = 8;
-  string partial_brief = 9 [(buf.validate.field).string.max_len = 1000];
-  string partial_content = 10 [(buf.validate.field).string.max_len = 5000];
+  string partial_name_ar = 3 [(buf.validate.field).string.max_len = 200];
+  int32 partial_type_id = 4 [(buf.validate.field).int32.gte = 1];
+  int32 section_id = 5;
+  string partial_image = 6 [(buf.validate.field).string.max_len = 500];
+  repeated string partial_images = 7;
+  string partial_video = 8 [(buf.validate.field).string.max_len = 500];
+  bool is_featured = 9;
+  string partial_brief = 10 [(buf.validate.field).string.max_len = 1000];
+  string partial_brief_ar = 11 [(buf.validate.field).string.max_len = 1000];
+  string partial_content = 12 [(buf.validate.field).string.max_len = 5000];
+  string partial_content_ar = 13 [(buf.validate.field).string.max_len = 5000];
+  string partial_button_label = 14 [(buf.validate.field).string.max_len = 200];
+  string partial_button_label_ar = 15 [(buf.validate.field).string.max_len = 200];
+  string partial_button_icon = 16 [(buf.validate.field).string.max_len = 500];
+  string partial_button_link = 17 [(buf.validate.field).string.max_len = 500];
+  int32 partial_button_page_id = 18;
+  string partial_icons = 19 [(buf.validate.field).string.max_len = 500];
+  string address = 20 [(buf.validate.field).string.max_len = 1000];
+  map<string, string> partial_links = 21;
+  string partial_link = 22 [(buf.validate.field).string.max_len = 500];
 }
 
 message PartialCreateUpdateResponse {
