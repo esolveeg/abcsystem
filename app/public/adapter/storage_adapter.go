@@ -1,6 +1,8 @@
 package adapter
 
 import (
+	"fmt"
+
 	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"github.com/rs/zerolog/log"
@@ -45,7 +47,7 @@ func convertMetadata(meta interface{}) *devkitv1.FileMetadata {
 func (a *PublicAdapter) FileObjectGrpcFromSupa(resp *storage_go.FileObject) *devkitv1.FileObject {
 	log.Debug().Interface("buck is", resp.BucketId).Msg("bucucucuuc")
 	return &devkitv1.FileObject{
-		Name:      resp.Name,
+		Name:      fmt.Sprintf("%s/%s", resp.BucketId, resp.Name),
 		UpdatedAt: resp.UpdatedAt,
 		BucketId:  resp.BucketId,
 		Metadata:  convertMetadata(resp.Metadata),
@@ -63,9 +65,10 @@ func (a *PublicAdapter) FileDeleteGrpcFromSupa(resp []storage_go.FileUploadRespo
 		Responses: response,
 	}
 }
-func (a *PublicAdapter) FileListGrpcFromSupa(resp []storage_go.FileObject) *devkitv1.FileListResponse {
+func (a *PublicAdapter) FileListGrpcFromSupa(resp []storage_go.FileObject, bucketId string) *devkitv1.FileListResponse {
 	files := make([]*devkitv1.FileObject, len(resp))
 	for index, rec := range resp {
+		rec.BucketId = bucketId
 		files[index] = a.FileObjectGrpcFromSupa(&rec)
 	}
 	return &devkitv1.FileListResponse{Files: files}
