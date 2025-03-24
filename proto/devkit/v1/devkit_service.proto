@@ -4,6 +4,9 @@ package devkit.v1;
 import "devkit/v1/accounts_auth.proto";
 import "devkit/v1/accounts_role.proto";
 import "devkit/v1/accounts_user.proto";
+// INJECT IMPORTS
+import "devkit/v1/property_city.proto";
+import "devkit/v1/property_location.proto";
 import "devkit/v1/public_email.proto";
 import "devkit/v1/public_icon.proto";
 import "devkit/v1/public_setting.proto";
@@ -12,7 +15,6 @@ import "devkit/v1/public_translation.proto";
 import "devkit/v1/service_options.proto";
 import "devkit/v1/tenant_page.proto";
 import "devkit/v1/tenant_partial.proto";
-// INJECT IMPORTS
 import "devkit/v1/tenant_section.proto";
 import "devkit/v1/tenant_tenant.proto";
 
@@ -35,32 +37,23 @@ import "devkit/v1/tenant_tenant.proto";
 
 service DevkitService {
   // INJECT METHODS
-  rpc PartialDeleteRestore(PartialDeleteRestoreRequest) returns (PartialDeleteRestoreResponse) {}
-  rpc PartialCreateUpdate(PartialCreateUpdateRequest) returns (PartialCreateUpdateResponse) {}
-  rpc PartialList(PartialListRequest) returns (PartialListResponse) {
+  rpc CityListInput(CityListInputRequest) returns (CityListInputResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authentication) = true;
+  }
+
+  rpc CityList(CityListRequest) returns (CityListResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
   }
 
-  rpc PageDeleteRestore(PageDeleteRestoreRequest) returns (PageDeleteRestoreResponse) {}
-  rpc PageCreateUpdate(PageCreateUpdateRequest) returns (PageCreateUpdateResponse) {}
-  rpc PageList(PageListRequest) returns (PageListResponse) {
+  rpc LocationListInput(LocationListInputRequest) returns (LocationListInputResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authentication) = true;
   }
 
-  rpc SectionDeleteRestore(SectionDeleteRestoreRequest) returns (SectionDeleteRestoreResponse) {}
-
-  rpc SectionCreateUpdate(SectionCreateUpdateRequest) returns (SectionCreateUpdateResponse) {}
-
-  rpc SectionList(SectionListRequest) returns (SectionListResponse) {
+  rpc LocationList(LocationListRequest) returns (LocationListResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
   }
-
-  rpc TenantDeleteRestore(TenantDeleteRestoreRequest) returns (TenantDeleteRestoreResponse) {}
-  rpc TenantList(TenantListRequest) returns (TenantListResponse) {
-    option idempotency_level = NO_SIDE_EFFECTS;
-  }
-  rpc TenantCreateUpdate(TenantCreateUpdateRequest) returns (TenantCreateUpdateResponse) {}
-
   //////////////////////////////////////////////////////////////////////////////////////////////
   // public
   //////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,12 +78,14 @@ service DevkitService {
   // buckets
   rpc BucketList(BucketListRequest) returns (BucketListResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authentication) = true;
   }
   rpc BucketCreateUpdate(BucketCreateUpdateRequest) returns (BucketCreateUpdateResponse) {}
 
   // files
   rpc FileList(FileListRequest) returns (FileListResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authentication) = true;
   }
   rpc FileCreate(FileCreateRequest) returns (FileCreateResponse) {}
   rpc FileCreateBulk(FileCreateBulkRequest) returns (FileCreateBulkResponse) {}
@@ -185,4 +180,30 @@ service DevkitService {
   //*******************************************************************************************//
   // tenant
   //*******************************************************************************************//
+
+  rpc TenantDeleteRestore(TenantDeleteRestoreRequest) returns (TenantDeleteRestoreResponse) {}
+  rpc TenantList(TenantListRequest) returns (TenantListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc TenantCreateUpdate(TenantCreateUpdateRequest) returns (TenantCreateUpdateResponse) {}
+
+  rpc PartialDeleteRestore(PartialDeleteRestoreRequest) returns (PartialDeleteRestoreResponse) {}
+  rpc PartialCreateUpdate(PartialCreateUpdateRequest) returns (PartialCreateUpdateResponse) {}
+  rpc PartialList(PartialListRequest) returns (PartialListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+
+  rpc PageDeleteRestore(PageDeleteRestoreRequest) returns (PageDeleteRestoreResponse) {}
+  rpc PageCreateUpdate(PageCreateUpdateRequest) returns (PageCreateUpdateResponse) {}
+  rpc PageList(PageListRequest) returns (PageListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+
+  rpc SectionDeleteRestore(SectionDeleteRestoreRequest) returns (SectionDeleteRestoreResponse) {}
+
+  rpc SectionCreateUpdate(SectionCreateUpdateRequest) returns (SectionCreateUpdateResponse) {}
+
+  rpc SectionList(SectionListRequest) returns (SectionListResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
 }

@@ -56,9 +56,9 @@ func (api *Api) UserDeleteRestore(ctx context.Context, req *connect.Request[devk
 }
 
 func (api *Api) UserDelete(ctx context.Context, req *connect.Request[devkitv1.UserDeleteRequest]) (*connect.Response[devkitv1.UserDeleteResponse], error) {
-	record, err := api.accountsUsecase.UserDelete(ctx, req)
+	records, err := api.accountsUsecase.UserDelete(ctx, req)
 	if err != nil {
 		return nil, err
 	}
-	return connect.NewResponse(&devkitv1.UserDeleteResponse{Record: record}), nil
+	return connect.NewResponse(records), nil
 }

@@ -50,10 +50,10 @@ message UserDeleteRestoreResponse {
 }
 
 message UserDeleteRequest {
-  int32 record_id = 1;
+  repeated int32 records = 1;
 }
 message UserDeleteResponse {
-  AccountsSchemaUser record = 1;
+  repeated AccountsSchemaUser records = 1;
 }
 message UserListRequest {}
 message UserListResponse {

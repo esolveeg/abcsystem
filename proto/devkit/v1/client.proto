@@ -30,6 +30,7 @@ message UpdateHandler {
   string endpoint = 5;
   string find_endpoint = 6;
   string find_request_property = 7;
+  string find_response_property = 8;
 }
 
 message DeleteHandler {

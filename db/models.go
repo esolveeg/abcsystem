@@ -94,6 +94,175 @@ type Log struct {
 	CreatedAt      pgtype.Timestamp `json:"created_at"`
 }
 
+type PropertiesSchemaAmenity struct {
+	AmenityID           int32            `json:"amenity_id"`
+	AmenityGroupID      int32            `json:"amenity_group_id"`
+	AmenityName         string           `json:"amenity_name"`
+	AmenityNameAr       pgtype.Text      `json:"amenity_name_ar"`
+	AmenityIcon         pgtype.Text      `json:"amenity_icon"`
+	AmenityInputLabel   pgtype.Text      `json:"amenity_input_label"`
+	AmenityInputLabelAr pgtype.Text      `json:"amenity_input_label_ar"`
+	AmenityValueTypeID  int32            `json:"amenity_value_type_id"`
+	CreatedAt           pgtype.Timestamp `json:"created_at"`
+	UpdatedAt           pgtype.Timestamp `json:"updated_at"`
+	DeletedAt           pgtype.Timestamp `json:"deleted_at"`
+}
+
+type PropertiesSchemaAmenityGroup struct {
+	AmenityGroupID     int32            `json:"amenity_group_id"`
+	AmenityGroupName   string           `json:"amenity_group_name"`
+	PropertyCategoryID pgtype.Int4      `json:"property_category_id"`
+	AmenityGroupIcon   pgtype.Text      `json:"amenity_group_icon"`
+	CreatedAt          pgtype.Timestamp `json:"created_at"`
+	UpdatedAt          pgtype.Timestamp `json:"updated_at"`
+	DeletedAt          pgtype.Timestamp `json:"deleted_at"`
+}
+
+type PropertiesSchemaAmenityValueType struct {
+	AmenityValueTypeID int32  `json:"amenity_value_type_id"`
+	AmenityValueType   string `json:"amenity_value_type"`
+}
+
+type PropertiesSchemaBedType struct {
+	BedTypeID   int32         `json:"bed_type_id"`
+	BedType     string        `json:"bed_type"`
+	BedTypeAr   pgtype.Text   `json:"bed_type_ar"`
+	BedLength   pgtype.Float4 `json:"bed_length"`
+	BedWidth    pgtype.Float4 `json:"bed_width"`
+	BedTypeIcon pgtype.Text   `json:"bed_type_icon"`
+}
+
+type PropertiesSchemaCity struct {
+	CityID     int32            `json:"city_id"`
+	CityName   string           `json:"city_name"`
+	CityNameAr pgtype.Text      `json:"city_name_ar"`
+	CityImage  pgtype.Text      `json:"city_image"`
+	CreatedAt  pgtype.Timestamp `json:"created_at"`
+	UpdatedAt  pgtype.Timestamp `json:"updated_at"`
+	DeletedAt  pgtype.Timestamp `json:"deleted_at"`
+}
+
+type PropertiesSchemaCompound struct {
+	CompoundID     int32            `json:"compound_id"`
+	CompoundName   string           `json:"compound_name"`
+	CompoundNameAr pgtype.Text      `json:"compound_name_ar"`
+	CompoundImage  pgtype.Text      `json:"compound_image"`
+	CreatedAt      pgtype.Timestamp `json:"created_at"`
+	UpdatedAt      pgtype.Timestamp `json:"updated_at"`
+	DeletedAt      pgtype.Timestamp `json:"deleted_at"`
+}
+
+type PropertiesSchemaLocation struct {
+	LocationID     int32            `json:"location_id"`
+	CityID         int32            `json:"city_id"`
+	LocationName   string           `json:"location_name"`
+	LocationNameAr pgtype.Text      `json:"location_name_ar"`
+	LocationImage  pgtype.Text      `json:"location_image"`
+	CreatedAt      pgtype.Timestamp `json:"created_at"`
+	UpdatedAt      pgtype.Timestamp `json:"updated_at"`
+	DeletedAt      pgtype.Timestamp `json:"deleted_at"`
+}
+
+type PropertiesSchemaProperty struct {
+	PropertyID            int32            `json:"property_id"`
+	PropertyName          string           `json:"property_name"`
+	PropertyNameAr        pgtype.Text      `json:"property_name_ar"`
+	AddressLine           string           `json:"address_line"`
+	AddressLineAr         pgtype.Text      `json:"address_line_ar"`
+	InstantApprove        pgtype.Bool      `json:"instant_approve"`
+	StarRating            pgtype.Int4      `json:"star_rating"`
+	IframeUrl             pgtype.Text      `json:"iframe_url"`
+	LocationUrl           string           `json:"location_url"`
+	PropertyTypeID        int32            `json:"property_type_id"`
+	LocationID            int32            `json:"location_id"`
+	CompoundID            pgtype.Int4      `json:"compound_id"`
+	TenantID              int32            `json:"tenant_id"`
+	PropertyImage         pgtype.Text      `json:"property_image"`
+	PropertyImages        pgtype.Text      `json:"property_images"`
+	PropertyDescription   pgtype.Text      `json:"property_description"`
+	PropertyDescriptionAr pgtype.Text      `json:"property_description_ar"`
+	CheckinTimeFrom       pgtype.Time      `json:"checkin_time_from"`
+	CheckinTimeTo         pgtype.Time      `json:"checkin_time_to"`
+	CheckoutTimeFrom      pgtype.Time      `json:"checkout_time_from"`
+	CheckoutTimeTo        pgtype.Time      `json:"checkout_time_to"`
+	CreatedAt             pgtype.Timestamp `json:"created_at"`
+	UpdatedAt             pgtype.Timestamp `json:"updated_at"`
+	DeletedAt             pgtype.Timestamp `json:"deleted_at"`
+}
+
+type PropertiesSchemaPropertyCategory struct {
+	PropertyCategoryID   int32            `json:"property_category_id"`
+	PropertyCategoryName string           `json:"property_category_name"`
+	CreatedAt            pgtype.Timestamp `json:"created_at"`
+	UpdatedAt            pgtype.Timestamp `json:"updated_at"`
+	DeletedAt            pgtype.Timestamp `json:"deleted_at"`
+}
+
+type PropertiesSchemaPropertyType struct {
+	PropertyTypeID     int32            `json:"property_type_id"`
+	PropertyTypeName   string           `json:"property_type_name"`
+	PropertyTypeNameAr pgtype.Text      `json:"property_type_name_ar"`
+	PropertyTypeIcon   pgtype.Text      `json:"property_type_icon"`
+	PropertyCategoryID int32            `json:"property_category_id"`
+	CreatedAt          pgtype.Timestamp `json:"created_at"`
+	UpdatedAt          pgtype.Timestamp `json:"updated_at"`
+	DeletedAt          pgtype.Timestamp `json:"deleted_at"`
+}
+
+type PropertiesSchemaReservableUnit struct {
+	ReservableUnitID            int32            `json:"reservable_unit_id"`
+	ReservableUnitName          string           `json:"reservable_unit_name"`
+	ReservableUnitNameAr        pgtype.Text      `json:"reservable_unit_name_ar"`
+	ReservableUnitDescription   pgtype.Text      `json:"reservable_unit_description"`
+	ReservableUnitDescriptionAr pgtype.Text      `json:"reservable_unit_description_ar"`
+	MinimumGuestsNumber         int32            `json:"minimum_guests_number"`
+	MaximumGuestsNumber         int32            `json:"maximum_guests_number"`
+	UnitArea                    float32          `json:"unit_area"`
+	ReservableUnitTypeID        int32            `json:"reservable_unit_type_id"`
+	PropertyID                  int32            `json:"property_id"`
+	BathroomsCount              int32            `json:"bathrooms_count"`
+	IsClosed                    pgtype.Bool      `json:"is_closed"`
+	BasePrice                   pgtype.Float4    `json:"base_price"`
+	ReservableUnitImage         pgtype.Text      `json:"reservable_unit_image"`
+	ReservableUnitImages        pgtype.Text      `json:"reservable_unit_images"`
+	CreatedAt                   pgtype.Timestamp `json:"created_at"`
+	UpdatedAt                   pgtype.Timestamp `json:"updated_at"`
+	DeletedAt                   pgtype.Timestamp `json:"deleted_at"`
+}
+
+type PropertiesSchemaReservableUnitRoom struct {
+	ReservableUnitRoomID     int32            `json:"reservable_unit_room_id"`
+	ReservableUnitRoomName   string           `json:"reservable_unit_room_name"`
+	ReservableUnitRoomImage  pgtype.Text      `json:"reservable_unit_room_image"`
+	ReservableUnitRoomImages pgtype.Text      `json:"reservable_unit_room_images"`
+	ReservableUnitID         int32            `json:"reservable_unit_id"`
+	CreatedAt                pgtype.Timestamp `json:"created_at"`
+	UpdatedAt                pgtype.Timestamp `json:"updated_at"`
+	DeletedAt                pgtype.Timestamp `json:"deleted_at"`
+}
+
+type PropertiesSchemaReservableUnitRoomBed struct {
+	ReservableUnitRoomID int32 `json:"reservable_unit_room_id"`
+	BedTypeID            int32 `json:"bed_type_id"`
+	BedCount             int32 `json:"bed_count"`
+}
+
+type PropertiesSchemaReservableUnitType struct {
+	ReservableUnitTypeID     int32       `json:"reservable_unit_type_id"`
+	ReservableUnitTypeName   string      `json:"reservable_unit_type_name"`
+	ReservableUnitTypeNameAr pgtype.Text `json:"reservable_unit_type_name_ar"`
+	PropertyCategoryID       int32       `json:"property_category_id"`
+	RoomsCount               int32       `json:"rooms_count"`
+}
+
+type PropertiesSchemaUnitAmenity struct {
+	UnitID       int32       `json:"unit_id"`
+	UnitType     string      `json:"unit_type"`
+	IsFeatured   pgtype.Bool `json:"is_featured"`
+	AmenityID    int32       `json:"amenity_id"`
+	AmenityValue pgtype.Text `json:"amenity_value"`
+}
+
 type Setting struct {
 	SettingID    int32            `json:"setting_id"`
 	InputTypeID  int32            `json:"input_type_id"`

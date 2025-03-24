@@ -18,7 +18,7 @@ type PublicAdapterInterface interface {
 	TranslationGrpcFromSql(resp *db.Translation) *devkitv1.Translation
 	TranslationCreateUpdateBulkSqlFromGrpc(req *devkitv1.TranslationCreateUpdateBulkRequest) *db.TranslationCreateUpdateBulkParams
 	FileDeleteGrpcFromSupa(resp []storage_go.FileUploadResponse) *devkitv1.FileDeleteResponse
-	FileListGrpcFromSupa(resp []storage_go.FileObject) *devkitv1.FileListResponse
+	FileListGrpcFromSupa(resp []storage_go.FileObject, bucketId string) *devkitv1.FileListResponse
 	FileObjectGrpcFromSupa(resp *storage_go.FileObject) *devkitv1.FileObject
 	FileCreateResponseGrpcFromSupa(resp *storage_go.FileUploadResponse) *devkitv1.FileCreateResponse
 	BucketListGrpcFromSupa(resp []storage_go.Bucket) *devkitv1.BucketListResponse

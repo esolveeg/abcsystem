@@ -33,41 +33,17 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
-	// DevkitServicePartialDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
-	// PartialDeleteRestore RPC.
-	DevkitServicePartialDeleteRestoreProcedure = "/devkit.v1.DevkitService/PartialDeleteRestore"
-	// DevkitServicePartialCreateUpdateProcedure is the fully-qualified name of the DevkitService's
-	// PartialCreateUpdate RPC.
-	DevkitServicePartialCreateUpdateProcedure = "/devkit.v1.DevkitService/PartialCreateUpdate"
-	// DevkitServicePartialListProcedure is the fully-qualified name of the DevkitService's PartialList
-	// RPC.
-	DevkitServicePartialListProcedure = "/devkit.v1.DevkitService/PartialList"
-	// DevkitServicePageDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
-	// PageDeleteRestore RPC.
-	DevkitServicePageDeleteRestoreProcedure = "/devkit.v1.DevkitService/PageDeleteRestore"
-	// DevkitServicePageCreateUpdateProcedure is the fully-qualified name of the DevkitService's
-	// PageCreateUpdate RPC.
-	DevkitServicePageCreateUpdateProcedure = "/devkit.v1.DevkitService/PageCreateUpdate"
-	// DevkitServicePageListProcedure is the fully-qualified name of the DevkitService's PageList RPC.
-	DevkitServicePageListProcedure = "/devkit.v1.DevkitService/PageList"
-	// DevkitServiceSectionDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
-	// SectionDeleteRestore RPC.
-	DevkitServiceSectionDeleteRestoreProcedure = "/devkit.v1.DevkitService/SectionDeleteRestore"
-	// DevkitServiceSectionCreateUpdateProcedure is the fully-qualified name of the DevkitService's
-	// SectionCreateUpdate RPC.
-	DevkitServiceSectionCreateUpdateProcedure = "/devkit.v1.DevkitService/SectionCreateUpdate"
-	// DevkitServiceSectionListProcedure is the fully-qualified name of the DevkitService's SectionList
-	// RPC.
-	DevkitServiceSectionListProcedure = "/devkit.v1.DevkitService/SectionList"
-	// DevkitServiceTenantDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
-	// TenantDeleteRestore RPC.
-	DevkitServiceTenantDeleteRestoreProcedure = "/devkit.v1.DevkitService/TenantDeleteRestore"
-	// DevkitServiceTenantListProcedure is the fully-qualified name of the DevkitService's TenantList
-	// RPC.
-	DevkitServiceTenantListProcedure = "/devkit.v1.DevkitService/TenantList"
-	// DevkitServiceTenantCreateUpdateProcedure is the fully-qualified name of the DevkitService's
-	// TenantCreateUpdate RPC.
-	DevkitServiceTenantCreateUpdateProcedure = "/devkit.v1.DevkitService/TenantCreateUpdate"
+	// DevkitServiceCityListInputProcedure is the fully-qualified name of the DevkitService's
+	// CityListInput RPC.
+	DevkitServiceCityListInputProcedure = "/devkit.v1.DevkitService/CityListInput"
+	// DevkitServiceCityListProcedure is the fully-qualified name of the DevkitService's CityList RPC.
+	DevkitServiceCityListProcedure = "/devkit.v1.DevkitService/CityList"
+	// DevkitServiceLocationListInputProcedure is the fully-qualified name of the DevkitService's
+	// LocationListInput RPC.
+	DevkitServiceLocationListInputProcedure = "/devkit.v1.DevkitService/LocationListInput"
+	// DevkitServiceLocationListProcedure is the fully-qualified name of the DevkitService's
+	// LocationList RPC.
+	DevkitServiceLocationListProcedure = "/devkit.v1.DevkitService/LocationList"
 	// DevkitServiceSettingFindForUpdateProcedure is the fully-qualified name of the DevkitService's
 	// SettingFindForUpdate RPC.
 	DevkitServiceSettingFindForUpdateProcedure = "/devkit.v1.DevkitService/SettingFindForUpdate"
@@ -172,23 +148,50 @@ const (
 	// DevkitServiceAuthResetPasswordProcedure is the fully-qualified name of the DevkitService's
 	// AuthResetPassword RPC.
 	DevkitServiceAuthResetPasswordProcedure = "/devkit.v1.DevkitService/AuthResetPassword"
+	// DevkitServiceTenantDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
+	// TenantDeleteRestore RPC.
+	DevkitServiceTenantDeleteRestoreProcedure = "/devkit.v1.DevkitService/TenantDeleteRestore"
+	// DevkitServiceTenantListProcedure is the fully-qualified name of the DevkitService's TenantList
+	// RPC.
+	DevkitServiceTenantListProcedure = "/devkit.v1.DevkitService/TenantList"
+	// DevkitServiceTenantCreateUpdateProcedure is the fully-qualified name of the DevkitService's
+	// TenantCreateUpdate RPC.
+	DevkitServiceTenantCreateUpdateProcedure = "/devkit.v1.DevkitService/TenantCreateUpdate"
+	// DevkitServicePartialDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
+	// PartialDeleteRestore RPC.
+	DevkitServicePartialDeleteRestoreProcedure = "/devkit.v1.DevkitService/PartialDeleteRestore"
+	// DevkitServicePartialCreateUpdateProcedure is the fully-qualified name of the DevkitService's
+	// PartialCreateUpdate RPC.
+	DevkitServicePartialCreateUpdateProcedure = "/devkit.v1.DevkitService/PartialCreateUpdate"
+	// DevkitServicePartialListProcedure is the fully-qualified name of the DevkitService's PartialList
+	// RPC.
+	DevkitServicePartialListProcedure = "/devkit.v1.DevkitService/PartialList"
+	// DevkitServicePageDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
+	// PageDeleteRestore RPC.
+	DevkitServicePageDeleteRestoreProcedure = "/devkit.v1.DevkitService/PageDeleteRestore"
+	// DevkitServicePageCreateUpdateProcedure is the fully-qualified name of the DevkitService's
+	// PageCreateUpdate RPC.
+	DevkitServicePageCreateUpdateProcedure = "/devkit.v1.DevkitService/PageCreateUpdate"
+	// DevkitServicePageListProcedure is the fully-qualified name of the DevkitService's PageList RPC.
+	DevkitServicePageListProcedure = "/devkit.v1.DevkitService/PageList"
+	// DevkitServiceSectionDeleteRestoreProcedure is the fully-qualified name of the DevkitService's
+	// SectionDeleteRestore RPC.
+	DevkitServiceSectionDeleteRestoreProcedure = "/devkit.v1.DevkitService/SectionDeleteRestore"
+	// DevkitServiceSectionCreateUpdateProcedure is the fully-qualified name of the DevkitService's
+	// SectionCreateUpdate RPC.
+	DevkitServiceSectionCreateUpdateProcedure = "/devkit.v1.DevkitService/SectionCreateUpdate"
+	// DevkitServiceSectionListProcedure is the fully-qualified name of the DevkitService's SectionList
+	// RPC.
+	DevkitServiceSectionListProcedure = "/devkit.v1.DevkitService/SectionList"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
 	devkitServiceServiceDescriptor                           = v1.File_devkit_v1_devkit_service_proto.Services().ByName("DevkitService")
-	devkitServicePartialDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("PartialDeleteRestore")
-	devkitServicePartialCreateUpdateMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("PartialCreateUpdate")
-	devkitServicePartialListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("PartialList")
-	devkitServicePageDeleteRestoreMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("PageDeleteRestore")
-	devkitServicePageCreateUpdateMethodDescriptor            = devkitServiceServiceDescriptor.Methods().ByName("PageCreateUpdate")
-	devkitServicePageListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("PageList")
-	devkitServiceSectionDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("SectionDeleteRestore")
-	devkitServiceSectionCreateUpdateMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("SectionCreateUpdate")
-	devkitServiceSectionListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("SectionList")
-	devkitServiceTenantDeleteRestoreMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("TenantDeleteRestore")
-	devkitServiceTenantListMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("TenantList")
-	devkitServiceTenantCreateUpdateMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("TenantCreateUpdate")
+	devkitServiceCityListInputMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("CityListInput")
+	devkitServiceCityListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("CityList")
+	devkitServiceLocationListInputMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("LocationListInput")
+	devkitServiceLocationListMethodDescriptor                = devkitServiceServiceDescriptor.Methods().ByName("LocationList")
 	devkitServiceSettingFindForUpdateMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("SettingFindForUpdate")
 	devkitServiceSettingUpdateMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("SettingUpdate")
 	devkitServiceIconListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("IconList")
@@ -226,23 +229,27 @@ var (
 	devkitServiceAuthLoginProviderCallbackMethodDescriptor   = devkitServiceServiceDescriptor.Methods().ByName("AuthLoginProviderCallback")
 	devkitServiceAuthResetPasswordEmailMethodDescriptor      = devkitServiceServiceDescriptor.Methods().ByName("AuthResetPasswordEmail")
 	devkitServiceAuthResetPasswordMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("AuthResetPassword")
+	devkitServiceTenantDeleteRestoreMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("TenantDeleteRestore")
+	devkitServiceTenantListMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("TenantList")
+	devkitServiceTenantCreateUpdateMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("TenantCreateUpdate")
+	devkitServicePartialDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("PartialDeleteRestore")
+	devkitServicePartialCreateUpdateMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("PartialCreateUpdate")
+	devkitServicePartialListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("PartialList")
+	devkitServicePageDeleteRestoreMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("PageDeleteRestore")
+	devkitServicePageCreateUpdateMethodDescriptor            = devkitServiceServiceDescriptor.Methods().ByName("PageCreateUpdate")
+	devkitServicePageListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("PageList")
+	devkitServiceSectionDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("SectionDeleteRestore")
+	devkitServiceSectionCreateUpdateMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("SectionCreateUpdate")
+	devkitServiceSectionListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("SectionList")
 )
 
 // DevkitServiceClient is a client for the devkit.v1.DevkitService service.
 type DevkitServiceClient interface {
 	// INJECT METHODS
-	PartialDeleteRestore(context.Context, *connect.Request[v1.PartialDeleteRestoreRequest]) (*connect.Response[v1.PartialDeleteRestoreResponse], error)
-	PartialCreateUpdate(context.Context, *connect.Request[v1.PartialCreateUpdateRequest]) (*connect.Response[v1.PartialCreateUpdateResponse], error)
-	PartialList(context.Context, *connect.Request[v1.PartialListRequest]) (*connect.Response[v1.PartialListResponse], error)
-	PageDeleteRestore(context.Context, *connect.Request[v1.PageDeleteRestoreRequest]) (*connect.Response[v1.PageDeleteRestoreResponse], error)
-	PageCreateUpdate(context.Context, *connect.Request[v1.PageCreateUpdateRequest]) (*connect.Response[v1.PageCreateUpdateResponse], error)
-	PageList(context.Context, *connect.Request[v1.PageListRequest]) (*connect.Response[v1.PageListResponse], error)
-	SectionDeleteRestore(context.Context, *connect.Request[v1.SectionDeleteRestoreRequest]) (*connect.Response[v1.SectionDeleteRestoreResponse], error)
-	SectionCreateUpdate(context.Context, *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error)
-	SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error)
-	TenantDeleteRestore(context.Context, *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error)
-	TenantList(context.Context, *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error)
-	TenantCreateUpdate(context.Context, *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error)
+	CityListInput(context.Context, *connect.Request[v1.CityListInputRequest]) (*connect.Response[v1.CityListInputResponse], error)
+	CityList(context.Context, *connect.Request[v1.CityListRequest]) (*connect.Response[v1.CityListResponse], error)
+	LocationListInput(context.Context, *connect.Request[v1.LocationListInputRequest]) (*connect.Response[v1.LocationListInputResponse], error)
+	LocationList(context.Context, *connect.Request[v1.LocationListRequest]) (*connect.Response[v1.LocationListResponse], error)
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// public
 	// ////////////////////////////////////////////////////////////////////////////////////////////
@@ -303,6 +310,18 @@ type DevkitServiceClient interface {
 	AuthLoginProviderCallback(context.Context, *connect.Request[v1.AuthLoginProviderCallbackRequest]) (*connect.Response[v1.AuthLoginProviderCallbackResponse], error)
 	AuthResetPasswordEmail(context.Context, *connect.Request[v1.AuthResetPasswordEmailRequest]) (*connect.Response[v1.AuthResetPasswordEmailResponse], error)
 	AuthResetPassword(context.Context, *connect.Request[v1.AuthResetPasswordRequest]) (*connect.Response[v1.AuthResetPasswordResponse], error)
+	TenantDeleteRestore(context.Context, *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error)
+	TenantList(context.Context, *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error)
+	TenantCreateUpdate(context.Context, *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error)
+	PartialDeleteRestore(context.Context, *connect.Request[v1.PartialDeleteRestoreRequest]) (*connect.Response[v1.PartialDeleteRestoreResponse], error)
+	PartialCreateUpdate(context.Context, *connect.Request[v1.PartialCreateUpdateRequest]) (*connect.Response[v1.PartialCreateUpdateResponse], error)
+	PartialList(context.Context, *connect.Request[v1.PartialListRequest]) (*connect.Response[v1.PartialListResponse], error)
+	PageDeleteRestore(context.Context, *connect.Request[v1.PageDeleteRestoreRequest]) (*connect.Response[v1.PageDeleteRestoreResponse], error)
+	PageCreateUpdate(context.Context, *connect.Request[v1.PageCreateUpdateRequest]) (*connect.Response[v1.PageCreateUpdateResponse], error)
+	PageList(context.Context, *connect.Request[v1.PageListRequest]) (*connect.Response[v1.PageListResponse], error)
+	SectionDeleteRestore(context.Context, *connect.Request[v1.SectionDeleteRestoreRequest]) (*connect.Response[v1.SectionDeleteRestoreResponse], error)
+	SectionCreateUpdate(context.Context, *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error)
+	SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error)
 }
 
 // NewDevkitServiceClient constructs a client for the devkit.v1.DevkitService service. By default,
@@ -315,80 +334,32 @@ type DevkitServiceClient interface {
 func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) DevkitServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &devkitServiceClient{
-		partialDeleteRestore: connect.NewClient[v1.PartialDeleteRestoreRequest, v1.PartialDeleteRestoreResponse](
+		cityListInput: connect.NewClient[v1.CityListInputRequest, v1.CityListInputResponse](
 			httpClient,
-			baseURL+DevkitServicePartialDeleteRestoreProcedure,
-			connect.WithSchema(devkitServicePartialDeleteRestoreMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		partialCreateUpdate: connect.NewClient[v1.PartialCreateUpdateRequest, v1.PartialCreateUpdateResponse](
-			httpClient,
-			baseURL+DevkitServicePartialCreateUpdateProcedure,
-			connect.WithSchema(devkitServicePartialCreateUpdateMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		partialList: connect.NewClient[v1.PartialListRequest, v1.PartialListResponse](
-			httpClient,
-			baseURL+DevkitServicePartialListProcedure,
-			connect.WithSchema(devkitServicePartialListMethodDescriptor),
+			baseURL+DevkitServiceCityListInputProcedure,
+			connect.WithSchema(devkitServiceCityListInputMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
-		pageDeleteRestore: connect.NewClient[v1.PageDeleteRestoreRequest, v1.PageDeleteRestoreResponse](
+		cityList: connect.NewClient[v1.CityListRequest, v1.CityListResponse](
 			httpClient,
-			baseURL+DevkitServicePageDeleteRestoreProcedure,
-			connect.WithSchema(devkitServicePageDeleteRestoreMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		pageCreateUpdate: connect.NewClient[v1.PageCreateUpdateRequest, v1.PageCreateUpdateResponse](
-			httpClient,
-			baseURL+DevkitServicePageCreateUpdateProcedure,
-			connect.WithSchema(devkitServicePageCreateUpdateMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		pageList: connect.NewClient[v1.PageListRequest, v1.PageListResponse](
-			httpClient,
-			baseURL+DevkitServicePageListProcedure,
-			connect.WithSchema(devkitServicePageListMethodDescriptor),
+			baseURL+DevkitServiceCityListProcedure,
+			connect.WithSchema(devkitServiceCityListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
-		sectionDeleteRestore: connect.NewClient[v1.SectionDeleteRestoreRequest, v1.SectionDeleteRestoreResponse](
+		locationListInput: connect.NewClient[v1.LocationListInputRequest, v1.LocationListInputResponse](
 			httpClient,
-			baseURL+DevkitServiceSectionDeleteRestoreProcedure,
-			connect.WithSchema(devkitServiceSectionDeleteRestoreMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		sectionCreateUpdate: connect.NewClient[v1.SectionCreateUpdateRequest, v1.SectionCreateUpdateResponse](
-			httpClient,
-			baseURL+DevkitServiceSectionCreateUpdateProcedure,
-			connect.WithSchema(devkitServiceSectionCreateUpdateMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		sectionList: connect.NewClient[v1.SectionListRequest, v1.SectionListResponse](
-			httpClient,
-			baseURL+DevkitServiceSectionListProcedure,
-			connect.WithSchema(devkitServiceSectionListMethodDescriptor),
+			baseURL+DevkitServiceLocationListInputProcedure,
+			connect.WithSchema(devkitServiceLocationListInputMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
-		tenantDeleteRestore: connect.NewClient[v1.TenantDeleteRestoreRequest, v1.TenantDeleteRestoreResponse](
+		locationList: connect.NewClient[v1.LocationListRequest, v1.LocationListResponse](
 			httpClient,
-			baseURL+DevkitServiceTenantDeleteRestoreProcedure,
-			connect.WithSchema(devkitServiceTenantDeleteRestoreMethodDescriptor),
-			connect.WithClientOptions(opts...),
-		),
-		tenantList: connect.NewClient[v1.TenantListRequest, v1.TenantListResponse](
-			httpClient,
-			baseURL+DevkitServiceTenantListProcedure,
-			connect.WithSchema(devkitServiceTenantListMethodDescriptor),
+			baseURL+DevkitServiceLocationListProcedure,
+			connect.WithSchema(devkitServiceLocationListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
-			connect.WithClientOptions(opts...),
-		),
-		tenantCreateUpdate: connect.NewClient[v1.TenantCreateUpdateRequest, v1.TenantCreateUpdateResponse](
-			httpClient,
-			baseURL+DevkitServiceTenantCreateUpdateProcedure,
-			connect.WithSchema(devkitServiceTenantCreateUpdateMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
 		settingFindForUpdate: connect.NewClient[v1.SettingFindForUpdateRequest, v1.SettingFindForUpdateResponse](
@@ -627,23 +598,91 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(devkitServiceAuthResetPasswordMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		tenantDeleteRestore: connect.NewClient[v1.TenantDeleteRestoreRequest, v1.TenantDeleteRestoreResponse](
+			httpClient,
+			baseURL+DevkitServiceTenantDeleteRestoreProcedure,
+			connect.WithSchema(devkitServiceTenantDeleteRestoreMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		tenantList: connect.NewClient[v1.TenantListRequest, v1.TenantListResponse](
+			httpClient,
+			baseURL+DevkitServiceTenantListProcedure,
+			connect.WithSchema(devkitServiceTenantListMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
+		tenantCreateUpdate: connect.NewClient[v1.TenantCreateUpdateRequest, v1.TenantCreateUpdateResponse](
+			httpClient,
+			baseURL+DevkitServiceTenantCreateUpdateProcedure,
+			connect.WithSchema(devkitServiceTenantCreateUpdateMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		partialDeleteRestore: connect.NewClient[v1.PartialDeleteRestoreRequest, v1.PartialDeleteRestoreResponse](
+			httpClient,
+			baseURL+DevkitServicePartialDeleteRestoreProcedure,
+			connect.WithSchema(devkitServicePartialDeleteRestoreMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		partialCreateUpdate: connect.NewClient[v1.PartialCreateUpdateRequest, v1.PartialCreateUpdateResponse](
+			httpClient,
+			baseURL+DevkitServicePartialCreateUpdateProcedure,
+			connect.WithSchema(devkitServicePartialCreateUpdateMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		partialList: connect.NewClient[v1.PartialListRequest, v1.PartialListResponse](
+			httpClient,
+			baseURL+DevkitServicePartialListProcedure,
+			connect.WithSchema(devkitServicePartialListMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
+		pageDeleteRestore: connect.NewClient[v1.PageDeleteRestoreRequest, v1.PageDeleteRestoreResponse](
+			httpClient,
+			baseURL+DevkitServicePageDeleteRestoreProcedure,
+			connect.WithSchema(devkitServicePageDeleteRestoreMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		pageCreateUpdate: connect.NewClient[v1.PageCreateUpdateRequest, v1.PageCreateUpdateResponse](
+			httpClient,
+			baseURL+DevkitServicePageCreateUpdateProcedure,
+			connect.WithSchema(devkitServicePageCreateUpdateMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		pageList: connect.NewClient[v1.PageListRequest, v1.PageListResponse](
+			httpClient,
+			baseURL+DevkitServicePageListProcedure,
+			connect.WithSchema(devkitServicePageListMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
+		sectionDeleteRestore: connect.NewClient[v1.SectionDeleteRestoreRequest, v1.SectionDeleteRestoreResponse](
+			httpClient,
+			baseURL+DevkitServiceSectionDeleteRestoreProcedure,
+			connect.WithSchema(devkitServiceSectionDeleteRestoreMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		sectionCreateUpdate: connect.NewClient[v1.SectionCreateUpdateRequest, v1.SectionCreateUpdateResponse](
+			httpClient,
+			baseURL+DevkitServiceSectionCreateUpdateProcedure,
+			connect.WithSchema(devkitServiceSectionCreateUpdateMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
+		sectionList: connect.NewClient[v1.SectionListRequest, v1.SectionListResponse](
+			httpClient,
+			baseURL+DevkitServiceSectionListProcedure,
+			connect.WithSchema(devkitServiceSectionListMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // devkitServiceClient implements DevkitServiceClient.
 type devkitServiceClient struct {
-	partialDeleteRestore        *connect.Client[v1.PartialDeleteRestoreRequest, v1.PartialDeleteRestoreResponse]
-	partialCreateUpdate         *connect.Client[v1.PartialCreateUpdateRequest, v1.PartialCreateUpdateResponse]
-	partialList                 *connect.Client[v1.PartialListRequest, v1.PartialListResponse]
-	pageDeleteRestore           *connect.Client[v1.PageDeleteRestoreRequest, v1.PageDeleteRestoreResponse]
-	pageCreateUpdate            *connect.Client[v1.PageCreateUpdateRequest, v1.PageCreateUpdateResponse]
-	pageList                    *connect.Client[v1.PageListRequest, v1.PageListResponse]
-	sectionDeleteRestore        *connect.Client[v1.SectionDeleteRestoreRequest, v1.SectionDeleteRestoreResponse]
-	sectionCreateUpdate         *connect.Client[v1.SectionCreateUpdateRequest, v1.SectionCreateUpdateResponse]
-	sectionList                 *connect.Client[v1.SectionListRequest, v1.SectionListResponse]
-	tenantDeleteRestore         *connect.Client[v1.TenantDeleteRestoreRequest, v1.TenantDeleteRestoreResponse]
-	tenantList                  *connect.Client[v1.TenantListRequest, v1.TenantListResponse]
-	tenantCreateUpdate          *connect.Client[v1.TenantCreateUpdateRequest, v1.TenantCreateUpdateResponse]
+	cityListInput               *connect.Client[v1.CityListInputRequest, v1.CityListInputResponse]
+	cityList                    *connect.Client[v1.CityListRequest, v1.CityListResponse]
+	locationListInput           *connect.Client[v1.LocationListInputRequest, v1.LocationListInputResponse]
+	locationList                *connect.Client[v1.LocationListRequest, v1.LocationListResponse]
 	settingFindForUpdate        *connect.Client[v1.SettingFindForUpdateRequest, v1.SettingFindForUpdateResponse]
 	settingUpdate               *connect.Client[v1.SettingUpdateRequest, v1.SettingUpdateResponse]
 	iconList                    *connect.Client[v1.IconListRequest, v1.IconListResponse]
@@ -681,66 +720,38 @@ type devkitServiceClient struct {
 	authLoginProviderCallback   *connect.Client[v1.AuthLoginProviderCallbackRequest, v1.AuthLoginProviderCallbackResponse]
 	authResetPasswordEmail      *connect.Client[v1.AuthResetPasswordEmailRequest, v1.AuthResetPasswordEmailResponse]
 	authResetPassword           *connect.Client[v1.AuthResetPasswordRequest, v1.AuthResetPasswordResponse]
+	tenantDeleteRestore         *connect.Client[v1.TenantDeleteRestoreRequest, v1.TenantDeleteRestoreResponse]
+	tenantList                  *connect.Client[v1.TenantListRequest, v1.TenantListResponse]
+	tenantCreateUpdate          *connect.Client[v1.TenantCreateUpdateRequest, v1.TenantCreateUpdateResponse]
+	partialDeleteRestore        *connect.Client[v1.PartialDeleteRestoreRequest, v1.PartialDeleteRestoreResponse]
+	partialCreateUpdate         *connect.Client[v1.PartialCreateUpdateRequest, v1.PartialCreateUpdateResponse]
+	partialList                 *connect.Client[v1.PartialListRequest, v1.PartialListResponse]
+	pageDeleteRestore           *connect.Client[v1.PageDeleteRestoreRequest, v1.PageDeleteRestoreResponse]
+	pageCreateUpdate            *connect.Client[v1.PageCreateUpdateRequest, v1.PageCreateUpdateResponse]
+	pageList                    *connect.Client[v1.PageListRequest, v1.PageListResponse]
+	sectionDeleteRestore        *connect.Client[v1.SectionDeleteRestoreRequest, v1.SectionDeleteRestoreResponse]
+	sectionCreateUpdate         *connect.Client[v1.SectionCreateUpdateRequest, v1.SectionCreateUpdateResponse]
+	sectionList                 *connect.Client[v1.SectionListRequest, v1.SectionListResponse]
 }
 
-// PartialDeleteRestore calls devkit.v1.DevkitService.PartialDeleteRestore.
-func (c *devkitServiceClient) PartialDeleteRestore(ctx context.Context, req *connect.Request[v1.PartialDeleteRestoreRequest]) (*connect.Response[v1.PartialDeleteRestoreResponse], error) {
-	return c.partialDeleteRestore.CallUnary(ctx, req)
+// CityListInput calls devkit.v1.DevkitService.CityListInput.
+func (c *devkitServiceClient) CityListInput(ctx context.Context, req *connect.Request[v1.CityListInputRequest]) (*connect.Response[v1.CityListInputResponse], error) {
+	return c.cityListInput.CallUnary(ctx, req)
 }
 
-// PartialCreateUpdate calls devkit.v1.DevkitService.PartialCreateUpdate.
-func (c *devkitServiceClient) PartialCreateUpdate(ctx context.Context, req *connect.Request[v1.PartialCreateUpdateRequest]) (*connect.Response[v1.PartialCreateUpdateResponse], error) {
-	return c.partialCreateUpdate.CallUnary(ctx, req)
+// CityList calls devkit.v1.DevkitService.CityList.
+func (c *devkitServiceClient) CityList(ctx context.Context, req *connect.Request[v1.CityListRequest]) (*connect.Response[v1.CityListResponse], error) {
+	return c.cityList.CallUnary(ctx, req)
 }
 
-// PartialList calls devkit.v1.DevkitService.PartialList.
-func (c *devkitServiceClient) PartialList(ctx context.Context, req *connect.Request[v1.PartialListRequest]) (*connect.Response[v1.PartialListResponse], error) {
-	return c.partialList.CallUnary(ctx, req)
+// LocationListInput calls devkit.v1.DevkitService.LocationListInput.
+func (c *devkitServiceClient) LocationListInput(ctx context.Context, req *connect.Request[v1.LocationListInputRequest]) (*connect.Response[v1.LocationListInputResponse], error) {
+	return c.locationListInput.CallUnary(ctx, req)
 }
 
-// PageDeleteRestore calls devkit.v1.DevkitService.PageDeleteRestore.
-func (c *devkitServiceClient) PageDeleteRestore(ctx context.Context, req *connect.Request[v1.PageDeleteRestoreRequest]) (*connect.Response[v1.PageDeleteRestoreResponse], error) {
-	return c.pageDeleteRestore.CallUnary(ctx, req)
-}
-
-// PageCreateUpdate calls devkit.v1.DevkitService.PageCreateUpdate.
-func (c *devkitServiceClient) PageCreateUpdate(ctx context.Context, req *connect.Request[v1.PageCreateUpdateRequest]) (*connect.Response[v1.PageCreateUpdateResponse], error) {
-	return c.pageCreateUpdate.CallUnary(ctx, req)
-}
-
-// PageList calls devkit.v1.DevkitService.PageList.
-func (c *devkitServiceClient) PageList(ctx context.Context, req *connect.Request[v1.PageListRequest]) (*connect.Response[v1.PageListResponse], error) {
-	return c.pageList.CallUnary(ctx, req)
-}
-
-// SectionDeleteRestore calls devkit.v1.DevkitService.SectionDeleteRestore.
-func (c *devkitServiceClient) SectionDeleteRestore(ctx context.Context, req *connect.Request[v1.SectionDeleteRestoreRequest]) (*connect.Response[v1.SectionDeleteRestoreResponse], error) {
-	return c.sectionDeleteRestore.CallUnary(ctx, req)
-}
-
-// SectionCreateUpdate calls devkit.v1.DevkitService.SectionCreateUpdate.
-func (c *devkitServiceClient) SectionCreateUpdate(ctx context.Context, req *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error) {
-	return c.sectionCreateUpdate.CallUnary(ctx, req)
-}
-
-// SectionList calls devkit.v1.DevkitService.SectionList.
-func (c *devkitServiceClient) SectionList(ctx context.Context, req *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error) {
-	return c.sectionList.CallUnary(ctx, req)
-}
-
-// TenantDeleteRestore calls devkit.v1.DevkitService.TenantDeleteRestore.
-func (c *devkitServiceClient) TenantDeleteRestore(ctx context.Context, req *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error) {
-	return c.tenantDeleteRestore.CallUnary(ctx, req)
-}
-
-// TenantList calls devkit.v1.DevkitService.TenantList.
-func (c *devkitServiceClient) TenantList(ctx context.Context, req *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error) {
-	return c.tenantList.CallUnary(ctx, req)
-}
-
-// TenantCreateUpdate calls devkit.v1.DevkitService.TenantCreateUpdate.
-func (c *devkitServiceClient) TenantCreateUpdate(ctx context.Context, req *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error) {
-	return c.tenantCreateUpdate.CallUnary(ctx, req)
+// LocationList calls devkit.v1.DevkitService.LocationList.
+func (c *devkitServiceClient) LocationList(ctx context.Context, req *connect.Request[v1.LocationListRequest]) (*connect.Response[v1.LocationListResponse], error) {
+	return c.locationList.CallUnary(ctx, req)
 }
 
 // SettingFindForUpdate calls devkit.v1.DevkitService.SettingFindForUpdate.
@@ -928,21 +939,73 @@ func (c *devkitServiceClient) AuthResetPassword(ctx context.Context, req *connec
 	return c.authResetPassword.CallUnary(ctx, req)
 }
 
+// TenantDeleteRestore calls devkit.v1.DevkitService.TenantDeleteRestore.
+func (c *devkitServiceClient) TenantDeleteRestore(ctx context.Context, req *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error) {
+	return c.tenantDeleteRestore.CallUnary(ctx, req)
+}
+
+// TenantList calls devkit.v1.DevkitService.TenantList.
+func (c *devkitServiceClient) TenantList(ctx context.Context, req *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error) {
+	return c.tenantList.CallUnary(ctx, req)
+}
+
+// TenantCreateUpdate calls devkit.v1.DevkitService.TenantCreateUpdate.
+func (c *devkitServiceClient) TenantCreateUpdate(ctx context.Context, req *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error) {
+	return c.tenantCreateUpdate.CallUnary(ctx, req)
+}
+
+// PartialDeleteRestore calls devkit.v1.DevkitService.PartialDeleteRestore.
+func (c *devkitServiceClient) PartialDeleteRestore(ctx context.Context, req *connect.Request[v1.PartialDeleteRestoreRequest]) (*connect.Response[v1.PartialDeleteRestoreResponse], error) {
+	return c.partialDeleteRestore.CallUnary(ctx, req)
+}
+
+// PartialCreateUpdate calls devkit.v1.DevkitService.PartialCreateUpdate.
+func (c *devkitServiceClient) PartialCreateUpdate(ctx context.Context, req *connect.Request[v1.PartialCreateUpdateRequest]) (*connect.Response[v1.PartialCreateUpdateResponse], error) {
+	return c.partialCreateUpdate.CallUnary(ctx, req)
+}
+
+// PartialList calls devkit.v1.DevkitService.PartialList.
+func (c *devkitServiceClient) PartialList(ctx context.Context, req *connect.Request[v1.PartialListRequest]) (*connect.Response[v1.PartialListResponse], error) {
+	return c.partialList.CallUnary(ctx, req)
+}
+
+// PageDeleteRestore calls devkit.v1.DevkitService.PageDeleteRestore.
+func (c *devkitServiceClient) PageDeleteRestore(ctx context.Context, req *connect.Request[v1.PageDeleteRestoreRequest]) (*connect.Response[v1.PageDeleteRestoreResponse], error) {
+	return c.pageDeleteRestore.CallUnary(ctx, req)
+}
+
+// PageCreateUpdate calls devkit.v1.DevkitService.PageCreateUpdate.
+func (c *devkitServiceClient) PageCreateUpdate(ctx context.Context, req *connect.Request[v1.PageCreateUpdateRequest]) (*connect.Response[v1.PageCreateUpdateResponse], error) {
+	return c.pageCreateUpdate.CallUnary(ctx, req)
+}
+
+// PageList calls devkit.v1.DevkitService.PageList.
+func (c *devkitServiceClient) PageList(ctx context.Context, req *connect.Request[v1.PageListRequest]) (*connect.Response[v1.PageListResponse], error) {
+	return c.pageList.CallUnary(ctx, req)
+}
+
+// SectionDeleteRestore calls devkit.v1.DevkitService.SectionDeleteRestore.
+func (c *devkitServiceClient) SectionDeleteRestore(ctx context.Context, req *connect.Request[v1.SectionDeleteRestoreRequest]) (*connect.Response[v1.SectionDeleteRestoreResponse], error) {
+	return c.sectionDeleteRestore.CallUnary(ctx, req)
+}
+
+// SectionCreateUpdate calls devkit.v1.DevkitService.SectionCreateUpdate.
+func (c *devkitServiceClient) SectionCreateUpdate(ctx context.Context, req *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error) {
+	return c.sectionCreateUpdate.CallUnary(ctx, req)
+}
+
+// SectionList calls devkit.v1.DevkitService.SectionList.
+func (c *devkitServiceClient) SectionList(ctx context.Context, req *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error) {
+	return c.sectionList.CallUnary(ctx, req)
+}
+
 // DevkitServiceHandler is an implementation of the devkit.v1.DevkitService service.
 type DevkitServiceHandler interface {
 	// INJECT METHODS
-	PartialDeleteRestore(context.Context, *connect.Request[v1.PartialDeleteRestoreRequest]) (*connect.Response[v1.PartialDeleteRestoreResponse], error)
-	PartialCreateUpdate(context.Context, *connect.Request[v1.PartialCreateUpdateRequest]) (*connect.Response[v1.PartialCreateUpdateResponse], error)
-	PartialList(context.Context, *connect.Request[v1.PartialListRequest]) (*connect.Response[v1.PartialListResponse], error)
-	PageDeleteRestore(context.Context, *connect.Request[v1.PageDeleteRestoreRequest]) (*connect.Response[v1.PageDeleteRestoreResponse], error)
-	PageCreateUpdate(context.Context, *connect.Request[v1.PageCreateUpdateRequest]) (*connect.Response[v1.PageCreateUpdateResponse], error)
-	PageList(context.Context, *connect.Request[v1.PageListRequest]) (*connect.Response[v1.PageListResponse], error)
-	SectionDeleteRestore(context.Context, *connect.Request[v1.SectionDeleteRestoreRequest]) (*connect.Response[v1.SectionDeleteRestoreResponse], error)
-	SectionCreateUpdate(context.Context, *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error)
-	SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error)
-	TenantDeleteRestore(context.Context, *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error)
-	TenantList(context.Context, *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error)
-	TenantCreateUpdate(context.Context, *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error)
+	CityListInput(context.Context, *connect.Request[v1.CityListInputRequest]) (*connect.Response[v1.CityListInputResponse], error)
+	CityList(context.Context, *connect.Request[v1.CityListRequest]) (*connect.Response[v1.CityListResponse], error)
+	LocationListInput(context.Context, *connect.Request[v1.LocationListInputRequest]) (*connect.Response[v1.LocationListInputResponse], error)
+	LocationList(context.Context, *connect.Request[v1.LocationListRequest]) (*connect.Response[v1.LocationListResponse], error)
 	// ////////////////////////////////////////////////////////////////////////////////////////////
 	// public
 	// ////////////////////////////////////////////////////////////////////////////////////////////
@@ -1003,6 +1066,18 @@ type DevkitServiceHandler interface {
 	AuthLoginProviderCallback(context.Context, *connect.Request[v1.AuthLoginProviderCallbackRequest]) (*connect.Response[v1.AuthLoginProviderCallbackResponse], error)
 	AuthResetPasswordEmail(context.Context, *connect.Request[v1.AuthResetPasswordEmailRequest]) (*connect.Response[v1.AuthResetPasswordEmailResponse], error)
 	AuthResetPassword(context.Context, *connect.Request[v1.AuthResetPasswordRequest]) (*connect.Response[v1.AuthResetPasswordResponse], error)
+	TenantDeleteRestore(context.Context, *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error)
+	TenantList(context.Context, *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error)
+	TenantCreateUpdate(context.Context, *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error)
+	PartialDeleteRestore(context.Context, *connect.Request[v1.PartialDeleteRestoreRequest]) (*connect.Response[v1.PartialDeleteRestoreResponse], error)
+	PartialCreateUpdate(context.Context, *connect.Request[v1.PartialCreateUpdateRequest]) (*connect.Response[v1.PartialCreateUpdateResponse], error)
+	PartialList(context.Context, *connect.Request[v1.PartialListRequest]) (*connect.Response[v1.PartialListResponse], error)
+	PageDeleteRestore(context.Context, *connect.Request[v1.PageDeleteRestoreRequest]) (*connect.Response[v1.PageDeleteRestoreResponse], error)
+	PageCreateUpdate(context.Context, *connect.Request[v1.PageCreateUpdateRequest]) (*connect.Response[v1.PageCreateUpdateResponse], error)
+	PageList(context.Context, *connect.Request[v1.PageListRequest]) (*connect.Response[v1.PageListResponse], error)
+	SectionDeleteRestore(context.Context, *connect.Request[v1.SectionDeleteRestoreRequest]) (*connect.Response[v1.SectionDeleteRestoreResponse], error)
+	SectionCreateUpdate(context.Context, *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error)
+	SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error)
 }
 
 // NewDevkitServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -1011,80 +1086,32 @@ type DevkitServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	devkitServicePartialDeleteRestoreHandler := connect.NewUnaryHandler(
-		DevkitServicePartialDeleteRestoreProcedure,
-		svc.PartialDeleteRestore,
-		connect.WithSchema(devkitServicePartialDeleteRestoreMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServicePartialCreateUpdateHandler := connect.NewUnaryHandler(
-		DevkitServicePartialCreateUpdateProcedure,
-		svc.PartialCreateUpdate,
-		connect.WithSchema(devkitServicePartialCreateUpdateMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServicePartialListHandler := connect.NewUnaryHandler(
-		DevkitServicePartialListProcedure,
-		svc.PartialList,
-		connect.WithSchema(devkitServicePartialListMethodDescriptor),
+	devkitServiceCityListInputHandler := connect.NewUnaryHandler(
+		DevkitServiceCityListInputProcedure,
+		svc.CityListInput,
+		connect.WithSchema(devkitServiceCityListInputMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
-	devkitServicePageDeleteRestoreHandler := connect.NewUnaryHandler(
-		DevkitServicePageDeleteRestoreProcedure,
-		svc.PageDeleteRestore,
-		connect.WithSchema(devkitServicePageDeleteRestoreMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServicePageCreateUpdateHandler := connect.NewUnaryHandler(
-		DevkitServicePageCreateUpdateProcedure,
-		svc.PageCreateUpdate,
-		connect.WithSchema(devkitServicePageCreateUpdateMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServicePageListHandler := connect.NewUnaryHandler(
-		DevkitServicePageListProcedure,
-		svc.PageList,
-		connect.WithSchema(devkitServicePageListMethodDescriptor),
+	devkitServiceCityListHandler := connect.NewUnaryHandler(
+		DevkitServiceCityListProcedure,
+		svc.CityList,
+		connect.WithSchema(devkitServiceCityListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
-	devkitServiceSectionDeleteRestoreHandler := connect.NewUnaryHandler(
-		DevkitServiceSectionDeleteRestoreProcedure,
-		svc.SectionDeleteRestore,
-		connect.WithSchema(devkitServiceSectionDeleteRestoreMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServiceSectionCreateUpdateHandler := connect.NewUnaryHandler(
-		DevkitServiceSectionCreateUpdateProcedure,
-		svc.SectionCreateUpdate,
-		connect.WithSchema(devkitServiceSectionCreateUpdateMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServiceSectionListHandler := connect.NewUnaryHandler(
-		DevkitServiceSectionListProcedure,
-		svc.SectionList,
-		connect.WithSchema(devkitServiceSectionListMethodDescriptor),
+	devkitServiceLocationListInputHandler := connect.NewUnaryHandler(
+		DevkitServiceLocationListInputProcedure,
+		svc.LocationListInput,
+		connect.WithSchema(devkitServiceLocationListInputMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
-	devkitServiceTenantDeleteRestoreHandler := connect.NewUnaryHandler(
-		DevkitServiceTenantDeleteRestoreProcedure,
-		svc.TenantDeleteRestore,
-		connect.WithSchema(devkitServiceTenantDeleteRestoreMethodDescriptor),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServiceTenantListHandler := connect.NewUnaryHandler(
-		DevkitServiceTenantListProcedure,
-		svc.TenantList,
-		connect.WithSchema(devkitServiceTenantListMethodDescriptor),
+	devkitServiceLocationListHandler := connect.NewUnaryHandler(
+		DevkitServiceLocationListProcedure,
+		svc.LocationList,
+		connect.WithSchema(devkitServiceLocationListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
-		connect.WithHandlerOptions(opts...),
-	)
-	devkitServiceTenantCreateUpdateHandler := connect.NewUnaryHandler(
-		DevkitServiceTenantCreateUpdateProcedure,
-		svc.TenantCreateUpdate,
-		connect.WithSchema(devkitServiceTenantCreateUpdateMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
 	devkitServiceSettingFindForUpdateHandler := connect.NewUnaryHandler(
@@ -1323,32 +1350,92 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(devkitServiceAuthResetPasswordMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	devkitServiceTenantDeleteRestoreHandler := connect.NewUnaryHandler(
+		DevkitServiceTenantDeleteRestoreProcedure,
+		svc.TenantDeleteRestore,
+		connect.WithSchema(devkitServiceTenantDeleteRestoreMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceTenantListHandler := connect.NewUnaryHandler(
+		DevkitServiceTenantListProcedure,
+		svc.TenantList,
+		connect.WithSchema(devkitServiceTenantListMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceTenantCreateUpdateHandler := connect.NewUnaryHandler(
+		DevkitServiceTenantCreateUpdateProcedure,
+		svc.TenantCreateUpdate,
+		connect.WithSchema(devkitServiceTenantCreateUpdateMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServicePartialDeleteRestoreHandler := connect.NewUnaryHandler(
+		DevkitServicePartialDeleteRestoreProcedure,
+		svc.PartialDeleteRestore,
+		connect.WithSchema(devkitServicePartialDeleteRestoreMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServicePartialCreateUpdateHandler := connect.NewUnaryHandler(
+		DevkitServicePartialCreateUpdateProcedure,
+		svc.PartialCreateUpdate,
+		connect.WithSchema(devkitServicePartialCreateUpdateMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServicePartialListHandler := connect.NewUnaryHandler(
+		DevkitServicePartialListProcedure,
+		svc.PartialList,
+		connect.WithSchema(devkitServicePartialListMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServicePageDeleteRestoreHandler := connect.NewUnaryHandler(
+		DevkitServicePageDeleteRestoreProcedure,
+		svc.PageDeleteRestore,
+		connect.WithSchema(devkitServicePageDeleteRestoreMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServicePageCreateUpdateHandler := connect.NewUnaryHandler(
+		DevkitServicePageCreateUpdateProcedure,
+		svc.PageCreateUpdate,
+		connect.WithSchema(devkitServicePageCreateUpdateMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServicePageListHandler := connect.NewUnaryHandler(
+		DevkitServicePageListProcedure,
+		svc.PageList,
+		connect.WithSchema(devkitServicePageListMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceSectionDeleteRestoreHandler := connect.NewUnaryHandler(
+		DevkitServiceSectionDeleteRestoreProcedure,
+		svc.SectionDeleteRestore,
+		connect.WithSchema(devkitServiceSectionDeleteRestoreMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceSectionCreateUpdateHandler := connect.NewUnaryHandler(
+		DevkitServiceSectionCreateUpdateProcedure,
+		svc.SectionCreateUpdate,
+		connect.WithSchema(devkitServiceSectionCreateUpdateMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceSectionListHandler := connect.NewUnaryHandler(
+		DevkitServiceSectionListProcedure,
+		svc.SectionList,
+		connect.WithSchema(devkitServiceSectionListMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/devkit.v1.DevkitService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
-		case DevkitServicePartialDeleteRestoreProcedure:
-			devkitServicePartialDeleteRestoreHandler.ServeHTTP(w, r)
-		case DevkitServicePartialCreateUpdateProcedure:
-			devkitServicePartialCreateUpdateHandler.ServeHTTP(w, r)
-		case DevkitServicePartialListProcedure:
-			devkitServicePartialListHandler.ServeHTTP(w, r)
-		case DevkitServicePageDeleteRestoreProcedure:
-			devkitServicePageDeleteRestoreHandler.ServeHTTP(w, r)
-		case DevkitServicePageCreateUpdateProcedure:
-			devkitServicePageCreateUpdateHandler.ServeHTTP(w, r)
-		case DevkitServicePageListProcedure:
-			devkitServicePageListHandler.ServeHTTP(w, r)
-		case DevkitServiceSectionDeleteRestoreProcedure:
-			devkitServiceSectionDeleteRestoreHandler.ServeHTTP(w, r)
-		case DevkitServiceSectionCreateUpdateProcedure:
-			devkitServiceSectionCreateUpdateHandler.ServeHTTP(w, r)
-		case DevkitServiceSectionListProcedure:
-			devkitServiceSectionListHandler.ServeHTTP(w, r)
-		case DevkitServiceTenantDeleteRestoreProcedure:
-			devkitServiceTenantDeleteRestoreHandler.ServeHTTP(w, r)
-		case DevkitServiceTenantListProcedure:
-			devkitServiceTenantListHandler.ServeHTTP(w, r)
-		case DevkitServiceTenantCreateUpdateProcedure:
-			devkitServiceTenantCreateUpdateHandler.ServeHTTP(w, r)
+		case DevkitServiceCityListInputProcedure:
+			devkitServiceCityListInputHandler.ServeHTTP(w, r)
+		case DevkitServiceCityListProcedure:
+			devkitServiceCityListHandler.ServeHTTP(w, r)
+		case DevkitServiceLocationListInputProcedure:
+			devkitServiceLocationListInputHandler.ServeHTTP(w, r)
+		case DevkitServiceLocationListProcedure:
+			devkitServiceLocationListHandler.ServeHTTP(w, r)
 		case DevkitServiceSettingFindForUpdateProcedure:
 			devkitServiceSettingFindForUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceSettingUpdateProcedure:
@@ -1423,6 +1510,30 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 			devkitServiceAuthResetPasswordEmailHandler.ServeHTTP(w, r)
 		case DevkitServiceAuthResetPasswordProcedure:
 			devkitServiceAuthResetPasswordHandler.ServeHTTP(w, r)
+		case DevkitServiceTenantDeleteRestoreProcedure:
+			devkitServiceTenantDeleteRestoreHandler.ServeHTTP(w, r)
+		case DevkitServiceTenantListProcedure:
+			devkitServiceTenantListHandler.ServeHTTP(w, r)
+		case DevkitServiceTenantCreateUpdateProcedure:
+			devkitServiceTenantCreateUpdateHandler.ServeHTTP(w, r)
+		case DevkitServicePartialDeleteRestoreProcedure:
+			devkitServicePartialDeleteRestoreHandler.ServeHTTP(w, r)
+		case DevkitServicePartialCreateUpdateProcedure:
+			devkitServicePartialCreateUpdateHandler.ServeHTTP(w, r)
+		case DevkitServicePartialListProcedure:
+			devkitServicePartialListHandler.ServeHTTP(w, r)
+		case DevkitServicePageDeleteRestoreProcedure:
+			devkitServicePageDeleteRestoreHandler.ServeHTTP(w, r)
+		case DevkitServicePageCreateUpdateProcedure:
+			devkitServicePageCreateUpdateHandler.ServeHTTP(w, r)
+		case DevkitServicePageListProcedure:
+			devkitServicePageListHandler.ServeHTTP(w, r)
+		case DevkitServiceSectionDeleteRestoreProcedure:
+			devkitServiceSectionDeleteRestoreHandler.ServeHTTP(w, r)
+		case DevkitServiceSectionCreateUpdateProcedure:
+			devkitServiceSectionCreateUpdateHandler.ServeHTTP(w, r)
+		case DevkitServiceSectionListProcedure:
+			devkitServiceSectionListHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -1432,52 +1543,20 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 // UnimplementedDevkitServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedDevkitServiceHandler struct{}
 
-func (UnimplementedDevkitServiceHandler) PartialDeleteRestore(context.Context, *connect.Request[v1.PartialDeleteRestoreRequest]) (*connect.Response[v1.PartialDeleteRestoreResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PartialDeleteRestore is not implemented"))
+func (UnimplementedDevkitServiceHandler) CityListInput(context.Context, *connect.Request[v1.CityListInputRequest]) (*connect.Response[v1.CityListInputResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.CityListInput is not implemented"))
 }
 
-func (UnimplementedDevkitServiceHandler) PartialCreateUpdate(context.Context, *connect.Request[v1.PartialCreateUpdateRequest]) (*connect.Response[v1.PartialCreateUpdateResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PartialCreateUpdate is not implemented"))
+func (UnimplementedDevkitServiceHandler) CityList(context.Context, *connect.Request[v1.CityListRequest]) (*connect.Response[v1.CityListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.CityList is not implemented"))
 }
 
-func (UnimplementedDevkitServiceHandler) PartialList(context.Context, *connect.Request[v1.PartialListRequest]) (*connect.Response[v1.PartialListResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PartialList is not implemented"))
+func (UnimplementedDevkitServiceHandler) LocationListInput(context.Context, *connect.Request[v1.LocationListInputRequest]) (*connect.Response[v1.LocationListInputResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.LocationListInput is not implemented"))
 }
 
-func (UnimplementedDevkitServiceHandler) PageDeleteRestore(context.Context, *connect.Request[v1.PageDeleteRestoreRequest]) (*connect.Response[v1.PageDeleteRestoreResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PageDeleteRestore is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) PageCreateUpdate(context.Context, *connect.Request[v1.PageCreateUpdateRequest]) (*connect.Response[v1.PageCreateUpdateResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PageCreateUpdate is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) PageList(context.Context, *connect.Request[v1.PageListRequest]) (*connect.Response[v1.PageListResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PageList is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) SectionDeleteRestore(context.Context, *connect.Request[v1.SectionDeleteRestoreRequest]) (*connect.Response[v1.SectionDeleteRestoreResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SectionDeleteRestore is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) SectionCreateUpdate(context.Context, *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SectionCreateUpdate is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SectionList is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) TenantDeleteRestore(context.Context, *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TenantDeleteRestore is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) TenantList(context.Context, *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TenantList is not implemented"))
-}
-
-func (UnimplementedDevkitServiceHandler) TenantCreateUpdate(context.Context, *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TenantCreateUpdate is not implemented"))
+func (UnimplementedDevkitServiceHandler) LocationList(context.Context, *connect.Request[v1.LocationListRequest]) (*connect.Response[v1.LocationListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.LocationList is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) SettingFindForUpdate(context.Context, *connect.Request[v1.SettingFindForUpdateRequest]) (*connect.Response[v1.SettingFindForUpdateResponse], error) {
@@ -1626,4 +1705,52 @@ func (UnimplementedDevkitServiceHandler) AuthResetPasswordEmail(context.Context,
 
 func (UnimplementedDevkitServiceHandler) AuthResetPassword(context.Context, *connect.Request[v1.AuthResetPasswordRequest]) (*connect.Response[v1.AuthResetPasswordResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.AuthResetPassword is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) TenantDeleteRestore(context.Context, *connect.Request[v1.TenantDeleteRestoreRequest]) (*connect.Response[v1.TenantDeleteRestoreResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TenantDeleteRestore is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) TenantList(context.Context, *connect.Request[v1.TenantListRequest]) (*connect.Response[v1.TenantListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TenantList is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) TenantCreateUpdate(context.Context, *connect.Request[v1.TenantCreateUpdateRequest]) (*connect.Response[v1.TenantCreateUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.TenantCreateUpdate is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) PartialDeleteRestore(context.Context, *connect.Request[v1.PartialDeleteRestoreRequest]) (*connect.Response[v1.PartialDeleteRestoreResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PartialDeleteRestore is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) PartialCreateUpdate(context.Context, *connect.Request[v1.PartialCreateUpdateRequest]) (*connect.Response[v1.PartialCreateUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PartialCreateUpdate is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) PartialList(context.Context, *connect.Request[v1.PartialListRequest]) (*connect.Response[v1.PartialListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PartialList is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) PageDeleteRestore(context.Context, *connect.Request[v1.PageDeleteRestoreRequest]) (*connect.Response[v1.PageDeleteRestoreResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PageDeleteRestore is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) PageCreateUpdate(context.Context, *connect.Request[v1.PageCreateUpdateRequest]) (*connect.Response[v1.PageCreateUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PageCreateUpdate is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) PageList(context.Context, *connect.Request[v1.PageListRequest]) (*connect.Response[v1.PageListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PageList is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) SectionDeleteRestore(context.Context, *connect.Request[v1.SectionDeleteRestoreRequest]) (*connect.Response[v1.SectionDeleteRestoreResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SectionDeleteRestore is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) SectionCreateUpdate(context.Context, *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SectionCreateUpdate is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SectionList is not implemented"))
 }

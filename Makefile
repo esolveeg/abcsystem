@@ -30,13 +30,20 @@ seed_storage:
 seed_accounts:
 	devkit seed accounts_schema --file-path seeds/schemas/accounts.xlsx -e
 
-seed_tenants:
-	devkit seed tenants_schema --file-path seeds/schemas/tenants.xlsx -e
 
 seed_public:
 	devkit seed public --file-path seeds/schemas/pub.xlsx -e
+
+
+seed_properties:
+	devkit seed properties_schema --file-path seeds/schemas/properties_mac.xlsx -e
+	
+seed_tenants:
+	devkit seed tenants_schema --file-path seeds/schemas/tenants.xlsx -e
+
 seed_tenants_accounts:
 	devkit seed accounts_schema --file-path seeds/schemas/tenant_accounts.xlsx -e
+
 
 
 seed_super_user:
@@ -46,7 +53,7 @@ supabase_reset:
 	supabase db reset 
 			
 rdb:
-	make supabase_reset seed_super_user seed_accounts seed_storage seed_tenants seed_tenants_accounts seed_public
+	make supabase_reset seed_super_user seed_accounts seed_storage seed_public seed_tenants seed_tenants_accounts seed_properties
 run:
 	go run main.go
 buf_push:

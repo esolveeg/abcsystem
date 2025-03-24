@@ -9,9 +9,13 @@ import (
 )
 
 type Querier interface {
+	CityList(ctx context.Context) ([]PropertiesSchemaCity, error)
+	CityListInput(ctx context.Context) ([]CityListInputRow, error)
 	IconCreateUpdateBulk(ctx context.Context, arg IconCreateUpdateBulkParams) ([]Icon, error)
 	IconFind(ctx context.Context, arg IconFindParams) (Icon, error)
 	IconList(ctx context.Context) ([]Icon, error)
+	LocationList(ctx context.Context) ([]PropertiesSchemaLocation, error)
+	LocationListInput(ctx context.Context, arg LocationListInputParams) ([]LocationListInputRow, error)
 	PageCreateUpdate(ctx context.Context, arg PageCreateUpdateParams) (TenantsSchemaPage, error)
 	PageDeleteRestore(ctx context.Context, records []int32) ([]TenantsSchemaPage, error)
 	PageList(ctx context.Context, tenantID int32) ([]TenantsSchemaPage, error)

@@ -5,7 +5,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	storage_go "github.com/supabase-community/storage-go"
 )
 
@@ -35,7 +35,7 @@ func (s *PublicUsecase) FileList(ctx context.Context, req *devkitv1.FileListRequ
 		return nil, err
 	}
 
-	response := s.adapter.FileListGrpcFromSupa(resp)
+	response := s.adapter.FileListGrpcFromSupa(resp, req.BucketId)
 	return response, nil
 }
 func (s *PublicUsecase) BucketCreateUpdate(ctx context.Context, req *devkitv1.BucketCreateUpdateRequest) (*devkitv1.BucketCreateUpdateResponse, error) {

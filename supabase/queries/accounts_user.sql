@@ -125,7 +125,7 @@ FROM
 SELECT
 	u.user_id value,
 	u.user_name label,
-	concat("✉️", u.user_email, "📱", u.user_phone)::varchar note
+	concat('✉️', u.user_email, ' ', u.user_phone)::varchar note
 FROM
 	accounts_schema.user u
 	JOIN accounts_schema.user_role ur ON u.user_id = ur.user_id

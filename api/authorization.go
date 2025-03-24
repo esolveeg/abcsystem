@@ -29,6 +29,7 @@ func (api *Api) getAvailableOptions(header http.Header) *devkitv1.AvailableOptio
 		group                        string                     = headerkeys.PermissionGroup(&header)
 		findEndpoint                 string                     = strcase.ToLowerCamel(fmt.Sprintf("%s_find_for_update", group))
 		findRequestProperty          string                     = "recordId"
+		findResponseProperty         string                     = "request"
 		deleteRestoreRequestProperty string                     = "records"
 		redirectRoute                string                     = strcase.ToCamel(fmt.Sprintf("%s_list", group))
 		update                       string                     = strcase.ToCamel(fmt.Sprintf("%s_update", group))
@@ -55,12 +56,13 @@ func (api *Api) getAvailableOptions(header http.Header) *devkitv1.AvailableOptio
 	isUpdatePermitted, ok := permittedActions[update]
 	if isUpdatePermitted && ok {
 		result.UpdateHandler = &devkitv1.UpdateHandler{
-			RedirectRoute:       redirectRoute,
-			Title:               update,
-			Endpoint:            strcase.ToLowerCamel(createUpdate),
-			RouteName:           strcase.ToSnake(update),
-			FindEndpoint:        findEndpoint,
-			FindRequestProperty: findRequestProperty,
+			RedirectRoute:        redirectRoute,
+			Title:                update,
+			Endpoint:             strcase.ToLowerCamel(createUpdate),
+			RouteName:            strcase.ToSnake(update),
+			FindEndpoint:         findEndpoint,
+			FindRequestProperty:  findRequestProperty,
+			FindResponseProperty: findResponseProperty,
 		}
 	}
 	isDeletePermitted, ok := permittedActions[deleteRestore]

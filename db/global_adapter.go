@@ -60,3 +60,32 @@ func ToPgInt(value int32) pgtype.Int4 {
 func ToPgFloat(value float32) pgtype.Float4 {
 	return pgtype.Float4{Float32: value, Valid: true}
 }
+
+// Helper functions for type-safe extraction
+func StringFindFromMap(m map[string]interface{}, key string) string {
+	if v, ok := m[key].(string); ok {
+		return v
+	}
+	return ""
+}
+
+func Int64FindFromMap(m map[string]interface{}, key string) int64 {
+	if v, ok := m[key].(float64); ok { // JSON unmarshals numbers as float64
+		return int64(v)
+	}
+	return 0
+}
+
+func Int32FindFromMap(m map[string]interface{}, key string) int32 {
+	return int32(Int64FindFromMap(m, key))
+}
+
+func TimestampFindFromMap(m map[string]interface{}, key string) *timestamppb.Timestamp {
+	if v, ok := m[key].(string); ok {
+		t, err := time.Parse(time.RFC3339, v)
+		if err == nil {
+			return timestamppb.New(t)
+		}
+	}
+	return nil
+}
