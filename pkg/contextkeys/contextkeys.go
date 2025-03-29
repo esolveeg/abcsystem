@@ -13,6 +13,7 @@ type contectType string
 var callerIDKey = contectType("CallerID")
 var tenantIDKey = contectType("TenantID")
 var permissionFunctionKey = contectType("PermissionFunction")
+var permissionGroupKey = contectType("PermissionGroup")
 
 // WithCallerID injects the caller ID into the context.
 func WithCallerID(ctx context.Context, callerID int32) context.Context {
@@ -23,6 +24,10 @@ func WithCallerID(ctx context.Context, callerID int32) context.Context {
 // this should be use later from the repo layer to access the tenant id of the logged in user
 func WithiTenantID(ctx context.Context, tenantID int32) context.Context {
 	return context.WithValue(ctx, tenantIDKey, tenantID)
+}
+
+func WithPermissionGroup(ctx context.Context, permissionGroup string) context.Context {
+	return context.WithValue(ctx, permissionGroupKey, permissionGroup)
 }
 
 // this method injects the permission name for this function this should check for skip authorization is false
@@ -42,6 +47,11 @@ func CallerID(ctx context.Context) (int32, bool) {
 func PermissionFunction(ctx context.Context) (string, bool) {
 	permissionFunction, ok := ctx.Value(permissionFunctionKey).(string)
 	return permissionFunction, ok
+}
+
+func PermissionGroup(ctx context.Context) (string, bool) {
+	permissionGroup, ok := ctx.Value(permissionGroupKey).(string)
+	return permissionGroup, ok
 }
 func TenantID(ctx context.Context) (int32, bool) {
 	tenantID, ok := ctx.Value(tenantIDKey).(int32)

@@ -10,7 +10,8 @@ require (
 	github.com/aead/chacha20poly1305 v0.0.0-20201124145622-1a5aba2a8b29
 	github.com/bufbuild/protovalidate-go v0.7.2
 	github.com/darwishdev/sqlseeder v0.1.12
-	github.com/darwishdev/supaapi-go v0.14.0
+	github.com/darwishdev/storage-go v0.9.0
+	github.com/darwishdev/supaapi-go v0.17.0
 	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.6.0
 	github.com/iancoleman/strcase v0.3.0
@@ -23,7 +24,6 @@ require (
 	github.com/spf13/viper v1.19.0
 	github.com/stretchr/testify v1.9.0
 	github.com/supabase-community/auth-go v1.3.2
-	github.com/supabase-community/storage-go v0.7.0
 	golang.org/x/crypto v0.28.0
 	golang.org/x/net v0.30.0
 	google.golang.org/protobuf v1.35.1

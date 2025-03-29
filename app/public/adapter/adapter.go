@@ -3,8 +3,8 @@ package adapter
 import (
 	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	storage_go "github.com/darwishdev/storage-go"
 	"github.com/resend/resend-go/v2"
-	storage_go "github.com/supabase-community/storage-go"
 )
 
 type PublicAdapterInterface interface {

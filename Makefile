@@ -52,7 +52,7 @@ supabase_reset:
 	supabase db reset 
 			
 rdb:
-	make supabase_reset seed_super_user seed_accounts seed_storage seed_public seed_tenants seed_tenants_accounts seed_properties
+	make supabase_reset seed_super_user seed_accounts seed_storage seed_public seed_tenants seed_tenants_accounts 
 run:
 	go run main.go
 buf_push:

@@ -3,14 +3,13 @@ package usecase
 import (
 	"bytes"
 	"context"
-	"io"
 
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	storage_go "github.com/supabase-community/storage-go"
+	storage_go "github.com/darwishdev/storage-go"
 )
 
 func (s *PublicUsecase) FileCreate(ctx context.Context, req *devkitv1.FileCreateRequest) (*devkitv1.FileCreateResponse, error) {
-	reader := io.NopCloser(bytes.NewReader(req.Reader))
+	reader := bytes.NewReader(req.Reader)
 	isUpsert := true
 	fileOpts := storage_go.FileOptions{
 		ContentType: &req.FileType,
@@ -20,6 +19,7 @@ func (s *PublicUsecase) FileCreate(ctx context.Context, req *devkitv1.FileCreate
 	if err != nil {
 		return nil, err
 	}
+	// s.supaapi.RestartStorageClient()
 	return &devkitv1.FileCreateResponse{
 		Path: response.Key,
 	}, nil

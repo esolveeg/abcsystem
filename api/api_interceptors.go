@@ -41,28 +41,6 @@ func (s *Server) getFiledFromRequest(msgReflect protoreflect.Message, fieledName
 	return &value, true
 }
 
-// recordIdKey := "record_id"
-// permissionName := fmt.Sprintf("%s_create", group)
-// field := msgReflect.Descriptor().Fields().ByName(protoreflect.Name(recordIdKey))
-//
-//	if field == nil {
-//		recordIdKey = fmt.Sprintf("%s_id", group)
-//		field = msgReflect.Descriptor().Fields().ByName(protoreflect.Name(recordIdKey))
-//		if field == nil {
-//			return permissionName
-//		}
-//	}
-//
-//	if msgReflect.Has(field) {
-//		recordIDValue := msgReflect.Get(field)
-//		recordID := recordIDValue.Int() // assuming role_id is an int32 or int64 field
-//		if recordID > 0 {
-//			permissionName = fmt.Sprintf("%s_update", group)
-//		}
-//	}
-//
-// return strcase.ToCamel(permissionName)
-//
 // this function should handle the create update request and chech for the record id on the request to pass either [create , update]
 // as permission variation
 func (s *Server) createUpdateMethodPermissionName(msgReflect protoreflect.Message, group string) string {
@@ -120,12 +98,25 @@ func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 			options := methodDesc.Options()
 			var payload *auth.Payload
 			var err error
+
+			procedureName, group := s.proccessProcedureName(req.Spec().Procedure)
 			if options != nil {
 				skipAuth, ok := proto.GetExtension(options, devkitv1.E_SkipAuthentication).(bool)
 				if skipAuth && ok {
 					return next(ctx, req)
 				}
+
+				permissionGroup, ok := proto.GetExtension(options, devkitv1.E_PermissionGroup).(string)
+				if permissionGroup != "" && ok {
+					group = permissionGroup
+				}
+
+				permissionName, ok := proto.GetExtension(options, devkitv1.E_PermissionName).(string)
+				if permissionName != "" && ok {
+					procedureName = permissionName
+				}
 				payload, err = s.authorize(req)
+
 				if err != nil {
 					return nil, connect.NewError(connect.CodeUnauthenticated, err)
 				}
@@ -138,7 +129,6 @@ func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 				}
 
 			}
-			procedureName, group := s.proccessProcedureName(req.Spec().Procedure)
 			isCreateUpdate := strings.Contains(procedureName, "CreateUpdate")
 
 			ctx = contextkeys.WithiTenantID(ctx, payload.TenantId)
@@ -149,6 +139,7 @@ func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 				}
 				procedureName = s.createUpdateMethodPermissionName(message.ProtoReflect(), group)
 			}
+			ctx = contextkeys.WithPermissionGroup(ctx, group)
 			ctx = contextkeys.WithPermissionFunction(ctx, procedureName)
 			return next(ctx, req)
 
@@ -182,6 +173,8 @@ func (s *Server) NewAuthorizationInterceptor() connect.UnaryInterceptorFunc {
 			req connect.AnyRequest,
 		) (connect.AnyResponse, error) {
 			// this ok will be false if endpoint has the skip authorization option
+
+			group, ok := contextkeys.PermissionGroup(ctx)
 			permissionFunction, ok := contextkeys.PermissionFunction(ctx)
 			if !ok {
 				return next(ctx, req)
@@ -218,8 +211,6 @@ func (s *Server) NewAuthorizationInterceptor() connect.UnaryInterceptorFunc {
 				}
 				permissionsMap, err = s.redisClient.AuthSessionCreate(ctx, callerId, &permissions)
 			}
-			_, group := s.proccessProcedureName(req.Spec().Procedure)
-			headerkeys.WithPermissionGroup(req.Header(), group)
 			permissionGroup, ok := permissionsMap[group]
 			if !ok {
 				return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("user does not have the required permission for this group %s", group))

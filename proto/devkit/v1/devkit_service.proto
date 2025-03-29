@@ -97,9 +97,14 @@ service DevkitService {
   // files
   rpc FileList(FileListRequest) returns (FileListResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
+    option (permission_group) = 'object';
+    option (permission_name) = 'ObjectList';
     option (skip_authentication) = true;
   }
-  rpc FileCreate(FileCreateRequest) returns (FileCreateResponse) {}
+  rpc FileCreate(FileCreateRequest) returns (FileCreateResponse) {
+    option (permission_group) = 'object';
+    option (permission_name) = 'ObjectCreate';
+  }
   rpc FileCreateBulk(FileCreateBulkRequest) returns (FileCreateBulkResponse) {}
   //  rpc FileDeleteRestore(FileDeleteRestoreRequest) returns (FileDeleteRestoreResponse) {}
   rpc FileDelete(FileDeleteRequest) returns (FileDeleteResponse) {}
@@ -192,12 +197,6 @@ service DevkitService {
   //*******************************************************************************************//
   // tenant
   //*******************************************************************************************//
-
-  rpc TenantDeleteRestore(TenantDeleteRestoreRequest) returns (TenantDeleteRestoreResponse) {}
-  rpc TenantList(TenantListRequest) returns (TenantListResponse) {
-    option idempotency_level = NO_SIDE_EFFECTS;
-  }
-  rpc TenantCreateUpdate(TenantCreateUpdateRequest) returns (TenantCreateUpdateResponse) {}
 
   rpc PartialDeleteRestore(PartialDeleteRestoreRequest) returns (PartialDeleteRestoreResponse) {}
   rpc PartialCreateUpdate(PartialCreateUpdateRequest) returns (PartialCreateUpdateResponse) {}

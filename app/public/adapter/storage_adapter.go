@@ -5,8 +5,8 @@ import (
 
 	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	storage_go "github.com/darwishdev/storage-go"
 	"github.com/rs/zerolog/log"
-	storage_go "github.com/supabase-community/storage-go"
 )
 
 func (a *PublicAdapter) StorageBucketGrpcFromSupa(resp *storage_go.Bucket) *devkitv1.StorageBucket {
