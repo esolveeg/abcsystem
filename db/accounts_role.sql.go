@@ -157,65 +157,29 @@ func (q *Queries) RoleFindForUpdate(ctx context.Context, roleID int32) (RoleFind
 
 const roleList = `-- name: RoleList :many
 SELECT
-	role_id::int,
-	role_name::varchar(200),
-	role_description::varchar(200),
-	created_at::timestamptz,
-	total_count::bigint
+	role_id, tenant_id, role_name, role_security_level, role_description, created_at, updated_at, deleted_at
 FROM
-	execute_dynamic_pagination (primary_key => 'role_id', query_base => CONCAT(FORMAT('SELECT role_id, role_name,role_description, created_at
-             FROM accounts_schema.role
-             WHERE role_name LIKE CONCAT(''%%'', %L, ''%%'')
-               AND role_description LIKE CONCAT(''%%'', %L, ''%%'')
-AND deleted_at IS ', $1::varchar(200), $2::text),  iif($3::boolean , 'not null'::varchar , 'null'::varchar)), sort_func => $4, page_number => $5, -- Page number
-		sort_column => is_null_replace($6::varchar, 'role_id'), page_size => $7) AS result (role_id int,
-		role_name varchar(200),
-		role_description varchar(200),
-		created_at timestamptz,
-		total_count bigint)
+	accounts_schema.role
 `
 
-type RoleListParams struct {
-	InRoleName        string `json:"in_role_name"`
-	InRoleDescription string `json:"in_role_description"`
-	InIsDeleted       bool   `json:"in_is_deleted"`
-	SortFunction      string `json:"sort_function"`
-	PageNumber        int32  `json:"page_number"`
-	SortColumn        string `json:"sort_column"`
-	PageSize          int32  `json:"page_size"`
-}
-
-type RoleListRow struct {
-	RoleID          int32              `json:"role_id"`
-	RoleName        string             `json:"role_name"`
-	RoleDescription string             `json:"role_description"`
-	CreatedAt       pgtype.Timestamptz `json:"created_at"`
-	TotalCount      int64              `json:"total_count"`
-}
-
-func (q *Queries) RoleList(ctx context.Context, arg RoleListParams) ([]RoleListRow, error) {
-	rows, err := q.db.Query(ctx, roleList,
-		arg.InRoleName,
-		arg.InRoleDescription,
-		arg.InIsDeleted,
-		arg.SortFunction,
-		arg.PageNumber,
-		arg.SortColumn,
-		arg.PageSize,
-	)
+func (q *Queries) RoleList(ctx context.Context) ([]AccountsSchemaRole, error) {
+	rows, err := q.db.Query(ctx, roleList)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []RoleListRow{}
+	items := []AccountsSchemaRole{}
 	for rows.Next() {
-		var i RoleListRow
+		var i AccountsSchemaRole
 		if err := rows.Scan(
 			&i.RoleID,
+			&i.TenantID,
 			&i.RoleName,
+			&i.RoleSecurityLevel,
 			&i.RoleDescription,
 			&i.CreatedAt,
-			&i.TotalCount,
+			&i.UpdatedAt,
+			&i.DeletedAt,
 		); err != nil {
 			return nil, err
 		}

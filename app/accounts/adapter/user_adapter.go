@@ -43,6 +43,18 @@ func (a *AccountsAdapter) UserFindForUpdateUpdateGrpcFromSql(resp *db.UserFindFo
 		Roles:      resp.Roles,
 	}
 }
+func (a *AccountsAdapter) UserTypeListInputGrpcFromSql(resp *[]db.UserTypeListInputRow) *devkitv1.UserTypeListInputResponse {
+	records := make([]*devkitv1.SelectInputOption, 0)
+	for _, v := range *resp {
+		records = append(records, &devkitv1.SelectInputOption{
+			Value: v.Value,
+			Label: v.Label,
+		})
+	}
+	return &devkitv1.UserTypeListInputResponse{
+		Options: records,
+	}
+}
 func (a *AccountsAdapter) UserListInputGrpcFromSql(resp *[]db.UserListInputRow) *devkitv1.UserListInputResponse {
 	records := make([]*devkitv1.SelectInputOption, 0)
 	for _, v := range *resp {

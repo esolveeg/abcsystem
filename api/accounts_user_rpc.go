@@ -15,6 +15,14 @@ func (api *Api) UserFindForUpdate(ctx context.Context, req *connect.Request[devk
 	}
 	return connect.NewResponse(response), nil
 }
+func (api *Api) UserTypeListInput(ctx context.Context, req *connect.Request[devkitv1.UserTypeListInputRequest]) (*connect.Response[devkitv1.UserTypeListInputResponse], error) {
+	response, err := api.accountsUsecase.UserTypeListInput(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to retrieve users list input: %w", err)
+	}
+	return connect.NewResponse(response), nil
+}
+
 func (api *Api) UserListInput(ctx context.Context, req *connect.Request[devkitv1.UserListInputRequest]) (*connect.Response[devkitv1.UserListInputResponse], error) {
 	response, err := api.accountsUsecase.UserListInput(ctx)
 	if err != nil {

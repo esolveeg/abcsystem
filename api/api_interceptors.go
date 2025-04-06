@@ -29,7 +29,6 @@ func (s *Server) proccessProcedureName(procName string) (string, string) {
 	functionNameSnake := strcase.ToSnake(procedureName)
 	functionNameParts := strings.Split(functionNameSnake, "_")
 	group := functionNameParts[0]
-
 	return procedureName, group
 }
 func (s *Server) getFiledFromRequest(msgReflect protoreflect.Message, fieledName string) (*protoreflect.Value, bool) {
@@ -140,7 +139,9 @@ func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 				procedureName = s.createUpdateMethodPermissionName(message.ProtoReflect(), group)
 			}
 			ctx = contextkeys.WithPermissionGroup(ctx, group)
+
 			ctx = contextkeys.WithPermissionFunction(ctx, procedureName)
+			headerkeys.WithPermissionGroup(req.Header(), group)
 			return next(ctx, req)
 
 		})

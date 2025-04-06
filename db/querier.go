@@ -26,7 +26,7 @@ type Querier interface {
 	RoleDelete(ctx context.Context, arg RoleDeleteParams) (AccountsSchemaRole, error)
 	RoleDeleteRestore(ctx context.Context, arg RoleDeleteRestoreParams) (AccountsSchemaRole, error)
 	RoleFindForUpdate(ctx context.Context, roleID int32) (RoleFindForUpdateRow, error)
-	RoleList(ctx context.Context, arg RoleListParams) ([]RoleListRow, error)
+	RoleList(ctx context.Context) ([]AccountsSchemaRole, error)
 	RoleListInput(ctx context.Context, callerID int32) ([]RoleListInputRow, error)
 	SectionCreateUpdate(ctx context.Context, arg SectionCreateUpdateParams) (TenantsSchemaSection, error)
 	SectionDeleteRestore(ctx context.Context, records []int32) ([]TenantsSchemaSection, error)
@@ -50,6 +50,7 @@ type Querier interface {
 	UserNavigationBarFind(ctx context.Context, arg UserNavigationBarFindParams) ([]UserNavigationBarFindRow, error)
 	UserPermissionsMap(ctx context.Context, userID int32) ([]UserPermissionsMapRow, error)
 	UserResetPassword(ctx context.Context, arg UserResetPasswordParams) error
+	UserTypeListInput(ctx context.Context) ([]UserTypeListInputRow, error)
 }
 
 var _ Querier = (*Queries)(nil)

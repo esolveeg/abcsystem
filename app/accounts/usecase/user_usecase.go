@@ -56,6 +56,14 @@ func (u *AccountsUsecase) UserFindForUpdate(ctx context.Context, req *connect.Re
 		Request: request,
 	}, nil
 }
+func (u *AccountsUsecase) UserTypeListInput(ctx context.Context) (*devkitv1.UserTypeListInputResponse, error) {
+	users, err := u.repo.UserTypeListInput(ctx)
+	if err != nil {
+		return nil, err
+	}
+	response := u.adapter.UserTypeListInputGrpcFromSql(users)
+	return response, nil
+}
 func (u *AccountsUsecase) UserListInput(ctx context.Context) (*devkitv1.UserListInputResponse, error) {
 	users, err := u.repo.UserListInput(ctx)
 	if err != nil {

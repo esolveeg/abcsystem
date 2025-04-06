@@ -3,8 +3,6 @@ package adapter
 import (
 	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"github.com/iancoleman/strcase"
-	"github.com/rs/zerolog/log"
 )
 
 func (a *AccountsAdapter) RoleFindForUpdateUpdateGrpcFromSql(resp *db.RoleFindForUpdateRow) *devkitv1.RoleCreateUpdateRequest {
@@ -54,36 +52,11 @@ func (a *AccountsAdapter) RoleCreateUpdateSqlFromGrpc(req *devkitv1.RoleCreateUp
 	return resp
 }
 
-func (a *AccountsAdapter) RoleListSqlFromGrpc(req *devkitv1.RoleListRequest) *db.RoleListParams {
-
-	log.Debug().Interface("not empty params", "nottt").Msg("not empty")
-	if req.PaginationParams == nil {
-		log.Debug().Interface("empty params", "em").Msg("a;ready empty")
-		req.PaginationParams = &devkitv1.PaginationParams{PageNumber: 1, PageSize: 10, SortColumn: "roleId", IsDeleted: false}
-	}
-	if req.Filters == nil {
-		req.Filters = &devkitv1.RoleFilters{}
-	}
-	if req.PaginationParams.SortColumn == "" {
-		req.PaginationParams.SortColumn = "roleId"
-	}
-	return &db.RoleListParams{
-		InRoleName:        req.Filters.RoleName,
-		InRoleDescription: req.Filters.RoleDescription,
-		PageNumber:        req.PaginationParams.PageNumber,
-		// InCreatedAtTo:     db.StringToPgdate(req.Filters.CreatedAtTo),
-		// InCreatedAtFrom:   db.StringToPgdate(req.Filters.CreatedAtFrom),
-		SortFunction: req.PaginationParams.SortFunction,
-		PageSize:     req.PaginationParams.PageSize,
-		InIsDeleted:  req.PaginationParams.IsDeleted,
-		SortColumn:   strcase.ToSnake(req.PaginationParams.SortColumn),
-	}
-}
-func (a *AccountsAdapter) RoleListGrpcFromSql(resp *[]db.RoleListRow) *devkitv1.RoleListResponse {
+func (a *AccountsAdapter) RoleListGrpcFromSql(resp *[]db.AccountsSchemaRole) *devkitv1.RoleListResponse {
 	records := make([]*devkitv1.AccountsSchemaRole, 0)
 	deletedRecords := make([]*devkitv1.AccountsSchemaRole, 0)
 	for _, v := range *resp {
-		record := &devkitv1.AccountsSchemaRole{RoleId: v.RoleID, RoleName: v.RoleName}
+		record := a.RoleEntityGrpcFromSql(&v)
 		records = append(records, record)
 	}
 	return &devkitv1.RoleListResponse{

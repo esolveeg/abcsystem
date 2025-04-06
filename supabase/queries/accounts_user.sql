@@ -137,6 +137,13 @@ GROUP BY
 	u.user_email,
 	u.user_phone;
 
+-- name: UserTypeListInput :many
+SELECT
+	user_type_id value,
+	user_type_name label
+FROM
+	accounts_schema.user_type;
+
 -- name: UserResetPassword :exec
 UPDATE
 	accounts_schema.user

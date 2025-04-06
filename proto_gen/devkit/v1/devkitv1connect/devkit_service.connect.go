@@ -125,6 +125,9 @@ const (
 	// DevkitServiceUserListInputProcedure is the fully-qualified name of the DevkitService's
 	// UserListInput RPC.
 	DevkitServiceUserListInputProcedure = "/devkit.v1.DevkitService/UserListInput"
+	// DevkitServiceUserTypeListInputProcedure is the fully-qualified name of the DevkitService's
+	// UserTypeListInput RPC.
+	DevkitServiceUserTypeListInputProcedure = "/devkit.v1.DevkitService/UserTypeListInput"
 	// DevkitServiceUserFindForUpdateProcedure is the fully-qualified name of the DevkitService's
 	// UserFindForUpdate RPC.
 	DevkitServiceUserFindForUpdateProcedure = "/devkit.v1.DevkitService/UserFindForUpdate"
@@ -224,6 +227,7 @@ var (
 	devkitServiceRoleDeleteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("RoleDelete")
 	devkitServiceUserListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("UserList")
 	devkitServiceUserListInputMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("UserListInput")
+	devkitServiceUserTypeListInputMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("UserTypeListInput")
 	devkitServiceUserFindForUpdateMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("UserFindForUpdate")
 	devkitServiceUserCreateUpdateMethodDescriptor            = devkitServiceServiceDescriptor.Methods().ByName("UserCreateUpdate")
 	devkitServiceUserDeleteRestoreMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("UserDeleteRestore")
@@ -303,6 +307,7 @@ type DevkitServiceClient interface {
 	// *******************************************************************************************//
 	UserList(context.Context, *connect.Request[v1.UserListRequest]) (*connect.Response[v1.UserListResponse], error)
 	UserListInput(context.Context, *connect.Request[v1.UserListInputRequest]) (*connect.Response[v1.UserListInputResponse], error)
+	UserTypeListInput(context.Context, *connect.Request[v1.UserTypeListInputRequest]) (*connect.Response[v1.UserTypeListInputResponse], error)
 	UserFindForUpdate(context.Context, *connect.Request[v1.UserFindForUpdateRequest]) (*connect.Response[v1.UserFindForUpdateResponse], error)
 	UserCreateUpdate(context.Context, *connect.Request[v1.UserCreateUpdateRequest]) (*connect.Response[v1.UserCreateUpdateResponse], error)
 	UserDeleteRestore(context.Context, *connect.Request[v1.UserDeleteRestoreRequest]) (*connect.Response[v1.UserDeleteRestoreResponse], error)
@@ -555,6 +560,13 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
+		userTypeListInput: connect.NewClient[v1.UserTypeListInputRequest, v1.UserTypeListInputResponse](
+			httpClient,
+			baseURL+DevkitServiceUserTypeListInputProcedure,
+			connect.WithSchema(devkitServiceUserTypeListInputMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
 		userFindForUpdate: connect.NewClient[v1.UserFindForUpdateRequest, v1.UserFindForUpdateResponse](
 			httpClient,
 			baseURL+DevkitServiceUserFindForUpdateProcedure,
@@ -724,6 +736,7 @@ type devkitServiceClient struct {
 	roleDelete                  *connect.Client[v1.RoleDeleteRequest, v1.RoleDeleteResponse]
 	userList                    *connect.Client[v1.UserListRequest, v1.UserListResponse]
 	userListInput               *connect.Client[v1.UserListInputRequest, v1.UserListInputResponse]
+	userTypeListInput           *connect.Client[v1.UserTypeListInputRequest, v1.UserTypeListInputResponse]
 	userFindForUpdate           *connect.Client[v1.UserFindForUpdateRequest, v1.UserFindForUpdateResponse]
 	userCreateUpdate            *connect.Client[v1.UserCreateUpdateRequest, v1.UserCreateUpdateResponse]
 	userDeleteRestore           *connect.Client[v1.UserDeleteRestoreRequest, v1.UserDeleteRestoreResponse]
@@ -912,6 +925,11 @@ func (c *devkitServiceClient) UserListInput(ctx context.Context, req *connect.Re
 	return c.userListInput.CallUnary(ctx, req)
 }
 
+// UserTypeListInput calls devkit.v1.DevkitService.UserTypeListInput.
+func (c *devkitServiceClient) UserTypeListInput(ctx context.Context, req *connect.Request[v1.UserTypeListInputRequest]) (*connect.Response[v1.UserTypeListInputResponse], error) {
+	return c.userTypeListInput.CallUnary(ctx, req)
+}
+
 // UserFindForUpdate calls devkit.v1.DevkitService.UserFindForUpdate.
 func (c *devkitServiceClient) UserFindForUpdate(ctx context.Context, req *connect.Request[v1.UserFindForUpdateRequest]) (*connect.Response[v1.UserFindForUpdateResponse], error) {
 	return c.userFindForUpdate.CallUnary(ctx, req)
@@ -1073,6 +1091,7 @@ type DevkitServiceHandler interface {
 	// *******************************************************************************************//
 	UserList(context.Context, *connect.Request[v1.UserListRequest]) (*connect.Response[v1.UserListResponse], error)
 	UserListInput(context.Context, *connect.Request[v1.UserListInputRequest]) (*connect.Response[v1.UserListInputResponse], error)
+	UserTypeListInput(context.Context, *connect.Request[v1.UserTypeListInputRequest]) (*connect.Response[v1.UserTypeListInputResponse], error)
 	UserFindForUpdate(context.Context, *connect.Request[v1.UserFindForUpdateRequest]) (*connect.Response[v1.UserFindForUpdateResponse], error)
 	UserCreateUpdate(context.Context, *connect.Request[v1.UserCreateUpdateRequest]) (*connect.Response[v1.UserCreateUpdateResponse], error)
 	UserDeleteRestore(context.Context, *connect.Request[v1.UserDeleteRestoreRequest]) (*connect.Response[v1.UserDeleteRestoreResponse], error)
@@ -1321,6 +1340,13 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
+	devkitServiceUserTypeListInputHandler := connect.NewUnaryHandler(
+		DevkitServiceUserTypeListInputProcedure,
+		svc.UserTypeListInput,
+		connect.WithSchema(devkitServiceUserTypeListInputMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
 	devkitServiceUserFindForUpdateHandler := connect.NewUnaryHandler(
 		DevkitServiceUserFindForUpdateProcedure,
 		svc.UserFindForUpdate,
@@ -1520,6 +1546,8 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 			devkitServiceUserListHandler.ServeHTTP(w, r)
 		case DevkitServiceUserListInputProcedure:
 			devkitServiceUserListInputHandler.ServeHTTP(w, r)
+		case DevkitServiceUserTypeListInputProcedure:
+			devkitServiceUserTypeListInputHandler.ServeHTTP(w, r)
 		case DevkitServiceUserFindForUpdateProcedure:
 			devkitServiceUserFindForUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceUserCreateUpdateProcedure:
@@ -1701,6 +1729,10 @@ func (UnimplementedDevkitServiceHandler) UserList(context.Context, *connect.Requ
 
 func (UnimplementedDevkitServiceHandler) UserListInput(context.Context, *connect.Request[v1.UserListInputRequest]) (*connect.Response[v1.UserListInputResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserListInput is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) UserTypeListInput(context.Context, *connect.Request[v1.UserTypeListInputRequest]) (*connect.Response[v1.UserTypeListInputResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.UserTypeListInput is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) UserFindForUpdate(context.Context, *connect.Request[v1.UserFindForUpdateRequest]) (*connect.Response[v1.UserFindForUpdateResponse], error) {

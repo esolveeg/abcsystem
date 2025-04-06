@@ -60,19 +60,13 @@ func (u *AccountsUsecase) RoleListInput(ctx context.Context) (*devkitv1.RoleList
 	return response, nil
 }
 
-func (u *AccountsUsecase) RoleList(ctx context.Context, req *connect.Request[devkitv1.RoleListRequest]) (*devkitv1.RoleListResponse, int32, error) {
-	roleListParams := u.adapter.RoleListSqlFromGrpc(req.Msg)
-	roles, err := u.repo.RoleList(ctx, *roleListParams)
+func (u *AccountsUsecase) RoleList(ctx context.Context, req *connect.Request[devkitv1.RoleListRequest]) (*devkitv1.RoleListResponse, error) {
+	roles, err := u.repo.RoleList(ctx)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
-	var totalCount int32
 	response := u.adapter.RoleListGrpcFromSql(roles)
-	r := *roles
-	if len(r) > 0 {
-		totalCount = int32(r[0].TotalCount)
-	}
-	return response, totalCount, nil
+	return response, nil
 }
 
 func (u *AccountsUsecase) RoleCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.RoleCreateUpdateRequest]) (*devkitv1.RoleCreateUpdateResponse, error) {

@@ -65,6 +65,10 @@ message UserListInputRequest {}
 message UserListInputResponse {
   repeated SelectInputOption options = 1;
 }
+message UserTypeListInputRequest {}
+message UserTypeListInputResponse {
+  repeated SelectInputOption options = 1;
+}
 
 message UserFindForUpdateRequest {
   int32 record_id = 1;
