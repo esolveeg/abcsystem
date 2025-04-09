@@ -34,14 +34,15 @@ func (a *TenantAdapter) PartialEntityGrpcFromSql(resp *db.TenantsSchemaPartial) 
 		PartialButtonLabelAr: resp.PartialButtonLabelAr.String,
 		PartialButtonIcon:    resp.PartialButtonIcon.String,
 		PartialButtonLink:    resp.PartialButtonLink.String,
-		PartialButtonPageId:  int32(resp.PartialButtonPageID.Int32),
-		PartialIcons:         strings.Split(resp.PartialIcons.String, ","),
-		Address:              resp.Address.String,
-		PartialLinks:         partialLinks,
-		PartialLink:          resp.PartialLink.String,
-		CreatedAt:            db.TimeToProtoTimeStamp(resp.CreatedAt.Time),
-		UpdatedAt:            db.TimeToProtoTimeStamp(resp.UpdatedAt.Time),
-		DeletedAt:            db.TimeToProtoTimeStamp(resp.DeletedAt.Time),
+
+		PartialButtonPageId: int32(resp.PartialButtonPageID.Int32),
+		PartialIcons:        strings.Split(resp.PartialIcons.String, ","),
+		Address:             resp.Address.String,
+		PartialLinks:        partialLinks,
+		PartialLink:         resp.PartialLink.String,
+		CreatedAt:           db.TimeToProtoTimeStamp(resp.CreatedAt.Time),
+		UpdatedAt:           db.TimeToProtoTimeStamp(resp.UpdatedAt.Time),
+		DeletedAt:           db.TimeToProtoTimeStamp(resp.DeletedAt.Time),
 	}
 }
 
@@ -100,4 +101,32 @@ func (a *TenantAdapter) PartialCreateUpdateSqlFromGrpc(req *devkitv1.PartialCrea
 		PartialLinks:         partialLinks,
 		PartialLink:          req.GetPartialLink(),
 	}
+}
+
+func (a *TenantAdapter) PartialFindForUpdateGrpcFromSql(resp *db.TenantsSchemaPartial) *devkitv1.PartialFindForUpdateResponse {
+	return &devkitv1.PartialFindForUpdateResponse{
+		Request: &devkitv1.PartialCreateUpdateRequest{
+			PartialId:            int32(resp.PartialID),
+			PartialName:          resp.PartialName,
+			PartialNameAr:        resp.PartialNameAr.String,
+			PartialTypeId:        resp.PartialTypeID,
+			SectionId:            int32(resp.SectionID),
+			PartialImage:         resp.PartialImage.String,
+			PartialImages:        strings.Split(resp.PartialImages.String, ","),
+			PartialVideo:         resp.PartialVideo.String,
+			IsFeatured:           resp.IsFeatured.Bool,
+			PartialBrief:         resp.PartialBrief.String,
+			PartialBriefAr:       resp.PartialBriefAr.String,
+			PartialContent:       resp.PartialContent.String,
+			PartialContentAr:     resp.PartialContentAr.String,
+			PartialButtonLabel:   resp.PartialButtonLabel.String,
+			PartialButtonLabelAr: resp.PartialButtonLabelAr.String,
+			PartialButtonIcon:    resp.PartialButtonIcon.String,
+			PartialButtonLink:    resp.PartialButtonLink.String,
+			PartialButtonPageId:  int32(resp.PartialButtonPageID.Int32),
+			Address:              resp.Address.String,
+			PartialLink:          resp.PartialLink.String,
+		},
+	}
+
 }

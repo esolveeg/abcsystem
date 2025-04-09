@@ -15,6 +15,7 @@ CREATE TABLE tenants_schema.tenant (
 	tenant_logo_dark text,
 	tenant_logo_dark_vertical text,
 	tenant_values text,
+	tenant_links jsonb,
 	tenant_mission text,
 	tenant_vision text,
 	created_at timestamp NOT NULL DEFAULT now(),

@@ -10,9 +10,12 @@ import (
 
 func (api *Api) PageList(ctx context.Context, req *connect.Request[devkitv1.PageListRequest]) (*connect.Response[devkitv1.PageListResponse], error) {
 	resp, err := api.tenantUsecase.PageList(ctx, req)
+
 	if err != nil {
 		return nil, err
 	}
+
+	resp.Options = api.getAvailableOptions(req.Header())
 	return connect.NewResponse(resp), nil
 }
 
@@ -25,6 +28,13 @@ func (api *Api) PageCreateUpdate(ctx context.Context, req *connect.Request[devki
 }
 func (api *Api) PageDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.PageDeleteRestoreRequest]) (*connect.Response[devkitv1.PageDeleteRestoreResponse], error) {
 	resp, err := api.tenantUsecase.PageDeleteRestore(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(resp), nil
+}
+func (api *Api) PageFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.PageFindForUpdateRequest]) (*connect.Response[devkitv1.PageFindForUpdateResponse], error) {
+	resp, err := api.tenantUsecase.PageFindForUpdate(ctx, req)
 	if err != nil {
 		return nil, err
 	}

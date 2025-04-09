@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="54.587" height="56.145" viewBox="0 0 54.587 56.145">
+  <g id="Group_41" data-name="Group 41" transform="translate(-290.384 -229.617)">
+    <rect id="Rectangle_24" data-name="Rectangle 24" width="32.668" height="40.847" transform="translate(301.344 244.614)" fill="none" stroke="rgba(0,0,0,0.85)" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.6"/>
+    <rect id="Rectangle_25" data-name="Rectangle 25" width="10.66" height="13.329" transform="translate(312.348 272.133)" fill="none" stroke="rgba(0,0,0,0.85)" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.6"/>
+    <rect id="Rectangle_26" data-name="Rectangle 26" width="10.66" height="23.261" transform="translate(290.684 262.2)" fill="none" stroke="rgba(0,0,0,0.85)" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.6"/>
+    <rect id="Rectangle_27" data-name="Rectangle 27" width="10.66" height="23.261" transform="translate(334.011 262.2)" fill="none" stroke="rgba(0,0,0,0.85)" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.6"/>
+    <line id="Line_33" data-name="Line 33" y2="13.329" transform="translate(317.678 272.133)" fill="none" stroke="rgba(0,0,0,0.85)" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.6"/>
+    <g id="Group_40" data-name="Group 40" transform="translate(302.193 229.917)">
+      <path id="Path_66" data-name="Path 66" d="M300.454,237.009l-2.779,1.461.531-3.095-2.248-2.192,3.107-.451,1.39-2.816,1.39,2.816,3.107.451-2.248,2.192.531,3.095Z" transform="translate(-284.969 -229.917)" fill="none" stroke="rgba(0,0,0,0.85)" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.6"/>
+      <path id="Path_67" data-name="Path 67" d="M303.029,237.009l-2.779,1.461.531-3.095-2.248-2.192,3.107-.451,1.39-2.816,1.39,2.816,3.107.451-2.248,2.192.531,3.095Z" transform="translate(-276.557 -229.917)" fill="none" stroke="rgba(0,0,0,0.85)" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.6"/>
+      <path id="Path_68" data-name="Path 68" d="M297.878,237.009,295.1,238.47l.531-3.095-2.248-2.192,3.107-.451,1.39-2.816,1.39,2.816,3.107.451-2.248,2.192.531,3.095Z" transform="translate(-293.382 -229.917)" fill="none" stroke="rgba(0,0,0,0.85)" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.6"/>
+    </g>
+  </g>
+</svg>

@@ -6,6 +6,15 @@ FROM
 WHERE
 	tenant_id = is_null_replace(sqlc.arg('tenant_id')::int, tenant_id);
 
+-- name: SectionFind :one
+SELECT
+	*
+FROM
+	tenants_schema.section
+WHERE
+	section_id = is_null_replace(sqlc.arg('section_id')::int, tenant_id)
+	AND tenant_id = is_null_replace(sqlc.arg('tenant_id')::int, tenant_id);
+
 -- name: SectionCreateUpdate :one
 SELECT
 	*

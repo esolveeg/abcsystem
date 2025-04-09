@@ -39,3 +39,15 @@ func (repo *TenantRepo) PageDeleteRestore(ctx context.Context, req *[]int32) (*[
 	}
 	return &resp, nil
 }
+func (repo *TenantRepo) PageFindForUpdate(ctx context.Context, req db.PageFindForUpdateParams) (*db.TenantsSchemaPage, error) {
+	loggedInUserTenantId, _ := contextkeys.TenantID(ctx)
+	if loggedInUserTenantId > 0 {
+		req.TenantID = loggedInUserTenantId
+	}
+	resp, err := repo.store.PageFindForUpdate(ctx, req)
+
+	if err != nil {
+		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
+	}
+	return &resp, nil
+}

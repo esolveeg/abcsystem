@@ -85,3 +85,11 @@ message PartialDeleteRestoreRequest {
 message PartialDeleteRestoreResponse {
   repeated TenantsSchemaPartial records = 1;
 }
+
+message PartialFindForUpdateRequest {
+  int32 record_id = 1;
+}
+
+message PartialFindForUpdateResponse {
+  PartialCreateUpdateRequest request = 1;
+}

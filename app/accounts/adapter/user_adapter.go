@@ -14,7 +14,7 @@ func (a *AccountsAdapter) UserEntityGrpcFromSql(resp *db.AccountsSchemaUser) *de
 		TenantId:   resp.TenantID.Int32,
 		UserPhone:  resp.UserPhone.String,
 		UserEmail:  resp.UserEmail, // User's email, unique in DB
-		CreatedAt:  db.TimeToString(resp.CreatedAt.Time),
+		CreatedAt:  db.TimeToProtoTimeStamp(resp.CreatedAt.Time),
 		DeletedAt:  db.TimeToString(resp.DeletedAt.Time),
 	}
 }

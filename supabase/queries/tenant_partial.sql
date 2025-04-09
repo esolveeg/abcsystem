@@ -1,10 +1,11 @@
 -- name: PartialList :many
 SELECT
-	*
+	p.*
 FROM
-	tenants_schema.partial
+	tenants_schema.partial p
+	JOIN tenants_schema.section s ON p.section_id = s.section_id
 WHERE
-	tenant_id = is_null_replace(sqlc.arg('tenant_id')::int, tenant_id);
+	s.tenant_id = is_null_replace(sqlc.arg('tenant_id')::int, tenant_id);
 
 -- name: PartialCreateUpdate :one
 SELECT
@@ -21,4 +22,14 @@ WHERE
 	partial_id = ANY (sqlc.arg('records')::int[])
 RETURNING
 	*;
+
+-- name: PartialFindForUpdate :one
+SELECT
+	p.*
+FROM
+	tenants_schema.partial p
+	JOIN tenants_schema.section s ON p.section_id = s.section_id
+WHERE
+	s.tenant_id = is_null_replace(sqlc.arg('tenant_id')::int, tenant_id)
+	AND p.partial_id = is_null_replace(sqlc.arg('partial_id')::int, p.partial_id);
 

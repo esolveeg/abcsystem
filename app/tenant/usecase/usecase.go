@@ -16,6 +16,12 @@ type TenantUsecaseInterface interface {
 	PartialCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.PartialCreateUpdateRequest]) (*devkitv1.PartialCreateUpdateResponse, error)
 	PartialList(ctx context.Context, req *connect.Request[devkitv1.PartialListRequest]) (*devkitv1.PartialListResponse, error)
 	// INJECT INTERFACE
+
+	PartialFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.PartialFindForUpdateRequest]) (*devkitv1.PartialFindForUpdateResponse, error)
+
+	PageFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.PageFindForUpdateRequest]) (*devkitv1.PageFindForUpdateResponse, error)
+
+	SectionFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.SectionFindForUpdateRequest]) (*devkitv1.SectionFindForUpdateResponse, error)
 	SectionDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.SectionDeleteRestoreRequest]) (*devkitv1.SectionDeleteRestoreResponse, error)
 	SectionCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.SectionCreateUpdateRequest]) (*devkitv1.SectionCreateUpdateResponse, error)
 	SectionList(ctx context.Context, req *connect.Request[devkitv1.SectionListRequest]) (*devkitv1.SectionListResponse, error)

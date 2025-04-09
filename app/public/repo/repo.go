@@ -14,6 +14,7 @@ type PublicRepoInterface interface {
 	TranslationList(ctx context.Context) ([]db.Translation, error)
 	TranslationCreateUpdateBulk(ctx context.Context, req db.TranslationCreateUpdateBulkParams) ([]db.TranslationCreateUpdateBulkRow, error)
 	SettingUpdate(ctx context.Context, req *db.SettingUpdateParams) error
+	FileDelete(ctx context.Context, req []string) (string, error)
 	SettingFindForUpdate(ctx context.Context) (*[]db.SettingFindForUpdateRow, error)
 }
 

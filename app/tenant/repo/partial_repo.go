@@ -35,3 +35,11 @@ func (repo *TenantRepo) PartialDeleteRestore(ctx context.Context, req *[]int32) 
 	}
 	return &resp, nil
 }
+func (repo *TenantRepo) PartialFindForUpdate(ctx context.Context, req *db.PartialFindForUpdateParams) (*db.TenantsSchemaPartial, error) {
+	resp, err := repo.store.PartialFindForUpdate(ctx, *req)
+
+	if err != nil {
+		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
+	}
+	return &resp, nil
+}

@@ -17,6 +17,7 @@ type PublicUsecaseInterface interface {
 	TranslationCreateUpdateBulk(ctx context.Context, req *devkitv1.TranslationCreateUpdateBulkRequest) (*devkitv1.TranslationCreateUpdateBulkResponse, error)
 	TranslationFindLocale(ctx context.Context, req *devkitv1.TranslationFindLocaleRequest) (*devkitv1.TranslationFindLocaleResponse, error)
 	TranslationDelete(ctx context.Context, req *devkitv1.TranslationDeleteRequest) (*devkitv1.TranslationDeleteResponse, error)
+	GalleryList(ctx context.Context, req *devkitv1.GalleryListRequest) (*devkitv1.GalleryListResponse, error)
 	FileDelete(ctx context.Context, req *devkitv1.FileDeleteRequest) (*devkitv1.FileDeleteResponse, error)
 	FileList(ctx context.Context, req *devkitv1.FileListRequest) (*devkitv1.FileListResponse, error)
 	EmailSend(ctx context.Context, req *devkitv1.EmailSendRequest) (*devkitv1.EmailSendResponse, error)

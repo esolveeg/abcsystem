@@ -25,6 +25,44 @@ func (s *PublicUsecase) FileCreate(ctx context.Context, req *devkitv1.FileCreate
 	}, nil
 
 }
+
+func (s *PublicUsecase) GalleryList(ctx context.Context, req *devkitv1.GalleryListRequest) (*devkitv1.GalleryListResponse, error) {
+	limit := 10
+	offset := 0
+	if req.PaginationParams != nil {
+		limit = int(req.PaginationParams.PageSize)
+		offset = int((req.PaginationParams.PageNumber - 1) * req.PaginationParams.PageSize)
+	}
+	options := storage_go.FileSearchOptions{
+		Limit:  limit,
+		Offset: offset,
+	}
+	resp, err := s.supaapi.StorageClient.ListFiles(req.Filters.BucketId, req.Filters.QueryPath, options)
+	if err != nil {
+		return nil, err
+	}
+
+	response := s.adapter.FileListGrpcFromSupa(resp, req.Filters.BucketId)
+
+	return &devkitv1.GalleryListResponse{
+		Records: response.Files,
+		Options: &devkitv1.AvailableOptions{
+			Title:       "gallery",
+			Description: "gallery_description",
+			CreateHandler: &devkitv1.CreateHandler{
+				Endpoint: "bucketCreateUpdate",
+			},
+			UpdateHandler: &devkitv1.UpdateHandler{
+				Endpoint:     "fileUpdate",
+				FindEndpoint: "fileFind",
+			},
+			DeleteHandler: &devkitv1.DeleteHandler{
+				Endpoint:        "fileDelete",
+				RequestProperty: "records",
+			},
+		},
+	}, nil
+}
 func (s *PublicUsecase) FileList(ctx context.Context, req *devkitv1.FileListRequest) (*devkitv1.FileListResponse, error) {
 	options := storage_go.FileSearchOptions{
 		Limit:  int(req.Limit),
@@ -72,12 +110,11 @@ func (s *PublicUsecase) BucketList(ctx context.Context, req *devkitv1.BucketList
 }
 
 func (s *PublicUsecase) FileDelete(ctx context.Context, req *devkitv1.FileDeleteRequest) (*devkitv1.FileDeleteResponse, error) {
-	resp, err := s.supaapi.StorageClient.RemoveFile(req.BucketId, req.FilesPaths)
+	_, err := s.repo.FileDelete(ctx, req.Records)
 	if err != nil {
 		return nil, err
 	}
-	response := s.adapter.FileDeleteGrpcFromSupa(resp)
-	return response, nil
+	return &devkitv1.FileDeleteResponse{}, nil
 }
 
 func (s *PublicUsecase) FileCreateBuilk(ctx context.Context, req *devkitv1.FileCreateBulkRequest) (*devkitv1.FileCreateBulkResponse, error) {

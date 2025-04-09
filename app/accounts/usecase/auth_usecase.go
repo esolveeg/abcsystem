@@ -10,6 +10,7 @@ import (
 	"github.com/darwishdev/devkit-api/pkg/contextkeys"
 	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	"github.com/rs/zerolog/log"
 	"github.com/supabase-community/auth-go/types"
 )
 
@@ -82,23 +83,23 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 		return nil, err
 	}
 	response.LoginInfo = loginInfo
-	if response.User.UserTypeId == 1 {
-		navigtionBarRequest := db.UserNavigationBarFindParams{
-			UserID:          response.User.UserId,
-			NavigationBarID: 1,
-		}
-		navigationBar, err := u.repo.UserNavigationBarFind(ctx, navigtionBarRequest)
+	navigtionBarRequest := db.UserNavigationBarFindParams{
+		UserID:          response.User.UserId,
+		NavigationBarID: response.User.UserTypeId,
+	}
+	navigationBar, err := u.repo.UserNavigationBarFind(ctx, navigtionBarRequest)
+	if err != nil {
+		return nil, err
+	}
+	log.Debug().Interface("navbar", navigationBar).Msg("navbarishere")
+	if len(*navigationBar) > 0 {
+		navigations, err := u.adapter.UserNavigationBarFindGrpcFromSql(*navigationBar)
 		if err != nil {
 			return nil, err
 		}
-		if len(*navigationBar) > 0 {
-			navigations, err := u.adapter.UserNavigationBarFindGrpcFromSql(*navigationBar)
-			if err != nil {
-				return nil, err
-			}
-			response.NavigationBar = navigations
-		}
+		response.NavigationBar = navigations
 	}
+
 	return response, nil
 }
 

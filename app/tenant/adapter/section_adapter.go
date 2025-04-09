@@ -7,6 +7,33 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
+func (a *TenantAdapter) SectionFindForUpdateSqlFromGrpc(req *devkitv1.SectionFindForUpdateRequest) *db.SectionFindParams {
+	return &db.SectionFindParams{
+		SectionID: req.RecordId,
+	}
+}
+
+func (a *TenantAdapter) SectionFindForUpdateGrpcFromSql(resp *db.TenantsSchemaSection) *devkitv1.SectionFindForUpdateResponse {
+	return &devkitv1.SectionFindForUpdateResponse{
+		Request: &devkitv1.SectionCreateUpdateRequest{
+			SectionId:            int32(resp.SectionID),
+			SectionName:          resp.SectionName,
+			SectionNameAr:        resp.SectionNameAr.String,
+			SectionHeader:        resp.SectionHeader.String,
+			SectionHeaderAr:      resp.SectionHeaderAr.String,
+			SectionButtonLabel:   resp.SectionButtonLabel.String,
+			SectionButtonLabelAr: resp.SectionButtonLabelAr.String,
+			SectionButtonPageId:  int32(resp.SectionButtonPageID.Int32),
+			SectionDescription:   resp.SectionDescription.String,
+			SectionDescriptionAr: resp.SectionDescriptionAr.String,
+			TenantId:             int32(resp.TenantID.Int32),
+			SectionBackground:    resp.SectionBackground.String,
+			SectionImages:        strings.Split(resp.SectionImages.String, ","),
+			SectionIcon:          resp.SectionIcon.String,
+		},
+	}
+}
+
 func (a *TenantAdapter) SectionEntityGrpcFromSql(resp *db.TenantsSchemaSection) *devkitv1.TenantsSchemaSection {
 	return &devkitv1.TenantsSchemaSection{
 		SectionId:            int32(resp.SectionID),
@@ -21,7 +48,8 @@ func (a *TenantAdapter) SectionEntityGrpcFromSql(resp *db.TenantsSchemaSection) 
 		SectionDescriptionAr: resp.SectionDescriptionAr.String,
 		TenantId:             int32(resp.TenantID.Int32),
 		SectionBackground:    resp.SectionBackground.String,
-		SectionImages:        strings.Split(resp.SectionImages.String, ","),
+		SectionImages:        resp.SectionImages.String,
+		SectionImagesArray:   strings.Split(resp.SectionImages.String, ","),
 		SectionIcon:          resp.SectionIcon.String,
 		CreatedAt:            db.TimeToProtoTimeStamp(resp.CreatedAt.Time),
 		UpdatedAt:            db.TimeToProtoTimeStamp(resp.UpdatedAt.Time),

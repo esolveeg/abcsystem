@@ -33,6 +33,12 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
+	// DevkitServicePartialFindForUpdateProcedure is the fully-qualified name of the DevkitService's
+	// PartialFindForUpdate RPC.
+	DevkitServicePartialFindForUpdateProcedure = "/devkit.v1.DevkitService/PartialFindForUpdate"
+	// DevkitServicePageFindForUpdateProcedure is the fully-qualified name of the DevkitService's
+	// PageFindForUpdate RPC.
+	DevkitServicePageFindForUpdateProcedure = "/devkit.v1.DevkitService/PageFindForUpdate"
 	// DevkitServiceCityListInputProcedure is the fully-qualified name of the DevkitService's
 	// CityListInput RPC.
 	DevkitServiceCityListInputProcedure = "/devkit.v1.DevkitService/CityListInput"
@@ -77,6 +83,9 @@ const (
 	DevkitServiceBucketCreateUpdateProcedure = "/devkit.v1.DevkitService/BucketCreateUpdate"
 	// DevkitServiceFileListProcedure is the fully-qualified name of the DevkitService's FileList RPC.
 	DevkitServiceFileListProcedure = "/devkit.v1.DevkitService/FileList"
+	// DevkitServiceGalleryListProcedure is the fully-qualified name of the DevkitService's GalleryList
+	// RPC.
+	DevkitServiceGalleryListProcedure = "/devkit.v1.DevkitService/GalleryList"
 	// DevkitServiceFileCreateProcedure is the fully-qualified name of the DevkitService's FileCreate
 	// RPC.
 	DevkitServiceFileCreateProcedure = "/devkit.v1.DevkitService/FileCreate"
@@ -189,11 +198,16 @@ const (
 	// DevkitServiceSectionListProcedure is the fully-qualified name of the DevkitService's SectionList
 	// RPC.
 	DevkitServiceSectionListProcedure = "/devkit.v1.DevkitService/SectionList"
+	// DevkitServiceSectionFindForUpdateProcedure is the fully-qualified name of the DevkitService's
+	// SectionFindForUpdate RPC.
+	DevkitServiceSectionFindForUpdateProcedure = "/devkit.v1.DevkitService/SectionFindForUpdate"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
 	devkitServiceServiceDescriptor                           = v1.File_devkit_v1_devkit_service_proto.Services().ByName("DevkitService")
+	devkitServicePartialFindForUpdateMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("PartialFindForUpdate")
+	devkitServicePageFindForUpdateMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("PageFindForUpdate")
 	devkitServiceCityListInputMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("CityListInput")
 	devkitServiceCityListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("CityList")
 	devkitServiceLocationListInputMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("LocationListInput")
@@ -210,6 +224,7 @@ var (
 	devkitServiceBucketListMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("BucketList")
 	devkitServiceBucketCreateUpdateMethodDescriptor          = devkitServiceServiceDescriptor.Methods().ByName("BucketCreateUpdate")
 	devkitServiceFileListMethodDescriptor                    = devkitServiceServiceDescriptor.Methods().ByName("FileList")
+	devkitServiceGalleryListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("GalleryList")
 	devkitServiceFileCreateMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("FileCreate")
 	devkitServiceFileCreateBulkMethodDescriptor              = devkitServiceServiceDescriptor.Methods().ByName("FileCreateBulk")
 	devkitServiceFileDeleteMethodDescriptor                  = devkitServiceServiceDescriptor.Methods().ByName("FileDelete")
@@ -249,11 +264,14 @@ var (
 	devkitServiceSectionDeleteRestoreMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("SectionDeleteRestore")
 	devkitServiceSectionCreateUpdateMethodDescriptor         = devkitServiceServiceDescriptor.Methods().ByName("SectionCreateUpdate")
 	devkitServiceSectionListMethodDescriptor                 = devkitServiceServiceDescriptor.Methods().ByName("SectionList")
+	devkitServiceSectionFindForUpdateMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("SectionFindForUpdate")
 )
 
 // DevkitServiceClient is a client for the devkit.v1.DevkitService service.
 type DevkitServiceClient interface {
 	// INJECT METHODS
+	PartialFindForUpdate(context.Context, *connect.Request[v1.PartialFindForUpdateRequest]) (*connect.Response[v1.PartialFindForUpdateResponse], error)
+	PageFindForUpdate(context.Context, *connect.Request[v1.PageFindForUpdateRequest]) (*connect.Response[v1.PageFindForUpdateResponse], error)
 	CityListInput(context.Context, *connect.Request[v1.CityListInputRequest]) (*connect.Response[v1.CityListInputResponse], error)
 	CityList(context.Context, *connect.Request[v1.CityListRequest]) (*connect.Response[v1.CityListResponse], error)
 	LocationListInput(context.Context, *connect.Request[v1.LocationListInputRequest]) (*connect.Response[v1.LocationListInputResponse], error)
@@ -278,6 +296,7 @@ type DevkitServiceClient interface {
 	BucketCreateUpdate(context.Context, *connect.Request[v1.BucketCreateUpdateRequest]) (*connect.Response[v1.BucketCreateUpdateResponse], error)
 	// files
 	FileList(context.Context, *connect.Request[v1.FileListRequest]) (*connect.Response[v1.FileListResponse], error)
+	GalleryList(context.Context, *connect.Request[v1.GalleryListRequest]) (*connect.Response[v1.GalleryListResponse], error)
 	FileCreate(context.Context, *connect.Request[v1.FileCreateRequest]) (*connect.Response[v1.FileCreateResponse], error)
 	FileCreateBulk(context.Context, *connect.Request[v1.FileCreateBulkRequest]) (*connect.Response[v1.FileCreateBulkResponse], error)
 	// rpc FileDeleteRestore(FileDeleteRestoreRequest) returns (FileDeleteRestoreResponse) {}
@@ -332,6 +351,7 @@ type DevkitServiceClient interface {
 	SectionDeleteRestore(context.Context, *connect.Request[v1.SectionDeleteRestoreRequest]) (*connect.Response[v1.SectionDeleteRestoreResponse], error)
 	SectionCreateUpdate(context.Context, *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error)
 	SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error)
+	SectionFindForUpdate(context.Context, *connect.Request[v1.SectionFindForUpdateRequest]) (*connect.Response[v1.SectionFindForUpdateResponse], error)
 }
 
 // NewDevkitServiceClient constructs a client for the devkit.v1.DevkitService service. By default,
@@ -344,6 +364,20 @@ type DevkitServiceClient interface {
 func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) DevkitServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &devkitServiceClient{
+		partialFindForUpdate: connect.NewClient[v1.PartialFindForUpdateRequest, v1.PartialFindForUpdateResponse](
+			httpClient,
+			baseURL+DevkitServicePartialFindForUpdateProcedure,
+			connect.WithSchema(devkitServicePartialFindForUpdateMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
+		pageFindForUpdate: connect.NewClient[v1.PageFindForUpdateRequest, v1.PageFindForUpdateResponse](
+			httpClient,
+			baseURL+DevkitServicePageFindForUpdateProcedure,
+			connect.WithSchema(devkitServicePageFindForUpdateMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
 		cityListInput: connect.NewClient[v1.CityListInputRequest, v1.CityListInputResponse](
 			httpClient,
 			baseURL+DevkitServiceCityListInputProcedure,
@@ -448,6 +482,13 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			httpClient,
 			baseURL+DevkitServiceFileListProcedure,
 			connect.WithSchema(devkitServiceFileListMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
+		galleryList: connect.NewClient[v1.GalleryListRequest, v1.GalleryListResponse](
+			httpClient,
+			baseURL+DevkitServiceGalleryListProcedure,
+			connect.WithSchema(devkitServiceGalleryListMethodDescriptor),
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
@@ -698,11 +739,20 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 			connect.WithClientOptions(opts...),
 		),
+		sectionFindForUpdate: connect.NewClient[v1.SectionFindForUpdateRequest, v1.SectionFindForUpdateResponse](
+			httpClient,
+			baseURL+DevkitServiceSectionFindForUpdateProcedure,
+			connect.WithSchema(devkitServiceSectionFindForUpdateMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // devkitServiceClient implements DevkitServiceClient.
 type devkitServiceClient struct {
+	partialFindForUpdate        *connect.Client[v1.PartialFindForUpdateRequest, v1.PartialFindForUpdateResponse]
+	pageFindForUpdate           *connect.Client[v1.PageFindForUpdateRequest, v1.PageFindForUpdateResponse]
 	cityListInput               *connect.Client[v1.CityListInputRequest, v1.CityListInputResponse]
 	cityList                    *connect.Client[v1.CityListRequest, v1.CityListResponse]
 	locationListInput           *connect.Client[v1.LocationListInputRequest, v1.LocationListInputResponse]
@@ -719,6 +769,7 @@ type devkitServiceClient struct {
 	bucketList                  *connect.Client[v1.BucketListRequest, v1.BucketListResponse]
 	bucketCreateUpdate          *connect.Client[v1.BucketCreateUpdateRequest, v1.BucketCreateUpdateResponse]
 	fileList                    *connect.Client[v1.FileListRequest, v1.FileListResponse]
+	galleryList                 *connect.Client[v1.GalleryListRequest, v1.GalleryListResponse]
 	fileCreate                  *connect.Client[v1.FileCreateRequest, v1.FileCreateResponse]
 	fileCreateBulk              *connect.Client[v1.FileCreateBulkRequest, v1.FileCreateBulkResponse]
 	fileDelete                  *connect.Client[v1.FileDeleteRequest, v1.FileDeleteResponse]
@@ -758,6 +809,17 @@ type devkitServiceClient struct {
 	sectionDeleteRestore        *connect.Client[v1.SectionDeleteRestoreRequest, v1.SectionDeleteRestoreResponse]
 	sectionCreateUpdate         *connect.Client[v1.SectionCreateUpdateRequest, v1.SectionCreateUpdateResponse]
 	sectionList                 *connect.Client[v1.SectionListRequest, v1.SectionListResponse]
+	sectionFindForUpdate        *connect.Client[v1.SectionFindForUpdateRequest, v1.SectionFindForUpdateResponse]
+}
+
+// PartialFindForUpdate calls devkit.v1.DevkitService.PartialFindForUpdate.
+func (c *devkitServiceClient) PartialFindForUpdate(ctx context.Context, req *connect.Request[v1.PartialFindForUpdateRequest]) (*connect.Response[v1.PartialFindForUpdateResponse], error) {
+	return c.partialFindForUpdate.CallUnary(ctx, req)
+}
+
+// PageFindForUpdate calls devkit.v1.DevkitService.PageFindForUpdate.
+func (c *devkitServiceClient) PageFindForUpdate(ctx context.Context, req *connect.Request[v1.PageFindForUpdateRequest]) (*connect.Response[v1.PageFindForUpdateResponse], error) {
+	return c.pageFindForUpdate.CallUnary(ctx, req)
 }
 
 // CityListInput calls devkit.v1.DevkitService.CityListInput.
@@ -838,6 +900,11 @@ func (c *devkitServiceClient) BucketCreateUpdate(ctx context.Context, req *conne
 // FileList calls devkit.v1.DevkitService.FileList.
 func (c *devkitServiceClient) FileList(ctx context.Context, req *connect.Request[v1.FileListRequest]) (*connect.Response[v1.FileListResponse], error) {
 	return c.fileList.CallUnary(ctx, req)
+}
+
+// GalleryList calls devkit.v1.DevkitService.GalleryList.
+func (c *devkitServiceClient) GalleryList(ctx context.Context, req *connect.Request[v1.GalleryListRequest]) (*connect.Response[v1.GalleryListResponse], error) {
+	return c.galleryList.CallUnary(ctx, req)
 }
 
 // FileCreate calls devkit.v1.DevkitService.FileCreate.
@@ -1035,9 +1102,16 @@ func (c *devkitServiceClient) SectionList(ctx context.Context, req *connect.Requ
 	return c.sectionList.CallUnary(ctx, req)
 }
 
+// SectionFindForUpdate calls devkit.v1.DevkitService.SectionFindForUpdate.
+func (c *devkitServiceClient) SectionFindForUpdate(ctx context.Context, req *connect.Request[v1.SectionFindForUpdateRequest]) (*connect.Response[v1.SectionFindForUpdateResponse], error) {
+	return c.sectionFindForUpdate.CallUnary(ctx, req)
+}
+
 // DevkitServiceHandler is an implementation of the devkit.v1.DevkitService service.
 type DevkitServiceHandler interface {
 	// INJECT METHODS
+	PartialFindForUpdate(context.Context, *connect.Request[v1.PartialFindForUpdateRequest]) (*connect.Response[v1.PartialFindForUpdateResponse], error)
+	PageFindForUpdate(context.Context, *connect.Request[v1.PageFindForUpdateRequest]) (*connect.Response[v1.PageFindForUpdateResponse], error)
 	CityListInput(context.Context, *connect.Request[v1.CityListInputRequest]) (*connect.Response[v1.CityListInputResponse], error)
 	CityList(context.Context, *connect.Request[v1.CityListRequest]) (*connect.Response[v1.CityListResponse], error)
 	LocationListInput(context.Context, *connect.Request[v1.LocationListInputRequest]) (*connect.Response[v1.LocationListInputResponse], error)
@@ -1062,6 +1136,7 @@ type DevkitServiceHandler interface {
 	BucketCreateUpdate(context.Context, *connect.Request[v1.BucketCreateUpdateRequest]) (*connect.Response[v1.BucketCreateUpdateResponse], error)
 	// files
 	FileList(context.Context, *connect.Request[v1.FileListRequest]) (*connect.Response[v1.FileListResponse], error)
+	GalleryList(context.Context, *connect.Request[v1.GalleryListRequest]) (*connect.Response[v1.GalleryListResponse], error)
 	FileCreate(context.Context, *connect.Request[v1.FileCreateRequest]) (*connect.Response[v1.FileCreateResponse], error)
 	FileCreateBulk(context.Context, *connect.Request[v1.FileCreateBulkRequest]) (*connect.Response[v1.FileCreateBulkResponse], error)
 	// rpc FileDeleteRestore(FileDeleteRestoreRequest) returns (FileDeleteRestoreResponse) {}
@@ -1116,6 +1191,7 @@ type DevkitServiceHandler interface {
 	SectionDeleteRestore(context.Context, *connect.Request[v1.SectionDeleteRestoreRequest]) (*connect.Response[v1.SectionDeleteRestoreResponse], error)
 	SectionCreateUpdate(context.Context, *connect.Request[v1.SectionCreateUpdateRequest]) (*connect.Response[v1.SectionCreateUpdateResponse], error)
 	SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error)
+	SectionFindForUpdate(context.Context, *connect.Request[v1.SectionFindForUpdateRequest]) (*connect.Response[v1.SectionFindForUpdateResponse], error)
 }
 
 // NewDevkitServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -1124,6 +1200,20 @@ type DevkitServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	devkitServicePartialFindForUpdateHandler := connect.NewUnaryHandler(
+		DevkitServicePartialFindForUpdateProcedure,
+		svc.PartialFindForUpdate,
+		connect.WithSchema(devkitServicePartialFindForUpdateMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServicePageFindForUpdateHandler := connect.NewUnaryHandler(
+		DevkitServicePageFindForUpdateProcedure,
+		svc.PageFindForUpdate,
+		connect.WithSchema(devkitServicePageFindForUpdateMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
 	devkitServiceCityListInputHandler := connect.NewUnaryHandler(
 		DevkitServiceCityListInputProcedure,
 		svc.CityListInput,
@@ -1228,6 +1318,13 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		DevkitServiceFileListProcedure,
 		svc.FileList,
 		connect.WithSchema(devkitServiceFileListMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServiceGalleryListHandler := connect.NewUnaryHandler(
+		DevkitServiceGalleryListProcedure,
+		svc.GalleryList,
+		connect.WithSchema(devkitServiceGalleryListMethodDescriptor),
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
@@ -1478,8 +1575,19 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
 		connect.WithHandlerOptions(opts...),
 	)
+	devkitServiceSectionFindForUpdateHandler := connect.NewUnaryHandler(
+		DevkitServiceSectionFindForUpdateProcedure,
+		svc.SectionFindForUpdate,
+		connect.WithSchema(devkitServiceSectionFindForUpdateMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/devkit.v1.DevkitService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
+		case DevkitServicePartialFindForUpdateProcedure:
+			devkitServicePartialFindForUpdateHandler.ServeHTTP(w, r)
+		case DevkitServicePageFindForUpdateProcedure:
+			devkitServicePageFindForUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceCityListInputProcedure:
 			devkitServiceCityListInputHandler.ServeHTTP(w, r)
 		case DevkitServiceCityListProcedure:
@@ -1512,6 +1620,8 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 			devkitServiceBucketCreateUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceFileListProcedure:
 			devkitServiceFileListHandler.ServeHTTP(w, r)
+		case DevkitServiceGalleryListProcedure:
+			devkitServiceGalleryListHandler.ServeHTTP(w, r)
 		case DevkitServiceFileCreateProcedure:
 			devkitServiceFileCreateHandler.ServeHTTP(w, r)
 		case DevkitServiceFileCreateBulkProcedure:
@@ -1590,6 +1700,8 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 			devkitServiceSectionCreateUpdateHandler.ServeHTTP(w, r)
 		case DevkitServiceSectionListProcedure:
 			devkitServiceSectionListHandler.ServeHTTP(w, r)
+		case DevkitServiceSectionFindForUpdateProcedure:
+			devkitServiceSectionFindForUpdateHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -1598,6 +1710,14 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 
 // UnimplementedDevkitServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedDevkitServiceHandler struct{}
+
+func (UnimplementedDevkitServiceHandler) PartialFindForUpdate(context.Context, *connect.Request[v1.PartialFindForUpdateRequest]) (*connect.Response[v1.PartialFindForUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PartialFindForUpdate is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) PageFindForUpdate(context.Context, *connect.Request[v1.PageFindForUpdateRequest]) (*connect.Response[v1.PageFindForUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PageFindForUpdate is not implemented"))
+}
 
 func (UnimplementedDevkitServiceHandler) CityListInput(context.Context, *connect.Request[v1.CityListInputRequest]) (*connect.Response[v1.CityListInputResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.CityListInput is not implemented"))
@@ -1661,6 +1781,10 @@ func (UnimplementedDevkitServiceHandler) BucketCreateUpdate(context.Context, *co
 
 func (UnimplementedDevkitServiceHandler) FileList(context.Context, *connect.Request[v1.FileListRequest]) (*connect.Response[v1.FileListResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.FileList is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) GalleryList(context.Context, *connect.Request[v1.GalleryListRequest]) (*connect.Response[v1.GalleryListResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.GalleryList is not implemented"))
 }
 
 func (UnimplementedDevkitServiceHandler) FileCreate(context.Context, *connect.Request[v1.FileCreateRequest]) (*connect.Response[v1.FileCreateResponse], error) {
@@ -1817,4 +1941,8 @@ func (UnimplementedDevkitServiceHandler) SectionCreateUpdate(context.Context, *c
 
 func (UnimplementedDevkitServiceHandler) SectionList(context.Context, *connect.Request[v1.SectionListRequest]) (*connect.Response[v1.SectionListResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SectionList is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) SectionFindForUpdate(context.Context, *connect.Request[v1.SectionFindForUpdateRequest]) (*connect.Response[v1.SectionFindForUpdateResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SectionFindForUpdate is not implemented"))
 }

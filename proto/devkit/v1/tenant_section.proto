@@ -21,7 +21,8 @@ message TenantsSchemaSection {
   string section_button_label = 8;
   string section_button_label_ar = 9;
   int32 section_button_page_id = 10;
-  repeated string section_images = 11;
+  string section_images = 11;
+  repeated string section_images_array = 21;
   int32 tenant_id = 12;
   string section_background = 13;
   string section_icon = 14;
@@ -40,7 +41,8 @@ message TenantsSchemaSectionView {
   string section_button_label = 8;
   string section_button_label_ar = 9;
   int32 section_button_page_id = 10;
-  repeated string section_images = 11;
+  repeated string section_images_array = 21;
+  string section_images = 11;
   int32 tenant_id = 12;
   string section_background = 13;
   string section_icon = 14;
@@ -87,4 +89,11 @@ message SectionDeleteRestoreRequest {
 
 message SectionDeleteRestoreResponse {
   repeated TenantsSchemaSection records = 1;
+}
+
+message SectionFindForUpdateRequest {
+  int32 record_id = 1;
+}
+message SectionFindForUpdateResponse {
+  SectionCreateUpdateRequest request = 1;
 }

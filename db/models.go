@@ -373,6 +373,7 @@ type TenantsSchemaTenant struct {
 	TenantLogoDark         pgtype.Text      `json:"tenant_logo_dark"`
 	TenantLogoDarkVertical pgtype.Text      `json:"tenant_logo_dark_vertical"`
 	TenantValues           pgtype.Text      `json:"tenant_values"`
+	TenantLinks            []byte           `json:"tenant_links"`
 	TenantMission          pgtype.Text      `json:"tenant_mission"`
 	TenantVision           pgtype.Text      `json:"tenant_vision"`
 	CreatedAt              pgtype.Timestamp `json:"created_at"`

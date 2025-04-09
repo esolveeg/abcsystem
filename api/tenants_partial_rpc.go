@@ -13,6 +13,8 @@ func (api *Api) PartialList(ctx context.Context, req *connect.Request[devkitv1.P
 	if err != nil {
 		return nil, err
 	}
+
+	resp.Options = api.getAvailableOptions(req.Header())
 	return connect.NewResponse(resp), nil
 }
 
@@ -25,6 +27,13 @@ func (api *Api) PartialCreateUpdate(ctx context.Context, req *connect.Request[de
 }
 func (api *Api) PartialDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.PartialDeleteRestoreRequest]) (*connect.Response[devkitv1.PartialDeleteRestoreResponse], error) {
 	resp, err := api.tenantUsecase.PartialDeleteRestore(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(resp), nil
+}
+func (api *Api) PartialFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.PartialFindForUpdateRequest]) (*connect.Response[devkitv1.PartialFindForUpdateResponse], error) {
+	resp, err := api.tenantUsecase.PartialFindForUpdate(ctx, req)
 	if err != nil {
 		return nil, err
 	}

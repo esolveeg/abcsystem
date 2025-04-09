@@ -20,6 +20,12 @@ func (api *Api) TenantList(ctx context.Context, req *connect.Request[devkitv1.Te
 	if err != nil {
 		return nil, err
 	}
+	resp.Options = api.getAvailableOptions(req.Header())
+	if resp.Options.UpdateHandler != nil {
+		resp.Options.UpdateHandler.FindEndpoint = "tenantFind"
+		resp.Options.UpdateHandler.FindRequestProperty = "tenantId"
+		resp.Options.UpdateHandler.FindResponseProperty = "tenant"
+	}
 	return connect.NewResponse(resp), nil
 
 }

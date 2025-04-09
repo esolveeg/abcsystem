@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"connectrpc.com/connect"
-	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
 func (api *Api) FileDelete(ctx context.Context, req *connect.Request[devkitv1.FileDeleteRequest]) (*connect.Response[devkitv1.FileDeleteResponse], error) {
@@ -17,6 +17,13 @@ func (api *Api) FileDelete(ctx context.Context, req *connect.Request[devkitv1.Fi
 	return connect.NewResponse(response), err
 }
 
+func (api *Api) GalleryList(ctx context.Context, req *connect.Request[devkitv1.GalleryListRequest]) (*connect.Response[devkitv1.GalleryListResponse], error) {
+	if err := ctx.Err(); err != nil {
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+	response, err := api.publicUsecase.GalleryList(ctx, req.Msg)
+	return connect.NewResponse(response), err
+}
 func (api *Api) FileList(ctx context.Context, req *connect.Request[devkitv1.FileListRequest]) (*connect.Response[devkitv1.FileListResponse], error) {
 	if err := ctx.Err(); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
