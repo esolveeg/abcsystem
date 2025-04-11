@@ -12,10 +12,16 @@ import (
 )
 
 type TenantUsecaseInterface interface {
+	// INJECT INTERFACE
+
+SectionListInpt(ctx context.Context, req *connect.Request[devkitv1.SectionListInptRequest]) (*devkitv1.SectionListInptResponse, error) 
+
+
+	PartialTypeListInput(ctx context.Context, req *connect.Request[devkitv1.PartialTypeListInputRequest]) (*devkitv1.PartialTypeListInputResponse, error)
+
 	PartialDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.PartialDeleteRestoreRequest]) (*devkitv1.PartialDeleteRestoreResponse, error)
 	PartialCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.PartialCreateUpdateRequest]) (*devkitv1.PartialCreateUpdateResponse, error)
 	PartialList(ctx context.Context, req *connect.Request[devkitv1.PartialListRequest]) (*devkitv1.PartialListResponse, error)
-	// INJECT INTERFACE
 
 	PartialFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.PartialFindForUpdateRequest]) (*devkitv1.PartialFindForUpdateResponse, error)
 

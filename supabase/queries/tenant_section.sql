@@ -31,3 +31,10 @@ WHERE
 RETURNING
 	*;
 
+-- name: SectionListInpt :many
+SELECT
+	section_id value,
+	section_name label
+FROM
+	tenants_schema.section;
+

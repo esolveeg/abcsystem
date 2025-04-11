@@ -33,6 +33,12 @@ const (
 // reflection-formatted method names, remove the leading slash and convert the remaining slash to a
 // period.
 const (
+	// DevkitServiceSectionListInptProcedure is the fully-qualified name of the DevkitService's
+	// SectionListInpt RPC.
+	DevkitServiceSectionListInptProcedure = "/devkit.v1.DevkitService/SectionListInpt"
+	// DevkitServicePartialTypeListInputProcedure is the fully-qualified name of the DevkitService's
+	// PartialTypeListInput RPC.
+	DevkitServicePartialTypeListInputProcedure = "/devkit.v1.DevkitService/PartialTypeListInput"
 	// DevkitServicePartialFindForUpdateProcedure is the fully-qualified name of the DevkitService's
 	// PartialFindForUpdate RPC.
 	DevkitServicePartialFindForUpdateProcedure = "/devkit.v1.DevkitService/PartialFindForUpdate"
@@ -206,6 +212,8 @@ const (
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
 	devkitServiceServiceDescriptor                           = v1.File_devkit_v1_devkit_service_proto.Services().ByName("DevkitService")
+	devkitServiceSectionListInptMethodDescriptor             = devkitServiceServiceDescriptor.Methods().ByName("SectionListInpt")
+	devkitServicePartialTypeListInputMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("PartialTypeListInput")
 	devkitServicePartialFindForUpdateMethodDescriptor        = devkitServiceServiceDescriptor.Methods().ByName("PartialFindForUpdate")
 	devkitServicePageFindForUpdateMethodDescriptor           = devkitServiceServiceDescriptor.Methods().ByName("PageFindForUpdate")
 	devkitServiceCityListInputMethodDescriptor               = devkitServiceServiceDescriptor.Methods().ByName("CityListInput")
@@ -270,6 +278,8 @@ var (
 // DevkitServiceClient is a client for the devkit.v1.DevkitService service.
 type DevkitServiceClient interface {
 	// INJECT METHODS
+	SectionListInpt(context.Context, *connect.Request[v1.SectionListInptRequest]) (*connect.Response[v1.SectionListInptResponse], error)
+	PartialTypeListInput(context.Context, *connect.Request[v1.PartialTypeListInputRequest]) (*connect.Response[v1.PartialTypeListInputResponse], error)
 	PartialFindForUpdate(context.Context, *connect.Request[v1.PartialFindForUpdateRequest]) (*connect.Response[v1.PartialFindForUpdateResponse], error)
 	PageFindForUpdate(context.Context, *connect.Request[v1.PageFindForUpdateRequest]) (*connect.Response[v1.PageFindForUpdateResponse], error)
 	CityListInput(context.Context, *connect.Request[v1.CityListInputRequest]) (*connect.Response[v1.CityListInputResponse], error)
@@ -364,6 +374,20 @@ type DevkitServiceClient interface {
 func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) DevkitServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
 	return &devkitServiceClient{
+		sectionListInpt: connect.NewClient[v1.SectionListInptRequest, v1.SectionListInptResponse](
+			httpClient,
+			baseURL+DevkitServiceSectionListInptProcedure,
+			connect.WithSchema(devkitServiceSectionListInptMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
+		partialTypeListInput: connect.NewClient[v1.PartialTypeListInputRequest, v1.PartialTypeListInputResponse](
+			httpClient,
+			baseURL+DevkitServicePartialTypeListInputProcedure,
+			connect.WithSchema(devkitServicePartialTypeListInputMethodDescriptor),
+			connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+			connect.WithClientOptions(opts...),
+		),
 		partialFindForUpdate: connect.NewClient[v1.PartialFindForUpdateRequest, v1.PartialFindForUpdateResponse](
 			httpClient,
 			baseURL+DevkitServicePartialFindForUpdateProcedure,
@@ -751,6 +775,8 @@ func NewDevkitServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 
 // devkitServiceClient implements DevkitServiceClient.
 type devkitServiceClient struct {
+	sectionListInpt             *connect.Client[v1.SectionListInptRequest, v1.SectionListInptResponse]
+	partialTypeListInput        *connect.Client[v1.PartialTypeListInputRequest, v1.PartialTypeListInputResponse]
 	partialFindForUpdate        *connect.Client[v1.PartialFindForUpdateRequest, v1.PartialFindForUpdateResponse]
 	pageFindForUpdate           *connect.Client[v1.PageFindForUpdateRequest, v1.PageFindForUpdateResponse]
 	cityListInput               *connect.Client[v1.CityListInputRequest, v1.CityListInputResponse]
@@ -810,6 +836,16 @@ type devkitServiceClient struct {
 	sectionCreateUpdate         *connect.Client[v1.SectionCreateUpdateRequest, v1.SectionCreateUpdateResponse]
 	sectionList                 *connect.Client[v1.SectionListRequest, v1.SectionListResponse]
 	sectionFindForUpdate        *connect.Client[v1.SectionFindForUpdateRequest, v1.SectionFindForUpdateResponse]
+}
+
+// SectionListInpt calls devkit.v1.DevkitService.SectionListInpt.
+func (c *devkitServiceClient) SectionListInpt(ctx context.Context, req *connect.Request[v1.SectionListInptRequest]) (*connect.Response[v1.SectionListInptResponse], error) {
+	return c.sectionListInpt.CallUnary(ctx, req)
+}
+
+// PartialTypeListInput calls devkit.v1.DevkitService.PartialTypeListInput.
+func (c *devkitServiceClient) PartialTypeListInput(ctx context.Context, req *connect.Request[v1.PartialTypeListInputRequest]) (*connect.Response[v1.PartialTypeListInputResponse], error) {
+	return c.partialTypeListInput.CallUnary(ctx, req)
 }
 
 // PartialFindForUpdate calls devkit.v1.DevkitService.PartialFindForUpdate.
@@ -1110,6 +1146,8 @@ func (c *devkitServiceClient) SectionFindForUpdate(ctx context.Context, req *con
 // DevkitServiceHandler is an implementation of the devkit.v1.DevkitService service.
 type DevkitServiceHandler interface {
 	// INJECT METHODS
+	SectionListInpt(context.Context, *connect.Request[v1.SectionListInptRequest]) (*connect.Response[v1.SectionListInptResponse], error)
+	PartialTypeListInput(context.Context, *connect.Request[v1.PartialTypeListInputRequest]) (*connect.Response[v1.PartialTypeListInputResponse], error)
 	PartialFindForUpdate(context.Context, *connect.Request[v1.PartialFindForUpdateRequest]) (*connect.Response[v1.PartialFindForUpdateResponse], error)
 	PageFindForUpdate(context.Context, *connect.Request[v1.PageFindForUpdateRequest]) (*connect.Response[v1.PageFindForUpdateResponse], error)
 	CityListInput(context.Context, *connect.Request[v1.CityListInputRequest]) (*connect.Response[v1.CityListInputResponse], error)
@@ -1200,6 +1238,20 @@ type DevkitServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
+	devkitServiceSectionListInptHandler := connect.NewUnaryHandler(
+		DevkitServiceSectionListInptProcedure,
+		svc.SectionListInpt,
+		connect.WithSchema(devkitServiceSectionListInptMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
+	devkitServicePartialTypeListInputHandler := connect.NewUnaryHandler(
+		DevkitServicePartialTypeListInputProcedure,
+		svc.PartialTypeListInput,
+		connect.WithSchema(devkitServicePartialTypeListInputMethodDescriptor),
+		connect.WithIdempotency(connect.IdempotencyNoSideEffects),
+		connect.WithHandlerOptions(opts...),
+	)
 	devkitServicePartialFindForUpdateHandler := connect.NewUnaryHandler(
 		DevkitServicePartialFindForUpdateProcedure,
 		svc.PartialFindForUpdate,
@@ -1584,6 +1636,10 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 	)
 	return "/devkit.v1.DevkitService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
+		case DevkitServiceSectionListInptProcedure:
+			devkitServiceSectionListInptHandler.ServeHTTP(w, r)
+		case DevkitServicePartialTypeListInputProcedure:
+			devkitServicePartialTypeListInputHandler.ServeHTTP(w, r)
 		case DevkitServicePartialFindForUpdateProcedure:
 			devkitServicePartialFindForUpdateHandler.ServeHTTP(w, r)
 		case DevkitServicePageFindForUpdateProcedure:
@@ -1710,6 +1766,14 @@ func NewDevkitServiceHandler(svc DevkitServiceHandler, opts ...connect.HandlerOp
 
 // UnimplementedDevkitServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedDevkitServiceHandler struct{}
+
+func (UnimplementedDevkitServiceHandler) SectionListInpt(context.Context, *connect.Request[v1.SectionListInptRequest]) (*connect.Response[v1.SectionListInptResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.SectionListInpt is not implemented"))
+}
+
+func (UnimplementedDevkitServiceHandler) PartialTypeListInput(context.Context, *connect.Request[v1.PartialTypeListInputRequest]) (*connect.Response[v1.PartialTypeListInputResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PartialTypeListInput is not implemented"))
+}
 
 func (UnimplementedDevkitServiceHandler) PartialFindForUpdate(context.Context, *connect.Request[v1.PartialFindForUpdateRequest]) (*connect.Response[v1.PartialFindForUpdateResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("devkit.v1.DevkitService.PartialFindForUpdate is not implemented"))

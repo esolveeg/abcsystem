@@ -59,3 +59,13 @@ func (u *TenantUsecase) SectionDeleteRestore(ctx context.Context, req *connect.R
 	return &devkitv1.SectionDeleteRestoreResponse{Records: *resp}, nil
 
 }
+
+func (u *TenantUsecase) SectionListInpt(ctx context.Context, req *connect.Request[devkitv1.SectionListInptRequest]) (*devkitv1.SectionListInptResponse, error) {
+	record, err := u.repo.SectionListInpt(ctx)
+	if err != nil {
+		return nil, err
+	}
+	resp := u.adapter.SectionListInptGrpcFromSql(&record)
+	return resp, nil
+
+}

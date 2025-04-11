@@ -73,10 +73,6 @@ func (a *TenantAdapter) PartialListGrpcFromSql(resp *[]db.TenantsSchemaPartial) 
 }
 
 func (a *TenantAdapter) PartialCreateUpdateSqlFromGrpc(req *devkitv1.PartialCreateUpdateRequest) *db.PartialCreateUpdateParams {
-	partialLinks, err := json.Marshal(req.GetPartialLinks())
-	if err != nil {
-		log.Error().Err(err).Msg("error parsing partial links")
-	}
 	return &db.PartialCreateUpdateParams{
 		PartialID:            req.GetPartialId(),
 		PartialName:          req.GetPartialName(),
@@ -98,7 +94,6 @@ func (a *TenantAdapter) PartialCreateUpdateSqlFromGrpc(req *devkitv1.PartialCrea
 		PartialButtonPageID:  req.GetPartialButtonPageId(),
 		PartialIcons:         req.GetPartialIcons(),
 		Address:              req.GetAddress(),
-		PartialLinks:         partialLinks,
 		PartialLink:          req.GetPartialLink(),
 	}
 }
@@ -127,6 +122,20 @@ func (a *TenantAdapter) PartialFindForUpdateGrpcFromSql(resp *db.TenantsSchemaPa
 			Address:              resp.Address.String,
 			PartialLink:          resp.PartialLink.String,
 		},
+	}
+
+}
+
+func (a *TenantAdapter) PartialTypeListInputGrpcFromSql(resp []db.PartialTypeListInputRow) *devkitv1.PartialTypeListInputResponse {
+	records := make([]*devkitv1.SelectInputOption, 0)
+	for _, v := range resp {
+		records = append(records, &devkitv1.SelectInputOption{
+			Value: v.Value,
+			Label: v.Label,
+		})
+	}
+	return &devkitv1.PartialTypeListInputResponse{
+		Options: records,
 	}
 
 }

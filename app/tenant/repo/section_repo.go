@@ -54,3 +54,10 @@ func (repo *TenantRepo) SectionDeleteRestore(ctx context.Context, req *[]int32) 
 	}
 	return &resp, nil
 }
+func (repo *TenantRepo) SectionListInpt(ctx context.Context) ([]db.SectionListInptRow, error) {
+	resp, err := repo.store.SectionListInpt(ctx)
+	if err != nil {
+		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
+	}
+	return resp, nil
+}

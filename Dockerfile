@@ -9,7 +9,7 @@ FROM alpine:3.16
 WORKDIR /app
 COPY --from=builder /app/main .
 COPY start.sh .
-COPY wait-for.sh . 
+RUN chmod +x /app/start.sh
 EXPOSE 9091
 CMD [ "/app/main" ]
 ENTRYPOINT [ "/app/start.sh" ]

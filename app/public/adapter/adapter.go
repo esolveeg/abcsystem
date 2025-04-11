@@ -8,6 +8,8 @@ import (
 )
 
 type PublicAdapterInterface interface {
+	// INJECT INTERFACE
+
 	IconFindSqlFromGrpc(icon *devkitv1.IconFindRequest) *db.IconFindParams
 	IconGrpcFromSql(icon *db.Icon) *devkitv1.Icon
 	IconCreateUpdateBulkSqlFromGrpc(req *devkitv1.IconCreateUpdateBulkRequest) db.IconCreateUpdateBulkParams

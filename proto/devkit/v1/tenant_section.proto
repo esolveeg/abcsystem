@@ -97,3 +97,9 @@ message SectionFindForUpdateRequest {
 message SectionFindForUpdateResponse {
   SectionCreateUpdateRequest request = 1;
 }
+
+message SectionListInptRequest {}
+
+message SectionListInptResponse {
+  repeated SelectInputOption options = 1;
+}

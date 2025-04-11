@@ -46,7 +46,7 @@ func (a *TenantAdapter) TenantCreateUpdateSqlFromGrpc(req *devkitv1.TenantCreate
 	if err != nil {
 		log.Error().Err(err).Msg("error parsing partial links")
 	}
-
+	log.Debug().Interface("tenat log", req.TenantLogo).Msg("show me logo")
 	resp := &db.TenantCreateUpdateParams{
 		TenantID:               req.TenantId,
 		TenantName:             req.TenantName,
@@ -60,8 +60,8 @@ func (a *TenantAdapter) TenantCreateUpdateSqlFromGrpc(req *devkitv1.TenantCreate
 		TenantMission:          req.TenantMission,
 		TenantEmail:            req.TenantEmail,
 		TenantDescription:      req.TenantDescription,
-		TenantDescriptionAr:    req.TenantDescriptionAr,
 		TenantLogo:             req.TenantLogo,
+		TenantDescriptionAr:    req.TenantDescriptionAr,
 		TenantLogoVertical:     req.TenantLogoVertical,
 		TenantLogoDark:         req.TenantLogoDark,
 		TenantLogoDarkVertical: req.TenantLogoDarkVertical,

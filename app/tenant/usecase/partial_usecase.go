@@ -62,3 +62,15 @@ func (u *TenantUsecase) PartialFindForUpdate(ctx context.Context, req *connect.R
 	return resp, nil
 
 }
+
+func (u *TenantUsecase) PartialTypeListInput(ctx context.Context, req *connect.Request[devkitv1.PartialTypeListInputRequest]) (*devkitv1.PartialTypeListInputResponse, error) {
+	record, err := u.repo.PartialTypeListInput(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp := u.adapter.PartialTypeListInputGrpcFromSql(record)
+	return resp, nil
+
+}

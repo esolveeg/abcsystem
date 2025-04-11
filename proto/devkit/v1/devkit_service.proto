@@ -37,6 +37,16 @@ import "devkit/v1/tenant_tenant.proto";
 
 service DevkitService {
   // INJECT METHODS
+  rpc SectionListInpt(SectionListInptRequest) returns (SectionListInptResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authorization) = true;
+  }
+
+  rpc PartialTypeListInput(PartialTypeListInputRequest) returns (PartialTypeListInputResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authorization) = true;
+  }
+
   rpc PartialFindForUpdate(PartialFindForUpdateRequest) returns (PartialFindForUpdateResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
     option (skip_authorization) = true;
@@ -118,6 +128,7 @@ service DevkitService {
     option (skip_authentication) = true;
   }
   rpc FileCreate(FileCreateRequest) returns (FileCreateResponse) {
+    option (skip_authorization) = true;
     option (permission_group) = 'object';
     option (permission_name) = 'ObjectCreate';
   }

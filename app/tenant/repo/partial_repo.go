@@ -43,3 +43,11 @@ func (repo *TenantRepo) PartialFindForUpdate(ctx context.Context, req *db.Partia
 	}
 	return &resp, nil
 }
+func (repo *TenantRepo) PartialTypeListInput(ctx context.Context) ([]db.PartialTypeListInputRow, error) {
+	resp, err := repo.store.PartialTypeListInput(ctx)
+
+	if err != nil {
+		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
+	}
+	return resp, nil
+}

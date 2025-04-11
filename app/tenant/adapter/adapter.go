@@ -6,6 +6,10 @@ import (
 )
 
 type TenantAdapterInterface interface {
+	// INJECT INTERFACE
+
+	SectionListInptGrpcFromSql(req *[]db.SectionListInptRow) *devkitv1.SectionListInptResponse
+
 	PartialCreateUpdateSqlFromGrpc(req *devkitv1.PartialCreateUpdateRequest) *db.PartialCreateUpdateParams
 	PartialListGrpcFromSql(resp *[]db.TenantsSchemaPartial) *devkitv1.PartialListResponse
 	PartialEntityListGrpcFromSql(resp *[]db.TenantsSchemaPartial) *[]*devkitv1.TenantsSchemaPartial
@@ -25,6 +29,7 @@ type TenantAdapterInterface interface {
 	TenantDeleteRestoreGrpcFromSql(resp *[]db.TenantsSchemaTenant) *devkitv1.TenantDeleteRestoreResponse
 	TenantListGrpcFromSql(resp *[]db.TenantsSchemaTenant) *devkitv1.TenantListResponse
 	TenantFindGrpcFromSql(resp *db.TenantFindRow) *devkitv1.TenantFindResponse
+	PartialTypeListInputGrpcFromSql(resp []db.PartialTypeListInputRow) *devkitv1.PartialTypeListInputResponse
 	TenantEntityGrpcFromSql(resp *db.TenantsSchemaTenant) *devkitv1.TenantsSchemaTenant
 	TenantCreateUpdateSqlFromGrpc(req *devkitv1.TenantCreateUpdateRequest) *db.TenantCreateUpdateParams
 }

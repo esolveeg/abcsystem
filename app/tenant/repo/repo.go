@@ -12,6 +12,10 @@ type TenantRepoInterface interface {
 	PartialCreateUpdate(ctx context.Context, req *db.PartialCreateUpdateParams) (*db.TenantsSchemaPartial, error)
 	PartialList(ctx context.Context, tenantId int32) (*[]db.TenantsSchemaPartial, error)
 	// INJECT INTERFACE
+	SectionListInpt(ctx context.Context) ([]db.SectionListInptRow, error)
+
+	PartialTypeListInput(ctx context.Context) ([]db.PartialTypeListInputRow, error)
+
 	PartialFindForUpdate(ctx context.Context, req *db.PartialFindForUpdateParams) (*db.TenantsSchemaPartial, error)
 
 	PageFindForUpdate(ctx context.Context, req db.PageFindForUpdateParams) (*db.TenantsSchemaPage, error)

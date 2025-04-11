@@ -33,3 +33,10 @@ WHERE
 	s.tenant_id = is_null_replace(sqlc.arg('tenant_id')::int, tenant_id)
 	AND p.partial_id = is_null_replace(sqlc.arg('partial_id')::int, p.partial_id);
 
+-- name: PartialTypeListInput :many
+SELECT
+	partial_type_id value,
+	partial_type_name label
+FROM
+	tenants_schema.partial_type;
+

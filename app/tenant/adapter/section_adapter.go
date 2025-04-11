@@ -100,3 +100,18 @@ func (a *TenantAdapter) SectionCreateUpdateSqlFromGrpc(req *devkitv1.SectionCrea
 		SectionIcon:          req.GetSectionIcon(),
 	}
 }
+
+func (a *TenantAdapter) SectionListInptGrpcFromSql(resp *[]db.SectionListInptRow) *devkitv1.SectionListInptResponse {
+
+	records := make([]*devkitv1.SelectInputOption, 0)
+	for _, v := range *resp {
+		records = append(records, &devkitv1.SelectInputOption{
+			Value: v.Value,
+			Label: v.Label,
+		})
+	}
+	return &devkitv1.SectionListInptResponse{
+		Options: records,
+	}
+
+}

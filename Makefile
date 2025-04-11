@@ -27,6 +27,9 @@ testapi:
 seed_storage:
 	devkit seed storage -f seeds/assets -i seeds/icons 
 
+deploy:
+	docker compose build && make dtag v=$(v) && make dpush v=$(v)
+
 seed_accounts:
 	devkit seed accounts_schema --file-path seeds/schemas/accounts.xlsx -e
 
@@ -51,12 +54,25 @@ seed_super_user:
 supabase_reset:
 	supabase db reset 
 			
+rdbr:
+	supabase db reset --linked
+
+rdbrr:
+	make rdbr seed_super_user seed_accounts seed_public seed_tenants seed_tenants_accounts 
+
 rdb:
 	make supabase_reset seed_super_user seed_accounts seed_storage seed_public seed_tenants seed_tenants_accounts 
 run:
 	go run main.go
 buf_push:
 	cd proto && buf push
+
+dtag:
+	docker tag devkit_api exploremelon/abc_portfolio:${v}
+
+dpush:
+	docker push  exploremelon/abc_portfolio:${v}
+
 buf:
 	rm -rf proto_gen/devkit/v1/*.pb.go && cd proto && buf lint && buf generate 
 sqlc:
