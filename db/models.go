@@ -309,6 +309,7 @@ type TenantsSchemaPartial struct {
 	PartialID            int32            `json:"partial_id"`
 	PartialName          string           `json:"partial_name"`
 	PartialNameAr        pgtype.Text      `json:"partial_name_ar"`
+	PartialCode          pgtype.Text      `json:"partial_code"`
 	PartialTypeID        int32            `json:"partial_type_id"`
 	SectionID            int32            `json:"section_id"`
 	PartialImage         pgtype.Text      `json:"partial_image"`

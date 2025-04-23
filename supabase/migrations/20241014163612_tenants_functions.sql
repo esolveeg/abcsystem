@@ -230,7 +230,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION tenants_schema.partial_create_update (in_partial_id int, in_partial_name varchar(200), in_partial_name_ar varchar(200), in_partial_type_id int, in_section_id int, in_partial_image text, in_partial_images text, in_partial_video text, in_is_featured bool, in_partial_brief text, in_partial_brief_ar text, in_partial_content text, in_partial_content_ar text, in_partial_button_label text, in_partial_button_label_ar text, in_partial_button_icon text, in_partial_button_link text, in_partial_button_page_id int, in_partial_icons text, in_address text, in_partial_links jsonb, in_partial_link text)
+CREATE OR REPLACE FUNCTION tenants_schema.partial_create_update (in_partial_id int, in_partial_code varchar(200), in_partial_name varchar(200), in_partial_name_ar varchar(200), in_partial_type_id int, in_section_id int, in_partial_image text, in_partial_images text, in_partial_video text, in_is_featured bool, in_partial_brief text, in_partial_brief_ar text, in_partial_content text, in_partial_content_ar text, in_partial_button_label text, in_partial_button_label_ar text, in_partial_button_icon text, in_partial_button_link text, in_partial_button_page_id int, in_partial_icons text, in_address text, in_partial_links jsonb, in_partial_link text)
 	RETURNS SETOF tenants_schema.partial
 	LANGUAGE plpgsql
 	AS $$
@@ -242,6 +242,7 @@ BEGIN
 			tenants_schema.partial
 		SET
 			partial_name = in_partial_name,
+			partial_code = in_partial_code,
 			partial_name_ar = in_partial_name_ar,
 			partial_type_id = in_partial_type_id,
 			section_id = in_section_id,
@@ -268,6 +269,7 @@ BEGIN
 	ELSE
 		INSERT INTO tenants_schema.partial (
 			partial_name,
+			partial_code,
 			partial_name_ar,
 			partial_type_id,
 			section_id,
@@ -290,6 +292,7 @@ BEGIN
 			partial_link)
 		VALUES (
 			in_partial_name,
+			in_partial_code,
 			in_partial_name_ar,
 			in_partial_type_id,
 			in_section_id,

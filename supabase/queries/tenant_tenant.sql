@@ -157,6 +157,8 @@ section_partials AS (
 		JOIN page_sections ps ON ps.section_id = p.section_id
 	WHERE
 		p.deleted_at IS NULL
+	ORDER BY
+		p.partial_code
 )
 SELECT
 	t.tenant_id,

@@ -45,6 +45,8 @@ func NewServer(config config.Config, store db.Store, tokenMaker auth.Maker, redi
 	}, nil
 }
 
+const maxMessageSize = 10 * 1024 * 1024 // 10MB
+
 func (s Server) NewGrpcHttpServer() *http.Server {
 	mux := http.NewServeMux()
 	mux.Handle("/", http.RedirectHandler("https://darwishdev.com", http.StatusFound))
@@ -57,6 +59,8 @@ func (s Server) NewGrpcHttpServer() *http.Server {
 		s.api,
 		interceptors,
 		compress1KB,
+		connect.WithReadMaxBytes(maxMessageSize),
+		connect.WithSendMaxBytes(maxMessageSize),
 	))
 
 	mux.Handle(grpchealth.NewHandler(

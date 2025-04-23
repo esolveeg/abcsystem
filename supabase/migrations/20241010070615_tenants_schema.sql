@@ -87,6 +87,7 @@ CREATE TABLE tenants_schema.partial (
 	partial_id serial PRIMARY KEY,
 	partial_name varchar(200) NOT NULL,
 	partial_name_ar varchar(200),
+	partial_code varchar(200),
 	partial_type_id int NOT NULL,
 	FOREIGN KEY (partial_type_id) REFERENCES tenants_schema.partial_type (partial_type_id),
 	section_id int NOT NULL,

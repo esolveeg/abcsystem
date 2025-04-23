@@ -41,7 +41,7 @@ seed_properties:
 	devkit seed properties_schema --file-path seeds/schemas/properties_mac.xlsx -e
 	
 seed_tenants:
-	devkit seed tenants_schema --file-path seeds/schemas/tenants.xlsx -e
+	devkit seed tenants_schema --file-path seeds/schemas/tenant_mac.xlsx -e
 
 seed_tenants_accounts:
 	devkit seed accounts_schema --file-path seeds/schemas/tenant_accounts_1.xlsx -e
@@ -58,7 +58,7 @@ rdbr:
 	supabase db reset --linked
 
 rdbrr:
-	make rdbr seed_super_user seed_accounts seed_public seed_tenants seed_tenants_accounts 
+	make rdbr seed_super_user seed_accounts  seed_storage seed_public seed_tenants seed_tenants_accounts 
 
 rdb:
 	make supabase_reset seed_super_user seed_accounts seed_storage seed_public seed_tenants seed_tenants_accounts 
