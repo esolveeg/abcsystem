@@ -139,7 +139,12 @@ service DevkitService {
   //  rpc FileDeleteRestore(FileDeleteRestoreRequest) returns (FileDeleteRestoreResponse) {}
   rpc FileDelete(FileDeleteRequest) returns (FileDeleteResponse) {
     option (permission_group) = 'object';
-    option (permission_name) = 'ObjectList';
+    option (permission_name) = 'ObjectDelete';
+  }
+
+  rpc FileDeleteByBucket(FileDeleteByBucketRequest) returns (FileDeleteByBucketResponse) {
+    option (permission_group) = 'object';
+    option (permission_name) = 'ObjectDelete';
   }
 
   // import

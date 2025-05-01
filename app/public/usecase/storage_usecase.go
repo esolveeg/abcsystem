@@ -117,7 +117,14 @@ func (s *PublicUsecase) FileDelete(ctx context.Context, req *devkitv1.FileDelete
 	return &devkitv1.FileDeleteResponse{}, nil
 }
 
-func (s *PublicUsecase) FileCreateBuilk(ctx context.Context, req *devkitv1.FileCreateBulkRequest) (*devkitv1.FileCreateBulkResponse, error) {
+func (s *PublicUsecase) FileDeleteByBucket(ctx context.Context, req *devkitv1.FileDeleteByBucketRequest) (*devkitv1.FileDeleteByBucketResponse, error) {
+	_, err := s.repo.FileDeleteByBucket(ctx, req.Records, req.BucketName)
+	if err != nil {
+		return nil, err
+	}
+	return &devkitv1.FileDeleteByBucketResponse{}, nil
+}
+func (s *PublicUsecase) FileCreateBulk(ctx context.Context, req *devkitv1.FileCreateBulkRequest) (*devkitv1.FileCreateBulkResponse, error) {
 	images := make([]string, len(req.Files))
 	for index, file := range req.Files {
 		response, err := s.FileCreate(ctx, file)

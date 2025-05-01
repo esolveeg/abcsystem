@@ -237,37 +237,8 @@ CREATE OR REPLACE FUNCTION tenants_schema.partial_create_update (in_partial_id i
 DECLARE
 	v_partial_id int;
 BEGIN
-	IF in_partial_id IS NOT NULL THEN
-		UPDATE
-			tenants_schema.partial
-		SET
-			partial_name = in_partial_name,
-			partial_code = in_partial_code,
-			partial_name_ar = in_partial_name_ar,
-			partial_type_id = in_partial_type_id,
-			section_id = in_section_id,
-			partial_image = in_partial_image,
-			partial_images = in_partial_images,
-			partial_video = in_partial_video,
-			is_featured = in_is_featured,
-			partial_brief = in_partial_brief,
-			partial_brief_ar = in_partial_brief_ar,
-			partial_content = in_partial_content,
-			partial_content_ar = in_partial_content_ar,
-			partial_button_label = in_partial_button_label,
-			partial_button_label_ar = in_partial_button_label_ar,
-			partial_button_icon = in_partial_button_icon,
-			partial_button_link = in_partial_button_link,
-			partial_button_page_id = nullable_foreign(in_partial_button_page_id),
-			partial_icons = in_partial_icons,
-			address = in_address,
-			partial_links = in_partial_links,
-			partial_link = in_partial_link,
-			updated_at = NOW()
-		WHERE
-			partial_id = in_partial_id;
-	ELSE
-		INSERT INTO tenants_schema.partial (
+	IF is_null (in_partial_id) THEN
+		RETURN query INSERT INTO tenants_schema.partial (
 			partial_name,
 			partial_code,
 			partial_name_ar,
@@ -315,15 +286,39 @@ BEGIN
 			in_partial_links,
 			in_partial_link)
 	RETURNING
-		partial_id INTO v_partial_id;
+		*;
+	ELSE
+		RETURN query UPDATE
+			tenants_schema.partial
+		SET
+			partial_name = in_partial_name,
+			partial_code = in_partial_code,
+			partial_name_ar = in_partial_name_ar,
+			partial_type_id = in_partial_type_id,
+			section_id = in_section_id,
+			partial_image = in_partial_image,
+			partial_images = in_partial_images,
+			partial_video = in_partial_video,
+			is_featured = in_is_featured,
+			partial_brief = in_partial_brief,
+			partial_brief_ar = in_partial_brief_ar,
+			partial_content = in_partial_content,
+			partial_content_ar = in_partial_content_ar,
+			partial_button_label = in_partial_button_label,
+			partial_button_label_ar = in_partial_button_label_ar,
+			partial_button_icon = in_partial_button_icon,
+			partial_button_link = in_partial_button_link,
+			partial_button_page_id = nullable_foreign(in_partial_button_page_id),
+			partial_icons = in_partial_icons,
+			address = in_address,
+			partial_links = in_partial_links,
+			partial_link = in_partial_link,
+			updated_at = NOW()
+		WHERE
+			partial_id = in_partial_id
+		RETURNING
+			*;
 	END IF;
-	RETURN QUERY
-	SELECT
-		*
-	FROM
-		tenants_schema.partial
-	WHERE
-		partial_id = COALESCE(v_partial_id, in_partial_id);
 END;
 $$;
 

@@ -127,3 +127,14 @@ message FileDeleteRequest {
 message FileDeleteResponse {
   repeated FileCreateResponse responses = 1;
 }
+message FileDeleteByBucketRequest {
+  string bucket_name = 1;
+  repeated string records = 2 [(buf.validate.field).repeated = {
+    unique: true
+    max_items: 500
+  }];
+}
+
+message FileDeleteByBucketResponse {
+  repeated FileCreateResponse responses = 1;
+}

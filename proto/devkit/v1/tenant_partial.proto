@@ -3,6 +3,7 @@ package devkit.v1;
 
 import "buf/validate/validate.proto";
 import "devkit/v1/client.proto";
+import "devkit/v1/public_storage.proto";
 import "google/protobuf/timestamp.proto";
 
 // INJECT MESSAGES
@@ -69,6 +70,7 @@ message PartialCreateUpdateRequest {
   string address = 20 [(buf.validate.field).string.max_len = 1000];
   map<string, string> partial_links = 21;
   string partial_link = 22 [(buf.validate.field).string.max_len = 500];
+  FileCreateBulkRequest uploads = 23;
 }
 
 message PartialCreateUpdateResponse {

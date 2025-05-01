@@ -13,6 +13,7 @@ type Store interface {
 	ExecTX(ctx context.Context, fn func(*Queries) error) error
 	AuthUserIDFindByEmail(ctx context.Context, email string) (string, error)
 	StorageFileDelete(ctx context.Context, records []string) (string, error)
+	StorageFileDeleteByBucket(ctx context.Context, records []string, bucketName string) (string, error)
 	DbErrorParser(err error, errorHandler map[string]string) *connect.Error
 }
 

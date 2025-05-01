@@ -14,8 +14,7 @@ import (
 type TenantUsecaseInterface interface {
 	// INJECT INTERFACE
 
-SectionListInpt(ctx context.Context, req *connect.Request[devkitv1.SectionListInptRequest]) (*devkitv1.SectionListInptResponse, error) 
-
+	SectionListInpt(ctx context.Context, req *connect.Request[devkitv1.SectionListInptRequest]) (*devkitv1.SectionListInptResponse, error)
 
 	PartialTypeListInput(ctx context.Context, req *connect.Request[devkitv1.PartialTypeListInputRequest]) (*devkitv1.PartialTypeListInputResponse, error)
 
