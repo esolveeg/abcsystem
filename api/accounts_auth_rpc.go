@@ -16,6 +16,22 @@ func (api *Api) AuthRegister(ctx context.Context, req *connect.Request[devkitv1.
 	}
 	return connect.NewResponse(response), nil
 }
+
+func (api *Api) AuthLoginProviderCallback(ctx context.Context, req *connect.Request[devkitv1.AuthLoginProviderCallbackRequest]) (*connect.Response[devkitv1.AuthLoginProviderCallbackResponse], error) {
+	response, err := api.accountsUsecase.AuthLoginProviderCallback(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(response), nil
+}
+
+func (api *Api) AuthLoginProvider(ctx context.Context, req *connect.Request[devkitv1.AuthLoginProviderRequest]) (*connect.Response[devkitv1.AuthLoginProviderResponse], error) {
+	response, err := api.accountsUsecase.AuthLoginProvider(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(response), nil
+}
 func (api *Api) AuthLogin(ctx context.Context, req *connect.Request[devkitv1.AuthLoginRequest]) (*connect.Response[devkitv1.AuthLoginResponse], error) {
 	response, err := api.accountsUsecase.AuthLogin(ctx, req)
 	if err != nil {

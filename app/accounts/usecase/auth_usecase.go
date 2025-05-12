@@ -106,6 +106,7 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 func (u *AccountsUsecase) AuthLoginProvider(ctx context.Context, req *connect.Request[devkitv1.AuthLoginProviderRequest]) (*devkitv1.AuthLoginProviderResponse, error) {
 	resp, err := u.supaapi.ProviderLogin(types.Provider(req.Msg.Provider), req.Msg.RedirectUrl)
 	if err != nil {
+		log.Debug().Interface("error from here", err).Msg("error")
 		return nil, err
 	}
 	return &devkitv1.AuthLoginProviderResponse{Url: resp.AuthorizationURL}, nil
@@ -146,7 +147,7 @@ func (u *AccountsUsecase) AuthResetPasswordEmail(ctx context.Context, req *conne
 	return &devkitv1.AuthResetPasswordEmailResponse{}, nil
 }
 
-func (u *AccountsUsecase) AuthLoginProviderCallback(ctx context.Context, req *connect.Request[devkitv1.AuthLoginProviderCallbackRequest]) (*devkitv1.AuthLoginResponse, error) {
+func (u *AccountsUsecase) AuthLoginProviderCallback(ctx context.Context, req *connect.Request[devkitv1.AuthLoginProviderCallbackRequest]) (*devkitv1.AuthLoginProviderCallbackResponse, error) {
 	user, err := u.supaapi.AuthClient.WithToken(req.Msg.AccessToken).GetUser()
 	if err != nil {
 		return nil, err
@@ -155,5 +156,9 @@ func (u *AccountsUsecase) AuthLoginProviderCallback(ctx context.Context, req *co
 	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	return &devkitv1.AuthLoginProviderCallbackResponse{
+		User:          resp.User,
+		NavigationBar: resp.NavigationBar,
+		LoginInfo:     resp.LoginInfo,
+	}, nil
 }
