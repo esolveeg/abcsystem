@@ -6,7 +6,6 @@ import (
 
 	"connectrpc.com/connect"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	"github.com/rs/zerolog/log"
 )
 
 func (api *Api) PartialList(ctx context.Context, req *connect.Request[devkitv1.PartialListRequest]) (*connect.Response[devkitv1.PartialListResponse], error) {
@@ -21,12 +20,12 @@ func (api *Api) PartialList(ctx context.Context, req *connect.Request[devkitv1.P
 
 func (api *Api) PartialCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.PartialCreateUpdateRequest]) (*connect.Response[devkitv1.PartialCreateUpdateResponse], error) {
 	var err error
-	if req.Msg.Uploads != nil {
-		_, err := api.publicUsecase.FileCreateBulk(ctx, req.Msg.Uploads)
-		if err != nil {
-			log.Error().Err(err).Msg("error uploading files")
-		}
-	}
+	// if req.Msg.Uploads != nil {
+	// 	_, err := api.publicUsecase.FileCreateBulk(ctx, req.Msg.Uploads)
+	// 	if err != nil {
+	// 		log.Error().Err(err).Msg("error uploading files")
+	// 	}
+	// }
 	resp, err := api.tenantUsecase.PartialCreateUpdate(ctx, req)
 	if err != nil {
 		return nil, err
