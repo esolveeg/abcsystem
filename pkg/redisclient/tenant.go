@@ -70,6 +70,9 @@ func (r *RedisClient) TenantCreate(ctx context.Context, tenantId int32, tenant *
 }
 
 func (r *RedisClient) TenantFind(ctx context.Context, tenantId int32) (*db.TenantFindRow, error) {
+	if r.isDisabled {
+		return nil, nil
+	}
 	var parsedStruct db.TenantFindRow
 	key := fmt.Sprintf("tenant--%d", tenantId)
 	jsonBytes, err := r.client.Get(ctx, key).Bytes()

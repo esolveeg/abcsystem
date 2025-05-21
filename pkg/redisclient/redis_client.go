@@ -21,17 +21,20 @@ type RedisClientInterface interface {
 }
 
 type RedisClient struct {
-	client *redis.Client
+	client     *redis.Client
+	isDisabled bool
 }
 
-func NewRedisClient(host string, port string, password string, db int) RedisClientInterface {
+func NewRedisClient(host string, port string, password string, db int, isDisabled bool) RedisClientInterface {
 	client := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", host, port),
 		Password: password, // no password set
 		DB:       db,       // use default DB
+
 	})
 
 	return &RedisClient{
-		client: client,
+		client:     client,
+		isDisabled: isDisabled,
 	}
 }

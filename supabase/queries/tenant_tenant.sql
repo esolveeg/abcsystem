@@ -134,7 +134,7 @@ section_partials AS (
 		p.section_id,
 		p.partial_image,
 		p.partial_link,
-		p.partial_images,
+		string_to_array(p.partial_images, ',') partial_images,
 		p.partial_video,
 		p.is_featured,
 		p.partial_brief,

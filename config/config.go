@@ -37,6 +37,7 @@ type Config struct {
 	RedisPassword string `mapstructure:"REDIS_PASSWORD"`
 	RedisDatabase int    `mapstructure:"REDIS_DATABASE"`
 
+	IsCacheDisabled        bool   `mapstructure:"IS_CACHE_DISABLED"`
 	SupabaseAPIPort        uint32 `mapstructure:"SUPABASE_API_PORT"`
 	SupabaseServiceRoleKey string `mapstructure:"SUPABASE_SERVICE_ROLE_KEY"`
 	SupabaseApiKey         string `mapstructure:"SUPABASE_API_KEY"`
