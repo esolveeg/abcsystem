@@ -18,6 +18,7 @@ type Config struct {
 
 	ApiVersion     string `mapstructure:"API_VERSION"`
 	ApiServiceName string `mapstructure:"API_SERVICE_NAME"`
+	DefaultBucket  string `mapstructure:"DEFAULT_BUCKET"`
 
 	DBProjectREF string `mapstructure:"DB_PROJECT_REF"`
 	DBSource     string `mapstructure:"DB_SOURCE"`

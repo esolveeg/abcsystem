@@ -3,11 +3,63 @@ package api
 import (
 	"bytes"
 	"context"
+	"net/http"
 	"strings"
 
 	"connectrpc.com/connect"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
+
+func (api *Api) HandleHttpFileUpload(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseMultipartForm(100 << 20) // 100MB max memory+disk buffer
+	if err != nil {
+		http.Error(w, "Failed to parse multipart form: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+	bucketName := r.FormValue("bucket_name")
+	if bucketName == "" {
+		bucketName = api.config.DefaultBucket
+	}
+
+	// Support multiple files with unknown field name
+	for _, files := range r.MultipartForm.File {
+		for _, fileHeader := range files {
+			file, err := fileHeader.Open()
+			if err != nil {
+				http.Error(w, "Failed to open uploaded file: "+err.Error(), http.StatusInternalServerError)
+				return
+			}
+			defer file.Close()
+
+			var buf bytes.Buffer
+			if _, err := buf.ReadFrom(file); err != nil {
+				http.Error(w, "Failed to read file: "+err.Error(), http.StatusInternalServerError)
+				return
+			}
+			req := connect.NewRequest(&devkitv1.FileCreateRequest{
+				Path:       fileHeader.Filename,
+				BucketName: bucketName,
+				Reader:     buf.Bytes(),
+				FileType:   fileHeader.Header.Get("Content-Type"),
+			})
+
+			if auth := r.Header.Get("Authorization"); auth != "" {
+				req.Header().Set("Authorization", auth)
+			}
+
+			_, err = api.FileCreate(r.Context(), req)
+			if err != nil {
+				http.Error(w, "FileCreate failed: "+err.Error(), http.StatusInternalServerError)
+				return
+			}
+		}
+	}
+
+	// Return generic success response
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"status": "ok"}`))
+}
 
 func (api *Api) FileDelete(ctx context.Context, req *connect.Request[devkitv1.FileDeleteRequest]) (*connect.Response[devkitv1.FileDeleteResponse], error) {
 	if err := ctx.Err(); err != nil {

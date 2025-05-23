@@ -75,6 +75,8 @@ func (s Server) NewGrpcHttpServer() *http.Server {
 		grpcreflect.NewStaticReflector(devkitv1connect.DevkitServiceName),
 		compress1KB,
 	))
+	// Add upload handler here
+	mux.HandleFunc("/upload", s.api.(*Api).HandleHttpFileUpload)
 	cors := cors.New(cors.Options{
 		AllowedMethods: []string{
 			http.MethodHead,
