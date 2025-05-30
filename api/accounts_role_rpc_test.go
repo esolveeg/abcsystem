@@ -7,7 +7,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/darwishdev/devkit-api/pkg/random"
-	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
 type roleCreateUpdateTest struct {

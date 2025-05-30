@@ -2,6 +2,7 @@ package api
 
 import (
 	// USECASE_IMPORTS
+
 	propertyUsecase "github.com/darwishdev/devkit-api/app/property/usecase"
 
 	"github.com/bufbuild/protovalidate-go"
@@ -62,8 +63,8 @@ func NewApi(config config.Config, store db.Store, tokenMaker auth.Maker, redisCl
 	propertyUsecase := propertyUsecase.NewPropertyUsecase(store)
 
 	tenantUsecase := tenantUsecase.NewTenantUsecase(store, redisClient)
-	accountsUsecase := accountsUsecase.NewAccountsUsecase(store, supaapi, redisClient, tokenMaker, config.AccessTokenDuration)
-	publicUsecase := publicUsecase.NewPublicUsecase(store, supaapi, redisClient, resendClient)
+	accountsUsecase := accountsUsecase.NewAccountsUsecase(store, supaapi, redisClient, tokenMaker, config.AccessTokenDuration, config.RefreshTokenDuration)
+	publicUsecase := publicUsecase.NewPublicUsecase(store, config.SupabaseApiKey, supaapi, redisClient, resendClient)
 	return &Api{
 		// USECASE_INJECTIONS
 		propertyUsecase: propertyUsecase,

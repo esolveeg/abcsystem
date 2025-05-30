@@ -78,6 +78,18 @@ SELECT
 FROM
 	accounts_schema.user_create_update (in_user_id => sqlc.arg('user_id'), in_user_name => sqlc.arg('user_name'), in_tenant_id => sqlc.arg('tenant_id'), in_caller_id => sqlc.arg('caller_id'), in_user_type_id => sqlc.arg('user_type_id'), in_user_phone => sqlc.arg('user_phone'), in_user_email => sqlc.arg('user_email'), in_user_password => sqlc.arg('user_password'), in_roles => sqlc.arg('roles')::int[]);
 
+-- name: UserFindForToken :one
+SELECT
+	u.user_id,
+	u.user_email,
+	accounts_schema.user_security_level_find(u.user_id) user_security_level,
+	u.tenant_id
+FROM
+	accounts_schema.user u
+WHERE
+	u.user_id = sqlc.arg('user_id')
+	OR u.user_email = sqlc.arg('user_email');
+
 -- name: UserFindForUpdate :one
 WITH user_roles AS (
 	SELECT
@@ -130,7 +142,7 @@ FROM
 	accounts_schema.user u
 	JOIN accounts_schema.user_role ur ON u.user_id = ur.user_id
 	JOIN accounts_schema.role r ON ur.role_id = r.role_id
-		AND r.role_security_level <= accounts_schema.user_security_level_find (sqlc.arg('caller_id'))
+		AND r.role_security_level <= accounts_schema.user_security_level_find(sqlc.arg('caller_id'))
 GROUP BY
 	u.user_id,
 	u.user_name,

@@ -45,23 +45,19 @@ func NewServer(config config.Config, store db.Store, tokenMaker auth.Maker, redi
 	}, nil
 }
 
-const maxMessageSize = 10 * 1024 * 1024 // 10MB
-
 func (s Server) NewGrpcHttpServer() *http.Server {
 	mux := http.NewServeMux()
 	mux.Handle("/", http.RedirectHandler("https://darwishdev.com", http.StatusFound))
 	// here we can find examples of diffrent compression method 	https://connectrpc.com/docs/go/serialization-and-compression/#compression
 	compress1KB := connect.WithCompressMinBytes(1024)
-	log.Debug().Interface("stete", s.config.State).Msg("state ios")
 	interceptors := connect.WithInterceptors(s.NewValidateInterceptor(), s.NewAuthenticationInterceptor(), s.NewAuthorizationInterceptor(), s.NewLoggerInterceptor())
 
-	mux.Handle(devkitv1connect.NewDevkitServiceHandler(
+	name, handler := devkitv1connect.NewDevkitServiceHandler(
 		s.api,
 		interceptors,
 		compress1KB,
-		connect.WithReadMaxBytes(maxMessageSize),
-		connect.WithSendMaxBytes(maxMessageSize),
-	))
+	)
+	mux.Handle(name, handler)
 
 	mux.Handle(grpchealth.NewHandler(
 		grpchealth.NewStaticChecker(devkitv1connect.DevkitServiceName),
@@ -75,8 +71,11 @@ func (s Server) NewGrpcHttpServer() *http.Server {
 		grpcreflect.NewStaticReflector(devkitv1connect.DevkitServiceName),
 		compress1KB,
 	))
-	// Add upload handler here
-	mux.HandleFunc("/upload", s.api.(*Api).HandleHttpFileUpload)
+	allowedMap := make(map[string]bool)
+	for _, origin := range s.config.AllowedOrigins {
+
+		allowedMap[origin] = true
+	}
 	cors := cors.New(cors.Options{
 		AllowedMethods: []string{
 			http.MethodHead,
@@ -88,7 +87,12 @@ func (s Server) NewGrpcHttpServer() *http.Server {
 		},
 		AllowOriginFunc: func(origin string) bool {
 			// Allow all origins, which effectively disables CORS.
-			return true
+			allowed := allowedMap[origin]
+			if !allowed && origin != "" {
+				log.Printf("Blocked CORS origin: %s", origin)
+				return false
+			}
+			return allowed
 		},
 		AllowedHeaders: []string{"*"},
 		ExposedHeaders: []string{
@@ -105,15 +109,12 @@ func (s Server) NewGrpcHttpServer() *http.Server {
 			"Grpc-Status",
 			"Grpc-Status-Details-Bin",
 		},
-		// Let browsers cache CORS information for longer, which reduces the number
-		// of preflight requests. Any changes to ExposedHeaders won't take effect
-		// until the cached data expires. FF caps this value at 24h, and modern
-		// Chrome caps it at 2h.
-		MaxAge: int(2 * time.Hour / time.Second),
+		AllowCredentials: true,
+		MaxAge:           int(2 * time.Hour / time.Second),
 	})
 	server := &http.Server{
 		Addr:    s.config.GRPCServerAddress,
-		Handler: h2c.NewHandler(cors.Handler(mux), &http2.Server{}),
+		Handler: h2c.NewHandler(s.InjectRefreshTokenMiddleware(cors.Handler(mux)), &http2.Server{}),
 	}
 	return server
 

@@ -16,20 +16,25 @@ type StateConfig struct {
 type Config struct {
 	State string `mapstructure:"STATE"`
 
-	ApiVersion     string `mapstructure:"API_VERSION"`
-	ApiServiceName string `mapstructure:"API_SERVICE_NAME"`
-	DefaultBucket  string `mapstructure:"DEFAULT_BUCKET"`
+	AllowedOrigins []string `mapstructure:"ALLOWED_ORIGINS"`
+	ApiVersion     string   `mapstructure:"API_VERSION"`
+	ApiServiceName string   `mapstructure:"API_SERVICE_NAME"`
+	DefaultBucket  string   `mapstructure:"DEFAULT_BUCKET"`
 
 	DBProjectREF string `mapstructure:"DB_PROJECT_REF"`
 	DBSource     string `mapstructure:"DB_SOURCE"`
 
-	GRPCServerAddress   string        `mapstructure:"GRPC_SERVER_ADDRESS"`
-	AccessTokenDuration time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
-	TokenSymmetricKey   string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
-	ClientBaseUrl       string        `mapstructure:"CLIENT_BASE_URL"`
-	DockerHubUser       string        `mapstructure:"DOCKERHUB_USER"`
-	AppName             string        `mapstructure:"APP_NAME"`
-	GitUser             string        `mapstructure:"GIT_USER"`
+	SupabaseTokenCookieName        string        `mapstructure:"SUPABASE_TOKEN_COOKIE_NAME"`
+	SupabaseRefreshTokenCookieName string        `mapstructure:"SUPABASE_REFRESH_TOKEN_COOKIE_NAME"`
+	RefreshTokenCookieName         string        `mapstructure:"REFRESH_TOKEN_COOKIE_NAME"`
+	GRPCServerAddress              string        `mapstructure:"GRPC_SERVER_ADDRESS"`
+	AccessTokenDuration            time.Duration `mapstructure:"ACCESS_TOKEN_DURATION"`
+	RefreshTokenDuration           time.Duration `mapstructure:"REFRESH_TOKEN_DURATION"`
+	TokenSymmetricKey              string        `mapstructure:"TOKEN_SYMMETRIC_KEY"`
+	ClientBaseUrl                  string        `mapstructure:"CLIENT_BASE_URL"`
+	DockerHubUser                  string        `mapstructure:"DOCKERHUB_USER"`
+	AppName                        string        `mapstructure:"APP_NAME"`
+	GitUser                        string        `mapstructure:"GIT_USER"`
 
 	ResendApiKey  string `mapstructure:"RESEND_API_KEY"`
 	RedisAddress  string `mapstructure:"REDIS_ADDRESS"`

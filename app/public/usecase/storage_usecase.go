@@ -3,11 +3,51 @@ package usecase
 import (
 	"bytes"
 	"context"
+	"fmt"
 
+	"github.com/darwishdev/devkit-api/pkg/contextkeys"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	storage_go "github.com/darwishdev/storage-go"
 )
 
+func (u *PublicUsecase) FileUploadUrlFind(ctx context.Context, req *devkitv1.FileUploadUrlFindRequest) (*devkitv1.FileUploadUrlFindResponse, error) {
+	uploadURL := fmt.Sprintf(
+		"%s/upload/resumable",
+		u.supaapi.StorageUrl,
+	)
+	token, ok := contextkeys.SupabaseToken(ctx)
+	if !ok {
+		return &devkitv1.FileUploadUrlFindResponse{
+			UploadUrl: uploadURL,
+			Token:     u.supaAnonApiKey,
+		}, nil
+	}
+
+	refreshToken, _ := contextkeys.SupabaseRefreshToken(ctx)
+	_, err := u.supaapi.AuthClient.WithToken(token).GetUser()
+	if err == nil {
+		return &devkitv1.FileUploadUrlFindResponse{
+			UploadUrl:    uploadURL,
+			Token:        token,
+			RefreshToken: refreshToken,
+		}, nil
+
+	}
+	tokensResponse, err := u.supaapi.AuthClient.RefreshToken(refreshToken)
+	if err != nil {
+		return &devkitv1.FileUploadUrlFindResponse{
+			UploadUrl: uploadURL,
+			Token:     u.supaAnonApiKey,
+		}, nil
+
+	}
+
+	return &devkitv1.FileUploadUrlFindResponse{
+		UploadUrl:    uploadURL,
+		Token:        tokensResponse.AccessToken,
+		RefreshToken: tokensResponse.RefreshToken,
+	}, nil
+}
 func (s *PublicUsecase) FileCreate(ctx context.Context, req *devkitv1.FileCreateRequest) (*devkitv1.FileCreateResponse, error) {
 	reader := bytes.NewReader(req.Reader)
 	isUpsert := true

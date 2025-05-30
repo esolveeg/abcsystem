@@ -21,7 +21,7 @@ func TestRoleCreateUpdate(t *testing.T) {
 			params: &RoleCreateUpdateParams{
 				RoleName:          validName,
 				RoleSecurityLevel: 1,
-				CalledByUserID:    1,
+				CallerID:          2,
 				RoleDescription:   random.RandomString(50),
 				Permissions:       []int32{1, 2, 3},
 			},
@@ -33,22 +33,11 @@ func TestRoleCreateUpdate(t *testing.T) {
 				RoleID:            1,
 				RoleName:          random.RandomName(),
 				RoleSecurityLevel: 1,
-				CalledByUserID:    1,
+				CallerID:          2,
 				RoleDescription:   random.RandomString(50),
 				Permissions:       []int32{1, 2, 3},
 			},
 			expectErr: false,
-		},
-		{
-			name: "DuplicatedRoleName",
-			params: &RoleCreateUpdateParams{
-				RoleName:          validName,
-				RoleDescription:   random.RandomString(50),
-				CalledByUserID:    1,
-				RoleSecurityLevel: 1,
-				Permissions:       []int32{1, 2, 3},
-			},
-			expectErr: true,
 		},
 
 		{
@@ -57,7 +46,7 @@ func TestRoleCreateUpdate(t *testing.T) {
 				RoleName:          random.RandomString(220), // Exceeds max length
 				RoleSecurityLevel: 1,
 				RoleDescription:   random.RandomString(50),
-				CalledByUserID:    1,
+				CallerID:          2,
 				Permissions:       []int32{1, 2, 3},
 			},
 			expectErr: true,

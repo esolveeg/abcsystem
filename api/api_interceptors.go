@@ -2,7 +2,9 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 	"strings"
 	"time"
@@ -23,6 +25,25 @@ type contextKey string
 
 const callerIDKey = contextKey("callerID")
 
+func (s *Server) InjectRefreshTokenMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if cookie, err := r.Cookie(s.config.RefreshTokenCookieName); err == nil {
+			ctx := contextkeys.WithRefreshToken(r.Context(), cookie.Value)
+			r = r.WithContext(ctx)
+		}
+
+		if cookie, err := r.Cookie(s.config.SupabaseTokenCookieName); err == nil {
+			ctx := contextkeys.WithSupabaseToken(r.Context(), cookie.Value)
+			r = r.WithContext(ctx)
+		}
+
+		if cookie, err := r.Cookie(s.config.SupabaseRefreshTokenCookieName); err == nil {
+			ctx := contextkeys.WithSupabaseRefreshToken(r.Context(), cookie.Value)
+			r = r.WithContext(ctx)
+		}
+		next.ServeHTTP(w, r)
+	})
+}
 func (s *Server) proccessProcedureName(procName string) (string, string) {
 	procParts := strings.Split(procName, "/")
 	procedureName := strings.TrimLeft(procParts[len(procParts)-1], "Input")
@@ -31,6 +52,7 @@ func (s *Server) proccessProcedureName(procName string) (string, string) {
 	group := functionNameParts[0]
 	return procedureName, group
 }
+
 func (s *Server) getFiledFromRequest(msgReflect protoreflect.Message, fieledName string) (*protoreflect.Value, bool) {
 	field := msgReflect.Descriptor().Fields().ByName(protoreflect.Name(fieledName))
 	if field == nil || !msgReflect.Has(field) {
@@ -58,10 +80,7 @@ func (s *Server) createUpdateMethodPermissionName(msgReflect protoreflect.Messag
 	return strcase.ToCamel(permissionName)
 
 }
-
-// checkRecordID checks if a connect.AnyRequest contains a field named "recordId"
-// (or a dynamically generated group-based field) with a value greater than zero.
-func (s *Server) authorize(req connect.AnyRequest) (*auth.Payload, error) {
+func (s *Server) AuthorizeRequest(req connect.AnyRequest) (*auth.Payload, error) {
 	authHeader := req.Header().Get("Authorization")
 	if authHeader == "" {
 		return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("missing metadata"))
@@ -83,6 +102,9 @@ func (s *Server) authorize(req connect.AnyRequest) (*auth.Payload, error) {
 	}
 	return payload, nil
 }
+
+// checkRecordID checks if a connect.AnyRequest contains a field named "recordId"
+// (or a dynamically generated group-based field) with a value greater than zero.
 func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 	interceptor := func(next connect.UnaryFunc) connect.UnaryFunc {
 		return connect.UnaryFunc(func(
@@ -114,10 +136,20 @@ func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 				if permissionName != "" && ok {
 					procedureName = permissionName
 				}
-				payload, err = s.authorize(req)
+				payload, err = s.AuthorizeRequest(req)
 
 				if err != nil {
 					return nil, connect.NewError(connect.CodeUnauthenticated, err)
+				}
+
+				log.Debug().Interface("from intecep", payload.ID.String()).Msg("inte")
+				log.Debug().Interface("from intecep", payload.UserId).Msg("inte")
+				session, err := s.redisClient.AuthSessionFind(ctx, payload.UserId, payload.ID.String())
+				if err != nil {
+					return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("session not stored : %w", err))
+				}
+				if session.IsBlocked {
+					return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("session is blocked"))
 				}
 				// Inject the callerID into the context
 				ctx = contextkeys.WithCallerID(ctx, payload.UserId)
@@ -182,7 +214,6 @@ func (s *Server) NewAuthorizationInterceptor() connect.UnaryInterceptorFunc {
 			}
 			// this ok will be false if the user type is not tenant and the logged in user don't have the attribute tenant_id set on the db
 			tenantId, ok := contextkeys.TenantID(ctx)
-			log.Debug().Interface("Te", tenantId).Msg("authroizat")
 			if ok {
 
 				// here we will check if the logged in user has certain tenant id to return error if he passed diffrent tenant id on the request
@@ -204,13 +235,26 @@ func (s *Server) NewAuthorizationInterceptor() connect.UnaryInterceptorFunc {
 			if !ok {
 				return next(ctx, req)
 			}
-			permissionsMap, err := s.redisClient.AuthSessionFind(ctx, callerId)
+			permissionsMap, err := s.redisClient.UserPermissionFind(ctx, callerId)
 			if err != nil {
 				permissions, err := s.store.UserPermissionsMap(ctx, callerId)
 				if err != nil {
 					return nil, connect.NewError(connect.CodeUnauthenticated, err)
 				}
-				permissionsMap, err = s.redisClient.AuthSessionCreate(ctx, callerId, &permissions)
+				for _, rec := range permissions {
+					groupPermissions := make(map[string]bool)
+					err := json.Unmarshal(rec.Permissions, &groupPermissions)
+					if err != nil {
+						return nil, err
+					}
+					permissionsMap[rec.PermissionGroup] = groupPermissions
+				}
+
+				err = s.redisClient.UserPermissionCreate(ctx, callerId, &permissionsMap)
+				if err != nil {
+					return nil, err
+				}
+
 			}
 			permissionGroup, ok := permissionsMap[group]
 			if !ok {

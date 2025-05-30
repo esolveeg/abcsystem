@@ -5,6 +5,13 @@ package devkit.v1;
 import "buf/validate/validate.proto";
 import "devkit/v1/client.proto";
 import "google/protobuf/timestamp.proto";
+message FileUploadUrlFindRequest {}
+
+message FileUploadUrlFindResponse {
+  string upload_url = 1;
+  string token = 2;
+  string refresh_token = 3;
+}
 message FileCreateRequest {
   string path = 1 [(buf.validate.field).string.min_len = 2];
   string bucket_name = 2 [(buf.validate.field).string.min_len = 2];

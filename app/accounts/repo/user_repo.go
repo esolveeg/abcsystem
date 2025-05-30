@@ -23,6 +23,14 @@ func (repo *AccountsRepo) UserTypeListInput(ctx context.Context) (*[]db.UserType
 	}
 	return &resp, nil
 }
+
+func (repo *AccountsRepo) UserFindForToken(ctx context.Context, req *db.UserFindForTokenParams) (*db.UserFindForTokenRow, error) {
+	resp, err := repo.store.UserFindForToken(ctx, *req)
+	if err != nil {
+		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
+	}
+	return &resp, nil
+}
 func (repo *AccountsRepo) UseriFindForUpdate(ctx context.Context, req int32) (*db.UserFindForUpdateRow, error) {
 	resp, err := repo.store.UserFindForUpdate(ctx, req)
 	if err != nil {

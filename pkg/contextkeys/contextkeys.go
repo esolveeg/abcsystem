@@ -15,6 +15,21 @@ var tenantIDKey = contectType("TenantID")
 var permissionFunctionKey = contectType("PermissionFunction")
 var permissionGroupKey = contectType("PermissionGroup")
 
+var RefreshTokenKey = contectType("RefreshToken")
+var SupabaseTokenKey = contectType("SupabaseToken")
+var SupabaseRefreshTokenKey = contectType("SupabaseRefreshToken")
+
+func WithRefreshToken(ctx context.Context, token string) context.Context {
+	return context.WithValue(ctx, RefreshTokenKey, token)
+}
+
+func WithSupabaseToken(ctx context.Context, token string) context.Context {
+	return context.WithValue(ctx, SupabaseTokenKey, token)
+}
+func WithSupabaseRefreshToken(ctx context.Context, token string) context.Context {
+	return context.WithValue(ctx, SupabaseRefreshTokenKey, token)
+}
+
 // WithCallerID injects the caller ID into the context.
 func WithCallerID(ctx context.Context, callerID int32) context.Context {
 	return context.WithValue(ctx, callerIDKey, callerID)
@@ -52,6 +67,19 @@ func PermissionFunction(ctx context.Context) (string, bool) {
 func PermissionGroup(ctx context.Context) (string, bool) {
 	permissionGroup, ok := ctx.Value(permissionGroupKey).(string)
 	return permissionGroup, ok
+}
+func RefreshToken(ctx context.Context) (string, bool) {
+	token, ok := ctx.Value(RefreshTokenKey).(string)
+	return token, ok
+}
+func SupabaseToken(ctx context.Context) (string, bool) {
+	token, ok := ctx.Value(SupabaseTokenKey).(string)
+	return token, ok
+}
+
+func SupabaseRefreshToken(ctx context.Context) (string, bool) {
+	token, ok := ctx.Value(SupabaseRefreshTokenKey).(string)
+	return token, ok
 }
 func TenantID(ctx context.Context) (int32, bool) {
 	tenantID, ok := ctx.Value(tenantIDKey).(int32)

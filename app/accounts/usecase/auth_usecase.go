@@ -14,38 +14,161 @@ import (
 	"github.com/supabase-community/auth-go/types"
 )
 
-func (u *AccountsUsecase) userGenerateTokens(username string, userId int32, tenantId int32, userSecurityLevel int32) (*devkitv1.LoginInfo, error) {
-	accessToken, accessPayload, err := u.tokenMaker.CreateToken(username, userId, userSecurityLevel, tenantId, u.tokenDuration)
+func (u *AccountsUsecase) AuthSessionDelete(
+	ctx context.Context,
+	req *connect.Request[devkitv1.AuthSessionDeleteRequest],
+) (*devkitv1.AuthSessionDeleteResponse, error) {
+	err := u.redisClient.AuthSessionDeleteByKey(ctx, req.Msg.SessionKey)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+	return &devkitv1.AuthSessionDeleteResponse{
+		Message: "Session deleted successfully",
+	}, nil
+}
+func (u *AccountsUsecase) AuthSessionList(ctx context.Context, req *connect.Request[devkitv1.AuthSessionListRequest]) (*devkitv1.AuthSessionListResponse, error) {
+	var sessions []*redisclient.AuthSession
+	var err error
+	if req.Msg.UserId > 0 {
+		sessions, err = u.redisClient.AuthSessionListByUser(ctx, req.Msg.UserId)
+	} else {
+		sessions, err = u.redisClient.AuthSessionListAll(ctx)
+	}
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+
+	response := u.adapter.AuthSessionListGrpcFromRedis(sessions)
+	return response, nil
+}
+func (u *AccountsUsecase) AuthSessionSetBlocked(
+	ctx context.Context,
+	req *connect.Request[devkitv1.AuthSessionSetBlockedRequest],
+) (*devkitv1.AuthSessionSetBlockedResponse, error) {
+	err := u.redisClient.AuthSessionSetBlockedByKey(ctx, req.Msg.SessionKey, req.Msg.IsBlocked)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+	return &devkitv1.AuthSessionSetBlockedResponse{
+		Message: "Session block status updated successfully",
+	}, nil
+}
+func (u *AccountsUsecase) AuthLogout(
+	ctx context.Context,
+	req *connect.Request[devkitv1.AuthLogoutRequest],
+) (*devkitv1.AuthLogoutResponse, error) {
+	// Extract app-level refresh token
+	refreshToken, ok := contextkeys.RefreshToken(ctx)
+	if !ok {
+		return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("refresh_token_not_passed"))
+	}
+
+	// Extract Supabase access token
+	supabaseToken, ok := contextkeys.SupabaseToken(ctx)
+	if !ok {
+		return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("supabase_token_not_passed"))
+	}
+	// Verify app refresh token and get payload
+	payload, err := u.tokenMaker.VerifyRefreshToken(refreshToken)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("invalid refresh token"))
+	}
+
+	// Delete Redis session by userID + tokenID
+	err = u.redisClient.AuthSessionDelete(ctx, payload.UserId, payload.ID.String())
+	if err != nil {
+		log.Error().Err(err).Msg("failed to delete redis auth session")
+	}
+
+	// Revoke Supabase session
+	err = u.supaapi.AuthClient.WithToken(supabaseToken).Logout()
+	if err != nil {
+		log.Warn().Err(err).Msg("supabase sign out failed")
+		// Optional: proceed anyway
+	}
+
+	return &devkitv1.AuthLogoutResponse{}, nil
+}
+func (u *AccountsUsecase) AuthRefreshToken(
+	ctx context.Context,
+	req *connect.Request[devkitv1.AuthRefreshTokenRequest],
+) (*devkitv1.AuthRefreshTokenResponse, error) {
+	refreshToken, ok := contextkeys.RefreshToken(ctx)
+	log.Debug().Interface("Refresh", refreshToken).Msg("refresh")
+	log.Debug().Interface("Refresh", ok).Msg("refresh")
+	if !ok {
+		return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("refresh_token_not_passed"))
+	}
+
+	// // 1. Validate refresh token
+	payload, err := u.tokenMaker.VerifyRefreshToken(refreshToken)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("invalid refresh token"))
+	}
+	user, err := u.repo.UserFindForToken(ctx, &db.UserFindForTokenParams{UserID: payload.UserId})
+	loginInfo, _, err := u.UserGenerateTokens(
+		user.UserEmail,
+		user.UserID,
+		user.TenantID.Int32,
+		user.UserSecurityLevel,
+	)
+	// // 2. Generate new tokens
 	if err != nil {
 		return nil, err
 	}
-	return &devkitv1.LoginInfo{
-		AccessToken:          accessToken,
-		AccessTokenExpiresAt: accessPayload.ExpiredAt.Format("2006-01-02 15:04:05"),
+
+	// // 3. Return new tokens
+	return &devkitv1.AuthRefreshTokenResponse{
+		LoginInfo: loginInfo,
 	}, nil
 }
+func (u *AccountsUsecase) UserGenerateTokens(username string, userId int32, tenantId int32, userSecurityLevel int32) (*devkitv1.LoginInfo, string, error) {
+	tokens, err := u.tokenMaker.CreateTokenPair(
+		username,
+		userId,
+		userSecurityLevel,
+		tenantId,
+		u.tokenDuration,        // Access token TTL
+		u.refreshTokenDuration, // Refresh token TTL
+	)
+	if err != nil {
+		return nil, "", err
+	}
+	return &devkitv1.LoginInfo{
+		AccessToken:           tokens.AccessToken,
+		RefreshToken:          tokens.RefreshToken,
+		AccessTokenExpiresAt:  db.TimeToString(tokens.AccessPayload.ExpiredAt),
+		RefreshTokenExpiresAt: db.TimeToString(tokens.RefreshPayload.ExpiredAt),
+	}, tokens.AccessPayload.ID.String(), nil
+}
 
-func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string, userId int32) (*devkitv1.AuthLoginResponse, redisclient.PermissionsMap, error) {
+func (u *AccountsUsecase) AppLogin(ctx context.Context, loginCode string, userId int32) (*devkitv1.AuthLoginResponse, error) {
 	user, err := u.repo.UserFind(ctx, db.UserFindParams{SearchKey: loginCode, UserID: userId})
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	if user == nil {
-		return nil, nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("user not found"))
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("user not found"))
 	}
 	permissions, err := u.repo.UserPermissionsMap(ctx, user.UserID)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
+	}
+	if len(*permissions) > 0 {
+		permissionsMap, err := u.adapter.UserPermissionsMapRedisFromSql(permissions)
+		if err != nil {
+			return nil, err
+		}
+		err = u.redisClient.UserPermissionCreate(ctx, user.UserID, permissionsMap)
+		if err != nil {
+			return nil, err
+		}
 	}
 	response := u.adapter.AuthLoginGrpcFromSql(user)
-	if len(*permissions) > 0 {
-		permissionsMap, err := u.redisClient.AuthSessionCreate(ctx, user.UserID, permissions)
-		if err != nil {
-			return nil, nil, err
-		}
-		return response, permissionsMap, nil
+	if err != nil {
+		return nil, err
 	}
-	return response, nil, nil
+	return response, nil
 }
 
 func (u *AccountsUsecase) AuthRegister(ctx context.Context, req *connect.Request[devkitv1.AuthRegisterRequest]) (*devkitv1.AuthRegisterResponse, error) {
@@ -54,34 +177,45 @@ func (u *AccountsUsecase) AuthRegister(ctx context.Context, req *connect.Request
 	if err != nil {
 		return nil, err
 	}
-	loginInfo, err := u.userGenerateTokens(user.User.UserEmail, user.User.UserId, user.User.UserSecurityLevel, user.User.TenantId)
+	loginInfo, _, err := u.UserGenerateTokens(user.User.UserEmail, user.User.UserId, user.User.UserSecurityLevel, user.User.TenantId)
 	if err != nil {
 		return nil, err
 	}
-	return &devkitv1.AuthRegisterResponse{
-		User:      user.User,
-		LoginInfo: loginInfo,
-	}, nil
-}
-
-func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[devkitv1.AuthLoginRequest]) (*devkitv1.AuthLoginResponse, error) {
-	userFindParams, supabaseRequest := u.adapter.AuthLoginSqlFromGrpc(req.Msg)
-	_, err := u.supaapi.AuthClient.Token(*supabaseRequest)
+	_, supabaseRequest := u.adapter.AuthLoginSqlFromGrpc(&devkitv1.AuthLoginRequest{LoginCode: req.Msg.UserEmail, UserPassword: req.Msg.UserPassword})
+	supaResponse, err := u.supaapi.AuthClient.Token(*supabaseRequest)
 	if err != nil {
 		if strings.Contains(strings.ToLower(err.Error()), "invalid login credentials") {
 			return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("invalid login"))
 		}
 		return nil, err
 	}
-	response, _, err := u.AppLogin(ctx, userFindParams.SearchKey, 0)
+	loginInfo.SupabaseRefreshToken = supaResponse.RefreshToken
+	loginInfo.SupabaseToken = supaResponse.AccessToken
+
+	return &devkitv1.AuthRegisterResponse{
+		User:      user.User,
+		LoginInfo: loginInfo,
+	}, nil
+}
+func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[devkitv1.AuthLoginRequest]) (*devkitv1.AuthLoginResponse, error) {
+	userFindParams, supabaseRequest := u.adapter.AuthLoginSqlFromGrpc(req.Msg)
+	supaResponse, err := u.supaapi.AuthClient.Token(*supabaseRequest)
+	if err != nil {
+		if strings.Contains(strings.ToLower(err.Error()), "invalid login credentials") {
+			return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("invalid login"))
+		}
+		return nil, err
+	}
+	response, err := u.AppLogin(ctx, userFindParams.SearchKey, 0)
 	if err != nil {
 		return nil, err
 	}
-	// log.Debug().Interface("tentatis", tenantId).Msg("show me the real tenant")
-	loginInfo, err := u.userGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.TenantId, response.User.UserSecurityLevel)
+	loginInfo, tokenID, err := u.UserGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.TenantId, response.User.UserSecurityLevel)
 	if err != nil {
 		return nil, err
 	}
+	loginInfo.SupabaseRefreshToken = supaResponse.RefreshToken
+	loginInfo.SupabaseToken = supaResponse.AccessToken
 	response.LoginInfo = loginInfo
 	navigtionBarRequest := db.UserNavigationBarFindParams{
 		UserID:          response.User.UserId,
@@ -91,7 +225,6 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 	if err != nil {
 		return nil, err
 	}
-	log.Debug().Interface("navbar", navigationBar).Msg("navbarishere")
 	if len(*navigationBar) > 0 {
 		navigations, err := u.adapter.UserNavigationBarFindGrpcFromSql(*navigationBar)
 		if err != nil {
@@ -99,14 +232,25 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 		}
 		response.NavigationBar = navigations
 	}
-
+	authSession, err := u.adapter.AuttSessionRedisFromGrpc(response, req.Peer().Addr, req.Header().Get("User-Agent"))
+	if err != nil {
+		return nil, err
+	}
+	authSession.TokenID = tokenID
+	err = u.redisClient.AuthSessionDeleteByUserAgent(ctx, authSession.UserID, authSession.UserAgent)
+	if err != nil {
+		return nil, err
+	}
+	err = u.redisClient.AuthSessionCreate(ctx, authSession, tokenID, u.refreshTokenDuration)
+	if err != nil {
+		return nil, err
+	}
 	return response, nil
 }
 
 func (u *AccountsUsecase) AuthLoginProvider(ctx context.Context, req *connect.Request[devkitv1.AuthLoginProviderRequest]) (*devkitv1.AuthLoginProviderResponse, error) {
 	resp, err := u.supaapi.ProviderLogin(types.Provider(req.Msg.Provider), req.Msg.RedirectUrl)
 	if err != nil {
-		log.Debug().Interface("error from here", err).Msg("error")
 		return nil, err
 	}
 	return &devkitv1.AuthLoginProviderResponse{Url: resp.AuthorizationURL}, nil
@@ -152,13 +296,39 @@ func (u *AccountsUsecase) AuthLoginProviderCallback(ctx context.Context, req *co
 	if err != nil {
 		return nil, err
 	}
-	resp, _, err := u.AppLogin(ctx, user.Email, 0)
 	if err != nil {
 		return nil, err
 	}
+	response, err := u.AppLogin(ctx, user.Email, 0)
+	if err != nil {
+		return nil, err
+	}
+	loginInfo, tokenID, err := u.UserGenerateTokens(user.Email, response.User.UserId, response.User.TenantId, response.User.UserSecurityLevel)
+	if err != nil {
+		return nil, err
+	}
+
+	loginInfo.SupabaseToken = req.Msg.AccessToken
+	loginInfo.SupabaseRefreshToken = req.Msg.RefreshToken
+	response.LoginInfo = loginInfo
+	authSession, err := u.adapter.AuttSessionRedisFromGrpc(response, req.Peer().Addr, req.Header().Get("User-Agent"))
+	authSession.TokenID = tokenID
+	if err != nil {
+		return nil, err
+	}
+
+	err = u.redisClient.AuthSessionDeleteByUserAgent(ctx, authSession.UserID, authSession.UserAgent)
+	if err != nil {
+		return nil, err
+	}
+	err = u.redisClient.AuthSessionCreate(ctx, authSession, tokenID, u.refreshTokenDuration)
+	if err != nil {
+		return nil, err
+	}
+
 	return &devkitv1.AuthLoginProviderCallbackResponse{
-		User:          resp.User,
-		NavigationBar: resp.NavigationBar,
-		LoginInfo:     resp.LoginInfo,
+		User:          response.User,
+		NavigationBar: response.NavigationBar,
+		LoginInfo:     response.LoginInfo,
 	}, nil
 }

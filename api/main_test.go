@@ -18,13 +18,14 @@ import (
 )
 
 var (
-	testConfig  config.Config
-	store       db.Store
-	redisClient redisclient.RedisClientInterface
-	validator   *protovalidate.Validator
-	testServer  *http.Server
-	testClient  devkitv1connect.DevkitServiceClient
-	tokenMaker  auth.Maker
+	testConfig      config.Config
+	store           db.Store
+	redisClient     redisclient.RedisClientInterface
+	validator       *protovalidate.Validator
+	isRedisDisabled bool
+	testServer      *http.Server
+	testClient      devkitv1connect.DevkitServiceClient
+	tokenMaker      auth.Maker
 )
 
 func startRealServer(store db.Store) *http.Server {
@@ -65,12 +66,13 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot load test config")
 	}
-
+	testConfig.State = "TEST"
 	redisClient = redisclient.NewRedisClient(
 		testConfig.RedisHost,
 		testConfig.RedisPort,
 		testConfig.RedisPassword,
 		testConfig.RedisDatabase,
+		isRedisDisabled,
 	)
 	validator, err = protovalidate.New()
 	if err != nil {

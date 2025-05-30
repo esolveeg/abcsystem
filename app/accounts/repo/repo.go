@@ -19,6 +19,7 @@ type AccountsRepoInterface interface {
 	UserList(ctx context.Context) (*[]db.AccountsSchemaUser, error)
 	RoleListInput(ctx context.Context) (*[]db.RoleListInputRow, error)
 	RoleFindForUpdate(ctx context.Context, req int32) (*db.RoleFindForUpdateRow, error)
+	UserFindForToken(ctx context.Context, req *db.UserFindForTokenParams) (*db.UserFindForTokenRow, error)
 	RoleList(ctx context.Context) (*[]db.AccountsSchemaRole, error)
 	AuthUserIDFindByEmail(ctx context.Context, req string) (*string, error)
 	RoleCreateUpdate(ctx context.Context, req db.RoleCreateUpdateParams) (*db.AccountsSchemaRole, error)

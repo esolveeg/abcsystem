@@ -127,6 +127,10 @@ service DevkitService {
     option (permission_name) = 'ObjectList';
     option (skip_authentication) = true;
   }
+
+  rpc FileUploadUrlFind(FileUploadUrlFindRequest) returns (FileUploadUrlFindResponse) {
+    option (skip_authorization) = true;
+  }
   rpc FileCreate(FileCreateRequest) returns (FileCreateResponse) {
     option (skip_authorization) = true;
     option (permission_group) = 'object';
@@ -215,6 +219,13 @@ service DevkitService {
   rpc AuthLogin(AuthLoginRequest) returns (AuthLoginResponse) {
     option (skip_authentication) = true;
   }
+  rpc AuthRefreshToken(AuthRefreshTokenRequest) returns (AuthRefreshTokenResponse) {
+    option (skip_authentication) = true;
+  }
+
+  rpc AuthLogout(AuthLogoutRequest) returns (AuthLogoutResponse) {
+    option (skip_authentication) = true;
+  }
   rpc AuthRegister(AuthRegisterRequest) returns (AuthRegisterResponse) {
     option (skip_authentication) = true;
   }
@@ -235,6 +246,20 @@ service DevkitService {
   }
   rpc AuthResetPassword(AuthResetPasswordRequest) returns (AuthResetPasswordResponse) {
     option (skip_authentication) = true;
+  }
+
+  rpc AuthSessionList(AuthSessionListRequest) returns (AuthSessionListResponse) {
+    option (permission_group) = 'auth';
+    option (permission_name) = 'SessionList';
+  }
+
+  rpc AuthSessionSetBlocked(AuthSessionSetBlockedRequest) returns (AuthSessionSetBlockedResponse) {
+    option (permission_group) = 'auth';
+    option (permission_name) = 'SessionSetBlocked';
+  }
+  rpc AuthSessionDelete(AuthSessionDeleteRequest) returns (AuthSessionDeleteResponse) {
+    option (permission_group) = 'auth';
+    option (permission_name) = 'SessionDelete';
   }
 
   //*******************************************************************************************//

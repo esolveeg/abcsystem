@@ -20,7 +20,7 @@ func (u *AccountsUsecase) UserDelete(ctx context.Context, req *connect.Request[d
 		if err != nil {
 			return nil, err
 		}
-		err = u.redisClient.AuthSessionDelete(ctx, recordId)
+		err = u.redisClient.AuthSessionClearAll(ctx, recordId)
 		if err != nil {
 			return nil, err
 		}

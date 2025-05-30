@@ -211,15 +211,15 @@ BEGIN
 		RAISE EXCEPTION 'caller id must be diffrent than user id';
 	END IF;
 	SELECT
-		accounts_schema.user_security_level_find (in_user_id => caller_id) INTO v_caller_security_level;
-	IF is_null (updated_role_id) AND is_null (updated_user_id) THEN
+		accounts_schema.user_security_level_find(in_user_id => caller_id) INTO v_caller_security_level;
+	IF is_null(updated_role_id) AND is_null(updated_user_id) THEN
 		RETURN v_caller_security_level;
 	END IF;
 	IF caller_id = 0 THEN
 		RAISE EXCEPTION 'caller id must be passed';
 	END IF;
 	-- check if the security level of updated role is higher
-	IF NOT is_null (updated_role_id) THEN
+	IF NOT is_null(updated_role_id) THEN
 		SELECT
 			role_security_level INTO v_role_security_level
 		FROM
@@ -231,7 +231,7 @@ BEGIN
 		END IF;
 	END IF;
 	-- check if the security level of updated user is higher
-	IF NOT is_null (updated_user_id) THEN
+	IF NOT is_null(updated_user_id) THEN
 		SELECT
 			max(r.role_security_level) INTO v_updated_user_security_level
 		FROM
@@ -265,7 +265,7 @@ DECLARE
 BEGIN
 	BEGIN
 		SELECT
-			accounts_schema.check_caller_security_level (updated_user_id => 0, updated_role_id => in_role_id, caller_id => in_caller_id) INTO v_caller_security_level;
+			accounts_schema.check_caller_security_level (updated_role_id => in_role_id, updated_user_id => 0, caller_id => in_caller_id) INTO v_caller_security_level;
 	EXCEPTION
 		WHEN OTHERS THEN
 			RAISE;
@@ -273,7 +273,7 @@ BEGIN
 	IF v_caller_security_level < in_role_security_level THEN
 		RAISE EXCEPTION 'the user security level % is lower than the new security level %', v_caller_security_level, in_role_security_level;
 		END IF;
-	IF NOT is_null (in_role_id) THEN
+	IF NOT is_null(in_role_id) THEN
 		UPDATE
 			accounts_schema.role
 		SET
@@ -284,7 +284,7 @@ BEGIN
 			updated_at = now()
 		WHERE
 			role_id = in_role_id;
-		IF NOT is_null (in_permissions) THEN
+		IF NOT is_null(in_permissions) THEN
 			DELETE FROM accounts_schema.role_permission
 			WHERE role_id = in_role_id;
 			INSERT INTO accounts_schema.role_permission (
@@ -365,7 +365,7 @@ BEGIN
 		RAISE EXCEPTION 'the current user security level: % ,is lower than the one of the passed roles security level: %', v_caller_security_level, v_max_role_security_level;
 		RETURN;
 		END IF;
-	IF NOT is_null (in_user_id) THEN
+	IF NOT is_null(in_user_id) THEN
 		UPDATE
 			accounts_schema.user
 		SET
@@ -378,7 +378,7 @@ BEGIN
 			updated_at = now()
 		WHERE
 			user_id = in_user_id;
-		IF NOT is_null (in_roles) THEN
+		IF NOT is_null(in_roles) THEN
 			DELETE FROM accounts_schema.user_role
 			WHERE user_id = in_user_id;
 			INSERT INTO accounts_schema.user_role (
@@ -401,8 +401,10 @@ BEGIN
 			in_user_type_id,
 			nullable_foreign(
 				in_tenant_id),
-			in_user_phone,
-			in_user_email,
+			nullable_value(
+				in_user_phone),
+			nullable_value(
+				in_user_email),
 			in_user_password)
 	RETURNING
 		user_id INTO v_user_id;

@@ -51,6 +51,36 @@ func (mr *MockStoreMockRecorder) AuthUserIDFindByEmail(arg0, arg1 interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AuthUserIDFindByEmail", reflect.TypeOf((*MockStore)(nil).AuthUserIDFindByEmail), arg0, arg1)
 }
 
+// CityList mocks base method.
+func (m *MockStore) CityList(arg0 context.Context) ([]db.PropertiesSchemaCity, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CityList", arg0)
+	ret0, _ := ret[0].([]db.PropertiesSchemaCity)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CityList indicates an expected call of CityList.
+func (mr *MockStoreMockRecorder) CityList(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CityList", reflect.TypeOf((*MockStore)(nil).CityList), arg0)
+}
+
+// CityListInput mocks base method.
+func (m *MockStore) CityListInput(arg0 context.Context) ([]db.CityListInputRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CityListInput", arg0)
+	ret0, _ := ret[0].([]db.CityListInputRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CityListInput indicates an expected call of CityListInput.
+func (mr *MockStoreMockRecorder) CityListInput(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CityListInput", reflect.TypeOf((*MockStore)(nil).CityListInput), arg0)
+}
+
 // DbErrorParser mocks base method.
 func (m *MockStore) DbErrorParser(arg0 error, arg1 map[string]string) *connect.Error {
 	m.ctrl.T.Helper()
@@ -94,6 +124,21 @@ func (mr *MockStoreMockRecorder) IconCreateUpdateBulk(arg0, arg1 interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IconCreateUpdateBulk", reflect.TypeOf((*MockStore)(nil).IconCreateUpdateBulk), arg0, arg1)
 }
 
+// IconFind mocks base method.
+func (m *MockStore) IconFind(arg0 context.Context, arg1 db.IconFindParams) (db.Icon, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IconFind", arg0, arg1)
+	ret0, _ := ret[0].(db.Icon)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// IconFind indicates an expected call of IconFind.
+func (mr *MockStoreMockRecorder) IconFind(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IconFind", reflect.TypeOf((*MockStore)(nil).IconFind), arg0, arg1)
+}
+
 // IconList mocks base method.
 func (m *MockStore) IconList(arg0 context.Context) ([]db.Icon, error) {
 	m.ctrl.T.Helper()
@@ -107,6 +152,171 @@ func (m *MockStore) IconList(arg0 context.Context) ([]db.Icon, error) {
 func (mr *MockStoreMockRecorder) IconList(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IconList", reflect.TypeOf((*MockStore)(nil).IconList), arg0)
+}
+
+// LocationList mocks base method.
+func (m *MockStore) LocationList(arg0 context.Context) ([]db.PropertiesSchemaLocation, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LocationList", arg0)
+	ret0, _ := ret[0].([]db.PropertiesSchemaLocation)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LocationList indicates an expected call of LocationList.
+func (mr *MockStoreMockRecorder) LocationList(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LocationList", reflect.TypeOf((*MockStore)(nil).LocationList), arg0)
+}
+
+// LocationListInput mocks base method.
+func (m *MockStore) LocationListInput(arg0 context.Context, arg1 db.LocationListInputParams) ([]db.LocationListInputRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "LocationListInput", arg0, arg1)
+	ret0, _ := ret[0].([]db.LocationListInputRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// LocationListInput indicates an expected call of LocationListInput.
+func (mr *MockStoreMockRecorder) LocationListInput(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LocationListInput", reflect.TypeOf((*MockStore)(nil).LocationListInput), arg0, arg1)
+}
+
+// PageCreateUpdate mocks base method.
+func (m *MockStore) PageCreateUpdate(arg0 context.Context, arg1 db.PageCreateUpdateParams) (db.TenantsSchemaPage, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PageCreateUpdate", arg0, arg1)
+	ret0, _ := ret[0].(db.TenantsSchemaPage)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PageCreateUpdate indicates an expected call of PageCreateUpdate.
+func (mr *MockStoreMockRecorder) PageCreateUpdate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PageCreateUpdate", reflect.TypeOf((*MockStore)(nil).PageCreateUpdate), arg0, arg1)
+}
+
+// PageDeleteRestore mocks base method.
+func (m *MockStore) PageDeleteRestore(arg0 context.Context, arg1 []int32) ([]db.TenantsSchemaPage, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PageDeleteRestore", arg0, arg1)
+	ret0, _ := ret[0].([]db.TenantsSchemaPage)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PageDeleteRestore indicates an expected call of PageDeleteRestore.
+func (mr *MockStoreMockRecorder) PageDeleteRestore(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PageDeleteRestore", reflect.TypeOf((*MockStore)(nil).PageDeleteRestore), arg0, arg1)
+}
+
+// PageFindForUpdate mocks base method.
+func (m *MockStore) PageFindForUpdate(arg0 context.Context, arg1 db.PageFindForUpdateParams) (db.TenantsSchemaPage, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PageFindForUpdate", arg0, arg1)
+	ret0, _ := ret[0].(db.TenantsSchemaPage)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PageFindForUpdate indicates an expected call of PageFindForUpdate.
+func (mr *MockStoreMockRecorder) PageFindForUpdate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PageFindForUpdate", reflect.TypeOf((*MockStore)(nil).PageFindForUpdate), arg0, arg1)
+}
+
+// PageList mocks base method.
+func (m *MockStore) PageList(arg0 context.Context, arg1 int32) ([]db.TenantsSchemaPage, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PageList", arg0, arg1)
+	ret0, _ := ret[0].([]db.TenantsSchemaPage)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PageList indicates an expected call of PageList.
+func (mr *MockStoreMockRecorder) PageList(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PageList", reflect.TypeOf((*MockStore)(nil).PageList), arg0, arg1)
+}
+
+// PartialCreateUpdate mocks base method.
+func (m *MockStore) PartialCreateUpdate(arg0 context.Context, arg1 db.PartialCreateUpdateParams) (db.TenantsSchemaPartial, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PartialCreateUpdate", arg0, arg1)
+	ret0, _ := ret[0].(db.TenantsSchemaPartial)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PartialCreateUpdate indicates an expected call of PartialCreateUpdate.
+func (mr *MockStoreMockRecorder) PartialCreateUpdate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PartialCreateUpdate", reflect.TypeOf((*MockStore)(nil).PartialCreateUpdate), arg0, arg1)
+}
+
+// PartialDeleteRestore mocks base method.
+func (m *MockStore) PartialDeleteRestore(arg0 context.Context, arg1 []int32) ([]db.TenantsSchemaPartial, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PartialDeleteRestore", arg0, arg1)
+	ret0, _ := ret[0].([]db.TenantsSchemaPartial)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PartialDeleteRestore indicates an expected call of PartialDeleteRestore.
+func (mr *MockStoreMockRecorder) PartialDeleteRestore(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PartialDeleteRestore", reflect.TypeOf((*MockStore)(nil).PartialDeleteRestore), arg0, arg1)
+}
+
+// PartialFindForUpdate mocks base method.
+func (m *MockStore) PartialFindForUpdate(arg0 context.Context, arg1 db.PartialFindForUpdateParams) (db.TenantsSchemaPartial, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PartialFindForUpdate", arg0, arg1)
+	ret0, _ := ret[0].(db.TenantsSchemaPartial)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PartialFindForUpdate indicates an expected call of PartialFindForUpdate.
+func (mr *MockStoreMockRecorder) PartialFindForUpdate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PartialFindForUpdate", reflect.TypeOf((*MockStore)(nil).PartialFindForUpdate), arg0, arg1)
+}
+
+// PartialList mocks base method.
+func (m *MockStore) PartialList(arg0 context.Context, arg1 int32) ([]db.TenantsSchemaPartial, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PartialList", arg0, arg1)
+	ret0, _ := ret[0].([]db.TenantsSchemaPartial)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PartialList indicates an expected call of PartialList.
+func (mr *MockStoreMockRecorder) PartialList(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PartialList", reflect.TypeOf((*MockStore)(nil).PartialList), arg0, arg1)
+}
+
+// PartialTypeListInput mocks base method.
+func (m *MockStore) PartialTypeListInput(arg0 context.Context) ([]db.PartialTypeListInputRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PartialTypeListInput", arg0)
+	ret0, _ := ret[0].([]db.PartialTypeListInputRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PartialTypeListInput indicates an expected call of PartialTypeListInput.
+func (mr *MockStoreMockRecorder) PartialTypeListInput(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PartialTypeListInput", reflect.TypeOf((*MockStore)(nil).PartialTypeListInput), arg0)
 }
 
 // RoleCreateUpdate mocks base method.
@@ -124,18 +334,49 @@ func (mr *MockStoreMockRecorder) RoleCreateUpdate(arg0, arg1 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RoleCreateUpdate", reflect.TypeOf((*MockStore)(nil).RoleCreateUpdate), arg0, arg1)
 }
 
+// RoleDelete mocks base method.
+func (m *MockStore) RoleDelete(arg0 context.Context, arg1 db.RoleDeleteParams) (db.AccountsSchemaRole, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RoleDelete", arg0, arg1)
+	ret0, _ := ret[0].(db.AccountsSchemaRole)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RoleDelete indicates an expected call of RoleDelete.
+func (mr *MockStoreMockRecorder) RoleDelete(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RoleDelete", reflect.TypeOf((*MockStore)(nil).RoleDelete), arg0, arg1)
+}
+
 // RoleDeleteRestore mocks base method.
-func (m *MockStore) RoleDeleteRestore(arg0 context.Context, arg1 []int32) error {
+func (m *MockStore) RoleDeleteRestore(arg0 context.Context, arg1 db.RoleDeleteRestoreParams) (db.AccountsSchemaRole, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "RoleDeleteRestore", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(db.AccountsSchemaRole)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // RoleDeleteRestore indicates an expected call of RoleDeleteRestore.
 func (mr *MockStoreMockRecorder) RoleDeleteRestore(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RoleDeleteRestore", reflect.TypeOf((*MockStore)(nil).RoleDeleteRestore), arg0, arg1)
+}
+
+// RoleFindForUpdate mocks base method.
+func (m *MockStore) RoleFindForUpdate(arg0 context.Context, arg1 int32) (db.RoleFindForUpdateRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RoleFindForUpdate", arg0, arg1)
+	ret0, _ := ret[0].(db.RoleFindForUpdateRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RoleFindForUpdate indicates an expected call of RoleFindForUpdate.
+func (mr *MockStoreMockRecorder) RoleFindForUpdate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RoleFindForUpdate", reflect.TypeOf((*MockStore)(nil).RoleFindForUpdate), arg0, arg1)
 }
 
 // RoleList mocks base method.
@@ -168,6 +409,81 @@ func (mr *MockStoreMockRecorder) RoleListInput(arg0, arg1 interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RoleListInput", reflect.TypeOf((*MockStore)(nil).RoleListInput), arg0, arg1)
 }
 
+// SectionCreateUpdate mocks base method.
+func (m *MockStore) SectionCreateUpdate(arg0 context.Context, arg1 db.SectionCreateUpdateParams) (db.TenantsSchemaSection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SectionCreateUpdate", arg0, arg1)
+	ret0, _ := ret[0].(db.TenantsSchemaSection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SectionCreateUpdate indicates an expected call of SectionCreateUpdate.
+func (mr *MockStoreMockRecorder) SectionCreateUpdate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SectionCreateUpdate", reflect.TypeOf((*MockStore)(nil).SectionCreateUpdate), arg0, arg1)
+}
+
+// SectionDeleteRestore mocks base method.
+func (m *MockStore) SectionDeleteRestore(arg0 context.Context, arg1 []int32) ([]db.TenantsSchemaSection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SectionDeleteRestore", arg0, arg1)
+	ret0, _ := ret[0].([]db.TenantsSchemaSection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SectionDeleteRestore indicates an expected call of SectionDeleteRestore.
+func (mr *MockStoreMockRecorder) SectionDeleteRestore(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SectionDeleteRestore", reflect.TypeOf((*MockStore)(nil).SectionDeleteRestore), arg0, arg1)
+}
+
+// SectionFind mocks base method.
+func (m *MockStore) SectionFind(arg0 context.Context, arg1 db.SectionFindParams) (db.TenantsSchemaSection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SectionFind", arg0, arg1)
+	ret0, _ := ret[0].(db.TenantsSchemaSection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SectionFind indicates an expected call of SectionFind.
+func (mr *MockStoreMockRecorder) SectionFind(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SectionFind", reflect.TypeOf((*MockStore)(nil).SectionFind), arg0, arg1)
+}
+
+// SectionList mocks base method.
+func (m *MockStore) SectionList(arg0 context.Context, arg1 int32) ([]db.TenantsSchemaSection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SectionList", arg0, arg1)
+	ret0, _ := ret[0].([]db.TenantsSchemaSection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SectionList indicates an expected call of SectionList.
+func (mr *MockStoreMockRecorder) SectionList(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SectionList", reflect.TypeOf((*MockStore)(nil).SectionList), arg0, arg1)
+}
+
+// SectionListInpt mocks base method.
+func (m *MockStore) SectionListInpt(arg0 context.Context) ([]db.SectionListInptRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SectionListInpt", arg0)
+	ret0, _ := ret[0].([]db.SectionListInptRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SectionListInpt indicates an expected call of SectionListInpt.
+func (mr *MockStoreMockRecorder) SectionListInpt(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SectionListInpt", reflect.TypeOf((*MockStore)(nil).SectionListInpt), arg0)
+}
+
 // SettingFindForUpdate mocks base method.
 func (m *MockStore) SettingFindForUpdate(arg0 context.Context) ([]db.SettingFindForUpdateRow, error) {
 	m.ctrl.T.Helper()
@@ -196,6 +512,96 @@ func (m *MockStore) SettingUpdate(arg0 context.Context, arg1 db.SettingUpdatePar
 func (mr *MockStoreMockRecorder) SettingUpdate(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SettingUpdate", reflect.TypeOf((*MockStore)(nil).SettingUpdate), arg0, arg1)
+}
+
+// StorageFileDelete mocks base method.
+func (m *MockStore) StorageFileDelete(arg0 context.Context, arg1 []string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StorageFileDelete", arg0, arg1)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// StorageFileDelete indicates an expected call of StorageFileDelete.
+func (mr *MockStoreMockRecorder) StorageFileDelete(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StorageFileDelete", reflect.TypeOf((*MockStore)(nil).StorageFileDelete), arg0, arg1)
+}
+
+// StorageFileDeleteByBucket mocks base method.
+func (m *MockStore) StorageFileDeleteByBucket(arg0 context.Context, arg1 []string, arg2 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StorageFileDeleteByBucket", arg0, arg1, arg2)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// StorageFileDeleteByBucket indicates an expected call of StorageFileDeleteByBucket.
+func (mr *MockStoreMockRecorder) StorageFileDeleteByBucket(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StorageFileDeleteByBucket", reflect.TypeOf((*MockStore)(nil).StorageFileDeleteByBucket), arg0, arg1, arg2)
+}
+
+// TenantCreateUpdate mocks base method.
+func (m *MockStore) TenantCreateUpdate(arg0 context.Context, arg1 db.TenantCreateUpdateParams) (db.TenantsSchemaTenant, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TenantCreateUpdate", arg0, arg1)
+	ret0, _ := ret[0].(db.TenantsSchemaTenant)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TenantCreateUpdate indicates an expected call of TenantCreateUpdate.
+func (mr *MockStoreMockRecorder) TenantCreateUpdate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TenantCreateUpdate", reflect.TypeOf((*MockStore)(nil).TenantCreateUpdate), arg0, arg1)
+}
+
+// TenantDeleteRestore mocks base method.
+func (m *MockStore) TenantDeleteRestore(arg0 context.Context, arg1 []int32) ([]db.TenantsSchemaTenant, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TenantDeleteRestore", arg0, arg1)
+	ret0, _ := ret[0].([]db.TenantsSchemaTenant)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TenantDeleteRestore indicates an expected call of TenantDeleteRestore.
+func (mr *MockStoreMockRecorder) TenantDeleteRestore(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TenantDeleteRestore", reflect.TypeOf((*MockStore)(nil).TenantDeleteRestore), arg0, arg1)
+}
+
+// TenantFind mocks base method.
+func (m *MockStore) TenantFind(arg0 context.Context, arg1 int32) (db.TenantFindRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TenantFind", arg0, arg1)
+	ret0, _ := ret[0].(db.TenantFindRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TenantFind indicates an expected call of TenantFind.
+func (mr *MockStoreMockRecorder) TenantFind(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TenantFind", reflect.TypeOf((*MockStore)(nil).TenantFind), arg0, arg1)
+}
+
+// TenantList mocks base method.
+func (m *MockStore) TenantList(arg0 context.Context, arg1 int32) ([]db.TenantsSchemaTenant, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TenantList", arg0, arg1)
+	ret0, _ := ret[0].([]db.TenantsSchemaTenant)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TenantList indicates an expected call of TenantList.
+func (mr *MockStoreMockRecorder) TenantList(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TenantList", reflect.TypeOf((*MockStore)(nil).TenantList), arg0, arg1)
 }
 
 // TranslationCreateUpdateBulk mocks base method.
@@ -303,6 +709,21 @@ func (mr *MockStoreMockRecorder) UserFind(arg0, arg1 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserFind", reflect.TypeOf((*MockStore)(nil).UserFind), arg0, arg1)
 }
 
+// UserFindForToken mocks base method.
+func (m *MockStore) UserFindForToken(arg0 context.Context, arg1 db.UserFindForTokenParams) (db.UserFindForTokenRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserFindForToken", arg0, arg1)
+	ret0, _ := ret[0].(db.UserFindForTokenRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UserFindForToken indicates an expected call of UserFindForToken.
+func (mr *MockStoreMockRecorder) UserFindForToken(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserFindForToken", reflect.TypeOf((*MockStore)(nil).UserFindForToken), arg0, arg1)
+}
+
 // UserFindForUpdate mocks base method.
 func (m *MockStore) UserFindForUpdate(arg0 context.Context, arg1 int32) (db.UserFindForUpdateRow, error) {
 	m.ctrl.T.Helper()
@@ -390,4 +811,19 @@ func (m *MockStore) UserResetPassword(arg0 context.Context, arg1 db.UserResetPas
 func (mr *MockStoreMockRecorder) UserResetPassword(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserResetPassword", reflect.TypeOf((*MockStore)(nil).UserResetPassword), arg0, arg1)
+}
+
+// UserTypeListInput mocks base method.
+func (m *MockStore) UserTypeListInput(arg0 context.Context) ([]db.UserTypeListInputRow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UserTypeListInput", arg0)
+	ret0, _ := ret[0].([]db.UserTypeListInputRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UserTypeListInput indicates an expected call of UserTypeListInput.
+func (mr *MockStoreMockRecorder) UserTypeListInput(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UserTypeListInput", reflect.TypeOf((*MockStore)(nil).UserTypeListInput), arg0)
 }
