@@ -151,14 +151,15 @@ func (a *AccountsAdapter) AuttSessionRedisFromGrpc(response *devkitv1.AuthLoginR
 func (a *AccountsAdapter) AuthLoginSqlFromGrpc(req *devkitv1.AuthLoginRequest) (*db.UserFindParams, *types.TokenRequest) {
 	isEmail := strings.Contains(req.LoginCode, "@") && strings.Contains(req.LoginCode, ".")
 	supabseRequest := &types.TokenRequest{Password: req.UserPassword}
+	normalizedCode := strings.ToLower(strings.TrimSpace(req.LoginCode))
 	if isEmail {
-		supabseRequest.Email = req.LoginCode
+		supabseRequest.Email = normalizedCode
 	} else {
-		supabseRequest.Phone = req.LoginCode
+		supabseRequest.Phone = normalizedCode
 	}
 	supabseRequest.GrantType = "password"
 	return &db.UserFindParams{
-		SearchKey: req.LoginCode,
+		SearchKey: normalizedCode,
 	}, supabseRequest
 }
 
