@@ -3,14 +3,53 @@ package usecase
 import (
 	"bytes"
 	"context"
-	"io"
+	"fmt"
 
+	"github.com/darwishdev/devkit-api/pkg/contextkeys"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
-	storage_go "github.com/supabase-community/storage-go"
+	storage_go "github.com/darwishdev/storage-go"
 )
 
+func (u *PublicUsecase) FileUploadUrlFind(ctx context.Context, req *devkitv1.FileUploadUrlFindRequest) (*devkitv1.FileUploadUrlFindResponse, error) {
+	uploadURL := fmt.Sprintf(
+		"%s/upload/resumable",
+		u.supaapi.StorageUrl,
+	)
+	token, ok := contextkeys.SupabaseToken(ctx)
+	if !ok {
+		return &devkitv1.FileUploadUrlFindResponse{
+			UploadUrl: uploadURL,
+			Token:     u.supaAnonApiKey,
+		}, nil
+	}
+
+	refreshToken, _ := contextkeys.SupabaseRefreshToken(ctx)
+	_, err := u.supaapi.AuthClient.WithToken(token).GetUser()
+	if err == nil {
+		return &devkitv1.FileUploadUrlFindResponse{
+			UploadUrl:    uploadURL,
+			Token:        token,
+			RefreshToken: refreshToken,
+		}, nil
+
+	}
+	tokensResponse, err := u.supaapi.AuthClient.RefreshToken(refreshToken)
+	if err != nil {
+		return &devkitv1.FileUploadUrlFindResponse{
+			UploadUrl: uploadURL,
+			Token:     u.supaAnonApiKey,
+		}, nil
+
+	}
+
+	return &devkitv1.FileUploadUrlFindResponse{
+		UploadUrl:    uploadURL,
+		Token:        tokensResponse.AccessToken,
+		RefreshToken: tokensResponse.RefreshToken,
+	}, nil
+}
 func (s *PublicUsecase) FileCreate(ctx context.Context, req *devkitv1.FileCreateRequest) (*devkitv1.FileCreateResponse, error) {
-	reader := io.NopCloser(bytes.NewReader(req.Reader))
+	reader := bytes.NewReader(req.Reader)
 	isUpsert := true
 	fileOpts := storage_go.FileOptions{
 		ContentType: &req.FileType,
@@ -20,10 +59,49 @@ func (s *PublicUsecase) FileCreate(ctx context.Context, req *devkitv1.FileCreate
 	if err != nil {
 		return nil, err
 	}
+	// s.supaapi.RestartStorageClient()
 	return &devkitv1.FileCreateResponse{
 		Path: response.Key,
 	}, nil
 
+}
+
+func (s *PublicUsecase) GalleryList(ctx context.Context, req *devkitv1.GalleryListRequest) (*devkitv1.GalleryListResponse, error) {
+	limit := 10
+	offset := 0
+	if req.PaginationParams != nil {
+		limit = int(req.PaginationParams.PageSize)
+		offset = int((req.PaginationParams.PageNumber - 1) * req.PaginationParams.PageSize)
+	}
+	options := storage_go.FileSearchOptions{
+		Limit:  limit,
+		Offset: offset,
+	}
+	resp, err := s.supaapi.StorageClient.ListFiles(req.Filters.BucketId, req.Filters.QueryPath, options)
+	if err != nil {
+		return nil, err
+	}
+
+	response := s.adapter.FileListGrpcFromSupa(resp, req.Filters.BucketId)
+
+	return &devkitv1.GalleryListResponse{
+		Records: response.Files,
+		Options: &devkitv1.AvailableOptions{
+			Title:       "gallery",
+			Description: "gallery_description",
+			CreateHandler: &devkitv1.CreateHandler{
+				Endpoint: "bucketCreateUpdate",
+			},
+			UpdateHandler: &devkitv1.UpdateHandler{
+				Endpoint:     "fileUpdate",
+				FindEndpoint: "fileFind",
+			},
+			DeleteHandler: &devkitv1.DeleteHandler{
+				Endpoint:        "fileDelete",
+				RequestProperty: "records",
+			},
+		},
+	}, nil
 }
 func (s *PublicUsecase) FileList(ctx context.Context, req *devkitv1.FileListRequest) (*devkitv1.FileListResponse, error) {
 	options := storage_go.FileSearchOptions{
@@ -72,15 +150,21 @@ func (s *PublicUsecase) BucketList(ctx context.Context, req *devkitv1.BucketList
 }
 
 func (s *PublicUsecase) FileDelete(ctx context.Context, req *devkitv1.FileDeleteRequest) (*devkitv1.FileDeleteResponse, error) {
-	resp, err := s.supaapi.StorageClient.RemoveFile(req.BucketId, req.FilesPaths)
+	_, err := s.repo.FileDelete(ctx, req.Records)
 	if err != nil {
 		return nil, err
 	}
-	response := s.adapter.FileDeleteGrpcFromSupa(resp)
-	return response, nil
+	return &devkitv1.FileDeleteResponse{}, nil
 }
 
-func (s *PublicUsecase) FileCreateBuilk(ctx context.Context, req *devkitv1.FileCreateBulkRequest) (*devkitv1.FileCreateBulkResponse, error) {
+func (s *PublicUsecase) FileDeleteByBucket(ctx context.Context, req *devkitv1.FileDeleteByBucketRequest) (*devkitv1.FileDeleteByBucketResponse, error) {
+	_, err := s.repo.FileDeleteByBucket(ctx, req.Records, req.BucketName)
+	if err != nil {
+		return nil, err
+	}
+	return &devkitv1.FileDeleteByBucketResponse{}, nil
+}
+func (s *PublicUsecase) FileCreateBulk(ctx context.Context, req *devkitv1.FileCreateBulkRequest) (*devkitv1.FileCreateBulkResponse, error) {
 	images := make([]string, len(req.Files))
 	for index, file := range req.Files {
 		response, err := s.FileCreate(ctx, file)

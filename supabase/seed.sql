@@ -1,7 +1,23 @@
+-- Allow authenticated users full access to the abchotels bucket
+CREATE POLICY "Allow unauth INSERTs" ON storage.buckets
+	FOR INSERT
+		WITH CHECK (
+TRUE);
+
+CREATE POLICY "Allow unauth INSERTs" ON storage.objects
+	FOR INSERT
+		WITH CHECK (
+TRUE);
+
+CREATE POLICY "Non-Authenticated users can manage abchotels bucket" ON storage.objects
+	FOR ALL
+		USING (bucket_id = 'abchotels')
+		WITH CHECK (bucket_id = 'abchotels');
+
 SELECT
 	*
 FROM
-	accounts_schema.permissions_populate (execluded_tables => ARRAY['navigation_bar_item', 'log', 'setting', 'input_type'], added_tables => ARRAY['storage.bucket', 'storage.object']);
+	accounts_schema.permissions_populate(execluded_tables => ARRAY['navigation_bar_item', 'log', 'setting', 'input_type'], added_tables => ARRAY['storage.bucket', 'storage.object', 'auth.session']);
 
 INSERT INTO accounts_schema.role (
 	role_name,

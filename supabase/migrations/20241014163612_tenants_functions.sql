@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION tenants_schema.tenant_create_update (in_tenant_id int, in_tenant_name varchar(200), in_tenant_name_ar varchar(200), in_tenant_phone varchar(200), in_tenant_address text, in_tenant_address_ar text, in_tenant_email varchar(200), in_tenant_values text, in_tenant_mission text, in_tenant_vision text, in_tenant_description text, in_tenant_description_ar text, in_tenant_logo text, in_tenant_logo_vertical text, in_tenant_logo_dark text, in_tenant_logo_dark_vertical text)
+CREATE OR REPLACE FUNCTION tenants_schema.tenant_create_update (in_tenant_id int, in_tenant_logo_dark_vertcal varchar(200), in_tenant_name varchar(200), in_tenant_name_ar varchar(200), in_tenant_phone varchar(200), in_tenant_address text, in_tenant_address_ar text, in_tenant_email varchar(200), in_tenant_values text, in_tenant_mission text, in_tenant_vision text, in_tenant_description text, in_tenant_description_ar text, in_tenant_logo text, in_tenant_logo_vertical text, in_tenant_logo_dark text, in_tenant_logo_dark_vertical text, in_tenant_links jsonb)
 	RETURNS SETOF tenants_schema.tenant
 	LANGUAGE plpgsql
 	AS $$
@@ -23,6 +23,7 @@ BEGIN
 			tenant_logo = in_tenant_logo,
 			tenant_logo_vertical = in_tenant_logo_vertical,
 			tenant_logo_dark = in_tenant_logo_dark,
+			tenant_links = in_tenant_links,
 			tenant_logo_dark_vertical = in_tenant_logo_dark_vertcal,
 			updated_at = NOW()
 		WHERE
@@ -43,7 +44,8 @@ BEGIN
 			tenant_logo,
 			tenant_logo_vertical,
 			tenant_logo_dark,
-			tenant_logo_dark_vertical)
+			tenant_logo_dark_vertical,
+			tenant_links)
 		VALUES (
 			in_tenant_name,
 			in_tenant_name_ar,
@@ -59,31 +61,14 @@ BEGIN
 			in_tenant_logo,
 			in_tenant_logo_vertical,
 			in_tenant_logo_dark,
-			in_tenant_logo_dark_vertical)
+			in_tenant_logo_dark_vertical,
+			in_tenant_links)
 	RETURNING
 		tenant_id INTO v_tenant_id;
 	END IF;
 	RETURN query
 	SELECT
-		tenant_id,
-		tenant_name,
-		tenant_name_ar,
-		tenant_phone,
-		tenant_address,
-		tenant_address_ar,
-		tenant_description,
-		tenant_description_ar,
-		tenant_email,
-		tenant_logo,
-		tenant_logo_vertical,
-		tenant_logo_dark,
-		tenant_logo_dark_vertical,
-		tenant_values,
-		tenant_mission,
-		tenant_vision,
-		created_at,
-		updated_at,
-		deleted_at
+		*
 	FROM
 		tenants_schema.tenant
 	WHERE
@@ -159,6 +144,7 @@ BEGIN
 		page_description_ar,
 		page_breadcrumb,
 		tenant_id,
+		partial_type_id,
 		page_route,
 		page_cover_image,
 		page_cover_video,
@@ -192,7 +178,7 @@ BEGIN
 			section_header_ar = in_section_header_ar,
 			section_button_label = in_section_button_label,
 			section_button_label_ar = in_section_button_label_ar,
-			section_button_page_id = in_section_button_page_id,
+			section_button_page_id = nullable_foreign(in_section_button_page_id),
 			section_description = in_section_description,
 			section_description_ar = in_section_description_ar,
 			tenant_id = in_tenant_id,
@@ -244,44 +230,17 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION tenants_schema.partial_create_update (in_partial_id int, in_partial_name varchar(200), in_partial_name_ar varchar(200), in_partial_type_id int, in_section_id int, in_partial_image text, in_partial_images text, in_partial_video text, in_is_featured bool, in_partial_brief text, in_partial_brief_ar text, in_partial_content text, in_partial_content_ar text, in_partial_button_label text, in_partial_button_label_ar text, in_partial_button_icon text, in_partial_button_link text, in_partial_button_page_id int, in_partial_icons text, in_address text, in_partial_links jsonb, in_partial_link text)
+CREATE OR REPLACE FUNCTION tenants_schema.partial_create_update (in_partial_id int, in_partial_code varchar(200), in_partial_name varchar(200), in_partial_name_ar varchar(200), in_partial_type_id int, in_section_id int, in_partial_image text, in_partial_images text, in_partial_video text, in_is_featured bool, in_partial_brief text, in_partial_brief_ar text, in_partial_content text, in_partial_content_ar text, in_partial_button_label text, in_partial_button_label_ar text, in_partial_button_icon text, in_partial_button_link text, in_partial_button_page_id int, in_partial_icons text, in_address text, in_partial_links jsonb, in_partial_link text)
 	RETURNS SETOF tenants_schema.partial
 	LANGUAGE plpgsql
 	AS $$
 DECLARE
 	v_partial_id int;
 BEGIN
-	IF in_partial_id IS NOT NULL THEN
-		UPDATE
-			tenants_schema.partial
-		SET
-			partial_name = in_partial_name,
-			partial_name_ar = in_partial_name_ar,
-			partial_type_id = in_partial_type_id,
-			section_id = in_section_id,
-			partial_image = in_partial_image,
-			partial_images = in_partial_images,
-			partial_video = in_partial_video,
-			is_featured = in_is_featured,
-			partial_brief = in_partial_brief,
-			partial_brief_ar = in_partial_brief_ar,
-			partial_content = in_partial_content,
-			partial_content_ar = in_partial_content_ar,
-			partial_button_label = in_partial_button_label,
-			partial_button_label_ar = in_partial_button_label_ar,
-			partial_button_icon = in_partial_button_icon,
-			partial_button_link = in_partial_button_link,
-			partial_button_page_id = in_partial_button_page_id,
-			partial_icons = in_partial_icons,
-			address = in_address,
-			partial_links = in_partial_links,
-			partial_link = in_partial_link,
-			updated_at = NOW()
-		WHERE
-			partial_id = in_partial_id;
-	ELSE
-		INSERT INTO tenants_schema.partial (
+	IF is_null (in_partial_id) THEN
+		RETURN query INSERT INTO tenants_schema.partial (
 			partial_name,
+			partial_code,
 			partial_name_ar,
 			partial_type_id,
 			section_id,
@@ -304,6 +263,7 @@ BEGIN
 			partial_link)
 		VALUES (
 			in_partial_name,
+			in_partial_code,
 			in_partial_name_ar,
 			in_partial_type_id,
 			in_section_id,
@@ -319,21 +279,46 @@ BEGIN
 			in_partial_button_label_ar,
 			in_partial_button_icon,
 			in_partial_button_link,
-			in_partial_button_page_id,
+			nullable_foreign(
+				in_partial_button_page_id),
 			in_partial_icons,
 			in_address,
 			in_partial_links,
 			in_partial_link)
 	RETURNING
-		partial_id INTO v_partial_id;
+		*;
+	ELSE
+		RETURN query UPDATE
+			tenants_schema.partial
+		SET
+			partial_name = in_partial_name,
+			partial_code = in_partial_code,
+			partial_name_ar = in_partial_name_ar,
+			partial_type_id = in_partial_type_id,
+			section_id = in_section_id,
+			partial_image = in_partial_image,
+			partial_images = in_partial_images,
+			partial_video = in_partial_video,
+			is_featured = in_is_featured,
+			partial_brief = in_partial_brief,
+			partial_brief_ar = in_partial_brief_ar,
+			partial_content = in_partial_content,
+			partial_content_ar = in_partial_content_ar,
+			partial_button_label = in_partial_button_label,
+			partial_button_label_ar = in_partial_button_label_ar,
+			partial_button_icon = in_partial_button_icon,
+			partial_button_link = in_partial_button_link,
+			partial_button_page_id = nullable_foreign(in_partial_button_page_id),
+			partial_icons = in_partial_icons,
+			address = in_address,
+			partial_links = in_partial_links,
+			partial_link = in_partial_link,
+			updated_at = NOW()
+		WHERE
+			partial_id = in_partial_id
+		RETURNING
+			*;
 	END IF;
-	RETURN QUERY
-	SELECT
-		*
-	FROM
-		tenants_schema.partial
-	WHERE
-		partial_id = COALESCE(v_partial_id, in_partial_id);
 END;
 $$;
 

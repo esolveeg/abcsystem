@@ -90,7 +90,7 @@ func main() {
 		panic("cann't create paset maker in gapi/api.go")
 	}
 
-	redisClient := redisclient.NewRedisClient(config.RedisHost, config.RedisPort, config.RedisPassword, config.RedisDatabase)
+	redisClient := redisclient.NewRedisClient(config.RedisHost, config.RedisPort, config.RedisPassword, config.RedisDatabase, config.IsCacheDisabled)
 	validator, err := protovalidate.New()
 	if err != nil {
 		log.Fatal().Err(err).Msg("can't get the validator")

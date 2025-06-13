@@ -22,3 +22,12 @@ WHERE
 RETURNING
 	*;
 
+-- name: PageFindForUpdate :one
+SELECT
+	*
+FROM
+	tenants_schema.page
+WHERE
+	tenant_id = is_null_replace(sqlc.arg('tenant_id')::int, tenant_id)
+	AND page_id = sqlc.arg('page_id')::int;
+

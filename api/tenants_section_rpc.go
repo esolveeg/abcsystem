@@ -13,6 +13,18 @@ func (api *Api) SectionList(ctx context.Context, req *connect.Request[devkitv1.S
 	if err != nil {
 		return nil, err
 	}
+
+	resp.Options = api.getAvailableOptions(req.Header())
+
+	return connect.NewResponse(resp), nil
+}
+
+func (api *Api) SectionFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.SectionFindForUpdateRequest]) (*connect.Response[devkitv1.SectionFindForUpdateResponse], error) {
+	resp, err := api.tenantUsecase.SectionFindForUpdate(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
 	return connect.NewResponse(resp), nil
 }
 

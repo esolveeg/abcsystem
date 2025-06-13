@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"github.com/iancoleman/strcase"
 	"github.com/supabase-community/auth-go/types"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type NavigationsMap map[int32]*devkitv1.NavigationBarItem
@@ -77,22 +78,44 @@ func (a *AccountsAdapter) UserNavigationBarFindGrpcFromSql(dbResponse []db.UserN
 	}
 	return rootItems, nil
 }
-
+func (a *AccountsAdapter) AuthSessionListGrpcFromRedis(resp []*redisclient.AuthSession) *devkitv1.AuthSessionListResponse {
+	records := make([]*devkitv1.AuthSession, 0)
+	for _, session := range resp {
+		records = append(records, &devkitv1.AuthSession{
+			SessionKey:                    session.SessionKey,
+			TokenId:                       session.TokenID,
+			UserId:                        session.UserID,
+			IpAddress:                     session.IPAddress,
+			IsBlocked:                     session.IsBlocked,
+			UserAgent:                     session.UserAgent,
+			AccessToken:                   session.AccessToken,
+			RefreshToken:                  session.RefreshToken,
+			SupabaseAccessToken:           session.SupabaseAccessToken,
+			SupabaseRefreshToken:          session.SupabaseRefreshToken,
+			AccessTokenExpiresAt:          session.AccessTokenExpiresAt.Format(time.RFC3339),
+			RefreshTokenExpiresAt:         session.RefreshTokenExpiresAt.Format(time.RFC3339),
+			SupabaseAccessTokenExpiresAt:  session.SupabaseAccessTokenExpiresAt.Format(time.RFC3339),
+			SupabaseRefreshTokenExpiresAt: session.SupabaseRefreshTokenExpiresAt.Format(time.RFC3339),
+		})
+	}
+	return &devkitv1.AuthSessionListResponse{
+		Records: records,
+	}
+}
 func (a *AccountsAdapter) UserCreateUpdateRequestFromAuthRegister(req *devkitv1.AuthRegisterRequest) *devkitv1.UserCreateUpdateRequest {
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.UserPassword), bcrypt.DefaultCost)
 	resp := &devkitv1.UserCreateUpdateRequest{
 		UserName:     req.UserName,
 		UserTypeId:   req.UserTypeId,
 		UserPhone:    req.UserPhone,
 		UserEmail:    req.UserEmail,
-		UserPassword: string(hashedPassword),
+		UserPassword: req.UserPassword,
 	}
 	return resp
 }
 
-func (a *AccountsAdapter) UserPermissionsMapRedisFromSql(resp []db.UserPermissionsMapRow) ([]byte, error) {
-	respMap := make(map[string]map[string]bool)
-	for _, rec := range resp {
+func (a *AccountsAdapter) UserPermissionsMapRedisFromSql(resp *[]db.UserPermissionsMapRow) (*redisclient.PermissionsMap, error) {
+	respMap := make(redisclient.PermissionsMap)
+	for _, rec := range *resp {
 		perms := make(map[string]bool)
 		err := json.Unmarshal(rec.Permissions, &perms)
 		if err != nil {
@@ -100,21 +123,43 @@ func (a *AccountsAdapter) UserPermissionsMapRedisFromSql(resp []db.UserPermissio
 		}
 		respMap[rec.PermissionGroup] = perms
 	}
-	respoinse, err := json.Marshal(respMap)
-	return respoinse, err
+	return &respMap, nil
 }
+func (a *AccountsAdapter) AuttSessionRedisFromGrpc(response *devkitv1.AuthLoginResponse, ipAddress string, userAgent string) (*redisclient.AuthSession, error) {
+	supabaseAccessExpiredAt, err := db.StringToTime(response.LoginInfo.SupabaseTokenExpiresAt)
+	supabaseRefreshExpiredAt, err := db.StringToTime(response.LoginInfo.SupabaseRefreshTokenExpiresAt)
+	accessTokenExpiredAt, err := db.StringToTime(response.LoginInfo.AccessTokenExpiresAt)
+	refreshTokenExpiredAt, err := db.StringToTime(response.LoginInfo.RefreshTokenExpiresAt)
+	if err != nil {
+		return nil, err
+	}
 
+	return &redisclient.AuthSession{
+		UserID:                        response.User.UserId,
+		AccessToken:                   response.LoginInfo.AccessToken,
+		SupabaseAccessTokenExpiresAt:  supabaseAccessExpiredAt,
+		SupabaseRefreshTokenExpiresAt: supabaseRefreshExpiredAt,
+		RefreshToken:                  response.LoginInfo.RefreshToken,
+		SupabaseAccessToken:           response.LoginInfo.SupabaseToken,
+		AccessTokenExpiresAt:          accessTokenExpiredAt,
+		IPAddress:                     ipAddress,
+		UserAgent:                     userAgent,
+		RefreshTokenExpiresAt:         refreshTokenExpiredAt,
+		SupabaseRefreshToken:          response.LoginInfo.SupabaseRefreshToken,
+	}, nil
+}
 func (a *AccountsAdapter) AuthLoginSqlFromGrpc(req *devkitv1.AuthLoginRequest) (*db.UserFindParams, *types.TokenRequest) {
 	isEmail := strings.Contains(req.LoginCode, "@") && strings.Contains(req.LoginCode, ".")
 	supabseRequest := &types.TokenRequest{Password: req.UserPassword}
+	normalizedCode := strings.ToLower(strings.TrimSpace(req.LoginCode))
 	if isEmail {
-		supabseRequest.Email = req.LoginCode
+		supabseRequest.Email = normalizedCode
 	} else {
-		supabseRequest.Phone = req.LoginCode
+		supabseRequest.Phone = normalizedCode
 	}
 	supabseRequest.GrantType = "password"
 	return &db.UserFindParams{
-		SearchKey: req.LoginCode,
+		SearchKey: normalizedCode,
 	}, supabseRequest
 }
 

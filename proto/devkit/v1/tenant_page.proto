@@ -86,3 +86,11 @@ message PageDeleteRestoreRequest {
 message PageDeleteRestoreResponse {
   repeated TenantsSchemaPage records = 1;
 }
+
+message PageFindForUpdateRequest {
+  int32 record_id = 1;
+}
+
+message PageFindForUpdateResponse {
+  PageCreateUpdateRequest request = 1;
+}

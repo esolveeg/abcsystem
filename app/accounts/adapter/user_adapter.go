@@ -14,7 +14,7 @@ func (a *AccountsAdapter) UserEntityGrpcFromSql(resp *db.AccountsSchemaUser) *de
 		TenantId:   resp.TenantID.Int32,
 		UserPhone:  resp.UserPhone.String,
 		UserEmail:  resp.UserEmail, // User's email, unique in DB
-		CreatedAt:  db.TimeToString(resp.CreatedAt.Time),
+		CreatedAt:  db.TimeToProtoTimeStamp(resp.CreatedAt.Time),
 		DeletedAt:  db.TimeToString(resp.DeletedAt.Time),
 	}
 }
@@ -41,6 +41,18 @@ func (a *AccountsAdapter) UserFindForUpdateUpdateGrpcFromSql(resp *db.UserFindFo
 		UserPhone:  resp.UserPhone.String,
 		UserEmail:  resp.UserEmail,
 		Roles:      resp.Roles,
+	}
+}
+func (a *AccountsAdapter) UserTypeListInputGrpcFromSql(resp *[]db.UserTypeListInputRow) *devkitv1.UserTypeListInputResponse {
+	records := make([]*devkitv1.SelectInputOption, 0)
+	for _, v := range *resp {
+		records = append(records, &devkitv1.SelectInputOption{
+			Value: v.Value,
+			Label: v.Label,
+		})
+	}
+	return &devkitv1.UserTypeListInputResponse{
+		Options: records,
 	}
 }
 func (a *AccountsAdapter) UserListInputGrpcFromSql(resp *[]db.UserListInputRow) *devkitv1.UserListInputResponse {

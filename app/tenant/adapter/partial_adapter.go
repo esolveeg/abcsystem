@@ -34,14 +34,15 @@ func (a *TenantAdapter) PartialEntityGrpcFromSql(resp *db.TenantsSchemaPartial) 
 		PartialButtonLabelAr: resp.PartialButtonLabelAr.String,
 		PartialButtonIcon:    resp.PartialButtonIcon.String,
 		PartialButtonLink:    resp.PartialButtonLink.String,
-		PartialButtonPageId:  int32(resp.PartialButtonPageID.Int32),
-		PartialIcons:         strings.Split(resp.PartialIcons.String, ","),
-		Address:              resp.Address.String,
-		PartialLinks:         partialLinks,
-		PartialLink:          resp.PartialLink.String,
-		CreatedAt:            db.TimeToProtoTimeStamp(resp.CreatedAt.Time),
-		UpdatedAt:            db.TimeToProtoTimeStamp(resp.UpdatedAt.Time),
-		DeletedAt:            db.TimeToProtoTimeStamp(resp.DeletedAt.Time),
+
+		PartialButtonPageId: int32(resp.PartialButtonPageID.Int32),
+		PartialIcons:        strings.Split(resp.PartialIcons.String, ","),
+		Address:             resp.Address.String,
+		PartialLinks:        partialLinks,
+		PartialLink:         resp.PartialLink.String,
+		CreatedAt:           db.TimeToProtoTimeStamp(resp.CreatedAt.Time),
+		UpdatedAt:           db.TimeToProtoTimeStamp(resp.UpdatedAt.Time),
+		DeletedAt:           db.TimeToProtoTimeStamp(resp.DeletedAt.Time),
 	}
 }
 
@@ -72,10 +73,6 @@ func (a *TenantAdapter) PartialListGrpcFromSql(resp *[]db.TenantsSchemaPartial) 
 }
 
 func (a *TenantAdapter) PartialCreateUpdateSqlFromGrpc(req *devkitv1.PartialCreateUpdateRequest) *db.PartialCreateUpdateParams {
-	partialLinks, err := json.Marshal(req.GetPartialLinks())
-	if err != nil {
-		log.Error().Err(err).Msg("error parsing partial links")
-	}
 	return &db.PartialCreateUpdateParams{
 		PartialID:            req.GetPartialId(),
 		PartialName:          req.GetPartialName(),
@@ -97,7 +94,48 @@ func (a *TenantAdapter) PartialCreateUpdateSqlFromGrpc(req *devkitv1.PartialCrea
 		PartialButtonPageID:  req.GetPartialButtonPageId(),
 		PartialIcons:         req.GetPartialIcons(),
 		Address:              req.GetAddress(),
-		PartialLinks:         partialLinks,
 		PartialLink:          req.GetPartialLink(),
 	}
+}
+
+func (a *TenantAdapter) PartialFindForUpdateGrpcFromSql(resp *db.TenantsSchemaPartial) *devkitv1.PartialFindForUpdateResponse {
+	return &devkitv1.PartialFindForUpdateResponse{
+		Request: &devkitv1.PartialCreateUpdateRequest{
+			PartialId:            int32(resp.PartialID),
+			PartialName:          resp.PartialName,
+			PartialNameAr:        resp.PartialNameAr.String,
+			PartialTypeId:        resp.PartialTypeID,
+			SectionId:            int32(resp.SectionID),
+			PartialImage:         resp.PartialImage.String,
+			PartialImages:        strings.Split(resp.PartialImages.String, ","),
+			PartialVideo:         resp.PartialVideo.String,
+			IsFeatured:           resp.IsFeatured.Bool,
+			PartialBrief:         resp.PartialBrief.String,
+			PartialBriefAr:       resp.PartialBriefAr.String,
+			PartialContent:       resp.PartialContent.String,
+			PartialContentAr:     resp.PartialContentAr.String,
+			PartialButtonLabel:   resp.PartialButtonLabel.String,
+			PartialButtonLabelAr: resp.PartialButtonLabelAr.String,
+			PartialButtonIcon:    resp.PartialButtonIcon.String,
+			PartialButtonLink:    resp.PartialButtonLink.String,
+			PartialButtonPageId:  int32(resp.PartialButtonPageID.Int32),
+			Address:              resp.Address.String,
+			PartialLink:          resp.PartialLink.String,
+		},
+	}
+
+}
+
+func (a *TenantAdapter) PartialTypeListInputGrpcFromSql(resp []db.PartialTypeListInputRow) *devkitv1.PartialTypeListInputResponse {
+	records := make([]*devkitv1.SelectInputOption, 0)
+	for _, v := range resp {
+		records = append(records, &devkitv1.SelectInputOption{
+			Value: v.Value,
+			Label: v.Label,
+		})
+	}
+	return &devkitv1.PartialTypeListInputResponse{
+		Options: records,
+	}
+
 }

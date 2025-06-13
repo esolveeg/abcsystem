@@ -14,6 +14,7 @@ var (
 	phone             = random.RandomPhone()
 	password          = random.RandomString(8)
 	validCreateParams = &UserCreateUpdateParams{
+		CallerID:     1,
 		UserName:     name,
 		UserEmail:    email,
 		UserPassword: password,
@@ -22,6 +23,8 @@ var (
 		Roles:        []int32{1},
 	}
 	duplicatedPhoneParams = &UserCreateUpdateParams{
+
+		CallerID:     1,
 		UserName:     random.RandomName(),
 		UserEmail:    random.RandomName(),
 		UserPassword: password,
@@ -30,6 +33,8 @@ var (
 		Roles:        []int32{1},
 	}
 	duplicatedEmailParams = &UserCreateUpdateParams{
+
+		CallerID:     1,
 		UserName:     random.RandomName(),
 		UserEmail:    email,
 		UserPassword: password,
@@ -66,6 +71,7 @@ func TestUserCreateUpdate(t *testing.T) {
 			name: "InvalidRoleId",
 			params: &UserCreateUpdateParams{
 				UserName:     random.RandomString(20), // Exceeds max length
+				CallerID:     1,
 				UserEmail:    random.RandomEmail(),
 				UserPassword: "123456",
 				UserTypeID:   1,
@@ -77,6 +83,8 @@ func TestUserCreateUpdate(t *testing.T) {
 		{
 			name: "UserNameTooLong",
 			params: &UserCreateUpdateParams{
+
+				CallerID:     1,
 				UserName:     random.RandomString(220), // Exceeds max length
 				UserPassword: "123456",
 				UserEmail:    random.RandomEmail(),

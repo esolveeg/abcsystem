@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
+	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"github.com/rs/zerolog/log"
 )
@@ -46,5 +47,30 @@ func (u *TenantUsecase) PartialDeleteRestore(ctx context.Context, req *connect.R
 	}
 	resp := u.adapter.PartialEntityListGrpcFromSql(record)
 	return &devkitv1.PartialDeleteRestoreResponse{Records: *resp}, nil
+
+}
+
+func (u *TenantUsecase) PartialFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.PartialFindForUpdateRequest]) (*devkitv1.PartialFindForUpdateResponse, error) {
+
+	record, err := u.repo.PartialFindForUpdate(ctx, &db.PartialFindForUpdateParams{PartialID: req.Msg.RecordId})
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp := u.adapter.PartialFindForUpdateGrpcFromSql(record)
+	return resp, nil
+
+}
+
+func (u *TenantUsecase) PartialTypeListInput(ctx context.Context, req *connect.Request[devkitv1.PartialTypeListInputRequest]) (*devkitv1.PartialTypeListInputResponse, error) {
+	record, err := u.repo.PartialTypeListInput(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp := u.adapter.PartialTypeListInputGrpcFromSql(record)
+	return resp, nil
 
 }

@@ -8,6 +8,14 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
+func (api *Api) SectionListInpt(ctx context.Context, req *connect.Request[devkitv1.SectionListInptRequest]) (*connect.Response[devkitv1.SectionListInptResponse], error) {
+	resp, err := api.tenantUsecase.SectionListInpt(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(resp), nil
+}
+
 func (api *Api) TenantCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.TenantCreateUpdateRequest]) (*connect.Response[devkitv1.TenantCreateUpdateResponse], error) {
 	resp, err := api.tenantUsecase.TenantCreateUpdate(ctx, req)
 	if err != nil {
@@ -19,6 +27,12 @@ func (api *Api) TenantList(ctx context.Context, req *connect.Request[devkitv1.Te
 	resp, err := api.tenantUsecase.TenantList(ctx, req)
 	if err != nil {
 		return nil, err
+	}
+	resp.Options = api.getAvailableOptions(req.Header())
+	if resp.Options.UpdateHandler != nil {
+		resp.Options.UpdateHandler.FindEndpoint = "tenantFind"
+		resp.Options.UpdateHandler.FindRequestProperty = "tenantId"
+		resp.Options.UpdateHandler.FindResponseProperty = "tenant"
 	}
 	return connect.NewResponse(resp), nil
 
@@ -38,4 +52,12 @@ func (api *Api) TenantDeleteRestore(ctx context.Context, req *connect.Request[de
 	}
 	return connect.NewResponse(resp), nil
 
+}
+
+func (api *Api) PartialTypeListInput(ctx context.Context, req *connect.Request[devkitv1.PartialTypeListInputRequest]) (*connect.Response[devkitv1.PartialTypeListInputResponse], error) {
+	resp, err := api.tenantUsecase.PartialTypeListInput(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(resp), nil
 }

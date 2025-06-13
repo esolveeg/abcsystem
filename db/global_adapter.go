@@ -37,6 +37,9 @@ func PgtimeToString(pgTime pgtype.Time) string {
 func TimeToString(time time.Time) string {
 	return time.Format("2006-01-02 15:04:05")
 }
+func StringToTime(str string) (time.Time, error) {
+	return time.Parse("2006-01-02 15:04:05", str)
+}
 func TimeToProtoTimeStamp(time time.Time) *timestamppb.Timestamp {
 	return timestamppb.New(time)
 }

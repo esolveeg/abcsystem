@@ -3,6 +3,7 @@ package devkit.v1;
 
 import "buf/validate/validate.proto";
 import "devkit/v1/client.proto";
+import "devkit/v1/public_storage.proto";
 import "google/protobuf/timestamp.proto";
 
 // INJECT MESSAGES
@@ -51,7 +52,7 @@ message PartialCreateUpdateRequest {
   ];
   string partial_name_ar = 3 [(buf.validate.field).string.max_len = 200];
   int32 partial_type_id = 4 [(buf.validate.field).int32.gte = 1];
-  int32 section_id = 5;
+  int32 section_id = 5 [(buf.validate.field).int32.gte = 1];
   string partial_image = 6 [(buf.validate.field).string.max_len = 500];
   repeated string partial_images = 7;
   string partial_video = 8 [(buf.validate.field).string.max_len = 500];
@@ -69,6 +70,7 @@ message PartialCreateUpdateRequest {
   string address = 20 [(buf.validate.field).string.max_len = 1000];
   map<string, string> partial_links = 21;
   string partial_link = 22 [(buf.validate.field).string.max_len = 500];
+  FileCreateBulkRequest uploads = 23;
 }
 
 message PartialCreateUpdateResponse {
@@ -84,4 +86,18 @@ message PartialDeleteRestoreRequest {
 
 message PartialDeleteRestoreResponse {
   repeated TenantsSchemaPartial records = 1;
+}
+
+message PartialFindForUpdateRequest {
+  int32 record_id = 1;
+}
+
+message PartialFindForUpdateResponse {
+  PartialCreateUpdateRequest request = 1;
+}
+
+message PartialTypeListInputRequest {}
+
+message PartialTypeListInputResponse {
+  repeated SelectInputOption options = 1;
 }

@@ -5,6 +5,7 @@ package devkit.v1;
 import "buf/validate/validate.proto";
 import "devkit/v1/accounts_navigation_bar.proto";
 import "devkit/v1/accounts_user.proto";
+import "devkit/v1/client.proto";
 
 message AuthLoginRequest {
   string login_code = 1 [
@@ -18,7 +19,13 @@ message AuthLoginRequest {
 }
 message LoginInfo {
   string access_token = 1;
-  string access_token_expires_at = 4;
+  string refresh_token = 4;
+  string supabase_token = 2;
+  string supabase_refresh_token = 3;
+  string access_token_expires_at = 5;
+  string refresh_token_expires_at = 6;
+  string supabase_token_expires_at = 7;
+  string supabase_refresh_token_expires_at = 8;
 }
 
 message AuthLoginResponse {
@@ -51,9 +58,15 @@ message AuthRegisterResponse {
   LoginInfo login_info = 2;
 }
 message AuthAuthorizeRequest {}
-message AuthAuthorizeResponse {
-  AccountsSchemaUser user = 1;
+message AuthAuthorizeResponse {}
+
+message AuthRefreshTokenRequest {}
+message AuthRefreshTokenResponse {
+  LoginInfo login_info = 2;
 }
+
+message AuthLogoutRequest {}
+message AuthLogoutResponse {}
 message AuthInviteRequest {
   string user_email = 1 [
     (buf.validate.field).string.email = true,
@@ -77,6 +90,8 @@ message AuthLoginProviderResponse {
 message AuthLoginProviderCallbackRequest {
   string provider = 1;
   string access_token = 2 [(buf.validate.field).string.min_len = 6];
+  string refresh_token = 3 [(buf.validate.field).string.min_len = 6];
+  string expires_in = 4;
 }
 message AuthLoginProviderCallbackResponse {
   AccountsSchemaUser user = 1;
@@ -111,4 +126,46 @@ message AuthResetPasswordResponse {
   AccountsSchemaUser user = 1;
   LoginInfo login_info = 2;
   repeated NavigationBarItem navigation_bar = 3;
+}
+
+message AuthSessionListRequest {
+  int32 user_id = 1;
+}
+message AuthSession {
+  string session_key = 13;
+  string token_id = 14;
+  int32 user_id = 1;
+  string ip_address = 2;
+  bool is_blocked = 3;
+  string user_agent = 4;
+  string access_token = 5;
+  string refresh_token = 6;
+  string supabase_access_token = 7;
+  string supabase_refresh_token = 8;
+  string access_token_expires_at = 9; // ISO 8601 formatted string (e.g. RFC3339)
+  string refresh_token_expires_at = 10;
+  string supabase_access_token_expires_at = 11;
+  string supabase_refresh_token_expires_at = 12;
+}
+message AuthSessionListResponse {
+  repeated AuthSession records = 1;
+  repeated AuthSession deleted_records = 2;
+  AvailableOptions options = 3;
+}
+
+message AuthSessionSetBlockedRequest {
+  string session_key = 1;
+  bool is_blocked = 2;
+}
+
+message AuthSessionSetBlockedResponse {
+  string message = 1;
+}
+
+message AuthSessionDeleteRequest {
+  string session_key = 1;
+}
+
+message AuthSessionDeleteResponse {
+  string message = 1;
 }

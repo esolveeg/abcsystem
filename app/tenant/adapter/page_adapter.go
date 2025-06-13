@@ -15,7 +15,7 @@ func (a *TenantAdapter) PageEntityGrpcFromSql(resp *db.TenantsSchemaPage) *devki
 		PageDescription:     resp.PageDescription.String,
 		PageDescriptionAr:   resp.PageDescriptionAr.String,
 		PageBreadcrumb:      resp.PageBreadcrumb.String,
-		TenantId:           int32(resp.TenantID.Int32), // Handle nullable int
+		TenantId:            int32(resp.TenantID.Int32), // Handle nullable int
 		PageRoute:           resp.PageRoute,
 		PageCoverImage:      resp.PageCoverImage.String,
 		PageCoverVideo:      resp.PageCoverVideo.String,
@@ -61,7 +61,7 @@ func (a *TenantAdapter) PageCreateUpdateSqlFromGrpc(req *devkitv1.PageCreateUpda
 		PageDescription:     req.GetPageDescription(),
 		PageDescriptionAr:   req.GetPageDescriptionAr(),
 		PageBreadcrumb:      req.GetPageBreadcrumb(),
-		TenantID:           req.GetTenantId(),
+		TenantID:            req.GetTenantId(),
 		PageRoute:           req.GetPageRoute(),
 		PageCoverImage:      req.GetPageCoverImage(),
 		PageCoverVideo:      req.GetPageCoverVideo(),
@@ -69,4 +69,24 @@ func (a *TenantAdapter) PageCreateUpdateSqlFromGrpc(req *devkitv1.PageCreateUpda
 		PageMetaDescription: req.GetPageMetaDescription(),
 		PageIcon:            req.GetPageIcon(),
 	}
+}
+
+func (a *TenantAdapter) PageFindForUpdateGrpcFromSql(resp *db.TenantsSchemaPage) *devkitv1.PageFindForUpdateResponse {
+	return &devkitv1.PageFindForUpdateResponse{
+		Request: &devkitv1.PageCreateUpdateRequest{
+			PageId:              int32(resp.PageID),
+			PageName:            resp.PageName,
+			PageNameAr:          resp.PageNameAr.String,
+			PageDescription:     resp.PageDescription.String,
+			PageDescriptionAr:   resp.PageDescriptionAr.String,
+			PageBreadcrumb:      resp.PageBreadcrumb.String,
+			TenantId:            int32(resp.TenantID.Int32), // Handle nullable int
+			PageRoute:           resp.PageRoute,
+			PageCoverImage:      resp.PageCoverImage.String,
+			PageCoverVideo:      resp.PageCoverVideo.String,
+			PageMetaDescription: resp.PageMetaDescription.String,
+			PageIcon:            resp.PageIcon.String,
+		},
+	}
+
 }

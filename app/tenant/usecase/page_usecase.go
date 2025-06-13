@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
+	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"github.com/rs/zerolog/log"
 )
@@ -52,4 +53,13 @@ func (u *TenantUsecase) PageDeleteRestore(ctx context.Context, req *connect.Requ
 	resp := u.adapter.PageEntityListGrpcFromSql(record)
 	return &devkitv1.PageDeleteRestoreResponse{Records: *resp}, nil
 
+}
+
+func (u *TenantUsecase) PageFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.PageFindForUpdateRequest]) (*devkitv1.PageFindForUpdateResponse, error) {
+	record, err := u.repo.PageFindForUpdate(ctx, db.PageFindForUpdateParams{PageID: req.Msg.RecordId})
+	if err != nil {
+		return nil, err
+	}
+	resp := u.adapter.PageFindForUpdateGrpcFromSql(record)
+	return resp, nil
 }

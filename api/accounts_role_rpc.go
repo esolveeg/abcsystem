@@ -9,12 +9,11 @@ import (
 )
 
 func (api *Api) RoleList(ctx context.Context, req *connect.Request[devkitv1.RoleListRequest]) (*connect.Response[devkitv1.RoleListResponse], error) {
-	response, totalCount, err := api.accountsUsecase.RoleList(ctx, req)
+	response, err := api.accountsUsecase.RoleList(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 	response.Options = api.getAvailableOptions(req.Header())
-	response.Options.TotalCount = totalCount
 	return connect.NewResponse(response), nil
 }
 

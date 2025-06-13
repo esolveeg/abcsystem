@@ -4,6 +4,7 @@ package devkit.v1;
 
 import "buf/validate/validate.proto";
 import "devkit/v1/client.proto";
+import "google/protobuf/timestamp.proto";
 message UserCreateUpdateRequest {
   int32 user_id = 1; // User's ID, should be unique
   string user_name = 2 [
@@ -35,7 +36,7 @@ message AccountsSchemaUser {
   string user_phone = 5; // Optional phone number
   string user_email = 6; // User's email, unique in DB
   string user_password = 7; // Password
-  string created_at = 9; // Creation timestamp
+  google.protobuf.Timestamp created_at = 9; // Creation timestamp
   string updated_at = 10; // Update timestamp
   string deleted_at = 11; // Deletion timestamp
 }
@@ -63,6 +64,10 @@ message UserListResponse {
 }
 message UserListInputRequest {}
 message UserListInputResponse {
+  repeated SelectInputOption options = 1;
+}
+message UserTypeListInputRequest {}
+message UserTypeListInputResponse {
   repeated SelectInputOption options = 1;
 }
 

@@ -1,27 +1,17 @@
-// Copyright 2022 Buf Technologies, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package auth
 
 import (
-	"fmt"
-
 	"time"
 
-	"github.com/aead/chacha20poly1305"
 	"github.com/o1egl/paseto"
 )
+
+type TokenPair struct {
+	AccessToken    string
+	RefreshToken   string
+	AccessPayload  *Payload
+	RefreshPayload *RefreshPayload
+}
 
 // PasetoMaker is a PASETO token maker
 type PasetoMaker struct {
@@ -30,15 +20,47 @@ type PasetoMaker struct {
 }
 
 // CreateToken creates a new token for a specific username and duration
-func (maker *PasetoMaker) CreateToken(username string, userId int32, userSecurityLevel int32, tenantId int32, duration time.Duration) (string, *Payload, error) {
-
-	payload, err := NewPayload(username, userId, userSecurityLevel, tenantId, duration)
+func (maker *PasetoMaker) CreateToken(payload *Payload) (string, error) {
+	token, err := maker.paseto.Encrypt(maker.symmetricKey, payload, nil)
+	return token, err
+}
+func (maker *PasetoMaker) CreateRefreshToken(RefreshPayload *RefreshPayload) (string, error) {
+	token, err := maker.paseto.Encrypt(maker.symmetricKey, RefreshPayload, nil)
+	return token, err
+}
+func (maker *PasetoMaker) CreateTokenPair(
+	username string,
+	userId int32,
+	userSecurityLevel int32,
+	tenantId int32,
+	accessDuration time.Duration,
+	refreshDuration time.Duration,
+) (*TokenPair, error) {
+	payload, err := NewPayload(username, userId, userSecurityLevel, tenantId, accessDuration)
 	if err != nil {
-		return "", payload, err
+		return nil, err
 	}
 
-	token, err := maker.paseto.Encrypt(maker.symmetricKey, payload, nil)
-	return token, payload, err
+	refreshPayload, err := NewRefreshPayload(userId, refreshDuration)
+	if err != nil {
+		return nil, err
+	}
+	accessToken, err := maker.CreateToken(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	refreshToken, err := maker.CreateRefreshToken(refreshPayload)
+	if err != nil {
+		return nil, err
+	}
+
+	return &TokenPair{
+		AccessToken:    accessToken,
+		RefreshToken:   refreshToken,
+		AccessPayload:  payload,
+		RefreshPayload: refreshPayload,
+	}, nil
 }
 
 // VerifyToken checks if the token is valid or not
@@ -58,16 +80,21 @@ func (maker *PasetoMaker) VerifyToken(token string) (*Payload, error) {
 	return payload, nil
 }
 
-// NewPasetoMaker creates a new PasetoMaker
-func NewPasetoMaker(symmetricKey string) (Maker, error) {
-	if len(symmetricKey) != chacha20poly1305.KeySize {
-		return nil, fmt.Errorf("invalid key size: must be exactly %d characters", chacha20poly1305.KeySize)
+func (maker *PasetoMaker) VerifyRefreshToken(token string) (*RefreshPayload, error) {
+	payload := &RefreshPayload{}
+	err := maker.paseto.Decrypt(token, maker.symmetricKey, payload, nil)
+
+	if err != nil {
+		return nil, ErrInvalidToken
 	}
 
-	maker := &PasetoMaker{
-		paseto:       paseto.NewV2(),
-		symmetricKey: []byte(symmetricKey),
+	err = payload.Valid()
+
+	if err != nil {
+		return nil, err
 	}
 
-	return maker, nil
+	return payload, nil
 }
+
+// NewPasetoMaker creates a new PasetoMaker

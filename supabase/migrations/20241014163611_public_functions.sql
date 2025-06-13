@@ -107,7 +107,7 @@ CREATE OR REPLACE FUNCTION is_null_replace (in_value ANYELEMENT, in_target_value
 DECLARE
 	value_type varchar(30);
 BEGIN
-	IF is_null (in_value) THEN
+	IF is_null(in_value) THEN
 		RETURN in_target_value;
 	ELSE
 		RETURN in_value;
@@ -261,6 +261,15 @@ CREATE OR REPLACE FUNCTION nullable_foreign (in_foreign_id int)
 	AS $$
 BEGIN
 	RETURN iif(in_foreign_id = 0, NULL, in_foreign_id);
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION nullable_value (value ANYELEMENT)
+	RETURNS ANYELEMENT
+	AS $$
+BEGIN
+	RETURN iif(is_null(value), NULL, value);
 END;
 $$
 LANGUAGE plpgsql;

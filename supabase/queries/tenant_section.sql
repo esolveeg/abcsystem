@@ -6,6 +6,15 @@ FROM
 WHERE
 	tenant_id = is_null_replace(sqlc.arg('tenant_id')::int, tenant_id);
 
+-- name: SectionFind :one
+SELECT
+	*
+FROM
+	tenants_schema.section
+WHERE
+	section_id = is_null_replace(sqlc.arg('section_id')::int, tenant_id)
+	AND tenant_id = is_null_replace(sqlc.arg('tenant_id')::int, tenant_id);
+
 -- name: SectionCreateUpdate :one
 SELECT
 	*
@@ -21,4 +30,11 @@ WHERE
 	section_id = ANY (sqlc.arg('records')::int[])
 RETURNING
 	*;
+
+-- name: SectionListInpt :many
+SELECT
+	section_id value,
+	section_name label
+FROM
+	tenants_schema.section;
 

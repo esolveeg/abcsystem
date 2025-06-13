@@ -10,6 +10,14 @@ import (
 )
 
 func (a *TenantAdapter) TenantEntityGrpcFromSql(resp *db.TenantsSchemaTenant) *devkitv1.TenantsSchemaTenant {
+	var tenantLinks map[string]string
+	log.Debug().Interface("tenant links is", resp.TenantLinks).Msg("links is")
+	if len(resp.TenantLinks) > 0 {
+		if err := json.Unmarshal(resp.TenantLinks, &tenantLinks); err == nil {
+			log.Error().Err(err).Msg("error parsing partial links")
+		}
+	}
+
 	return &devkitv1.TenantsSchemaTenant{
 		TenantId:               int32(resp.TenantID),
 		TenantName:             resp.TenantName,
@@ -20,6 +28,7 @@ func (a *TenantAdapter) TenantEntityGrpcFromSql(resp *db.TenantsSchemaTenant) *d
 		TenantDescription:      resp.TenantDescription.String,
 		TenantDescriptionAr:    resp.TenantDescriptionAr.String,
 		TenantEmail:            resp.TenantEmail.String,
+		TenantLinks:            tenantLinks,
 		TenantLogo:             resp.TenantLogo.String,
 		TenantValues:           resp.TenantValues.String,
 		TenantVision:           resp.TenantVision.String,
@@ -33,10 +42,16 @@ func (a *TenantAdapter) TenantEntityGrpcFromSql(resp *db.TenantsSchemaTenant) *d
 }
 
 func (a *TenantAdapter) TenantCreateUpdateSqlFromGrpc(req *devkitv1.TenantCreateUpdateRequest) *db.TenantCreateUpdateParams {
+	tenantLinks, err := json.Marshal(req.GetTenantLinks())
+	if err != nil {
+		log.Error().Err(err).Msg("error parsing partial links")
+	}
+	log.Debug().Interface("tenat log", req.TenantLogo).Msg("show me logo")
 	resp := &db.TenantCreateUpdateParams{
 		TenantID:               req.TenantId,
 		TenantName:             req.TenantName,
 		TenantNameAr:           req.TenantNameAr,
+		TenantLinks:            tenantLinks,
 		TenantPhone:            req.TenantPhone,
 		TenantAddress:          req.TenantAddress,
 		TenantAddressAr:        req.TenantAddressAr,
@@ -45,8 +60,8 @@ func (a *TenantAdapter) TenantCreateUpdateSqlFromGrpc(req *devkitv1.TenantCreate
 		TenantMission:          req.TenantMission,
 		TenantEmail:            req.TenantEmail,
 		TenantDescription:      req.TenantDescription,
-		TenantDescriptionAr:    req.TenantDescriptionAr,
 		TenantLogo:             req.TenantLogo,
+		TenantDescriptionAr:    req.TenantDescriptionAr,
 		TenantLogoVertical:     req.TenantLogoVertical,
 		TenantLogoDark:         req.TenantLogoDark,
 		TenantLogoDarkVertical: req.TenantLogoDarkVertical,
@@ -72,7 +87,15 @@ func (a *TenantAdapter) TenantListGrpcFromSql(resp *[]db.TenantsSchemaTenant) *d
 func (a *TenantAdapter) TenantFindGrpcFromSql(resp *db.TenantFindRow) *devkitv1.TenantFindResponse {
 
 	var navigations []*devkitv1.NavigationBar
-	log.Debug().Interface("debug", resp.Navigations).Msg("navigations are")
+	var tenantLinks map[string]string
+	if len(resp.TenantLinks) > 0 {
+		if err := json.Unmarshal(resp.TenantLinks, &tenantLinks); err == nil {
+			log.Error().Err(err).Msg("error parsing partial links")
+		}
+	}
+
+	log.Debug().Interface("debug", tenantLinks).Msg("navigations are")
+
 	if len(resp.Navigations) > 0 {
 		err := json.Unmarshal(resp.Navigations, &navigations)
 		log.Error().Err(err).Msg("error parsing the navigations")
@@ -92,6 +115,7 @@ func (a *TenantAdapter) TenantFindGrpcFromSql(resp *db.TenantFindRow) *devkitv1.
 			TenantAddressAr:        resp.TenantAddressAr.String,
 			TenantDescription:      resp.TenantDescription.String,
 			TenantDescriptionAr:    resp.TenantDescriptionAr.String,
+			TenantLinks:            tenantLinks,
 			TenantEmail:            resp.TenantEmail.String,
 			TenantLogo:             resp.TenantLogo.String,
 			TenantLogoVertical:     resp.TenantLogoVertical.String,

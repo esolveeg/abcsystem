@@ -1,21 +1,8 @@
 -- name: RoleList :many
 SELECT
-	role_id::int,
-	role_name::varchar(200),
-	role_description::varchar(200),
-	created_at::timestamptz,
-	total_count::bigint
+	*
 FROM
-	execute_dynamic_pagination (primary_key => 'role_id', query_base => CONCAT(FORMAT('SELECT role_id, role_name,role_description, created_at
-             FROM accounts_schema.role
-             WHERE role_name LIKE CONCAT(''%%'', %L, ''%%'')
-               AND role_description LIKE CONCAT(''%%'', %L, ''%%'')
-AND deleted_at IS ', @in_role_name::varchar(200), @in_role_description::text),  iif(@in_is_deleted::boolean , 'not null'::varchar , 'null'::varchar)), sort_func => @sort_function, page_number => @page_number, -- Page number
-		sort_column => is_null_replace(@sort_column::varchar, 'role_id'), page_size => @page_size) AS result (role_id int,
-		role_name varchar(200),
-		role_description varchar(200),
-		created_at timestamptz,
-		total_count bigint);
+	accounts_schema.role;
 
 -- name: RoleFindForUpdate :one
 WITH permissions AS (

@@ -20,7 +20,7 @@ func (u *AccountsUsecase) UserDelete(ctx context.Context, req *connect.Request[d
 		if err != nil {
 			return nil, err
 		}
-		err = u.redisClient.AuthSessionDelete(ctx, recordId)
+		err = u.redisClient.AuthSessionClearAll(ctx, recordId)
 		if err != nil {
 			return nil, err
 		}
@@ -55,6 +55,14 @@ func (u *AccountsUsecase) UserFindForUpdate(ctx context.Context, req *connect.Re
 	return &devkitv1.UserFindForUpdateResponse{
 		Request: request,
 	}, nil
+}
+func (u *AccountsUsecase) UserTypeListInput(ctx context.Context) (*devkitv1.UserTypeListInputResponse, error) {
+	users, err := u.repo.UserTypeListInput(ctx)
+	if err != nil {
+		return nil, err
+	}
+	response := u.adapter.UserTypeListInputGrpcFromSql(users)
+	return response, nil
 }
 func (u *AccountsUsecase) UserListInput(ctx context.Context) (*devkitv1.UserListInputResponse, error) {
 	users, err := u.repo.UserListInput(ctx)
