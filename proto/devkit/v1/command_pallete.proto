@@ -1,0 +1,20 @@
+
+syntax = "proto3";
+package devkit.v1;
+message CommandPalleteSearchRequest {
+  string query = 1;
+}
+
+message CommandPallet {
+  string id = 1;
+  string label = 2;
+  string label_ar = 3;
+  string icon = 4;
+  string type = 5;
+  string url = 6;
+  int32 tenant_id = 7;
+  repeated string keywords = 8;
+}
+message CommandPalleteSearchResponse {
+  repeated CommandPallet hits = 1;
+}

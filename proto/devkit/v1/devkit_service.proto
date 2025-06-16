@@ -6,6 +6,7 @@ import "devkit/v1/accounts_role.proto";
 import "devkit/v1/accounts_user.proto";
 // INJECT IMPORTS
 import "devkit/v1/property_city.proto";
+import "devkit/v1/command_pallete.proto";
 import "devkit/v1/property_location.proto";
 import "devkit/v1/public_email.proto";
 import "devkit/v1/public_icon.proto";
@@ -286,6 +287,13 @@ service DevkitService {
     option idempotency_level = NO_SIDE_EFFECTS;
   }
   rpc SectionFindForUpdate(SectionFindForUpdateRequest) returns (SectionFindForUpdateResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authorization) = true;
+  }
+  //*******************************************************************************************//
+  // admin
+  //*******************************************************************************************//
+  rpc CommandPalleteSearch(CommandPalleteSearchRequest) returns (CommandPalleteSearchResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
     option (skip_authorization) = true;
   }

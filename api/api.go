@@ -3,6 +3,8 @@ package api
 import (
 	// USECASE_IMPORTS
 
+	"context"
+
 	propertyUsecase "github.com/darwishdev/devkit-api/app/property/usecase"
 
 	"github.com/bufbuild/protovalidate-go"
@@ -14,6 +16,7 @@ import (
 	"github.com/darwishdev/devkit-api/pkg/auth"
 	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	"github.com/darwishdev/devkit-api/pkg/resend"
+	typesenseclient "github.com/darwishdev/devkit-api/pkg/typesense"
 	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1/devkitv1connect"
 	"github.com/darwishdev/sqlseeder"
 	supaapigo "github.com/darwishdev/supaapi-go"
@@ -28,6 +31,7 @@ type Api struct {
 	tokenMaker      auth.Maker
 	sqlSeeder       sqlseeder.SeederInterface
 	publicUsecase   publicUsecase.PublicUsecaseInterface
+	typesenseClient typesenseclient.TypesenseClientInterface
 	tenantUsecase   tenantUsecase.TenantUsecaseInterface
 	// USECASE_FIELDS
 	propertyUsecase propertyUsecase.PropertyUsecaseInterface
@@ -45,6 +49,13 @@ func NewApi(config config.Config, store db.Store, tokenMaker auth.Maker, redisCl
 	resendClient, err := resend.NewResendService(config.ResendApiKey, config.ClientBaseUrl)
 	if err != nil {
 		return nil, err
+	}
+
+	typesenseClient := typesenseclient.NewTypesenseClient(config.TypesenseHost, config.TypesensePort, config.TypesenseProtocol , config.TypesenseApiKey , false)
+
+	err = typesenseClient.CreateCommandPaletteCollectionIfNotExists(context.Background())
+	if err != nil {
+		return nil , err
 	}
 	supEnv := supaapigo.DEV
 
@@ -69,6 +80,7 @@ func NewApi(config config.Config, store db.Store, tokenMaker auth.Maker, redisCl
 		// USECASE_INJECTIONS
 		propertyUsecase: propertyUsecase,
 
+		typesenseClient: typesenseClient,
 		accountsUsecase: accountsUsecase,
 		tenantUsecase:   tenantUsecase,
 		store:           store,

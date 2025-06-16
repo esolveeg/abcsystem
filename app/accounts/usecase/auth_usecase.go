@@ -208,7 +208,7 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 	}
 	response, err := u.AppLogin(ctx, userFindParams.SearchKey, 0)
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("invalid  app login"))
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("invalid  app login %w" , err))
 	}
 	loginInfo, tokenID, err := u.UserGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.TenantId, response.User.UserSecurityLevel)
 	if err != nil {
