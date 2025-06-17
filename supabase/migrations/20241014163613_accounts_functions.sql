@@ -546,3 +546,41 @@ BEGIN
 END
 $$;
 
+CREATE OR REPLACE FUNCTION notify_navigation_bar_item_change()
+RETURNS TRIGGER
+	LANGUAGE plpgsql
+ AS $$
+DECLARE
+  url     text := 'http://192.168.100.40:9090/devkit.v1.DevkitService/CommandPalleteSync' ;
+  payload text;
+BEGIN
+  IF TG_OP = 'DELETE' THEN
+    payload := json_build_object(
+      'trigger_type', 'DELETE',
+      'record', to_jsonb(OLD)
+
+    )::text;
+  ELSE
+    payload := json_build_object(
+      'triggerType', TG_OP,  -- 'INSERT' or 'UPDATE'
+      'record', to_jsonb(NEW)
+    )::text;
+  END IF;
+
+
+  PERFORM http_post(
+    url,
+    payload,
+    'application/json'
+  );
+
+  RETURN NEW;
+END;
+$$;
+
+
+DROP TRIGGER IF EXISTS trg_navigation_bar_item_change on accounts_schema.navigation_bar_item;
+CREATE TRIGGER trg_navigation_bar_item_change
+AFTER INSERT OR UPDATE OR DELETE ON accounts_schema.navigation_bar_item
+FOR EACH ROW
+EXECUTE FUNCTION notify_navigation_bar_item_change();

@@ -15,8 +15,10 @@ import (
 	"github.com/darwishdev/devkit-api/db"
 	"github.com/darwishdev/devkit-api/pkg/auth"
 	"github.com/darwishdev/devkit-api/pkg/redisclient"
+
 	"github.com/darwishdev/devkit-api/pkg/resend"
 	typesenseclient "github.com/darwishdev/devkit-api/pkg/typesense"
+	weaviateclient "github.com/darwishdev/devkit-api/pkg/weaviateclient"
 	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1/devkitv1connect"
 	"github.com/darwishdev/sqlseeder"
 	supaapigo "github.com/darwishdev/supaapi-go"
@@ -32,6 +34,8 @@ type Api struct {
 	sqlSeeder       sqlseeder.SeederInterface
 	publicUsecase   publicUsecase.PublicUsecaseInterface
 	typesenseClient typesenseclient.TypesenseClientInterface
+
+	weaviateClient  weaviateclient.WeaviateClientInterface // 👈 NEW FIELD
 	tenantUsecase   tenantUsecase.TenantUsecaseInterface
 	// USECASE_FIELDS
 	propertyUsecase propertyUsecase.PropertyUsecaseInterface
@@ -51,11 +55,24 @@ func NewApi(config config.Config, store db.Store, tokenMaker auth.Maker, redisCl
 		return nil, err
 	}
 
-	typesenseClient := typesenseclient.NewTypesenseClient(config.TypesenseHost, config.TypesensePort, config.TypesenseProtocol , config.TypesenseApiKey , false)
-
-	err = typesenseClient.CreateCommandPaletteCollectionIfNotExists(context.Background())
+	// typesenseClient := typesenseclient.NewTypesenseClient(config.TypesenseHost, config.TypesensePort, config.TypesenseProtocol , config.TypesenseApiKey , false)
+	//
+	// err = typesenseClient.CreateCommandPaletteCollectionIfNotExists(context.Background())
+	// if err != nil {
+	// 	return nil , err
+	// }
+	// 👇 INIT WEAVIATE CLIENT
+	weaviateClient, err := weaviateclient.NewWeaviateClient(
+		config.WeaviateHost,
+		config.WeaviateScheme,
+		)
 	if err != nil {
-		return nil , err
+		return nil, err
+	}
+	ctx := context.Background()
+	err = weaviateClient.InitSchema(ctx)
+	if err != nil {
+		return nil, err
 	}
 	supEnv := supaapigo.DEV
 
@@ -75,12 +92,12 @@ func NewApi(config config.Config, store db.Store, tokenMaker auth.Maker, redisCl
 
 	tenantUsecase := tenantUsecase.NewTenantUsecase(store, redisClient)
 	accountsUsecase := accountsUsecase.NewAccountsUsecase(store, supaapi, redisClient, tokenMaker, config.AccessTokenDuration, config.RefreshTokenDuration)
-	publicUsecase := publicUsecase.NewPublicUsecase(store, config.SupabaseApiKey, supaapi, redisClient, resendClient)
+	publicUsecase := publicUsecase.NewPublicUsecase(store, config.SupabaseApiKey, supaapi, redisClient, resendClient , weaviateClient)
 	return &Api{
 		// USECASE_INJECTIONS
 		propertyUsecase: propertyUsecase,
-
-		typesenseClient: typesenseClient,
+		weaviateClient:  weaviateClient,
+		// typesenseClient: typesenseClient,
 		accountsUsecase: accountsUsecase,
 		tenantUsecase:   tenantUsecase,
 		store:           store,

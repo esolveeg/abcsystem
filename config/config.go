@@ -53,6 +53,11 @@ type Config struct {
 	TypesensePort     string `mapstructure:"TYPESENSE_PORT"`
 	TypesenseProtocol string `mapstructure:"TYPESENSE_PROTOCOL"`
 	TypesenseApiKey   string `mapstructure:"TYPESENSE_API_KEY"`
+
+  // Weaviate
+	WeaviateHost   string `mapstructure:"WEAVIATE_HOST"`
+	IsWeaviateDisabled   string `mapstructure:"IS_WEAVIATE_DISABLED"`
+	WeaviateScheme string `mapstructure:"WEAVIATE_SCHEME"`
 }
 
 // LoadConfig reads configuration from file or environment variables.

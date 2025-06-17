@@ -1,3 +1,4 @@
+create extension http with schema extensions;
 -- Allow authenticated users full access to the abchotels bucket
 CREATE POLICY "Allow unauth INSERTs" ON storage.buckets
 	FOR INSERT

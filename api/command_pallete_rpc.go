@@ -9,26 +9,18 @@ import (
 )
 
 func (api *Api) CommandPalleteSearch(ctx context.Context, req *connect.Request[devkitv1.CommandPalleteSearchRequest]) (*connect.Response[devkitv1.CommandPalleteSearchResponse], error) {
-	response, err := api.typesenseClient.SearchCommandPalette(ctx, req.Msg.Query , 10)
+	resp ,  err := api.publicUsecase.CommandPalleteSearch(ctx, req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve users list: %w", err)
 	}
-var results []*devkitv1.CommandPallet
-	for _, doc := range response {
-		results = append(results, &devkitv1.CommandPallet{
-			Id:       doc.ID,
-			Label:    doc.Label,
-			LabelAr:  doc.LabelAr,
-			Icon:     doc.Icon,
-			Type:     doc.Type,
-			Url:      doc.URL,
-			TenantId: doc.TenantID,
-			Keywords: doc.Keywords,
-		})
-	}
+	return connect.NewResponse(resp), nil
+}
 
-	res := &devkitv1.CommandPalleteSearchResponse{
-		Hits: results,
+
+func (api *Api) CommandPalleteSync(ctx context.Context, req *connect.Request[devkitv1.CommandPalleteSyncRequest]) (*connect.Response[devkitv1.CommandPalleteSyncResponse], error) {
+	resp ,  err := api.publicUsecase.CommandPalleteSync(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to retrieve users list: %w", err)
 	}
-	return connect.NewResponse(res), nil
+	return connect.NewResponse(resp), nil
 }
