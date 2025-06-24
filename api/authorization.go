@@ -65,14 +65,14 @@ func (api *Api) getAvailableOptions(header http.Header) *devkitv1.AvailableOptio
 			FindResponseProperty: findResponseProperty,
 		}
 	}
-	isDeletePermitted, ok := permittedActions[deleteRestore]
+	isDeletePermitted, ok := permittedActions[deleteKey]
 	if isDeletePermitted && ok {
 		result.DeleteHandler = &devkitv1.DeleteHandler{
 			Endpoint:        strcase.ToLowerCamel(deleteKey),
 			RequestProperty: deleteRestoreRequestProperty,
 		}
 	}
-	isDeleteRestorePermitted, ok := permittedActions[deleteKey]
+	isDeleteRestorePermitted, ok := permittedActions[deleteRestore]
 	if isDeleteRestorePermitted && ok {
 		result.DeleteRestoreHandler = &devkitv1.DeleteRestoreHandler{
 			Endpoint:        strcase.ToLowerCamel(deleteRestore),

@@ -27,6 +27,7 @@ CREATE TABLE translation(
 CREATE TABLE icon(
     icon_id serial PRIMARY KEY,
     icon_name varchar(200) NOT NULL UNIQUE,
+    icon_category varchar(200),
     icon_content text  NOT NULL
 ); 
 

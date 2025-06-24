@@ -12,6 +12,12 @@ FROM
 WHERE
 	tenant_id = is_null_replace(sqlc.arg('tenant_id')::int, tenant_id);
 
+-- name: TenantListInput :many
+SELECT
+	tenant_id value,
+  tenant_name label
+FROM
+	tenants_schema.tenant;
 -- name: TenantDeleteRestore :many
 UPDATE
 	tenants_schema.tenant

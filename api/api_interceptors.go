@@ -141,9 +141,6 @@ func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 				if err != nil {
 					return nil, connect.NewError(connect.CodeUnauthenticated, err)
 				}
-
-				log.Debug().Interface("from intecep", payload.ID.String()).Msg("inte")
-				log.Debug().Interface("from intecep", payload.UserId).Msg("inte")
 				session, err := s.redisClient.AuthSessionFind(ctx, payload.UserId, payload.ID.String())
 				if err != nil {
 					return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("session not stored : %w", err))
@@ -265,6 +262,7 @@ func (s *Server) NewAuthorizationInterceptor() connect.UnaryInterceptorFunc {
 				return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("user does not have the required permission for this permission %s on this group %s", permissionFunction, group))
 			}
 
+			log.Debug().Interface("local", permissionGroup).Msg("local")
 			headerkeys.WithPermittedActions(req.Header(), permissionGroup)
 			return next(ctx, req)
 		})

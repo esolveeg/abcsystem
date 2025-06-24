@@ -3,8 +3,6 @@ package api
 import (
 	// USECASE_IMPORTS
 
-	"context"
-
 	propertyUsecase "github.com/darwishdev/devkit-api/app/property/usecase"
 
 	"github.com/bufbuild/protovalidate-go"
@@ -17,7 +15,6 @@ import (
 	"github.com/darwishdev/devkit-api/pkg/redisclient"
 
 	"github.com/darwishdev/devkit-api/pkg/resend"
-	typesenseclient "github.com/darwishdev/devkit-api/pkg/typesense"
 	weaviateclient "github.com/darwishdev/devkit-api/pkg/weaviateclient"
 	"github.com/darwishdev/devkit-api/proto_gen/devkit/v1/devkitv1connect"
 	"github.com/darwishdev/sqlseeder"
@@ -33,7 +30,6 @@ type Api struct {
 	tokenMaker      auth.Maker
 	sqlSeeder       sqlseeder.SeederInterface
 	publicUsecase   publicUsecase.PublicUsecaseInterface
-	typesenseClient typesenseclient.TypesenseClientInterface
 
 	weaviateClient  weaviateclient.WeaviateClientInterface // 👈 NEW FIELD
 	tenantUsecase   tenantUsecase.TenantUsecaseInterface
@@ -66,11 +62,6 @@ func NewApi(config config.Config, store db.Store, tokenMaker auth.Maker, redisCl
 		config.WeaviateHost,
 		config.WeaviateScheme,
 		)
-	if err != nil {
-		return nil, err
-	}
-	ctx := context.Background()
-	err = weaviateClient.InitSchema(ctx)
 	if err != nil {
 		return nil, err
 	}

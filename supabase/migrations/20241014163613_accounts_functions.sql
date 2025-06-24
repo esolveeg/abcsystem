@@ -339,7 +339,7 @@ $$;
 -- possible errors:
 -- - if the caller’s security level is lower than the highest security level of the roles being assigned to the user, an exception is raised.
 -- - the function will propagate any exceptions raised from check_caller_security_level.
-CREATE OR REPLACE FUNCTION accounts_schema.user_create_update (in_user_id int, in_user_name varchar(200), in_caller_id int, in_tenant_id int, in_user_type_id int, in_user_phone varchar(200), in_user_email varchar(200), in_user_password varchar(200), in_roles int[])
+CREATE OR REPLACE FUNCTION accounts_schema.user_create_update (in_user_id int, in_user_name varchar(200),  in_user_image varchar(200),in_caller_id int, in_tenant_id int, in_user_type_id int, in_user_phone varchar(200), in_user_email varchar(200), in_user_password varchar(200), in_roles int[])
 	RETURNS SETOF accounts_schema.user
 	LANGUAGE plpgsql
 	AS $$
@@ -370,6 +370,7 @@ BEGIN
 			accounts_schema.user
 		SET
 			user_name = is_null_replace(in_user_name, user_name),
+			user_image = is_null_replace(in_image, user_image),
 			user_type_id = is_null_replace(in_user_type_id, user_type_id),
 			tenant_id = is_null_replace(in_tenant_id, NULL),
 			user_email = is_null_replace(in_user_email, user_email),
@@ -391,6 +392,7 @@ BEGIN
 	ELSE
 		INSERT INTO accounts_schema.user (
 			user_name,
+			user_image,
 			user_type_id,
 			tenant_id,
 			user_phone,
@@ -398,6 +400,7 @@ BEGIN
 			user_password)
 		VALUES (
 			in_user_name,
+			in_user_image,
 			in_user_type_id,
 			nullable_foreign(
 				in_tenant_id),

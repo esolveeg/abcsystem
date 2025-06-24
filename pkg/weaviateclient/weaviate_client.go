@@ -6,11 +6,10 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"github.com/weaviate/weaviate-go-client/v5/weaviate"
+	"github.com/weaviate/weaviate-go-client/v5/weaviate/filters"
 	"github.com/weaviate/weaviate-go-client/v5/weaviate/graphql"
-	"github.com/weaviate/weaviate/entities/models"
 )
 type WeaviateClientInterface interface {
-	InitSchema(ctx context.Context) error
 	CommandPalleteCreateUpdate(ctx context.Context, doc *CommandPallete) error
 	CommandPalleteDelete(ctx context.Context, documnetId string) error
 	CommandPaletteSearch(ctx context.Context, tenantID int32, query string, limit int) ([]*CommandPallete, error)
@@ -19,6 +18,7 @@ type CommandPallete struct {
 	ID       string   `json:"id"`
 	Label    string   `json:"label"`
 	LabelAr  string   `json:"label_ar,omitempty"`
+	MenuKey  string   `json:"menu_key,omitempty"`
 	Icon     string   `json:"icon,omitempty"`
 	Type     string   `json:"type"`
 	URL      string   `json:"url"`
@@ -43,29 +43,7 @@ func NewWeaviateClient(host, scheme string) (WeaviateClientInterface, error) {
 	return &WeaviateClient{client: client}, nil
 }
 
-func (w *WeaviateClient) InitSchema(ctx context.Context) error {
-	className := "CommandPalette"
-	exists, err := w.client.Schema().ClassGetter().WithClassName(className).Do(ctx)
-	if err == nil && exists != nil {
-		return nil // already exists
-	}
 
-	class := &models.Class{
-		Class: className,
-		Properties: []*models.Property{
-			{Name: "ID", DataType: []string{"text"}},
-			{Name: "label", DataType: []string{"text"}},
-			{Name: "label_ar", DataType: []string{"text"}},
-			{Name: "icon", DataType: []string{"text"}},
-			{Name: "type", DataType: []string{"text"}},
-			{Name: "url", DataType: []string{"text"}},
-			{Name: "tenant_id", DataType: []string{"int"}},
-			{Name: "keywords", DataType: []string{"text[]"}},
-		},
-		Vectorizer: "text2vec-ollama", // Or text2vec-contextionary or other
-	}
-	return w.client.Schema().ClassCreator().WithClass(class).Do(ctx)
-}
 
 func (w *WeaviateClient) CommandPalleteDelete(ctx context.Context, id string) error {
 	err := w.client.Data().Deleter().
@@ -80,17 +58,70 @@ func (w *WeaviateClient) CommandPalleteDelete(ctx context.Context, id string) er
 }
 
 func (w *WeaviateClient) CommandPalleteCreateUpdate(ctx context.Context, doc *CommandPallete) error {
-	_ ,err := w.client.Data().Creator().
+	resp , err:= w.client.GraphQL().
+	Get().
+	      WithClassName("CommandPalette").
+        WithFields(
+            graphql.Field{
+                Name: "_additional",
+                Fields: []graphql.Field{
+                    {Name: "id"},
+                },
+            },
+        ).
+WithWhere(filters.Where().WithPath([]string{"menu_key"}).WithOperator(filters.Equal).WithValueString(doc.MenuKey)).
+        Do(ctx)
+    // 2) Query for any existing object
+    if err != nil {
+        return fmt.Errorf("query existing CommandPalette: %w", err)
+    }
+
+    // 3) Prepare the shared property map
+    props := map[string]any{
+        "menu_key":  doc.MenuKey,
+        "label":     doc.Label,
+        "label_ar":  doc.LabelAr,
+        "icon":      doc.Icon,
+        "type":      doc.Type,
+        "url":       doc.URL,
+		"tenant_id": doc.TenantID,
+		"keywords":  doc.Keywords,
+	}
+	log.Debug().Interface("datal", resp.Data).Msg("new")
+	if resp.Data["Get"] != nil  {
+		itemsV := resp.Data["Get"].(map[string]any)["CommandPalette"]
+		if itemsV != nil {
+			items := itemsV.([]any)
+			if len(items) > 0 && false {
+				// grab the first match
+				first := items[0].(map[string]any)
+				additional := first["_additional"].(map[string]any)
+				existingID := additional["id"].(string)
+
+				err = w.client.Data().Updater().
+					WithClassName("CommandPalette").
+					WithID(existingID).
+					WithProperties(props).
+					Do(ctx)
+				if err != nil {
+					return fmt.Errorf("update existing CommandPalette (%s): %w", existingID, err)
+				}
+				return nil
+			}
+		}
+	}
+
+	_ ,err = w.client.Data().Creator().
 		WithClassName("CommandPalette").
 		WithID(doc.ID).
 		WithProperties(map[string]any{
-			"id" : doc.ID,
 			"label":     doc.Label,
 			"label_ar":  doc.LabelAr,
 			"icon":      doc.Icon,
 			"type":      doc.Type,
 			"url":       doc.URL,
 			"tenant_id": doc.TenantID,
+			"menu_key": doc.MenuKey,
 			"keywords":  doc.Keywords,
 		}).
 		Do(ctx)
@@ -98,61 +129,64 @@ func (w *WeaviateClient) CommandPalleteCreateUpdate(ctx context.Context, doc *Co
 }
 
 
+
 func (w *WeaviateClient) CommandPaletteSearch(ctx context.Context, tenantID int32, query string, limit int) ([]*CommandPallete, error) {
-	// Build and execute the GraphQL query
-	results, err := w.client.GraphQL().Get().
-		WithClassName("CommandPalette").
-		WithFields(
-		graphql.Field{Name: "id"},
-		graphql.Field{Name: "label"},
-		graphql.Field{Name: "label_ar"},
-		graphql.Field{Name: "icon"},
-		graphql.Field{Name: "url"},
-		graphql.Field{Name: "keywords"},
-		).
-		WithNearText(w.client.GraphQL().NearTextArgBuilder().
-			WithConcepts([]string{query}).
-			WithCertainty(0.8),
-		).
-		WithLimit(limit).
-		Do(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("Weaviate query failed: %w", err)
-	}
+    // 1) Build the GraphQL hybrid query
+    q := w.client.GraphQL().Get().
+        WithClassName("CommandPalette").
+        WithFields(
+            graphql.Field{Name: "label"},
+            graphql.Field{Name: "label_ar"},
+            graphql.Field{Name: "icon"},
+            graphql.Field{Name: "type"},
+            graphql.Field{Name: "url"},
+            graphql.Field{Name: "tenant_id"},
+        ).
+        WithHybrid(
+            w.client.GraphQL().
+                HybridArgumentBuilder().
+                WithQuery(query).
+								WithAlpha(.8).
+                WithVector(
+                    w.client.GraphQL().
+                        NearTextArgBuilder().
+                        WithConcepts([]string{query}).
+                        WithCertainty(.8),
+                ),
+        ).
+        WithLimit(limit).
+	WithAutocut(1)
 
-	// Check for GraphQL-level errors
-	if len(results.Errors) > 0 {
-		return nil, fmt.Errorf("Weaviate returned errors: %+v", results.Errors)
-	}
+    // 2) Execute it
+    resp, err := q.Do(ctx)
+    if err != nil {
+        return nil, fmt.Errorf("weaviate hybrid search failed: %w", err)
+    }
+    if len(resp.Errors) > 0 {
+			log.Debug().Interface("new", resp.Errors).Msg("new")
+        return nil, fmt.Errorf("weaviate returned errors: %+v", resp.Errors)
+    }
 
-	// Defensive parsing of response structure
-	rawResult, ok := results.Data["Get"].(map[string][]map[string]any)
-	if !ok {
-		return nil, fmt.Errorf("unexpected structure in Weaviate response: %+v", results.Data)
-	}
+    // 3) Parse the response
+    rawGet := resp.Data["Get"].(map[string]any)
+    rawArr := rawGet["CommandPalette"].([]any)
 
-	rawDocs, ok := rawResult["CommandPalette"]
-	if !ok {
-		return nil, fmt.Errorf("unexpected CommandPalette format: %+v", rawResult)
-	}
+    var out []*CommandPallete
+    for _, item := range rawArr {
+        m := item.(map[string]any)
+        out = append(out, &CommandPallete{
+            Label:    getString(m, "label"),
+            LabelAr:  getString(m, "label_ar"),
+            Icon:     getString(m, "icon"),
+            Type:     getString(m, "type"),
+            URL:      getString(m, "url"),
+            TenantID: getInt(m, "tenant_id"),
+        })
+    }
 
-	var response []*CommandPallete
-	for _, res := range rawDocs {
-
-		response = append(response, &CommandPallete{
-			ID:       getString(res, "id"),
-			Label:    getString(res, "label"),
-			LabelAr:  getString(res, "label_ar"),
-			Icon:     getString(res, "icon"),
-			Type:     getString(res, "type"),
-			URL:      getString(res, "url"),
-			TenantID: getInt(res, "tenant_id"),
-			Keywords: toStringSlice(res["keywords"]),
-		})
-	}
-
-	return response, nil
+    return out, nil
 }
+
 
 // Helper to safely extract string fields
 func getString(m map[string]any, key string) string {

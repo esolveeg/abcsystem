@@ -58,7 +58,7 @@ func (repo *AccountsRepo) UserDelete(ctx context.Context, req db.UserDeleteParam
 	return &resp, nil
 }
 
-func (repo *AccountsRepo) UserList(ctx context.Context) (*[]db.AccountsSchemaUser, error) {
+func (repo *AccountsRepo) UserList(ctx context.Context) (*[]db.AccountsSchemaUserView, error) {
 	resp, err := repo.store.UserList(ctx)
 	if err != nil {
 		return nil, repo.store.DbErrorParser(err, repo.errorHandler)

@@ -13,8 +13,8 @@ message CommandPallete {
   string label_ar = 3;
   string icon = 4;
   string route = 6;
+  string keywords = 8;
   int32 tenant_id = 7;
-  repeated string keywords = 8;
 }
 message CommandPalleteSearchResponse {
   repeated CommandPallete hits = 1;

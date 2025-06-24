@@ -1,8 +1,12 @@
 package adapter
 
 import (
+	"encoding/json"
+
 	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/pkg/dateutils"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -10,6 +14,7 @@ func (a *AccountsAdapter) UserEntityGrpcFromSql(resp *db.AccountsSchemaUser) *de
 	return &devkitv1.AccountsSchemaUser{
 		UserId:     int32(resp.UserID),
 		UserName:   resp.UserName,
+		UserImage:   resp.UserImage.String,
 		UserTypeId: resp.UserTypeID,
 		TenantId:   resp.TenantID.Int32,
 		UserPhone:  resp.UserPhone.String,
@@ -24,6 +29,7 @@ func (a *AccountsAdapter) UserCreateUpdateSqlFromGrpc(req *devkitv1.UserCreateUp
 	resp := &db.UserCreateUpdateParams{
 		UserID:       req.UserId,
 		UserName:     req.UserName,
+		UserImage:     req.UserImage,
 		UserTypeID:   req.UserTypeId,
 		UserPhone:    req.UserPhone,
 		UserEmail:    req.UserEmail,
@@ -37,6 +43,7 @@ func (a *AccountsAdapter) UserFindForUpdateUpdateGrpcFromSql(resp *db.UserFindFo
 		UserId:     resp.UserID,
 		TenantId:   resp.TenantID.Int32,
 		UserName:   resp.UserName,
+		UserImage:   resp.UserImage.String,
 		UserTypeId: resp.UserTypeID,
 		UserPhone:  resp.UserPhone.String,
 		UserEmail:  resp.UserEmail,
@@ -68,11 +75,28 @@ func (a *AccountsAdapter) UserListInputGrpcFromSql(resp *[]db.UserListInputRow) 
 		Options: records,
 	}
 }
-func (a *AccountsAdapter) UserListGrpcFromSql(resp *[]db.AccountsSchemaUser) *devkitv1.UserListResponse {
-	records := make([]*devkitv1.AccountsSchemaUser, 0)
-	deletedRecords := make([]*devkitv1.AccountsSchemaUser, 0)
+func (a *AccountsAdapter) UserListGrpcFromSql(resp *[]db.AccountsSchemaUserView) *devkitv1.UserListResponse {
+	records := make([]*devkitv1.AccountsSchemaUserView, 0)
+	deletedRecords := make([]*devkitv1.AccountsSchemaUserView, 0)
 	for _, v := range *resp {
-		record := a.UserEntityGrpcFromSql(&v)
+		log.Debug().Interface("time is", v.DeletedAt.Time).Msg("time is")
+		record := &devkitv1.AccountsSchemaUserView{
+			UserId:     int32(v.UserID),
+			UserImage:   v.UserImage.String,
+			UserName:   v.UserName,
+			UserTypeId: v.UserTypeID,
+			UserTypeName: v.UserTypeName,
+			TenantName: v.TenantName.(string),
+			TenantId:   v.TenantID.(int32),
+			UserPhone:  v.UserPhone.String,
+			UserEmail:  v.UserEmail, // User's email, unique in DB
+			CreatedAt: dateutils.DateTimeToStringDigit(v.CreatedAt.Time),
+			UpdatedAt:  dateutils.DateTimeToStringDigit(v.UpdatedAt.Time),
+			DeletedAt:  dateutils.DateTimeToStringDigit(v.DeletedAt.Time),
+		}
+		if len(v.Roles) > 0  {
+			json.Unmarshal(v.Roles, &record.Roles) 
+		}
 		if v.DeletedAt.Valid {
 			deletedRecords = append(deletedRecords, record)
 		} else {

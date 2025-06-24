@@ -40,8 +40,8 @@ func convertMetadata(meta interface{}) *devkitv1.FileMetadata {
 		CacheControl:   db.StringFindFromMap(metaMap, "cacheControl"),
 		LastModified:   db.TimestampFindFromMap(metaMap, "lastModified"),
 		HttpStatusCode: db.Int32FindFromMap(metaMap, "httpStatusCode"),
-		Size:           db.Int64FindFromMap(metaMap, "size"),
-		ContentLength:  db.Int64FindFromMap(metaMap, "contentLength"),
+		Size:           db.Int32FindFromMap(metaMap, "size"),
+		ContentLength:  db.Int32FindFromMap(metaMap, "contentLength"),
 	}
 }
 func (a *PublicAdapter) FileObjectGrpcFromSupa(resp *storage_go.FileObject) *devkitv1.FileObject {
@@ -50,7 +50,7 @@ func (a *PublicAdapter) FileObjectGrpcFromSupa(resp *storage_go.FileObject) *dev
 		Name:      fmt.Sprintf("%s/%s", resp.BucketId, resp.Name),
 		UpdatedAt: resp.UpdatedAt,
 		BucketId:  resp.BucketId,
-		Metadata:  convertMetadata(resp.Metadata),
+		// Metadata:  convertMetadata(resp.Metadata),
 		CreatedAt: resp.CreatedAt,
 		Id:        resp.Id,
 	}

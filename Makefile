@@ -20,6 +20,9 @@ mign :
 testdb:
 	go test ./db/... -v
 
+testdate:
+	go test ./pkg/dateutils/... -v
+
 testapi:
 	go test ./api/... -v --race
 
@@ -60,8 +63,21 @@ rdbr:
 rdbrr:
 	make rdbr seed_super_user seed_accounts  seed_storage seed_public seed_tenants seed_tenants_accounts 
 
+
+SCHEMA_FILE    := weaviate_schema.json
+CLASS_NAME     := $(shell jq -r '.class' $(SCHEMA_FILE))
+.PHONY: init_weaviate_schema
+
+init_weaviate_schema:
+	  curl -s -X POST http://localhost:8080/v1/schema \
+	    -H "Content-Type: application/json" \
+	    --data-binary @$(SCHEMA_FILE) 
+
+refresh_vector_db:
+	curl -X DELETE http://localhost:8080/v1/schema/CommandPallete && make init_weaviate_schema
+
 rdb:
-	make supabase_reset seed_super_user seed_accounts seed_storage seed_public seed_tenants seed_tenants_accounts 
+	make supabase_reset refresh_vector_db seed_super_user seed_accounts seed_storage seed_public seed_tenants seed_tenants_accounts 
 run:
 	go run main.go
 buf_push:

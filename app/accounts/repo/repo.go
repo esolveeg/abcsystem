@@ -16,7 +16,7 @@ type AccountsRepoInterface interface {
 	UserDelete(ctx context.Context, req db.UserDeleteParams) (*db.AccountsSchemaUser, error)
 	UserPermissionsMap(ctx context.Context, userID int32) (*[]db.UserPermissionsMapRow, error)
 	UserCreateUpdate(ctx context.Context, req db.UserCreateUpdateParams) (*db.AccountsSchemaUser, error)
-	UserList(ctx context.Context) (*[]db.AccountsSchemaUser, error)
+	UserList(ctx context.Context) (*[]db.AccountsSchemaUserView, error)
 	RoleListInput(ctx context.Context) (*[]db.RoleListInputRow, error)
 	RoleFindForUpdate(ctx context.Context, req int32) (*db.RoleFindForUpdateRow, error)
 	UserFindForToken(ctx context.Context, req *db.UserFindForTokenParams) (*db.UserFindForTokenRow, error)
