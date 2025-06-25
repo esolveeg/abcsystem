@@ -31,6 +31,7 @@ func (api *Api) GalleryList(ctx context.Context, req *connect.Request[devkitv1.G
 	response, err := api.publicUsecase.GalleryList(ctx, req.Msg)
 	response.Options = api.getAvailableOptions(req.Header())
 	response.Options.DeleteRestoreHandler = nil
+	response.Options.UpdateHandler = nil
 	return connect.NewResponse(response), err
 }
 func (api *Api) FileList(ctx context.Context, req *connect.Request[devkitv1.FileListRequest]) (*connect.Response[devkitv1.FileListResponse], error) {
