@@ -53,6 +53,7 @@ CREATE TABLE tenants_schema.page (
 CREATE TABLE tenants_schema.section (
 	section_id serial PRIMARY KEY,
 	section_name varchar(200) NOT NULL,
+	section_slug varchar(200) NOT NULL unique,
 	section_name_ar varchar(200),
 	section_header text,
 	section_header_ar text,

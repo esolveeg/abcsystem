@@ -161,7 +161,7 @@ BEGIN
 END
 $$;
 
-CREATE OR REPLACE FUNCTION tenants_schema.section_create_update (in_section_id int, in_section_name varchar(200), in_section_name_ar varchar(200), in_section_header text, in_section_header_ar text, in_section_button_label text, in_section_button_label_ar text, in_section_button_page_id int, in_section_description text, in_section_description_ar text, in_tenant_id int, in_section_background text, in_section_images text, in_section_icon text)
+CREATE OR REPLACE FUNCTION tenants_schema.section_create_update (in_section_id int, in_section_name varchar(200), in_section_slug varchar(200),in_section_name_ar varchar(200), in_section_header text, in_section_header_ar text, in_section_button_label text, in_section_button_label_ar text, in_section_button_page_id int, in_section_description text, in_section_description_ar text, in_tenant_id int, in_section_background text, in_section_images text, in_section_icon text)
 	RETURNS SETOF tenants_schema.section
 	LANGUAGE plpgsql
 	AS $$
@@ -173,6 +173,7 @@ BEGIN
 			tenants_schema.section
 		SET
 			section_name = in_section_name,
+			section_slug = in_section_slug,
 			section_name_ar = in_section_name_ar,
 			section_header = in_section_header,
 			section_header_ar = in_section_header_ar,
@@ -191,6 +192,7 @@ BEGIN
 	ELSE
 		INSERT INTO tenants_schema.section (
 			section_name,
+			section_slug,
 			section_name_ar,
 			section_header,
 			section_header_ar,
@@ -205,6 +207,7 @@ BEGIN
 			section_icon)
 		VALUES (
 			in_section_name,
+			in_slug,
 			in_section_name_ar,
 			in_section_header,
 			section_header_ar,
