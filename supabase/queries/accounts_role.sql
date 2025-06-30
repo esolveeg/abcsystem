@@ -49,7 +49,7 @@ FROM
 SELECT
 	role_id value,
 	role_name label,
-	concat("level: ", role_security_level::varchar)::varchar note
+	concat('level: ', role_security_level::varchar)::varchar note
 FROM
 	accounts_schema.role
 WHERE

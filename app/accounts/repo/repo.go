@@ -11,7 +11,7 @@ type AccountsRepoInterface interface {
 	UserTypeListInput(ctx context.Context) (*[]db.UserTypeListInputRow, error)
 	UserListInput(ctx context.Context) (*[]db.UserListInputRow, error)
 	UseriFindForUpdate(ctx context.Context, req int32) (*db.UserFindForUpdateRow, error)
-	UserFind(ctx context.Context, req db.UserFindParams) (*db.AccountsSchemaUser, error)
+	UserFind(ctx context.Context, req db.UserFindParams) (*db.AccountsSchemaUserView, error)
 	UserDeleteRestore(ctx context.Context, req db.UserDeleteRestoreParams) (*db.AccountsSchemaUser, error)
 	UserDelete(ctx context.Context, req db.UserDeleteParams) (*db.AccountsSchemaUser, error)
 	UserPermissionsMap(ctx context.Context, userID int32) (*[]db.UserPermissionsMapRow, error)
@@ -34,10 +34,10 @@ type AccountsRepo struct {
 
 func NewAccountsRepo(store db.Store) AccountsRepoInterface {
 	errorHandler := map[string]string{
-		"roles_role_name_key":  "roleName",
-		"users_user_name_key":  "userName",
-		"users_user_email_key": "userEmail",
-		"users_user_phone_key": "userPhone",
+		"role_role_name_key":  "roleName",
+		"user_user_name_key":  "userName",
+		"user_user_email_key": "userEmail",
+		"user_user_phone_key": "userPhone",
 	}
 	return &AccountsRepo{
 		store:        store,

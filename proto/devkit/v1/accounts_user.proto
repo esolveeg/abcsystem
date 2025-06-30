@@ -4,7 +4,6 @@ package devkit.v1;
 
 import "buf/validate/validate.proto";
 import "devkit/v1/client.proto";
-import "google/protobuf/timestamp.proto";
 message UserCreateUpdateRequest {
   int32 user_id = 1; // User's ID, should be unique
   string user_name = 2 [
@@ -40,7 +39,7 @@ message AccountsSchemaUser {
   string user_phone = 5; // Optional phone number
   string user_email = 6; // User's email, unique in DB
   string user_password = 7; // Password
-  google.protobuf.Timestamp created_at = 9; // Creation timestamp
+  string created_at = 9; // Creation timestamp
   string updated_at = 10; // Update timestamp
   string deleted_at = 11; // Deletion timestamp
 }
@@ -53,6 +52,8 @@ message AccountsSchemaUserView {
   int32 user_id         = 1; 
   string user_name      = 2; 
   string user_image = 22;
+
+  int32 user_security_level = 23; // Security level of the user
   string user_email     = 3; 
   string user_phone     = 4; 
   int32 user_type_id    = 5;
@@ -100,4 +101,11 @@ message UserFindForUpdateRequest {
 }
 message UserFindForUpdateResponse {
   UserCreateUpdateRequest request = 1;
+}
+
+message UserFindRequest {
+  int32 record_id = 1;
+}
+message UserFindResponse {
+  AccountsSchemaUserView  record = 1;
 }

@@ -223,7 +223,7 @@ func (s *Server) NewAuthorizationInterceptor() connect.UnaryInterceptorFunc {
 				requestTenantIdValue, ok := s.getFiledFromRequest(msgReflect, "tenant_id")
 				if ok {
 					requestTenantId := requestTenantIdValue.Int()
-					if requestTenantId != int64(tenantId) {
+					if requestTenantId != int64(tenantId) && tenantId > 0 {
 						return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("this user attached to TenantId number %d , not allowed to take any actions under another tenant %d", tenantId, requestTenantId))
 					}
 				}

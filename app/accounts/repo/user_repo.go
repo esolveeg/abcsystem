@@ -97,7 +97,7 @@ func (repo *AccountsRepo) UserDeleteRestore(ctx context.Context, req db.UserDele
 	}
 	return &resp, nil
 }
-func (repo *AccountsRepo) UserFind(ctx context.Context, req db.UserFindParams) (*db.AccountsSchemaUser, error) {
+func (repo *AccountsRepo) UserFind(ctx context.Context, req db.UserFindParams) (*db.AccountsSchemaUserView, error) {
 	resp, err := repo.store.UserFind(ctx, req)
 	if err != nil {
 		return nil, repo.store.DbErrorParser(err, repo.errorHandler)

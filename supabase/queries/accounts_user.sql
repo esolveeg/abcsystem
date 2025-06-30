@@ -59,7 +59,7 @@ ORDER BY
 SELECT
 	*
 FROM
-	accounts_schema.user
+	accounts_schema.user_view
 WHERE
 	deleted_at IS NULL
 	AND (user_email = sqlc.arg('search_key')

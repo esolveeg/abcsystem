@@ -29,6 +29,7 @@ type TenantAdapterInterface interface {
 	TenantDeleteRestoreGrpcFromSql(resp *[]db.TenantsSchemaTenant) *devkitv1.TenantDeleteRestoreResponse
 	TenantListGrpcFromSql(resp *[]db.TenantsSchemaTenant) *devkitv1.TenantListResponse
 	TenantFindGrpcFromSql(resp *db.TenantFindRow) *devkitv1.TenantFindResponse
+	TenantListInputGrpcFromSql(resp *[]db.TenantListInputRow) *devkitv1.TenantListInputResponse
 	PartialTypeListInputGrpcFromSql(resp []db.PartialTypeListInputRow) *devkitv1.PartialTypeListInputResponse
 	TenantEntityGrpcFromSql(resp *db.TenantsSchemaTenant) *devkitv1.TenantsSchemaTenant
 	TenantCreateUpdateSqlFromGrpc(req *devkitv1.TenantCreateUpdateRequest) *db.TenantCreateUpdateParams
