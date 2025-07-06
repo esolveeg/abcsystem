@@ -204,7 +204,6 @@ service DevkitService {
 
   rpc UserFind(UserFindRequest) returns (UserFindResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
-    option (skip_authorization) = true;
   }
   rpc UserFindForUpdate(UserFindForUpdateRequest) returns (UserFindForUpdateResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;

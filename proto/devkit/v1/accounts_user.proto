@@ -107,5 +107,6 @@ message UserFindRequest {
   int32 record_id = 1;
 }
 message UserFindResponse {
+  AvailableOptions options = 3;
   AccountsSchemaUserView  record = 1;
 }

@@ -55,7 +55,7 @@ ORDER BY
 	level,
 	menu_key;
 
--- name: UserFind :one
+-- name: UserFindForAuth :one
 SELECT
 	*
 FROM
@@ -65,6 +65,16 @@ WHERE
 	AND (user_email = sqlc.arg('search_key')
 		OR user_phone = sqlc.arg('search_key')
 		OR user_id = sqlc.arg('user_id'));
+
+-- name: UserFind :one
+SELECT
+	*
+FROM
+	accounts_schema.user_view
+WHERE
+	user_email = sqlc.arg('search_key')
+		OR user_phone = sqlc.arg('search_key')
+		OR user_id = sqlc.arg('user_id');
 
 -- name: UserList :many
 select 

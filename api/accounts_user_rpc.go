@@ -13,6 +13,10 @@ func (api *Api) UserFind(ctx context.Context, req *connect.Request[devkitv1.User
 	if err != nil {
 		return nil, fmt.Errorf("failed to retrieve users find: %w", err)
 	}
+	response.Options = api.getAvailableOptions(req.Header(), "find")
+	if response.Record.DeletedAt == "" {
+		response.Options.DeleteHandler = nil
+	}
 	return connect.NewResponse(response), nil
 }
 func (api *Api) UserFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.UserFindForUpdateRequest]) (*connect.Response[devkitv1.UserFindForUpdateResponse], error) {

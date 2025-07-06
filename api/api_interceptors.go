@@ -50,6 +50,7 @@ func (s *Server) proccessProcedureName(procName string) (string, string) {
 	functionNameSnake := strcase.ToSnake(procedureName)
 	functionNameParts := strings.Split(functionNameSnake, "_")
 	group := functionNameParts[0]
+	log.Debug().Interface("err", group).Msg("group")
 	return procedureName, group
 }
 
@@ -170,6 +171,8 @@ func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 			ctx = contextkeys.WithPermissionGroup(ctx, group)
 
 			ctx = contextkeys.WithPermissionFunction(ctx, procedureName)
+			log.Debug().Interface("err", group).Msg("group")
+
 			headerkeys.WithPermissionGroup(req.Header(), group)
 			return next(ctx, req)
 
