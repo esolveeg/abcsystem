@@ -176,7 +176,7 @@ DECLARE
 	v_security_level int;
 BEGIN
 	SELECT
-		max(r.role_security_level) INTO v_security_level
+	is_null_replace(max(r.role_security_level) , 0) INTO v_security_level
 	FROM
 		accounts_schema.user_role ur
 		JOIN accounts_schema.role r ON ur.role_id = r.role_id
