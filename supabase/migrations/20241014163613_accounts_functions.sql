@@ -548,41 +548,77 @@ BEGIN
 		*;
 END
 $$;
-
+-- This function is triggered on changes to the navigation_bar_item table
+-- and sends an HTTP POST request, gracefully handling any errors to avoid
+-- blocking the database transaction.
 CREATE OR REPLACE FUNCTION notify_navigation_bar_item_change()
 RETURNS TRIGGER
-	LANGUAGE plpgsql
- AS $$
+LANGUAGE plpgsql
+AS $$
 DECLARE
-  url     text := 'http://192.168.100.40:9090/devkit.v1.DevkitService/CommandPalleteSync' ;
-  payload text;
+  base_url text;
+  full_url text;
+  payload  text;
 BEGIN
+  -- Use a BEGIN...EXCEPTION block to catch any errors during the notification
+  -- process and prevent the main transaction from failing.
+  BEGIN
+    -- Step 1: Retrieve the base URL from Supabase Vault.
+    SELECT decrypted_secret INTO base_url
+    FROM vault.decrypted_secrets
+    WHERE name = 'devkit_base_url'
+    LIMIT 1;
+
+    -- Step 2: Only proceed if the URL was found.
+    IF base_url IS NOT NULL THEN
+      -- Construct the full URL.
+      full_url := base_url || '/devkit.v1.DevkitService/CommandPalleteSync';
+
+      -- Build the JSON payload based on the trigger operation.
+      IF TG_OP = 'DELETE' THEN
+        payload := json_build_object(
+          'trigger_type', 'DELETE',
+          'record', to_jsonb(OLD)
+        )::text;
+      ELSE
+        payload := json_build_object(
+          'triggerType', TG_OP,  -- 'INSERT' or 'UPDATE'
+          'record', to_jsonb(NEW)
+        )::text;
+      END IF;
+
+      -- Perform the HTTP POST request.
+      PERFORM http_post(
+        full_url,
+        payload,
+        'application/json'
+      );
+    ELSE
+      -- If the secret is not found, log a notice for debugging but do not fail.
+      RAISE NOTICE 'notify_navigation_bar_item_change: Secret "DEVKIT_BASE_URL" not found in Vault. Skipping HTTP call.';
+    END IF;
+
+  EXCEPTION
+    WHEN OTHERS THEN
+      -- Catch any other exception (e.g., from http_post if the server is down)
+      -- and log it as a notice without failing the transaction.
+      RAISE NOTICE 'notify_navigation_bar_item_change: Failed to send notification. Error: %', SQLERRM;
+  END;
+
+  -- Always return the appropriate record to allow the original DB operation to succeed.
   IF TG_OP = 'DELETE' THEN
-    payload := json_build_object(
-      'trigger_type', 'DELETE',
-      'record', to_jsonb(OLD)
-
-    )::text;
+    RETURN OLD;
   ELSE
-    payload := json_build_object(
-      'triggerType', TG_OP,  -- 'INSERT' or 'UPDATE'
-      'record', to_jsonb(NEW)
-    )::text;
+    RETURN NEW;
   END IF;
-
-
-  PERFORM http_post(
-    url,
-    payload,
-    'application/json'
-  );
-
-  RETURN NEW;
 END;
 $$;
 
 
+-- Drop the existing trigger to ensure it's replaced with the new logic.
 DROP TRIGGER IF EXISTS trg_navigation_bar_item_change on accounts_schema.navigation_bar_item;
+
+-- Create the trigger that executes the updated function after any change.
 CREATE TRIGGER trg_navigation_bar_item_change
 AFTER INSERT OR UPDATE OR DELETE ON accounts_schema.navigation_bar_item
 FOR EACH ROW

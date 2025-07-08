@@ -37,17 +37,17 @@ seed_accounts:
 	devkit seed accounts_schema --file-path seeds/schemas/accounts.xlsx -e
 
 seed_public:
-	devkit seed public --file-path seeds/schemas/pub.xlsx -e
+	devkit seed public --file-path seeds/schemas/public.xlsx -e
 
 
 seed_properties:
-	devkit seed properties_schema --file-path seeds/schemas/properties_mac.xlsx -e
+	devkit seed properties_schema --file-path seeds/schemas/properties.xlsx -e
 	
 seed_tenants:
-	devkit seed tenants_schema --file-path seeds/schemas/tenant_mac.xlsx -e
+	devkit seed tenants_schema --file-path seeds/schemas/tenant.xlsx -e
 
 seed_tenants_accounts:
-	devkit seed accounts_schema --file-path seeds/schemas/tenant_accounts_1.xlsx -e
+	devkit seed accounts_schema --file-path seeds/schemas/tenant_accounts.xlsx -e
 
 
 
