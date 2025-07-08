@@ -291,6 +291,8 @@ enabled = false
 enabled = false
 # user_pool_id = "my-user-pool-id"
 # user_pool_region = "us-east-1"
+[db.vault]
+DEVKIT_BASE_URL = "env(DEVKIT_BASE_URL)"
 
 [edge_runtime]
 enabled = false

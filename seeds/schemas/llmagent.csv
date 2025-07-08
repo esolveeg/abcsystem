@@ -1,6 +1,0 @@
-AddressID,CustomerID,AddressType,AddressLine1,AddressLine2,City,State,PostalCode,IsPrimary
-1,1,Shipping,٢١ شارع مصطفى النحاس,شقة ١٢، الدور الثالث,القاهرة,القاهرة,NULL,1
-2,1,AddressType,١٥ ميدان التحرير,بجوار مسجد النور,القاهرة,القاهرة,NULL,0
-3,1,Shipping,٥ شارع القصر العيني,الدور الأرضي، محل رقم ٥,القاهرة,القاهرة,NULL,0
-4,2,AddressType,١٠ شارع التسعين الجنوبي,فيلا رقم ٦، منطقة الفيلات,القاهرة,القاهرة,NULL,1
-5,2,Shipping,١١ شارع النزهة، مصر الجديدة,مدخل ٢، الدور الثاني,القاهرة,القاهرة,NULL,0
