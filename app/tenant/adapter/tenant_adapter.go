@@ -143,3 +143,17 @@ func (a *TenantAdapter) TenantDeleteRestoreGrpcFromSql(resp *[]db.TenantsSchemaT
 	}
 
 }
+
+func (a *TenantAdapter) TenantListInputGrpcFromSql(resp *[]db.TenantListInputRow) *devkitv1.TenantListInputResponse {
+	records := make([]*devkitv1.SelectInputOption, 0)
+	for _, v := range *resp {
+		records = append(records, &devkitv1.SelectInputOption{
+			Value: v.Value,
+			Label: v.Label,
+		})
+	}
+	return &devkitv1.TenantListInputResponse{
+		Options: records,
+	}
+
+}

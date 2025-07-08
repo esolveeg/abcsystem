@@ -26,6 +26,15 @@ func StringToPgTimestamp(dateString string) pgtype.Timestamp {
 	}
 	return pgTimestamp
 }
+func DateToInt(t time.Time) int32 {
+	dateInt := t.Year()*10000 + int(t.Month())*100 + t.Day() 
+    return  int32(dateInt)
+}
+func DateTimeToInt(t time.Time) int64 {
+	dateInt := t.Year()*10000 + int(t.Month())*100 + t.Day()
+	dateTimeInt := int64(dateInt*10000) + int64(t.Hour()*100 + t.Minute())
+	return dateTimeInt
+}
 func PgtimeToString(pgTime pgtype.Time) string {
 	duration := time.Duration(pgTime.Microseconds) * time.Microsecond
 	// Convert duration to time.Time

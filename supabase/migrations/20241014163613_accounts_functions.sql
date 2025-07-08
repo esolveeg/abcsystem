@@ -176,7 +176,7 @@ DECLARE
 	v_security_level int;
 BEGIN
 	SELECT
-		max(r.role_security_level) INTO v_security_level
+	is_null_replace(max(r.role_security_level) , 0) INTO v_security_level
 	FROM
 		accounts_schema.user_role ur
 		JOIN accounts_schema.role r ON ur.role_id = r.role_id
@@ -339,7 +339,7 @@ $$;
 -- possible errors:
 -- - if the caller’s security level is lower than the highest security level of the roles being assigned to the user, an exception is raised.
 -- - the function will propagate any exceptions raised from check_caller_security_level.
-CREATE OR REPLACE FUNCTION accounts_schema.user_create_update (in_user_id int, in_user_name varchar(200), in_caller_id int, in_tenant_id int, in_user_type_id int, in_user_phone varchar(200), in_user_email varchar(200), in_user_password varchar(200), in_roles int[])
+CREATE OR REPLACE FUNCTION accounts_schema.user_create_update (in_user_id int, in_user_name varchar(200),  in_user_image varchar(200),in_caller_id int, in_tenant_id int, in_user_type_id int, in_user_phone varchar(200), in_user_email varchar(200), in_user_password varchar(200), in_roles int[])
 	RETURNS SETOF accounts_schema.user
 	LANGUAGE plpgsql
 	AS $$
@@ -370,10 +370,11 @@ BEGIN
 			accounts_schema.user
 		SET
 			user_name = is_null_replace(in_user_name, user_name),
+			user_image = in_user_image,
 			user_type_id = is_null_replace(in_user_type_id, user_type_id),
-			tenant_id = is_null_replace(in_tenant_id, NULL),
+			tenant_id = nullable_foreign(in_tenant_id),
 			user_email = is_null_replace(in_user_email, user_email),
-			user_phone = is_null_replace(in_user_phone, user_phone),
+			user_phone = in_user_phone,
 			user_password = is_null_replace(in_user_password, user_password),
 			updated_at = now()
 		WHERE
@@ -391,6 +392,7 @@ BEGIN
 	ELSE
 		INSERT INTO accounts_schema.user (
 			user_name,
+			user_image,
 			user_type_id,
 			tenant_id,
 			user_phone,
@@ -398,6 +400,7 @@ BEGIN
 			user_password)
 		VALUES (
 			in_user_name,
+			in_user_image,
 			in_user_type_id,
 			nullable_foreign(
 				in_tenant_id),
@@ -546,3 +549,41 @@ BEGIN
 END
 $$;
 
+CREATE OR REPLACE FUNCTION notify_navigation_bar_item_change()
+RETURNS TRIGGER
+	LANGUAGE plpgsql
+ AS $$
+DECLARE
+  url     text := 'http://192.168.100.40:9090/devkit.v1.DevkitService/CommandPalleteSync' ;
+  payload text;
+BEGIN
+  IF TG_OP = 'DELETE' THEN
+    payload := json_build_object(
+      'trigger_type', 'DELETE',
+      'record', to_jsonb(OLD)
+
+    )::text;
+  ELSE
+    payload := json_build_object(
+      'triggerType', TG_OP,  -- 'INSERT' or 'UPDATE'
+      'record', to_jsonb(NEW)
+    )::text;
+  END IF;
+
+
+  PERFORM http_post(
+    url,
+    payload,
+    'application/json'
+  );
+
+  RETURN NEW;
+END;
+$$;
+
+
+DROP TRIGGER IF EXISTS trg_navigation_bar_item_change on accounts_schema.navigation_bar_item;
+CREATE TRIGGER trg_navigation_bar_item_change
+AFTER INSERT OR UPDATE OR DELETE ON accounts_schema.navigation_bar_item
+FOR EACH ROW
+EXECUTE FUNCTION notify_navigation_bar_item_change();

@@ -48,6 +48,8 @@ type AccountsUsecaseInterface interface {
 		req *connect.Request[devkitv1.AuthLogoutRequest],
 	) (*devkitv1.AuthLogoutResponse, error)
 	AppLogin(ctx context.Context, loginCode string, userId int32) (*devkitv1.AuthLoginResponse, error)
+
+	UserFind(ctx context.Context, req *connect.Request[devkitv1.UserFindRequest]) (*devkitv1.UserFindResponse, error)
 	AuthResetPassword(ctx context.Context, req *connect.Request[devkitv1.AuthResetPasswordRequest]) (*devkitv1.AuthResetPasswordResponse, error)
 	AuthResetPasswordEmail(ctx context.Context, req *connect.Request[devkitv1.AuthResetPasswordEmailRequest]) (*devkitv1.AuthResetPasswordEmailResponse, error)
 	AuthRefreshToken(ctx context.Context, req *connect.Request[devkitv1.AuthRefreshTokenRequest]) (*devkitv1.AuthRefreshTokenResponse, error)

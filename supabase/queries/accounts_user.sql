@@ -55,112 +55,122 @@ ORDER BY
 	level,
 	menu_key;
 
--- name: UserFind :one
+-- name: UserFindForAuth :one
 SELECT
 	*
 FROM
-	accounts_schema.user
+	accounts_schema.user_view
 WHERE
 	deleted_at IS NULL
 	AND (user_email = sqlc.arg('search_key')
 		OR user_phone = sqlc.arg('search_key')
 		OR user_id = sqlc.arg('user_id'));
 
--- name: UserList :many
+-- name: UserFind :one
 SELECT
 	*
 FROM
-	accounts_schema.user;
+	accounts_schema.user_view
+WHERE
+	user_email = sqlc.arg('search_key')
+		OR user_phone = sqlc.arg('search_key')
+		OR user_id = sqlc.arg('user_id');
+
+-- name: UserList :many
+select 
+  *
+from accounts_schema.user_view;
 
 -- name: UserCreateUpdate :one
 SELECT
-	*
+*
 FROM
-	accounts_schema.user_create_update (in_user_id => sqlc.arg('user_id'), in_user_name => sqlc.arg('user_name'), in_tenant_id => sqlc.arg('tenant_id'), in_caller_id => sqlc.arg('caller_id'), in_user_type_id => sqlc.arg('user_type_id'), in_user_phone => sqlc.arg('user_phone'), in_user_email => sqlc.arg('user_email'), in_user_password => sqlc.arg('user_password'), in_roles => sqlc.arg('roles')::int[]);
+accounts_schema.user_create_update (in_user_id => sqlc.arg('user_id'),  in_user_name => sqlc.arg('user_name'), in_user_image => sqlc.arg('user_image'), in_tenant_id => sqlc.arg('tenant_id'), in_caller_id => sqlc.arg('caller_id'), in_user_type_id => sqlc.arg('user_type_id'), in_user_phone => sqlc.arg('user_phone'), in_user_email => sqlc.arg('user_email'), in_user_password => sqlc.arg('user_password'), in_roles => sqlc.arg('roles')::int[]);
 
 -- name: UserFindForToken :one
 SELECT
-	u.user_id,
-	u.user_email,
-	accounts_schema.user_security_level_find(u.user_id) user_security_level,
-	u.tenant_id
+  u.user_id,
+  u.user_email,
+  accounts_schema.user_security_level_find(u.user_id) user_security_level,
+  u.tenant_id
 FROM
-	accounts_schema.user u
+accounts_schema.user u
 WHERE
-	u.user_id = sqlc.arg('user_id')
-	OR u.user_email = sqlc.arg('user_email');
+u.user_id = sqlc.arg('user_id')
+OR u.user_email = sqlc.arg('user_email');
 
 -- name: UserFindForUpdate :one
 WITH user_roles AS (
-	SELECT
-		ur.user_id,
-		array_agg(ur.role_id)::int[] roles
-	FROM
-		accounts_schema.user_role ur
-	WHERE
-		ur.user_id = $1
-	GROUP BY
-		ur.user_id
+  SELECT
+    ur.user_id,
+    array_agg(ur.role_id)::int[] roles
+  FROM
+  accounts_schema.user_role ur
+  WHERE
+  ur.user_id = $1
+  GROUP BY
+  ur.user_id
 )
 SELECT
-	u.user_id,
-	u.user_name,
-	u.user_type_id,
-	u.user_phone,
-	u.tenant_id,
-	u.user_email,
-	r.roles::int[] roles
+  u.user_id,
+  u.user_image,
+  u.user_name,
+  u.user_type_id,
+  u.user_phone,
+  u.tenant_id,
+  u.user_email,
+  r.roles::int[] roles
 FROM
-	accounts_schema.user u
-	JOIN user_roles r ON u.user_id = r.user_id;
+accounts_schema.user u
+JOIN user_roles r ON u.user_id = r.user_id;
 
 -- name: UserDeleteRestore :one
 SELECT
-	*
+  *
 FROM
-	accounts_schema.user_delete_restore (in_user_id => sqlc.arg(user_id), in_caller_id => sqlc.arg(caller_id));
+accounts_schema.user_delete_restore (in_user_id => sqlc.arg(user_id), in_caller_id => sqlc.arg(caller_id));
 
 -- name: UserPermissionsMap :many
 SELECT
-	permission_group::varchar(200),
-	permissions::jsonb
+  permission_group::varchar(200),
+  permissions::jsonb
 FROM
-	accounts_schema.user_permissions_list_map (in_user_id => sqlc.arg('user_id'));
+accounts_schema.user_permissions_list_map (in_user_id => sqlc.arg('user_id'));
 
 -- name: UserDelete :one
 SELECT
-	*
+  *
 FROM
-	accounts_schema.user_delete (in_user_id => sqlc.arg('user_id'), in_caller_id => sqlc.arg('caller_id'));
+accounts_schema.user_delete (in_user_id => sqlc.arg('user_id'), in_caller_id => sqlc.arg('caller_id'));
 
 -- name: UserListInput :many
 SELECT
-	u.user_id value,
-	u.user_name label,
-	concat('✉️', u.user_email, ' ', u.user_phone)::varchar note
+  u.user_id value,
+  u.user_name label,
+  concat('✉️', u.user_email, ' ', u.user_phone)::varchar note
 FROM
-	accounts_schema.user u
-	JOIN accounts_schema.user_role ur ON u.user_id = ur.user_id
-	JOIN accounts_schema.role r ON ur.role_id = r.role_id
-		AND r.role_security_level <= accounts_schema.user_security_level_find(sqlc.arg('caller_id'))
+accounts_schema.user u
+JOIN accounts_schema.user_role ur ON u.user_id = ur.user_id
+JOIN accounts_schema.role r ON ur.role_id = r.role_id
+AND r.role_security_level <= accounts_schema.user_security_level_find(sqlc.arg('caller_id'))
 GROUP BY
-	u.user_id,
-	u.user_name,
-	u.user_email,
-	u.user_phone;
+u.user_id,
+u.user_name,
+u.user_email,
+u.user_phone;
 
 -- name: UserTypeListInput :many
 SELECT
-	user_type_id value,
-	user_type_name label
+  user_type_id value,
+  user_type_name label
 FROM
-	accounts_schema.user_type;
+accounts_schema.user_type;
 
 -- name: UserResetPassword :exec
 UPDATE
-	accounts_schema.user
+accounts_schema.user
 SET
-	user_password = $2
+user_password = $2
 WHERE
-	user_email = $1;
+user_email = $1;
 

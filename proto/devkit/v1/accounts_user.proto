@@ -4,7 +4,6 @@ package devkit.v1;
 
 import "buf/validate/validate.proto";
 import "devkit/v1/client.proto";
-import "google/protobuf/timestamp.proto";
 message UserCreateUpdateRequest {
   int32 user_id = 1; // User's ID, should be unique
   string user_name = 2 [
@@ -12,6 +11,9 @@ message UserCreateUpdateRequest {
     (buf.validate.field).string.max_len = 200
   ]; // User's name with validation
 
+  string user_image= 12 [
+    (buf.validate.field).string.max_len = 200
+  ]; 
   int32 tenant_id = 9;
   int32 user_security_level = 3; // Security level of the user (non-nullable in DB)
   int32 user_type_id = 4 [(buf.validate.field).int32.gt = 0]; // Foreign key for the user type (validated for presence)
@@ -30,15 +32,38 @@ message UserCreateUpdateRequest {
 message AccountsSchemaUser {
   int32 user_id = 1;
   string user_name = 2; // User's name, should be unique
+  string user_image= 22; // User's name, should be unique
   int32 tenant_id = 12;
   int32 user_security_level = 3; // Security level of the user
   int32 user_type_id = 4; // Foreign key for user type
   string user_phone = 5; // Optional phone number
   string user_email = 6; // User's email, unique in DB
   string user_password = 7; // Password
-  google.protobuf.Timestamp created_at = 9; // Creation timestamp
+  string created_at = 9; // Creation timestamp
   string updated_at = 10; // Update timestamp
   string deleted_at = 11; // Deletion timestamp
+}
+message UserRole {
+  int32 user_id = 1;
+  int32 role_id = 2;
+  string role_name= 3;
+}
+message AccountsSchemaUserView {
+  int32 user_id         = 1; 
+  string user_name      = 2; 
+  string user_image = 22;
+
+  int32 user_security_level = 23; // Security level of the user
+  string user_email     = 3; 
+  string user_phone     = 4; 
+  int32 user_type_id    = 5;
+  string user_type_name = 6;
+  int32 tenant_id       = 7;
+  string tenant_name    = 8;
+  string created_at    = 9;
+  string updated_at = 10;
+  string deleted_at = 11;
+  repeated UserRole roles  = 12;  // nested array of Role
 }
 message UserCreateUpdateResponse {
   AccountsSchemaUser user = 1;
@@ -58,8 +83,8 @@ message UserDeleteResponse {
 }
 message UserListRequest {}
 message UserListResponse {
-  repeated AccountsSchemaUser records = 1;
-  repeated AccountsSchemaUser deleted_records = 2;
+  repeated AccountsSchemaUserView  records = 1;
+  repeated AccountsSchemaUserView deleted_records = 2;
   AvailableOptions options = 3;
 }
 message UserListInputRequest {}
@@ -76,4 +101,12 @@ message UserFindForUpdateRequest {
 }
 message UserFindForUpdateResponse {
   UserCreateUpdateRequest request = 1;
+}
+
+message UserFindRequest {
+  int32 record_id = 1;
+}
+message UserFindResponse {
+  AvailableOptions options = 3;
+  AccountsSchemaUserView  record = 1;
 }

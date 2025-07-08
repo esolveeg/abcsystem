@@ -37,6 +37,15 @@ func (api *Api) TenantList(ctx context.Context, req *connect.Request[devkitv1.Te
 	return connect.NewResponse(resp), nil
 
 }
+func (api *Api) TenantListInput(ctx context.Context, req *connect.Request[devkitv1.TenantListInputRequest]) (*connect.Response[devkitv1.TenantListInputResponse], error) {
+	resp, err := api.tenantUsecase.TenantListInput(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	return connect.NewResponse(resp), nil
+
+}
+
 func (api *Api) TenantFind(ctx context.Context, req *connect.Request[devkitv1.TenantFindRequest]) (*connect.Response[devkitv1.TenantFindResponse], error) {
 	resp, err := api.tenantUsecase.TenantFind(ctx, req)
 	if err != nil {

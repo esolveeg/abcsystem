@@ -50,6 +50,7 @@ func (s *Server) proccessProcedureName(procName string) (string, string) {
 	functionNameSnake := strcase.ToSnake(procedureName)
 	functionNameParts := strings.Split(functionNameSnake, "_")
 	group := functionNameParts[0]
+	log.Debug().Interface("err", group).Msg("group")
 	return procedureName, group
 }
 
@@ -141,9 +142,6 @@ func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 				if err != nil {
 					return nil, connect.NewError(connect.CodeUnauthenticated, err)
 				}
-
-				log.Debug().Interface("from intecep", payload.ID.String()).Msg("inte")
-				log.Debug().Interface("from intecep", payload.UserId).Msg("inte")
 				session, err := s.redisClient.AuthSessionFind(ctx, payload.UserId, payload.ID.String())
 				if err != nil {
 					return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("session not stored : %w", err))
@@ -173,6 +171,8 @@ func (s *Server) NewAuthenticationInterceptor() connect.UnaryInterceptorFunc {
 			ctx = contextkeys.WithPermissionGroup(ctx, group)
 
 			ctx = contextkeys.WithPermissionFunction(ctx, procedureName)
+			log.Debug().Interface("err", group).Msg("group")
+
 			headerkeys.WithPermissionGroup(req.Header(), group)
 			return next(ctx, req)
 
@@ -226,7 +226,7 @@ func (s *Server) NewAuthorizationInterceptor() connect.UnaryInterceptorFunc {
 				requestTenantIdValue, ok := s.getFiledFromRequest(msgReflect, "tenant_id")
 				if ok {
 					requestTenantId := requestTenantIdValue.Int()
-					if requestTenantId != int64(tenantId) {
+					if requestTenantId != int64(tenantId) && tenantId > 0 {
 						return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("this user attached to TenantId number %d , not allowed to take any actions under another tenant %d", tenantId, requestTenantId))
 					}
 				}
@@ -265,6 +265,7 @@ func (s *Server) NewAuthorizationInterceptor() connect.UnaryInterceptorFunc {
 				return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("user does not have the required permission for this permission %s on this group %s", permissionFunction, group))
 			}
 
+			log.Debug().Interface("local", permissionGroup).Msg("local")
 			headerkeys.WithPermittedActions(req.Header(), permissionGroup)
 			return next(ctx, req)
 		})

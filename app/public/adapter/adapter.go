@@ -2,6 +2,7 @@ package adapter
 
 import (
 	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/pkg/weaviateclient"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	storage_go "github.com/darwishdev/storage-go"
 	"github.com/resend/resend-go/v2"
@@ -29,6 +30,12 @@ type PublicAdapterInterface interface {
 	SettingEntityGrpcFromSql(resp []db.Setting) []*devkitv1.Setting
 	SettingFindForUpdateGrpcFromSql(resp *[]db.SettingFindForUpdateRow) *devkitv1.SettingFindForUpdateResponse
 	IconListGrpcFromSql(resp []db.Icon) *devkitv1.IconListResponse
+
+// Converts from gRPC model to Weaviate model:
+	CommandPalleteWeaviateFromGrpc(req *devkitv1.CommandPallete) *weaviateclient.CommandPallete
+
+// Converts from Weaviate model back to gRPC model:
+	CommandPalleteGrpcFromWeaviate(doc *weaviateclient.CommandPallete) *devkitv1.CommandPallete
 }
 
 type PublicAdapter struct {

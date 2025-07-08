@@ -41,6 +41,13 @@ func (repo *TenantRepo) TenantList(ctx context.Context, tenantId int32) (*[]db.T
 	return &resp, nil
 }
 
+func (repo *TenantRepo) TenantListInput(ctx context.Context, tenantId int32) (*[]db.TenantListInputRow, error) {
+	resp, err := repo.store.TenantListInput(ctx)
+	if err != nil {
+		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
+	}
+	return &resp, nil
+}
 func (repo *TenantRepo) TenantDeleteRestore(ctx context.Context, req []int32) (*[]db.TenantsSchemaTenant, error) {
 	resp, err := repo.store.TenantDeleteRestore(ctx, req)
 	if err != nil {

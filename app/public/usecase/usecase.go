@@ -3,11 +3,13 @@ package usecase
 import (
 	"context"
 
+	"connectrpc.com/connect"
 	"github.com/darwishdev/devkit-api/app/public/adapter"
 	"github.com/darwishdev/devkit-api/app/public/repo"
 	"github.com/darwishdev/devkit-api/db"
 	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	"github.com/darwishdev/devkit-api/pkg/resend"
+	"github.com/darwishdev/devkit-api/pkg/weaviateclient"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	supaapigo "github.com/darwishdev/supaapi-go"
 )
@@ -33,6 +35,9 @@ type PublicUsecaseInterface interface {
 	IconList(ctx context.Context) (*devkitv1.IconListResponse, error)
 	FileUploadUrlFind(ctx context.Context, req *devkitv1.FileUploadUrlFindRequest) (*devkitv1.FileUploadUrlFindResponse, error)
 	FileCreateBulk(ctx context.Context, req *devkitv1.FileCreateBulkRequest) (*devkitv1.FileCreateBulkResponse, error)
+
+	CommandPalleteSync(ctx context.Context, req *connect.Request[devkitv1.CommandPalleteSyncRequest]) (*devkitv1.CommandPalleteSyncResponse, error)
+ CommandPalleteSearch(ctx context.Context, req *connect.Request[devkitv1.CommandPalleteSearchRequest]) (*devkitv1.CommandPalleteSearchResponse, error) 
 }
 
 type PublicUsecase struct {
@@ -42,15 +47,17 @@ type PublicUsecase struct {
 	supaapi        supaapigo.Supaapi
 	supaAnonApiKey string
 	resendClient   resend.ResendServiceInterface
+	weaviateClient weaviateclient.WeaviateClientInterface
 	redisClient    redisclient.RedisClientInterface
 }
 
-func NewPublicUsecase(store db.Store, supaAnonApiKey string, supaapi supaapigo.Supaapi, redisClient redisclient.RedisClientInterface, resendClient resend.ResendServiceInterface) PublicUsecaseInterface {
+func NewPublicUsecase(store db.Store, supaAnonApiKey string, supaapi supaapigo.Supaapi, redisClient redisclient.RedisClientInterface, resendClient resend.ResendServiceInterface, weaviateClient weaviateclient.WeaviateClientInterface) PublicUsecaseInterface {
 	return &PublicUsecase{
 		resendClient:   resendClient,
 		supaAnonApiKey: supaAnonApiKey,
 		supaapi:        supaapi,
 		redisClient:    redisClient,
+		weaviateClient: weaviateClient,
 		adapter:        adapter.NewPublicAdapter(),
 		repo:           repo.NewPublicRepo(store),
 		store:          store,

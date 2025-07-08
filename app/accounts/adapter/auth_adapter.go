@@ -163,9 +163,9 @@ func (a *AccountsAdapter) AuthLoginSqlFromGrpc(req *devkitv1.AuthLoginRequest) (
 	}, supabseRequest
 }
 
-func (a *AccountsAdapter) AuthLoginGrpcFromSql(resp *db.AccountsSchemaUser) *devkitv1.AuthLoginResponse {
+func (a *AccountsAdapter) AuthLoginGrpcFromSql(resp *db.AccountsSchemaUserView) *devkitv1.AuthLoginResponse {
 	return &devkitv1.AuthLoginResponse{
-		User: a.UserEntityGrpcFromSql(resp),
+		User: a.UserViewEntityGrpcFromSql(resp),
 	}
 }
 func (a *AccountsAdapter) NavigationBarItemGrpcFromSql(resp *db.UserNavigationBarFindRow) *devkitv1.NavigationBarItem {

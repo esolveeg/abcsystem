@@ -99,6 +99,11 @@ message TenantListResponse {
   AvailableOptions options = 3;
 }
 
+message TenantListInputRequest {}
+
+message TenantListInputResponse {
+  repeated SelectInputOption options = 1;
+}
 message TenantDeleteRestoreRequest {
   repeated int32 records = 1 [(buf.validate.field).repeated = {
     unique: true

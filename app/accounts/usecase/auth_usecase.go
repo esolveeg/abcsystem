@@ -177,26 +177,76 @@ func (u *AccountsUsecase) AuthRegister(ctx context.Context, req *connect.Request
 	if err != nil {
 		return nil, err
 	}
-	loginInfo, _, err := u.UserGenerateTokens(user.User.UserEmail, user.User.UserId, user.User.UserSecurityLevel, user.User.TenantId)
+	response, err := u.AppLogin(ctx, user.User.UserEmail, 0)
 	if err != nil {
 		return nil, err
 	}
-	_, supabaseRequest := u.adapter.AuthLoginSqlFromGrpc(&devkitv1.AuthLoginRequest{LoginCode: req.Msg.UserEmail, UserPassword: req.Msg.UserPassword})
-	supaResponse, err := u.supaapi.AuthClient.Token(*supabaseRequest)
+	err = u.WithNavigationBar(ctx, response)
+	if err != nil {
+		return nil, err
+	}
+
+	supaResponse, err := u.supaapi.AuthClient.Token(types.TokenRequest{Email: user.User.UserEmail, Password: req.Msg.UserPassword})
 	if err != nil {
 		if strings.Contains(strings.ToLower(err.Error()), "invalid login credentials") {
 			return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("invalid login"))
 		}
 		return nil, err
 	}
-	loginInfo.SupabaseRefreshToken = supaResponse.RefreshToken
-	loginInfo.SupabaseToken = supaResponse.AccessToken
 
+	err = u.WithTokens(ctx, req.Peer().Addr, req.Header().Get("User-Agent"), user.User.UserEmail, response, supaResponse.AccessToken, supaResponse.RefreshToken)
+	if err != nil {
+		return nil, err
+	}
 	return &devkitv1.AuthRegisterResponse{
-		User:      user.User,
-		LoginInfo: loginInfo,
+		User:      response.User,
+		LoginInfo: response.LoginInfo,
 	}, nil
 }
+
+func (u *AccountsUsecase) WithNavigationBar(ctx context.Context, response *devkitv1.AuthLoginResponse) error {
+	navigtionBarRequest := db.UserNavigationBarFindParams{
+		UserID:          response.User.UserId,
+		NavigationBarID: response.User.UserTypeId,
+	}
+	navigationBar, err := u.repo.UserNavigationBarFind(ctx, navigtionBarRequest)
+	if err != nil {
+		return err
+	}
+	if len(*navigationBar) > 0 {
+		navigations, err := u.adapter.UserNavigationBarFindGrpcFromSql(*navigationBar)
+		if err != nil {
+			return err
+		}
+		response.NavigationBar = navigations
+	}
+	return nil
+}
+func (u *AccountsUsecase) WithTokens(ctx context.Context, addr string, userAgent string, loginCode string, response *devkitv1.AuthLoginResponse, supaToken string, supaRefreshToken string) error {
+	loginInfo, tokenID, err := u.UserGenerateTokens(loginCode, response.User.UserId, response.User.TenantId, response.User.UserSecurityLevel)
+	if err != nil {
+		return err
+	}
+	loginInfo.SupabaseRefreshToken = supaRefreshToken
+	loginInfo.SupabaseToken = supaToken
+	response.LoginInfo = loginInfo
+	authSession, err := u.adapter.AuttSessionRedisFromGrpc(response, addr, userAgent)
+	if err != nil {
+		return err
+	}
+	authSession.TokenID = tokenID
+	err = u.redisClient.AuthSessionDeleteByUserAgent(ctx, authSession.UserID, authSession.UserAgent)
+	if err != nil {
+		return err
+	}
+	err = u.redisClient.AuthSessionCreate(ctx, authSession, tokenID, u.refreshTokenDuration)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[devkitv1.AuthLoginRequest]) (*devkitv1.AuthLoginResponse, error) {
 	userFindParams, supabaseRequest := u.adapter.AuthLoginSqlFromGrpc(req.Msg)
 	supaResponse, err := u.supaapi.AuthClient.Token(*supabaseRequest)
@@ -208,43 +258,17 @@ func (u *AccountsUsecase) AuthLogin(ctx context.Context, req *connect.Request[de
 	}
 	response, err := u.AppLogin(ctx, userFindParams.SearchKey, 0)
 	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("invalid  app login"))
+		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("invalid  app login %w", err))
 	}
-	loginInfo, tokenID, err := u.UserGenerateTokens(req.Msg.LoginCode, response.User.UserId, response.User.TenantId, response.User.UserSecurityLevel)
+	err = u.WithNavigationBar(ctx, response)
 	if err != nil {
 		return nil, err
 	}
-	loginInfo.SupabaseRefreshToken = supaResponse.RefreshToken
-	loginInfo.SupabaseToken = supaResponse.AccessToken
-	response.LoginInfo = loginInfo
-	navigtionBarRequest := db.UserNavigationBarFindParams{
-		UserID:          response.User.UserId,
-		NavigationBarID: response.User.UserTypeId,
-	}
-	navigationBar, err := u.repo.UserNavigationBarFind(ctx, navigtionBarRequest)
+	err = u.WithTokens(ctx, req.Peer().Addr, req.Header().Get("User-Agent"), req.Msg.LoginCode, response, supaResponse.AccessToken, supaResponse.RefreshToken)
 	if err != nil {
 		return nil, err
 	}
-	if len(*navigationBar) > 0 {
-		navigations, err := u.adapter.UserNavigationBarFindGrpcFromSql(*navigationBar)
-		if err != nil {
-			return nil, err
-		}
-		response.NavigationBar = navigations
-	}
-	authSession, err := u.adapter.AuttSessionRedisFromGrpc(response, req.Peer().Addr, req.Header().Get("User-Agent"))
-	if err != nil {
-		return nil, err
-	}
-	authSession.TokenID = tokenID
-	err = u.redisClient.AuthSessionDeleteByUserAgent(ctx, authSession.UserID, authSession.UserAgent)
-	if err != nil {
-		return nil, err
-	}
-	err = u.redisClient.AuthSessionCreate(ctx, authSession, tokenID, u.refreshTokenDuration)
-	if err != nil {
-		return nil, err
-	}
+
 	return response, nil
 }
 
@@ -276,11 +300,18 @@ func (u *AccountsUsecase) AuthResetPassword(ctx context.Context, req *connect.Re
 	if err != nil {
 		return nil, err
 	}
-	_, err = u.supaapi.AuthClient.AdminUpdateUser(types.AdminUpdateUserRequest{UserID: user.ID, Email: req.Msg.Email, Password: req.Msg.NewPassword})
+	_, err = u.supaapi.AuthClient.AdminUpdateUser(types.AdminUpdateUserRequest{UserID: user.ID, Email: user.Email, Password: req.Msg.NewPassword})
 	if err != nil {
 		return nil, err
 	}
-	return &devkitv1.AuthResetPasswordResponse{}, nil
+	userResp, err := u.AuthLogin(ctx, connect.NewRequest(&devkitv1.AuthLoginRequest{
+		LoginCode:    req.Msg.Email,
+		UserPassword: req.Msg.NewPassword,
+	}))
+	if err != nil {
+		return nil, err
+	}
+	return &devkitv1.AuthResetPasswordResponse{User: userResp.User, LoginInfo: userResp.LoginInfo, NavigationBar: userResp.NavigationBar}, nil
 }
 
 func (u *AccountsUsecase) AuthResetPasswordEmail(ctx context.Context, req *connect.Request[devkitv1.AuthResetPasswordEmailRequest]) (*devkitv1.AuthResetPasswordEmailResponse, error) {
@@ -296,36 +327,19 @@ func (u *AccountsUsecase) AuthLoginProviderCallback(ctx context.Context, req *co
 	if err != nil {
 		return nil, err
 	}
-	if err != nil {
-		return nil, err
-	}
 	response, err := u.AppLogin(ctx, user.Email, 0)
 	if err != nil {
 		return nil, err
 	}
-	loginInfo, tokenID, err := u.UserGenerateTokens(user.Email, response.User.UserId, response.User.TenantId, response.User.UserSecurityLevel)
+	err = u.WithNavigationBar(ctx, response)
 	if err != nil {
 		return nil, err
 	}
 
-	loginInfo.SupabaseToken = req.Msg.AccessToken
-	loginInfo.SupabaseRefreshToken = req.Msg.RefreshToken
-	response.LoginInfo = loginInfo
-	authSession, err := u.adapter.AuttSessionRedisFromGrpc(response, req.Peer().Addr, req.Header().Get("User-Agent"))
-	authSession.TokenID = tokenID
+	err = u.WithTokens(ctx, req.Peer().Addr, req.Header().Get("User-Agent"), user.Email, response, req.Msg.AccessToken, req.Msg.RefreshToken)
 	if err != nil {
 		return nil, err
 	}
-
-	err = u.redisClient.AuthSessionDeleteByUserAgent(ctx, authSession.UserID, authSession.UserAgent)
-	if err != nil {
-		return nil, err
-	}
-	err = u.redisClient.AuthSessionCreate(ctx, authSession, tokenID, u.refreshTokenDuration)
-	if err != nil {
-		return nil, err
-	}
-
 	return &devkitv1.AuthLoginProviderCallbackResponse{
 		User:          response.User,
 		NavigationBar: response.NavigationBar,

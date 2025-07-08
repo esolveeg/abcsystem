@@ -1,3 +1,4 @@
+create extension http with schema extensions;
 -- Allow authenticated users full access to the abchotels bucket
 CREATE POLICY "Allow unauth INSERTs" ON storage.buckets
 	FOR INSERT
@@ -17,7 +18,7 @@ CREATE POLICY "Non-Authenticated users can manage abchotels bucket" ON storage.o
 SELECT
 	*
 FROM
-	accounts_schema.permissions_populate(execluded_tables => ARRAY['navigation_bar_item', 'log', 'setting', 'input_type'], added_tables => ARRAY['storage.bucket', 'storage.object', 'auth.session']);
+	accounts_schema.permissions_populate(execluded_tables => ARRAY['navigation_bar_item', 'log', 'setting', 'input_type'], added_tables => ARRAY['storage.bucket', 'storage.file', 'auth.session']);
 
 INSERT INTO accounts_schema.role (
 	role_name,

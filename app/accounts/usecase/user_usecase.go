@@ -2,12 +2,15 @@ package usecase
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"connectrpc.com/connect"
 	"github.com/darwishdev/devkit-api/db"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"github.com/google/uuid"
 	"github.com/supabase-community/auth-go/types"
+	"google.golang.org/genproto/googleapis/rpc/errdetails"
 )
 
 func (u *AccountsUsecase) UserDelete(ctx context.Context, req *connect.Request[devkitv1.UserDeleteRequest]) (*devkitv1.UserDeleteResponse, error) {
@@ -56,6 +59,16 @@ func (u *AccountsUsecase) UserFindForUpdate(ctx context.Context, req *connect.Re
 		Request: request,
 	}, nil
 }
+
+func (u *AccountsUsecase) UserFind(ctx context.Context, req *connect.Request[devkitv1.UserFindRequest]) (*devkitv1.UserFindResponse, error) {
+	user, err := u.repo.UserFind(ctx, db.UserFindParams{UserID: req.Msg.RecordId})
+	if err != nil {
+		return nil, err
+	}
+	return &devkitv1.UserFindResponse{
+		Record: u.adapter.UserViewEntityGrpcFromSql(user),
+	}, nil
+}
 func (u *AccountsUsecase) UserTypeListInput(ctx context.Context) (*devkitv1.UserTypeListInputResponse, error) {
 	users, err := u.repo.UserTypeListInput(ctx)
 	if err != nil {
@@ -80,6 +93,23 @@ func (u *AccountsUsecase) UserList(ctx context.Context) (*devkitv1.UserListRespo
 	response := u.adapter.UserListGrpcFromSql(users)
 	return response, nil
 }
+func addBadRequestDetail(cErr *connect.Error, br *errdetails.BadRequest) {
+	if br == nil {
+		return
+	}
+	if detail, derr := connect.NewErrorDetail(br); derr == nil {
+		cErr.AddDetail(detail)
+	}
+}
+
+func brSingle(field, msg string) *errdetails.BadRequest {
+	return &errdetails.BadRequest{
+		FieldViolations: []*errdetails.BadRequest_FieldViolation{{
+			Field:       field,
+			Description: msg,
+		}},
+	}
+}
 func (u *AccountsUsecase) UserCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.UserCreateUpdateRequest]) (*devkitv1.UserCreateUpdateResponse, error) {
 	supabasRequest := types.AdminUpdateUserRequest{
 		Email:    req.Msg.UserEmail,
@@ -98,6 +128,14 @@ func (u *AccountsUsecase) UserCreateUpdate(ctx context.Context, req *connect.Req
 	}
 	_, err := u.supaapi.UserCreateUpdate(supabasRequest)
 	if err != nil {
+		if err.Error() != "" {
+			if strings.Contains(err.Error(), "user_already_exists") {
+				cErr := connect.NewError(connect.CodeAlreadyExists,
+					fmt.Errorf("duplicate value for %s", "userEmail"))
+				addBadRequestDetail(cErr, brSingle("userEmail", "value already exists"))
+				return nil, cErr
+			}
+		}
 		return nil, err
 	}
 	userCreateParams := u.adapter.UserCreateUpdateSqlFromGrpc(req.Msg)

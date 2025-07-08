@@ -1,7 +1,10 @@
 package adapter
 
 import (
+	"encoding/json"
+
 	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/pkg/dateutils"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -10,20 +13,44 @@ func (a *AccountsAdapter) UserEntityGrpcFromSql(resp *db.AccountsSchemaUser) *de
 	return &devkitv1.AccountsSchemaUser{
 		UserId:     int32(resp.UserID),
 		UserName:   resp.UserName,
+		UserImage:  resp.UserImage.String,
 		UserTypeId: resp.UserTypeID,
 		TenantId:   resp.TenantID.Int32,
 		UserPhone:  resp.UserPhone.String,
 		UserEmail:  resp.UserEmail, // User's email, unique in DB
-		CreatedAt:  db.TimeToProtoTimeStamp(resp.CreatedAt.Time),
+		CreatedAt:  db.TimeToString(resp.CreatedAt.Time),
 		DeletedAt:  db.TimeToString(resp.DeletedAt.Time),
 	}
 }
 
+func (a *AccountsAdapter) UserViewEntityGrpcFromSql(resp *db.AccountsSchemaUserView) *devkitv1.AccountsSchemaUserView {
+	record := &devkitv1.AccountsSchemaUserView{
+		UserId:       int32(resp.UserID),
+		UserImage:    resp.UserImage.String,
+		UserName:     resp.UserName,
+		UserTypeId:   resp.UserTypeID,
+		UserTypeName: resp.UserTypeName,
+
+		UserSecurityLevel: resp.UserSecurityLevel,
+		TenantName:        resp.TenantName,
+		TenantId:          resp.TenantID,
+		UserPhone:         resp.UserPhone.String,
+		UserEmail:         resp.UserEmail,
+		CreatedAt:         dateutils.DateTimeToStringDigit(resp.CreatedAt.Time),
+		UpdatedAt:         dateutils.DateTimeToStringDigit(resp.UpdatedAt.Time),
+		DeletedAt:         dateutils.DateTimeToStringDigit(resp.DeletedAt.Time),
+	}
+	if len(resp.Roles) > 0 {
+		json.Unmarshal(resp.Roles, &record.Roles)
+	}
+	return record
+}
 func (a *AccountsAdapter) UserCreateUpdateSqlFromGrpc(req *devkitv1.UserCreateUpdateRequest) *db.UserCreateUpdateParams {
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(req.UserPassword), bcrypt.DefaultCost)
 	resp := &db.UserCreateUpdateParams{
 		UserID:       req.UserId,
 		UserName:     req.UserName,
+		UserImage:    req.UserImage,
 		UserTypeID:   req.UserTypeId,
 		UserPhone:    req.UserPhone,
 		UserEmail:    req.UserEmail,
@@ -37,6 +64,7 @@ func (a *AccountsAdapter) UserFindForUpdateUpdateGrpcFromSql(resp *db.UserFindFo
 		UserId:     resp.UserID,
 		TenantId:   resp.TenantID.Int32,
 		UserName:   resp.UserName,
+		UserImage:  resp.UserImage.String,
 		UserTypeId: resp.UserTypeID,
 		UserPhone:  resp.UserPhone.String,
 		UserEmail:  resp.UserEmail,
@@ -68,11 +96,11 @@ func (a *AccountsAdapter) UserListInputGrpcFromSql(resp *[]db.UserListInputRow) 
 		Options: records,
 	}
 }
-func (a *AccountsAdapter) UserListGrpcFromSql(resp *[]db.AccountsSchemaUser) *devkitv1.UserListResponse {
-	records := make([]*devkitv1.AccountsSchemaUser, 0)
-	deletedRecords := make([]*devkitv1.AccountsSchemaUser, 0)
+func (a *AccountsAdapter) UserListGrpcFromSql(resp *[]db.AccountsSchemaUserView) *devkitv1.UserListResponse {
+	records := make([]*devkitv1.AccountsSchemaUserView, 0)
+	deletedRecords := make([]*devkitv1.AccountsSchemaUserView, 0)
 	for _, v := range *resp {
-		record := a.UserEntityGrpcFromSql(&v)
+		record := a.UserViewEntityGrpcFromSql(&v)
 		if v.DeletedAt.Valid {
 			deletedRecords = append(deletedRecords, record)
 		} else {

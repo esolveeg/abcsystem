@@ -29,7 +29,7 @@ message LoginInfo {
 }
 
 message AuthLoginResponse {
-  AccountsSchemaUser user = 1;
+  AccountsSchemaUserView user = 1;
   LoginInfo login_info = 2;
   repeated NavigationBarItem navigation_bar = 3;
 }
@@ -54,7 +54,7 @@ message AuthRegisterRequest {
   ];
 }
 message AuthRegisterResponse {
-  AccountsSchemaUser user = 1;
+  AccountsSchemaUserView user = 1;
   LoginInfo login_info = 2;
 }
 message AuthAuthorizeRequest {}
@@ -94,7 +94,7 @@ message AuthLoginProviderCallbackRequest {
   string expires_in = 4;
 }
 message AuthLoginProviderCallbackResponse {
-  AccountsSchemaUser user = 1;
+  AccountsSchemaUserView user = 1;
   LoginInfo login_info = 2;
   repeated NavigationBarItem navigation_bar = 3;
 }
@@ -110,7 +110,7 @@ message AuthResetPasswordEmailResponse {
 }
 message AuthResetPasswordRequest {
   string email = 1 [
-    (buf.validate.field).string.email = true,
+    (buf.validate.field).required = false,
     (buf.validate.field).string.max_len = 200
   ];
 
@@ -123,7 +123,7 @@ message AuthResetPasswordRequest {
   string redirect_url = 5;
 }
 message AuthResetPasswordResponse {
-  AccountsSchemaUser user = 1;
+  AccountsSchemaUserView user = 1;
   LoginInfo login_info = 2;
   repeated NavigationBarItem navigation_bar = 3;
 }

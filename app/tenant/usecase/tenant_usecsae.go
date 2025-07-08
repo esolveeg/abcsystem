@@ -57,6 +57,15 @@ func (u *TenantUsecase) TenantList(ctx context.Context, req *connect.Request[dev
 
 }
 
+func (u *TenantUsecase) TenantListInput(ctx context.Context, req *connect.Request[devkitv1.TenantListInputRequest]) (*devkitv1.TenantListInputResponse, error) {
+	records, err := u.repo.TenantListInput(ctx, 0)
+	if err != nil {
+		return nil, err
+	}
+	resp := u.adapter.TenantListInputGrpcFromSql(records)
+	return resp, nil
+
+}
 func (u *TenantUsecase) TenantDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.TenantDeleteRestoreRequest]) (*devkitv1.TenantDeleteRestoreResponse, error) {
 	record, err := u.repo.TenantDeleteRestore(ctx, req.Msg.GetRecords())
 	if err != nil {

@@ -13,6 +13,7 @@ import "google/protobuf/timestamp.proto";
 message TenantsSchemaSection {
   int32 section_id = 1;
   string section_name = 2;
+  string section_slug = 19;
   string section_name_ar = 3;
   string section_header = 4;
   string section_header_ar = 5;
@@ -33,6 +34,7 @@ message TenantsSchemaSection {
 message TenantsSchemaSectionView {
   int32 section_id = 1;
   string section_name = 2;
+  string section_slug = 19;
   string section_name_ar = 3;
   string section_header = 4;
   string section_header_ar = 5;
@@ -59,6 +61,10 @@ message SectionListResponse {
 message SectionCreateUpdateRequest {
   int32 section_id = 1;
   string section_name = 2 [
+    (buf.validate.field).string.min_len = 2,
+    (buf.validate.field).string.max_len = 200
+  ];
+  string section_slug= 19 [
     (buf.validate.field).string.min_len = 2,
     (buf.validate.field).string.max_len = 200
   ];

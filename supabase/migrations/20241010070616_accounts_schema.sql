@@ -41,6 +41,7 @@ CREATE TABLE accounts_schema.user_type (
 CREATE TABLE accounts_schema.user (
 	user_id serial PRIMARY KEY,
 	user_name varchar(200) NOT NULL,
+	user_image varchar(200),
 	tenant_id int,
 	FOREIGN KEY (tenant_id) REFERENCES tenants_schema.tenant (tenant_id),
 	user_type_id int NOT NULL,
@@ -80,8 +81,9 @@ CREATE TABLE accounts_schema.navigation_bar_item (
 	FOREIGN KEY (tenant_id) REFERENCES tenants_schema.tenant (tenant_id),
 	partial_type_id int,
 	FOREIGN KEY (partial_type_id) REFERENCES tenants_schema.partial_type (partial_type_id),
-	parent_id int, -- Self-referential ID, allows item to belong to a parent item (for nested menus) if this is null the this item on the root level FOREIGN KEY (parent_id) REFERENCES accounts_schema.navigation_bar_item (navigation_bar_item_id),
+  parent_id int, -- Self-referential ID, allows item to belong to a parent item (for nested menus) if this is null the this item on the root level FOREIGN KEY (parent_id) REFERENCES accounts_schema.navigation_bar_item (navigation_bar_item_id),
 	navigation_bar_id int,
+  keywords text,
 	FOREIGN KEY (navigation_bar_id) REFERENCES accounts_schema.navigation_bar (navigation_bar_id),
 	permission_id int, -- Permission required to access this item
 	FOREIGN KEY (permission_id) REFERENCES accounts_schema.permission (permission_id),

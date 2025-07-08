@@ -8,6 +8,17 @@ import (
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
+func (api *Api) UserFind(ctx context.Context, req *connect.Request[devkitv1.UserFindRequest]) (*connect.Response[devkitv1.UserFindResponse], error) {
+	response, err := api.accountsUsecase.UserFind(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to retrieve users find: %w", err)
+	}
+	response.Options = api.getAvailableOptions(req.Header(), "find")
+	if response.Record.DeletedAt == "" {
+		response.Options.DeleteHandler = nil
+	}
+	return connect.NewResponse(response), nil
+}
 func (api *Api) UserFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.UserFindForUpdateRequest]) (*connect.Response[devkitv1.UserFindForUpdateResponse], error) {
 	response, err := api.accountsUsecase.UserFindForUpdate(ctx, req)
 	if err != nil {

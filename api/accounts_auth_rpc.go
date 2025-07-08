@@ -65,18 +65,16 @@ func (api *Api) AuthResetPasswordEmail(ctx context.Context, req *connect.Request
 	return connect.NewResponse(response), nil
 }
 func (api *Api) AuthResetPassword(ctx context.Context, req *connect.Request[devkitv1.AuthResetPasswordRequest]) (*connect.Response[devkitv1.AuthResetPasswordResponse], error) {
-	err := api.validator.Validate(req.Msg)
-	if err != nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("validation error: %w", err))
-	}
 	if req.Msg.NewPassword != req.Msg.NewPasswordConfirmation {
 		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("password and confirmation do not match"))
 	}
-	payload, err := api.authorizeRequestHeader(req.Header())
-	if err != nil {
-		return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("invalid access token: %w", err))
+	if len(req.Msg.ResetToken) > 6 {
+		user, err := api.supaapi.AuthClient.WithToken(req.Msg.ResetToken).GetUser()
+		if err != nil {
+			return nil, err
+		}
+		req.Msg.Email = user.Email
 	}
-	req.Msg.Email = payload.Username
 	response, err := api.accountsUsecase.AuthResetPassword(ctx, req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to reset password: %w", err)
