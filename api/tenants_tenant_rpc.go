@@ -5,6 +5,7 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
+	"github.com/darwishdev/devkit-api/pkg/headerkeys"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
@@ -63,6 +64,27 @@ func (api *Api) TenantDeleteRestore(ctx context.Context, req *connect.Request[de
 
 }
 
+func (api *Api) TenantDashboard(ctx context.Context, req *connect.Request[devkitv1.TenantDashboardRequest]) (*connect.Response[devkitv1.TenantDashboardResponse], error) {
+	resp, err := api.tenantUsecase.TenantDashboard(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	pageListReq := connect.NewRequest(&devkitv1.PageListRequest{})
+	permissGroup, err := api.CheckForAccess(ctx, "PageList", "page")
+	if err != nil {
+		return nil, err
+	}
+
+	// pageListReq.Header().Add(key string, value string)
+	headerkeys.WithPermissionGroup(pageListReq.Header(), "page")
+	headerkeys.WithPermittedActions(pageListReq.Header(), *permissGroup)
+	pagesResponse, err := api.PageList(ctx, pageListReq)
+	if err != nil {
+		return nil, err
+	}
+	resp.Pages = pagesResponse.Msg
+	return connect.NewResponse(resp), nil
+}
 func (api *Api) PartialTypeListInput(ctx context.Context, req *connect.Request[devkitv1.PartialTypeListInputRequest]) (*connect.Response[devkitv1.PartialTypeListInputResponse], error) {
 	resp, err := api.tenantUsecase.PartialTypeListInput(ctx, req)
 	if err != nil {

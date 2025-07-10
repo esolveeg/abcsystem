@@ -78,6 +78,10 @@ service DevkitService {
 
   rpc TenantDeleteRestore(TenantDeleteRestoreRequest) returns (TenantDeleteRestoreResponse) {}
 
+
+  rpc TenantDashboard(TenantDashboardRequest) returns (TenantDashboardResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
   rpc TenantFind(TenantFindRequest) returns (TenantFindResponse) {
     option (skip_authentication) = true;
     option idempotency_level = NO_SIDE_EFFECTS;

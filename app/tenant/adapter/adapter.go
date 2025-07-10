@@ -33,6 +33,7 @@ type TenantAdapterInterface interface {
 	PartialTypeListInputGrpcFromSql(resp []db.PartialTypeListInputRow) *devkitv1.PartialTypeListInputResponse
 	TenantEntityGrpcFromSql(resp *db.TenantsSchemaTenant) *devkitv1.TenantsSchemaTenant
 	TenantCreateUpdateSqlFromGrpc(req *devkitv1.TenantCreateUpdateRequest) *db.TenantCreateUpdateParams
+	TenantDashboardGrpcFromSql(resp *[]db.TenantDashboardRow) *devkitv1.TenantDashboardResponse
 }
 
 type TenantAdapter struct {

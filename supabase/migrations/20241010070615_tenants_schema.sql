@@ -25,7 +25,8 @@ CREATE TABLE tenants_schema.tenant (
 
 CREATE TABLE tenants_schema.partial_type (
 	partial_type_id serial PRIMARY KEY,
-	partial_type_name varchar(200) NOT NULL UNIQUE
+	partial_type_name varchar(200) NOT NULL UNIQUE,
+	partial_type_icon varchar(200) 
 );
 
 CREATE TABLE tenants_schema.page (

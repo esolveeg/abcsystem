@@ -42,6 +42,7 @@ type TenantUsecaseInterface interface {
 	TenantListInput(ctx context.Context, req *connect.Request[devkitv1.TenantListInputRequest]) (*devkitv1.TenantListInputResponse, error)
 	TenantFind(ctx context.Context, req *connect.Request[devkitv1.TenantFindRequest]) (*devkitv1.TenantFindResponse, error)
 	TenantCreateUpdate(ctx context.Context, req *connect.Request[devkitv1.TenantCreateUpdateRequest]) (*devkitv1.TenantCreateUpdateResponse, error)
+	TenantDashboard(ctx context.Context, req *connect.Request[devkitv1.TenantDashboardRequest]) (*devkitv1.TenantDashboardResponse, error)
 }
 type TenantUsecase struct {
 	store       db.Store

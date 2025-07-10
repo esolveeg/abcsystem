@@ -41,6 +41,14 @@ func (repo *TenantRepo) TenantList(ctx context.Context, tenantId int32) (*[]db.T
 	return &resp, nil
 }
 
+func (repo *TenantRepo) TenantDashboard(ctx context.Context) (*[]db.TenantDashboardRow, error) {
+	tenateID, _ := contextkeys.TenantID(ctx)
+	resp, err := repo.store.TenantDashboard(ctx, tenateID)
+	if err != nil {
+		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
+	}
+	return &resp, nil
+}
 func (repo *TenantRepo) TenantListInput(ctx context.Context, tenantId int32) (*[]db.TenantListInputRow, error) {
 	resp, err := repo.store.TenantListInput(ctx)
 	if err != nil {

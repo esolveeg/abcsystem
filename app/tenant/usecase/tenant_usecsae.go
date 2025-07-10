@@ -56,6 +56,15 @@ func (u *TenantUsecase) TenantList(ctx context.Context, req *connect.Request[dev
 	return resp, nil
 
 }
+func (u *TenantUsecase) TenantDashboard(ctx context.Context, req *connect.Request[devkitv1.TenantDashboardRequest]) (*devkitv1.TenantDashboardResponse, error) {
+	records, err := u.repo.TenantDashboard(ctx)
+	if err != nil {
+		return nil, err
+	}
+	response := u.adapter.TenantDashboardGrpcFromSql(records)
+	return response, nil
+
+}
 
 func (u *TenantUsecase) TenantListInput(ctx context.Context, req *connect.Request[devkitv1.TenantListInputRequest]) (*devkitv1.TenantListInputResponse, error) {
 	records, err := u.repo.TenantListInput(ctx, 0)

@@ -233,3 +233,18 @@ FROM
 WHERE
 	t.deleted_at IS NULL;
 
+-- name: TenantDashboard :many
+with user_count as (
+select COUNT(*) user_count from accounts_schema.user where tenant_id = is_null_replace(sqlc.arg('tenant_id') , tenant_id)
+) , role_count as (
+select COUNT(*) role_count from accounts_schema.role where tenant_id = is_null_replace(sqlc.arg('tenant_id') , tenant_id)
+) , tenant_count as (
+  select count(*) tenant_count from tenants_schema.tenant where tenant_id = is_null_replace(sqlc.arg('tenant_id') , tenant_id)
+) , section_count as (
+  select count(*) section_count from tenants_schema.section where tenant_id = is_null_replace(sqlc.arg('tenant_id') , tenant_id)
+) , partial_by_type as (
+select p.partial_type_id , pt.partial_type_name , COUNT(p.*) partial_type_count from tenants_schema.partial p 
+  join tenants_schema.partial_type pt on p.partial_type_id = pt.partial_type_id
+  join tenants_schema.section s on p.section_id = s.section_id
+  where s.tenant_id = is_null_replace(sqlc.arg('tenant_id') , s.tenant_id) group by p.partial_type_id ,pt.partial_type_name 
+) SELECT  * FROM user_count , role_count ,tenant_count, section_count ,partial_by_type;

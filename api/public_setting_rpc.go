@@ -11,11 +11,7 @@ func (api *Api) SettingUpdate(ctx context.Context, req *connect.Request[devkitv1
 	if err := ctx.Err(); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
-	_, err := api.checkForAccess(req.Header(), "setting", "update")
-	if err != nil {
-		return nil, err
-	}
-	err = api.publicUsecase.SettingUpdate(ctx, req.Msg)
+	err := api.publicUsecase.SettingUpdate(ctx, req.Msg)
 	if err != nil {
 		return nil, err
 	}

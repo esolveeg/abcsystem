@@ -11,11 +11,7 @@ func (api *Api) IconCreateUpdateBulk(ctx context.Context, req *connect.Request[d
 	if err := ctx.Err(); err != nil {
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
-	_, err := api.checkForAccess(req.Header(), "icon", "create")
-	if err != nil {
-		return nil, err
-	}
-	_, err = api.publicUsecase.IconCreateUpdateBulk(ctx, req.Msg)
+	_, err := api.publicUsecase.IconCreateUpdateBulk(ctx, req.Msg)
 	if err != nil {
 		return nil, err
 	}

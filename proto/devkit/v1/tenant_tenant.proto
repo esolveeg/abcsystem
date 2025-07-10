@@ -122,3 +122,27 @@ message TenantFindRequest {
 message TenantFindResponse {
   TenantsSchemaTenantView tenant = 1;
 }
+message TenantDashboardRequest {
+}
+
+message CountCard {
+  int32 count = 1;
+  string link = 2;
+}
+message TenantDashboardCounts {
+  CountCard role_count = 1;
+  CountCard user_count = 2;
+  CountCard tenant_count = 3;
+  CountCard section_count = 4;
+}
+
+message PartialByType {
+  int32 partial_type_id = 1;
+  string partial_type_name = 2;
+  int32 partial_count = 3;
+}
+message TenantDashboardResponse {
+  TenantDashboardCounts  counts = 1;
+  repeated PartialByType  partial_by_type = 2;
+  PageListResponse pages = 3;
+}

@@ -9,6 +9,35 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+func (a *TenantAdapter) TenantDashboardGrpcFromSql(resp *[]db.TenantDashboardRow) *devkitv1.TenantDashboardResponse {
+	partialByType := make([]*devkitv1.PartialByType, len(*resp))
+	counts := &devkitv1.TenantDashboardCounts{}
+	for i, r := range *resp {
+		if i == 0 {
+			counts.RoleCount = &devkitv1.CountCard{
+				Link:  "/accounts/role",
+				Count: int32(r.RoleCount),
+			}
+			counts.UserCount = &devkitv1.CountCard{
+				Link:  "/accounts/user",
+				Count: int32(r.UserCount),
+			}
+			counts.SectionCount = &devkitv1.CountCard{
+				Link:  "/tenants/section",
+				Count: int32(r.SectionCount),
+			}
+			counts.TenantCount = &devkitv1.CountCard{
+				Link:  "/tenants/tenant",
+				Count: int32(r.TenantCount),
+			}
+		}
+		partialByType[i] = &devkitv1.PartialByType{PartialTypeId: r.PartialTypeID, PartialTypeName: r.PartialTypeName, PartialCount: int32(r.PartialTypeCount)}
+	}
+	return &devkitv1.TenantDashboardResponse{
+		Counts:        counts,
+		PartialByType: partialByType,
+	}
+}
 func (a *TenantAdapter) TenantEntityGrpcFromSql(resp *db.TenantsSchemaTenant) *devkitv1.TenantsSchemaTenant {
 	var tenantLinks map[string]string
 	log.Debug().Interface("tenant links is", resp.TenantLinks).Msg("links is")

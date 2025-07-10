@@ -31,6 +31,7 @@ type TenantRepoInterface interface {
 	TenantList(ctx context.Context, tenantId int32) (*[]db.TenantsSchemaTenant, error)
 	TenantFind(ctx context.Context, tenantId int32) (*db.TenantFindRow, error)
 	TenantCreateUpdate(ctx context.Context, req *db.TenantCreateUpdateParams) (*db.TenantsSchemaTenant, error)
+	TenantDashboard(ctx context.Context) (*[]db.TenantDashboardRow, error)
 }
 
 type TenantRepo struct {
