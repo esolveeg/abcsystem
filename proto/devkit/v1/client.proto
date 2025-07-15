@@ -69,6 +69,7 @@ message RowActions {
 message SelectInputOption {
   int32 value = 1;
   string label = 2;
+  string group = 5;
   string icon = 3;
   string note = 4;
 }

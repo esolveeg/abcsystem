@@ -174,3 +174,14 @@ user_password = $2
 WHERE
 user_email = $1;
 
+-- name: UserPermissionListInput :many
+select
+  permission_group::varchar  permission_group,
+  json_agg(
+    json_build_object(
+      'label', permission_name,
+      'value', permission_id
+    )
+  ) as options
+from accounts_schema.user_permissions_list(in_user_id => sqlc.arg('user_id')::int) up
+group by permission_group;

@@ -7,6 +7,15 @@ import (
 	"github.com/darwishdev/devkit-api/pkg/contextkeys"
 )
 
+func (repo *AccountsRepo) UserPermissionListInput(ctx context.Context) (*[]db.UserPermissionListInputRow, error) {
+	callerID, _ := contextkeys.CallerID(ctx)
+	resp, err := repo.store.UserPermissionListInput(ctx, callerID)
+	if err != nil {
+		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
+	}
+	return &resp, nil
+}
+
 func (repo *AccountsRepo) UserListInput(ctx context.Context) (*[]db.UserListInputRow, error) {
 	callerID, _ := contextkeys.CallerID(ctx)
 	resp, err := repo.store.UserListInput(ctx, callerID)

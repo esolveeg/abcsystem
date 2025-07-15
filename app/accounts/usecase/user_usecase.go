@@ -77,6 +77,15 @@ func (u *AccountsUsecase) UserTypeListInput(ctx context.Context) (*devkitv1.User
 	response := u.adapter.UserTypeListInputGrpcFromSql(users)
 	return response, nil
 }
+
+func (u *AccountsUsecase) UserPermissionListInput(ctx context.Context, req *connect.Request[devkitv1.UserPermissionListInputRequest]) (*devkitv1.UserPermissionListInputResponse, error) {
+	users, err := u.repo.UserPermissionListInput(ctx)
+	if err != nil {
+		return nil, err
+	}
+	response := u.adapter.UserPermissionListInputGrpcFromSql(users)
+	return response, nil
+}
 func (u *AccountsUsecase) UserListInput(ctx context.Context) (*devkitv1.UserListInputResponse, error) {
 	users, err := u.repo.UserListInput(ctx)
 	if err != nil {

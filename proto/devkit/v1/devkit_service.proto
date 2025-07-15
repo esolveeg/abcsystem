@@ -196,11 +196,16 @@ service DevkitService {
   rpc UserList(UserListRequest) returns (UserListResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
   }
+
   rpc UserListInput(UserListInputRequest) returns (UserListInputResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
     option (skip_authorization) = true;
   }
 
+  rpc UserPermissionListInput(UserPermissionListInputRequest) returns (UserPermissionListInputResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+    option (skip_authorization) = true;
+  }
   rpc UserTypeListInput(UserTypeListInputRequest) returns (UserTypeListInputResponse) {
     option idempotency_level = NO_SIDE_EFFECTS;
     option (skip_authorization) = true;

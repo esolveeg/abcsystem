@@ -5,6 +5,7 @@ CREATE OR REPLACE FUNCTION accounts_schema.user_permissions_list (in_user_id int
 	RETURNS TABLE (
 		permission_id int,
 		permission_group varchar(200),
+		permission_name varchar(200),
 		permission_function varchar(200))
 	LANGUAGE plpgsql
 	AS $$
@@ -13,6 +14,7 @@ BEGIN
 	SELECT
 		rp.permission_id,
 		p.permission_group,
+		p.permission_name,
 		p.permission_function
 	FROM
 		accounts_schema.role_permission rp

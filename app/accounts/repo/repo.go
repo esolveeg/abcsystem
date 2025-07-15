@@ -10,6 +10,7 @@ type AccountsRepoInterface interface {
 	UserNavigationBarFind(ctx context.Context, req db.UserNavigationBarFindParams) (*[]db.UserNavigationBarFindRow, error)
 	UserTypeListInput(ctx context.Context) (*[]db.UserTypeListInputRow, error)
 	UserListInput(ctx context.Context) (*[]db.UserListInputRow, error)
+	UserPermissionListInput(ctx context.Context) (*[]db.UserPermissionListInputRow, error)
 	UseriFindForUpdate(ctx context.Context, req int32) (*db.UserFindForUpdateRow, error)
 	UserFind(ctx context.Context, req db.UserFindParams) (*db.AccountsSchemaUserView, error)
 	UserDeleteRestore(ctx context.Context, req db.UserDeleteRestoreParams) (*db.AccountsSchemaUser, error)

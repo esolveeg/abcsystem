@@ -29,7 +29,7 @@ func (api *Api) authorizedUserPermissions(ctx context.Context, payload *auth.Pay
 
 }
 
-func (api *Api) CheckForAccess(ctx context.Context, function string, group string) (*map[string]bool, error) {
+func (api *Api) CurrentUserPermissionsMap(ctx context.Context) (redisclient.PermissionsMap, error) {
 	callerId, ok := contextkeys.CallerID(ctx)
 	if !ok {
 		return nil, nil
@@ -42,7 +42,7 @@ func (api *Api) CheckForAccess(ctx context.Context, function string, group strin
 		}
 		for _, rec := range permissions {
 			groupPermissions := make(map[string]bool)
-			err := json.Unmarshal(rec.Permissions, &groupPermissions)
+			err = json.Unmarshal(rec.Permissions, &groupPermissions)
 			if err != nil {
 				return nil, err
 			}
@@ -55,6 +55,15 @@ func (api *Api) CheckForAccess(ctx context.Context, function string, group strin
 		}
 
 	}
+	return permissionsMap, nil
+
+}
+func (api *Api) CheckForAccess(ctx context.Context, function string, group string) (*map[string]bool, error) {
+	permissionsMap, err := api.CurrentUserPermissionsMap(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	permissionGroup, ok := permissionsMap[group]
 	if !ok {
 		return nil, connect.NewError(connect.CodePermissionDenied, fmt.Errorf("user does not have the required permission for this group %s", group))

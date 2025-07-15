@@ -28,6 +28,7 @@ type AccountsUsecaseInterface interface {
 	AuthSessionList(ctx context.Context, req *connect.Request[devkitv1.AuthSessionListRequest]) (*devkitv1.AuthSessionListResponse, error)
 	AuthRegister(ctx context.Context, req *connect.Request[devkitv1.AuthRegisterRequest]) (*devkitv1.AuthRegisterResponse, error)
 	UserDeleteRestore(ctx context.Context, req *connect.Request[devkitv1.UserDeleteRestoreRequest]) (*devkitv1.UserDeleteRestoreResponse, error)
+	UserPermissionListInput(ctx context.Context, req *connect.Request[devkitv1.UserPermissionListInputRequest]) (*devkitv1.UserPermissionListInputResponse, error)
 	UserList(ctx context.Context) (*devkitv1.UserListResponse, error)
 	UserTypeListInput(ctx context.Context) (*devkitv1.UserTypeListInputResponse, error)
 	UserListInput(ctx context.Context) (*devkitv1.UserListInputResponse, error)

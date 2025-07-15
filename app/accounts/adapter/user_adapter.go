@@ -96,6 +96,24 @@ func (a *AccountsAdapter) UserListInputGrpcFromSql(resp *[]db.UserListInputRow) 
 		Options: records,
 	}
 }
+func (a *AccountsAdapter) UserPermissionListInputGrpcFromSql(resp *[]db.UserPermissionListInputRow) *devkitv1.UserPermissionListInputResponse {
+	groupedOptions := make([]*devkitv1.SelectInputOptionWithGroup, len(*resp))
+
+	for groupIndex, v := range *resp {
+		items := make([]*devkitv1.SelectInputOption, len(v.Options))
+		if err := json.Unmarshal(v.Options, &items); err != nil {
+			continue
+		}
+		groupedOptions[groupIndex] = &devkitv1.SelectInputOptionWithGroup{
+			GroupName: v.PermissionGroup,
+			Items:     items,
+		}
+	}
+	return &devkitv1.UserPermissionListInputResponse{
+		Options: groupedOptions,
+	}
+}
+
 func (a *AccountsAdapter) UserListGrpcFromSql(resp *[]db.AccountsSchemaUserView) *devkitv1.UserListResponse {
 	records := make([]*devkitv1.AccountsSchemaUserView, 0)
 	deletedRecords := make([]*devkitv1.AccountsSchemaUserView, 0)

@@ -110,3 +110,10 @@ message UserFindResponse {
   AvailableOptions options = 3;
   AccountsSchemaUserView  record = 1;
 }
+
+message UserPermissionListInputRequest {
+}
+message UserPermissionListInputResponse {
+  repeated SelectInputOptionWithGroup   options  = 1;
+}
+
