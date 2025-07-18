@@ -258,7 +258,7 @@ service DevkitService {
   }
 
   rpc AuthSessionList(AuthSessionListRequest) returns (AuthSessionListResponse) {
-    option (permission_group) = 'auth';
+    option (permission_group) = 'session';
     option (permission_name) = 'SessionList';
   }
 

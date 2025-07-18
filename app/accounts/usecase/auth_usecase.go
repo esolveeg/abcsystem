@@ -103,15 +103,24 @@ func (u *AccountsUsecase) AuthRefreshToken(
 	// // 1. Validate refresh token
 	payload, err := u.tokenMaker.VerifyRefreshToken(refreshToken)
 	if err != nil {
-		return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("invalid refresh token"))
+		return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("invalid refresh token : %w", err))
 	}
 	user, err := u.repo.UserFindForToken(ctx, &db.UserFindForTokenParams{UserID: payload.UserId})
-	loginInfo, _, err := u.UserGenerateTokens(
-		user.UserEmail,
-		user.UserID,
-		user.TenantID.Int32,
-		user.UserSecurityLevel,
-	)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeUnauthenticated, fmt.Errorf("failed to fetch user from db : %w", err))
+	}
+	response := &devkitv1.AuthLoginResponse{
+		LoginInfo: &devkitv1.LoginInfo{},
+		User:      &devkitv1.AccountsSchemaUserView{UserId: user.UserID, TenantId: user.TenantID.Int32, UserSecurityLevel: user.UserSecurityLevel},
+	}
+
+	err = u.WithTokens(ctx, req.Peer().Addr, req.Header().Get("User-Agent"), user.UserEmail, response, "", "")
+	// loginInfo, _, err := u.UserGenerateTokens(
+	// 	user.UserEmail,
+	// 	user.UserID,
+	// 	user.TenantID.Int32,
+	// 	user.UserSecurityLevel,
+	// )
 	// // 2. Generate new tokens
 	if err != nil {
 		return nil, err
@@ -119,7 +128,7 @@ func (u *AccountsUsecase) AuthRefreshToken(
 
 	// // 3. Return new tokens
 	return &devkitv1.AuthRefreshTokenResponse{
-		LoginInfo: loginInfo,
+		LoginInfo: response.LoginInfo,
 	}, nil
 }
 func (u *AccountsUsecase) UserGenerateTokens(username string, userId int32, tenantId int32, userSecurityLevel int32) (*devkitv1.LoginInfo, string, error) {
