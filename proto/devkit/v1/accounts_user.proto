@@ -31,17 +31,17 @@ message UserCreateUpdateRequest {
 }
 message AccountsSchemaUser {
   int32 user_id = 1;
-  string user_name = 2; // User's name, should be unique
-  string user_image= 22; // User's name, should be unique
+  string user_name = 2; 
+  string user_image= 22; 
   int32 tenant_id = 12;
-  int32 user_security_level = 3; // Security level of the user
-  int32 user_type_id = 4; // Foreign key for user type
-  string user_phone = 5; // Optional phone number
-  string user_email = 6; // User's email, unique in DB
-  string user_password = 7; // Password
-  string created_at = 9; // Creation timestamp
-  string updated_at = 10; // Update timestamp
-  string deleted_at = 11; // Deletion timestamp
+  int32 user_security_level = 3; 
+  int32 user_type_id = 4; 
+  string user_phone = 5; 
+  string user_email = 6; 
+  string user_password = 7; 
+  string created_at = 9; 
+  string updated_at = 10; 
+  string deleted_at = 11; 
 }
 message UserRole {
   int32 user_id = 1;
@@ -52,8 +52,7 @@ message AccountsSchemaUserView {
   int32 user_id         = 1; 
   string user_name      = 2; 
   string user_image = 22;
-
-  int32 user_security_level = 23; // Security level of the user
+  int32 user_security_level = 23; 
   string user_email     = 3; 
   string user_phone     = 4; 
   int32 user_type_id    = 5;
@@ -65,6 +64,7 @@ message AccountsSchemaUserView {
   string deleted_at = 11;
   repeated UserRole roles  = 12;  // nested array of Role
 }
+
 message UserCreateUpdateResponse {
   AccountsSchemaUser user = 1;
 }
@@ -81,10 +81,27 @@ message UserDeleteRequest {
 message UserDeleteResponse {
   repeated AccountsSchemaUser records = 1;
 }
+message UserListRow {
+  int32 user_id         = 1; 
+  string user_name      = 2; 
+  string user_image = 22;
+  int32 user_security_level = 23; 
+  string user_email     = 3; 
+  string user_phone     = 4; 
+  int32 user_type_id    = 5;
+  string user_type_name = 6;
+  int32 tenant_id       = 7;
+  string tenant_name    = 8;
+  string created_at    = 9;
+  string updated_at = 10;
+  string deleted_at = 11;
+  repeated int32 role_ids = 12;
+  repeated UserRole roles  = 13;  // nested array of Role
+}
 message UserListRequest {}
 message UserListResponse {
-  repeated AccountsSchemaUserView  records = 1;
-  repeated AccountsSchemaUserView deleted_records = 2;
+  repeated UserListRow  records = 1;
+  repeated UserListRow deleted_records = 2;
   AvailableOptions options = 3;
 }
 message UserListInputRequest {}

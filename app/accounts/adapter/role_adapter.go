@@ -2,6 +2,7 @@ package adapter
 
 import (
 	"github.com/darwishdev/devkit-api/db"
+	"github.com/darwishdev/devkit-api/pkg/dateutils"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 )
 
@@ -52,11 +53,25 @@ func (a *AccountsAdapter) RoleCreateUpdateSqlFromGrpc(req *devkitv1.RoleCreateUp
 	return resp
 }
 
-func (a *AccountsAdapter) RoleListGrpcFromSql(resp *[]db.AccountsSchemaRole) *devkitv1.RoleListResponse {
-	records := make([]*devkitv1.AccountsSchemaRole, 0)
-	deletedRecords := make([]*devkitv1.AccountsSchemaRole, 0)
+func (a *AccountsAdapter) RoleListRowGrpcFromSql(resp *db.RoleListRow) *devkitv1.RoleListRow {
+	return &devkitv1.RoleListRow{
+		RoleId:            int32(resp.RoleID),
+		RoleName:          resp.RoleName,
+		TenantName:        resp.TenantName,
+		RoleSecurityLevel: resp.RoleSecurityLevel,
+		UserCount:         int32(resp.UserCount),
+		PermissionCount:   int32(resp.PermissionCount),
+		TenantId:          resp.TenantID,
+		CreatedAt:         dateutils.DateTimeToStringDigit(resp.CreatedAt.Time),
+		UpdatedAt:         dateutils.DateTimeToStringDigit(resp.UpdatedAt.Time),
+		DeletedAt:         dateutils.DateTimeToStringDigit(resp.DeletedAt.Time),
+	}
+}
+func (a *AccountsAdapter) RoleListGrpcFromSql(resp *[]db.RoleListRow) *devkitv1.RoleListResponse {
+	records := make([]*devkitv1.RoleListRow, 0)
+	deletedRecords := make([]*devkitv1.RoleListRow, 0)
 	for _, v := range *resp {
-		record := a.RoleEntityGrpcFromSql(&v)
+		record := a.RoleListRowGrpcFromSql(&v)
 		records = append(records, record)
 	}
 	return &devkitv1.RoleListResponse{

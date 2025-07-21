@@ -6,6 +6,7 @@ import (
 	"github.com/darwishdev/devkit-api/db"
 	"github.com/darwishdev/devkit-api/pkg/dateutils"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
+	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -83,6 +84,7 @@ func (a *AccountsAdapter) UserTypeListInputGrpcFromSql(resp *[]db.UserTypeListIn
 		Options: records,
 	}
 }
+
 func (a *AccountsAdapter) UserListInputGrpcFromSql(resp *[]db.UserListInputRow) *devkitv1.UserListInputResponse {
 	records := make([]*devkitv1.SelectInputOption, 0)
 	for _, v := range *resp {
@@ -114,11 +116,40 @@ func (a *AccountsAdapter) UserPermissionListInputGrpcFromSql(resp *[]db.UserPerm
 	}
 }
 
+func (a *AccountsAdapter) UserListRowGrpcFromSql(resp *db.AccountsSchemaUserView) *devkitv1.UserListRow {
+	record := &devkitv1.UserListRow{
+		UserId:            int32(resp.UserID),
+		UserImage:         resp.UserImage.String,
+		UserName:          resp.UserName,
+		UserTypeId:        resp.UserTypeID,
+		UserTypeName:      resp.UserTypeName,
+		UserSecurityLevel: resp.UserSecurityLevel,
+		TenantName:        resp.TenantName,
+		TenantId:          resp.TenantID,
+		UserPhone:         resp.UserPhone.String,
+		UserEmail:         resp.UserEmail,
+		CreatedAt:         dateutils.DateTimeToStringDigit(resp.CreatedAt.Time),
+		UpdatedAt:         dateutils.DateTimeToStringDigit(resp.UpdatedAt.Time),
+		DeletedAt:         dateutils.DateTimeToStringDigit(resp.DeletedAt.Time),
+	}
+	if len(resp.Roles) > 0 {
+		err := json.Unmarshal(resp.Roles, &record.Roles)
+		if err != nil {
+			log.Error().Err(err).Msg("error parsinng user roles into json")
+		}
+	}
+	roleIds := make([]int32, len(record.Roles))
+	for index, v := range record.Roles {
+		roleIds[index] = v.RoleId
+	}
+	record.RoleIds = roleIds
+	return record
+}
 func (a *AccountsAdapter) UserListGrpcFromSql(resp *[]db.AccountsSchemaUserView) *devkitv1.UserListResponse {
-	records := make([]*devkitv1.AccountsSchemaUserView, 0)
-	deletedRecords := make([]*devkitv1.AccountsSchemaUserView, 0)
+	records := make([]*devkitv1.UserListRow, 0)
+	deletedRecords := make([]*devkitv1.UserListRow, 0)
 	for _, v := range *resp {
-		record := a.UserViewEntityGrpcFromSql(&v)
+		record := a.UserListRowGrpcFromSql(&v)
 		if v.DeletedAt.Valid {
 			deletedRecords = append(deletedRecords, record)
 		} else {

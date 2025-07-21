@@ -50,13 +50,27 @@ message RoleFilters {
   string created_at_from = 3;
   string created_at_to = 4;
 }
+
+message RoleListRow {
+  int32 role_id = 1;
+  string role_name = 2;
+  string tenant_name = 8;
+  int32 tenant_id = 7;
+  int32 role_security_level = 17;
+  int32 user_count = 9;
+  int32 permission_count = 10;
+  string created_at = 4;
+  string updated_at = 5;
+  string deleted_at = 6;
+}
+
 message RoleListRequest {
   RoleFilters filters = 1;
   PaginationParams pagination_params = 2;
 }
 message RoleListResponse {
-  repeated AccountsSchemaRole records = 1;
-  repeated AccountsSchemaRole deleted_records = 2;
+  repeated RoleListRow records = 1;
+  repeated RoleListRow deleted_records = 2;
   AvailableOptions options = 3;
 }
 

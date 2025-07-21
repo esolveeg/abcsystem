@@ -1,8 +1,27 @@
 -- name: RoleList :many
 SELECT
-	*
+	r.role_id,
+  r.role_name,
+  r.role_security_level,
+  is_null_replace(r.tenant_id , 0)::int tenant_id,
+  is_null_replace(t.tenant_name , '')::varchar tenant_name,
+  is_null_replace(count(rp.*)::int , 0 )::int permission_count,
+  is_null_replace(count(ur.*)::int , 0 )::int user_count,
+  r.created_at,
+  r.updated_at,
+  r.deleted_at  
 FROM
-	accounts_schema.role;
+	accounts_schema.role r 
+left join accounts_schema.user_role ur on r.role_id = ur.role_id
+left join tenants_schema.tenant t on r.tenant_id = t.tenant_id
+left join accounts_schema.role_permission rp on r.role_id = rp.role_id
+group by 	r.role_id,
+  r.role_name,
+  r.tenant_id,
+  t.tenant_name,
+ r.created_at,
+  r.updated_at,
+  r.deleted_at  ;
 
 -- name: RoleFindForUpdate :one
 WITH permissions AS (

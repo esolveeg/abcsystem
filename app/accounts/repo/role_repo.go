@@ -22,7 +22,7 @@ func (repo *AccountsRepo) RoleListInput(ctx context.Context) (*[]db.RoleListInpu
 	}
 	return &resp, nil
 }
-func (repo *AccountsRepo) RoleList(ctx context.Context) (*[]db.AccountsSchemaRole, error) {
+func (repo *AccountsRepo) RoleList(ctx context.Context) (*[]db.RoleListRow, error) {
 	resp, err := repo.store.RoleList(ctx)
 	if err != nil {
 		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
