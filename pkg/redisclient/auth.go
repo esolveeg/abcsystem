@@ -6,12 +6,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 type PermissionsMap map[string]map[string]bool
 type AuthSession struct {
 	SessionKey                    string    `json:"key"`
 	UserID                        int32     `json:"user_id"`
+	AccessTokenID                 string    `json:"access_token_id"`
 	TokenID                       string    `json:"token_id"`
 	IPAddress                     string    `json:"ip_address"`
 	IsBlocked                     bool      `json:"is_blocked"`
@@ -20,6 +23,7 @@ type AuthSession struct {
 	RefreshToken                  string    `json:"refresh_token"`
 	SupabaseAccessToken           string    `json:"supabase_access_token"`
 	SupabaseRefreshToken          string    `json:"supabase_refresh_token"`
+	CreatedAt                     time.Time `json:"created_at"`
 	AccessTokenExpiresAt          time.Time `json:"access_token_expires_at"`
 	RefreshTokenExpiresAt         time.Time `json:"refresh_token_expires_at"`
 	SupabaseAccessTokenExpiresAt  time.Time `json:"supabase_access_token_expires_at"`
@@ -79,6 +83,7 @@ func (r *RedisClient) AuthSessionDeleteByUserAgent(ctx context.Context, userID i
 }
 func (r *RedisClient) AuthSessionCreateByKey(ctx context.Context, session *AuthSession, key string, ttl time.Duration) error {
 	session.SessionKey = key
+	session.CreatedAt = time.Now()
 	data, err := json.Marshal(session)
 	if err != nil {
 		return err
@@ -89,11 +94,22 @@ func (r *RedisClient) AuthSessionCreateByKey(ctx context.Context, session *AuthS
 	}
 	userAgentKey := fmt.Sprintf("user_sessions_by_agent:%d:%x", session.UserID, sha256.Sum256([]byte(session.UserAgent)))
 	r.client.SAdd(ctx, userAgentKey, key) // key = auth_session:{userID}:{tokenID}
+	accessIndexKey := fmt.Sprintf("user_sessions_by_access_token_id:%s", session.AccessTokenID)
+	r.client.Set(ctx, accessIndexKey, key, ttl)
 	return nil
 }
 func (r *RedisClient) AuthSessionCreate(ctx context.Context, session *AuthSession, tokenID string, ttl time.Duration) error {
 	key := r.GenerateAuthSessionKey(session.UserID, tokenID)
 	return r.AuthSessionCreateByKey(ctx, session, key, ttl)
+}
+func (r *RedisClient) AuthSessionFindByAccessTokenID(ctx context.Context, accessTokenID string) (*AuthSession, error) {
+	indexKey := fmt.Sprintf("user_sessions_by_access_token_id:%s", accessTokenID)
+	sessionKey, err := r.client.Get(ctx, indexKey).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	return r.AuthSessionFindByKey(ctx, sessionKey)
 }
 func (r *RedisClient) AuthSessionFindByKey(ctx context.Context, key string) (*AuthSession, error) {
 	data, err := r.client.Get(ctx, key).Bytes()
@@ -117,6 +133,7 @@ func (r *RedisClient) AuthSessionDeleteByKey(ctx context.Context, key string) er
 }
 func (r *RedisClient) AuthSessionDelete(ctx context.Context, userID int32, tokenID string) error {
 	key := r.GenerateAuthSessionKey(userID, tokenID)
+	log.Debug().Interface("keyyyy", key).Msg("Asdasd redi")
 	return r.AuthSessionDeleteByKey(ctx, key)
 
 }
@@ -230,7 +247,7 @@ func (r *RedisClient) AuthSessionClearAll(ctx context.Context, userID int32) err
 	}
 
 	if len(keys) > 0 {
-		if err := r.client.Del(ctx, keys...).Err(); err != nil {
+		if err = r.client.Del(ctx, keys...).Err(); err != nil {
 			return err
 		}
 	}
@@ -241,24 +258,36 @@ func (r *RedisClient) AuthSessionClearAll(ctx context.Context, userID int32) err
 	return r.client.Del(ctx, indexKey).Err()
 }
 func (r *RedisClient) AuthSessionListByUser(ctx context.Context, userID int32) ([]*AuthSession, error) {
-	indexKey := fmt.Sprintf("user_sessions:%d", userID)
+	prefix := fmt.Sprintf("auth_session:%d:", userID)
+	var (
+		cursor   uint64
+		sessions []*AuthSession
+	)
 
-	keys, err := r.client.SMembers(ctx, indexKey).Result()
-	if err != nil {
-		return nil, err
-	}
-
-	var sessions []*AuthSession
-	for _, key := range keys {
-		data, err := r.client.Get(ctx, key).Bytes()
+	for {
+		// Match pattern
+		keys, nextCursor, err := r.client.Scan(ctx, cursor, prefix+"*", 100).Result()
 		if err != nil {
-			continue
+			return nil, err
 		}
-		var session AuthSession
-		if err := json.Unmarshal(data, &session); err != nil {
-			continue
+
+		for _, key := range keys {
+			data, err := r.client.Get(ctx, key).Bytes()
+			if err != nil {
+				continue // optionally log
+			}
+			var session AuthSession
+			if err := json.Unmarshal(data, &session); err != nil {
+				continue
+			}
+			sessions = append(sessions, &session)
 		}
-		sessions = append(sessions, &session)
+
+		if nextCursor == 0 {
+			break
+		}
+		cursor = nextCursor
 	}
+	log.Debug().Interface("asd", sessions).Msg("res")
 	return sessions, nil
 }

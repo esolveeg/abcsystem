@@ -1,27 +1,39 @@
 -- name: RoleList :many
+with tmp_user_count as (
+  select 
+    r.role_id,
+  count(ur.*)::int user_count
+    from accounts_schema.role r 
+ join accounts_schema.user_role ur on r.role_id = ur.role_id
+group by r.role_id
+  order by r.role_id
+), tmp_permission_count as (
+  select 
+    r.role_id,
+  count(rp.*)::int permission_count
+    from accounts_schema.role r 
+ join accounts_schema.role_permission rp on r.role_id = rp.role_id
+group by r.role_id
+  order by r.role_id
+)
 SELECT
 	r.role_id,
   r.role_name,
   r.role_security_level,
-  is_null_replace(r.tenant_id , 0)::int tenant_id,
-  is_null_replace(t.tenant_name , '')::varchar tenant_name,
-  is_null_replace(count(rp.*)::int , 0 )::int permission_count,
-  is_null_replace(count(ur.*)::int , 0 )::int user_count,
   r.created_at,
   r.updated_at,
-  r.deleted_at  
+  r.deleted_at,
+  is_null_replace(r.tenant_id , 0)::int tenant_id,
+  is_null_replace(t.tenant_name , '')::varchar tenant_name,
+  is_null_replace(uc.user_count , 0)::int user_count,
+  is_null_replace(pc.permission_count , 0)::int permission_count
 FROM
 	accounts_schema.role r 
-left join accounts_schema.user_role ur on r.role_id = ur.role_id
-left join tenants_schema.tenant t on r.tenant_id = t.tenant_id
-left join accounts_schema.role_permission rp on r.role_id = rp.role_id
-group by 	r.role_id,
-  r.role_name,
-  r.tenant_id,
-  t.tenant_name,
- r.created_at,
-  r.updated_at,
-  r.deleted_at  ;
+ left join tmp_user_count uc on r.role_id = uc.role_id
+ left join tmp_permission_count pc on r.role_id = pc.role_id
+left join tenants_schema.tenant t on r.tenant_id = t.tenant_id 
+order by r.role_id ;
+
 
 -- name: RoleFindForUpdate :one
 WITH permissions AS (

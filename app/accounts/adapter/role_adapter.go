@@ -72,6 +72,10 @@ func (a *AccountsAdapter) RoleListGrpcFromSql(resp *[]db.RoleListRow) *devkitv1.
 	deletedRecords := make([]*devkitv1.RoleListRow, 0)
 	for _, v := range *resp {
 		record := a.RoleListRowGrpcFromSql(&v)
+		if v.DeletedAt.Valid {
+			deletedRecords = append(deletedRecords, record)
+			continue
+		}
 		records = append(records, record)
 	}
 	return &devkitv1.RoleListResponse{

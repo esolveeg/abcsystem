@@ -31,14 +31,15 @@ CREATE TABLE icon(
     icon_content text  NOT NULL
 ); 
 
-CREATE TABLE log(
-    log_id serial PRIMARY KEY,
-    log_title varchar(200) NOT NULL,
-    user_id int NOT NULL,
-    record_id int,
-    action_name varchar(100),
-    table_name varchar(100),
-    permission_name varchar(200),
-    created_at timestamp not null default now()
-); 
-
+CREATE TABLE log (
+  log_id serial PRIMARY KEY,
+  log_title varchar(200) NOT NULL,              -- Typically the gRPC procedure name
+  action_type varchar,                          -- e.g. create, update, delete, find, etc.
+  status_code varchar,                          -- gRPC or HTTP-like code (e.g., "ok", "not_found", "internal")
+  user_id int NOT NULL,                         -- Caller user ID
+  record_id int,                                -- Related entity ID (optional)
+  duartion_milliseconds int,                    -- Total request duration
+  api_error_message text,
+  permission_name varchar(200),                 -- permission.function style
+  created_at timestamp not null default now()
+);

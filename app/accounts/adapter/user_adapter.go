@@ -5,6 +5,7 @@ import (
 
 	"github.com/darwishdev/devkit-api/db"
 	"github.com/darwishdev/devkit-api/pkg/dateutils"
+	"github.com/darwishdev/devkit-api/pkg/redisclient"
 	devkitv1 "github.com/darwishdev/devkit-api/proto_gen/devkit/v1"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/crypto/bcrypt"
@@ -24,10 +25,56 @@ func (a *AccountsAdapter) UserEntityGrpcFromSql(resp *db.AccountsSchemaUser) *de
 	}
 }
 
+func (a *AccountsAdapter) UserFindRowGrpcFromSql(resp *db.UserFindRow) *devkitv1.UserFindRow {
+	record := &devkitv1.UserFindRow{
+		UserId:            int32(resp.UserID),
+		UserImage:         resp.UserImage,
+		UserName:          resp.UserName,
+		UserTypeId:        resp.UserTypeID,
+		UserTypeName:      resp.UserTypeName,
+		UserSecurityLevel: resp.UserSecurityLevel,
+		PermissionCount:   int32(resp.PermissionCount),
+		TenantName:        resp.TenantName,
+		TenantId:          resp.TenantID,
+		UserPhone:         resp.UserPhone,
+		UserEmail:         resp.UserEmail,
+		CreatedAt:         dateutils.DateTimeToStringDigit(resp.CreatedAt.Time),
+		UpdatedAt:         dateutils.DateTimeToStringDigit(resp.UpdatedAt.Time),
+		DeletedAt:         dateutils.DateTimeToStringDigit(resp.DeletedAt.Time),
+	}
+	if len(resp.Roles) > 0 {
+		json.Unmarshal(resp.Roles, &record.Roles)
+	}
+	if len(resp.Logs) > 0 {
+		json.Unmarshal(resp.Logs, &record.Logs)
+	}
+	return record
+}
+func (a *AccountsAdapter) UserSessionGrpcFropmSql(resp *redisclient.AuthSession) *devkitv1.UserSession {
+	return &devkitv1.UserSession{
+		UserId:                        int32(resp.UserID),
+		SessionKey:                    resp.SessionKey,
+		IpAddress:                     resp.IPAddress,
+		IsBlocked:                     resp.IsBlocked,
+		CreatedAt:                     dateutils.DateTimeToStringDigit(resp.CreatedAt),
+		AccessTokenExpiresAt:          dateutils.DateTimeToStringDigit(resp.AccessTokenExpiresAt),
+		RefreshTokenExpiresAt:         dateutils.DateTimeToStringDigit(resp.RefreshTokenExpiresAt),
+		SupabaseAccessTokenExpiresAt:  dateutils.DateTimeToStringDigit(resp.SupabaseAccessTokenExpiresAt),
+		SupabaseRefreshTokenExpiresAt: dateutils.DateTimeToStringDigit(resp.SupabaseRefreshTokenExpiresAt),
+	}
+}
+func (a *AccountsAdapter) UserSessionsGrpcFropmSql(sessions []*redisclient.AuthSession) []*devkitv1.UserSession {
+	response := make([]*devkitv1.UserSession, len(sessions))
+
+	for index, session := range sessions {
+		response[index] = a.UserSessionGrpcFropmSql(session)
+	}
+	return response
+}
 func (a *AccountsAdapter) UserViewEntityGrpcFromSql(resp *db.AccountsSchemaUserView) *devkitv1.AccountsSchemaUserView {
 	record := &devkitv1.AccountsSchemaUserView{
 		UserId:       int32(resp.UserID),
-		UserImage:    resp.UserImage.String,
+		UserImage:    resp.UserImage,
 		UserName:     resp.UserName,
 		UserTypeId:   resp.UserTypeID,
 		UserTypeName: resp.UserTypeName,
@@ -35,7 +82,7 @@ func (a *AccountsAdapter) UserViewEntityGrpcFromSql(resp *db.AccountsSchemaUserV
 		UserSecurityLevel: resp.UserSecurityLevel,
 		TenantName:        resp.TenantName,
 		TenantId:          resp.TenantID,
-		UserPhone:         resp.UserPhone.String,
+		UserPhone:         resp.UserPhone,
 		UserEmail:         resp.UserEmail,
 		CreatedAt:         dateutils.DateTimeToStringDigit(resp.CreatedAt.Time),
 		UpdatedAt:         dateutils.DateTimeToStringDigit(resp.UpdatedAt.Time),
@@ -119,14 +166,14 @@ func (a *AccountsAdapter) UserPermissionListInputGrpcFromSql(resp *[]db.UserPerm
 func (a *AccountsAdapter) UserListRowGrpcFromSql(resp *db.AccountsSchemaUserView) *devkitv1.UserListRow {
 	record := &devkitv1.UserListRow{
 		UserId:            int32(resp.UserID),
-		UserImage:         resp.UserImage.String,
+		UserImage:         resp.UserImage,
 		UserName:          resp.UserName,
 		UserTypeId:        resp.UserTypeID,
 		UserTypeName:      resp.UserTypeName,
 		UserSecurityLevel: resp.UserSecurityLevel,
 		TenantName:        resp.TenantName,
 		TenantId:          resp.TenantID,
-		UserPhone:         resp.UserPhone.String,
+		UserPhone:         resp.UserPhone,
 		UserEmail:         resp.UserEmail,
 		CreatedAt:         dateutils.DateTimeToStringDigit(resp.CreatedAt.Time),
 		UpdatedAt:         dateutils.DateTimeToStringDigit(resp.UpdatedAt.Time),

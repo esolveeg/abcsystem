@@ -148,7 +148,7 @@ func (a *AccountsAdapter) AuttSessionRedisFromGrpc(response *devkitv1.AuthLoginR
 		SupabaseRefreshToken:          response.LoginInfo.SupabaseRefreshToken,
 	}, nil
 }
-func (a *AccountsAdapter) AuthLoginSqlFromGrpc(req *devkitv1.AuthLoginRequest) (*db.UserFindParams, *types.TokenRequest) {
+func (a *AccountsAdapter) AuthLoginSqlFromGrpc(req *devkitv1.AuthLoginRequest) (*db.UserFindForAuthParams, *types.TokenRequest) {
 	isEmail := strings.Contains(req.LoginCode, "@") && strings.Contains(req.LoginCode, ".")
 	supabseRequest := &types.TokenRequest{Password: req.UserPassword}
 	normalizedCode := strings.ToLower(strings.TrimSpace(req.LoginCode))
@@ -158,7 +158,7 @@ func (a *AccountsAdapter) AuthLoginSqlFromGrpc(req *devkitv1.AuthLoginRequest) (
 		supabseRequest.Phone = normalizedCode
 	}
 	supabseRequest.GrantType = "password"
-	return &db.UserFindParams{
+	return &db.UserFindForAuthParams{
 		SearchKey: normalizedCode,
 	}, supabseRequest
 }

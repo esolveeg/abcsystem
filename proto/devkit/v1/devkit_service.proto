@@ -263,11 +263,11 @@ service DevkitService {
   }
 
   rpc AuthSessionSetBlocked(AuthSessionSetBlockedRequest) returns (AuthSessionSetBlockedResponse) {
-    option (permission_group) = 'auth';
-    option (permission_name) = 'SessionSetBlocked';
+    option (permission_group) = 'session';
+    option (permission_name) = 'SessionUpdate';
   }
   rpc AuthSessionDelete(AuthSessionDeleteRequest) returns (AuthSessionDeleteResponse) {
-    option (permission_group) = 'auth';
+    option (permission_group) = 'session';
     option (permission_name) = 'SessionDelete';
   }
 

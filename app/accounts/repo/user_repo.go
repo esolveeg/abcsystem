@@ -5,6 +5,7 @@ import (
 
 	"github.com/darwishdev/devkit-api/db"
 	"github.com/darwishdev/devkit-api/pkg/contextkeys"
+	"github.com/rs/zerolog/log"
 )
 
 func (repo *AccountsRepo) UserPermissionListInput(ctx context.Context) (*[]db.UserPermissionListInputRow, error) {
@@ -106,11 +107,21 @@ func (repo *AccountsRepo) UserDeleteRestore(ctx context.Context, req db.UserDele
 	}
 	return &resp, nil
 }
-func (repo *AccountsRepo) UserFind(ctx context.Context, req db.UserFindParams) (*db.AccountsSchemaUserView, error) {
-	resp, err := repo.store.UserFind(ctx, req)
+func (repo *AccountsRepo) UserFind(ctx context.Context, userID int32) (*db.UserFindRow, error) {
+	resp, err := repo.store.UserFind(ctx, userID)
 	if err != nil {
 		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
 	}
+	log.Debug().Interface("resp is here", resp).Msg("reggg")
+	return &resp, nil
+}
+
+func (repo *AccountsRepo) UserFindForAuth(ctx context.Context, params db.UserFindForAuthParams) (*db.AccountsSchemaUserView, error) {
+	resp, err := repo.store.UserFindForAuth(ctx, params)
+	if err != nil {
+		return nil, repo.store.DbErrorParser(err, repo.errorHandler)
+	}
+	log.Debug().Interface("resp is here", resp).Msg("reggg")
 	return &resp, nil
 }
 func (repo *AccountsRepo) UserPermissionsMap(ctx context.Context, userID int32) (*[]db.UserPermissionsMapRow, error) {

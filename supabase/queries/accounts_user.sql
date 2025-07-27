@@ -63,18 +63,50 @@ FROM
 WHERE
 	deleted_at IS NULL
 	AND (user_email = sqlc.arg('search_key')
-		OR user_phone = sqlc.arg('search_key')
+		OR user_phone = is_null_replace(sqlc.arg('search_key')::varchar , user_phone)
 		OR user_id = sqlc.arg('user_id'));
 
 -- name: UserFind :one
+
+with permission_count as (
+  select  count(DISTINCT rp.permission_id) permission_count from accounts_schema.user_role ur join accounts_schema.role_permission rp on ur.role_id = rp.role_id where ur.user_id = sqlc.arg(user_id)
+), logs as (
+select 
+  log_title ,
+  permission_name ,
+  action_type ,
+  status_code ,
+  api_error_message ,
+  record_id ,
+  created_at 
+  from log 
+  where user_id = sqlc.arg(user_id)
+)
 SELECT
-	*
+  u.user_id,
+  u.user_name,
+  u.roles,
+  u.user_image,
+  u.user_email,
+  u.user_phone,
+  u.user_type_id,
+  u.user_type_name,
+  u.user_security_level,
+  u.tenant_id,
+  p.permission_count,
+  u.tenant_name,
+  u.created_at,
+  u.updated_at,
+  u.deleted_at,
+  (
+    SELECT json_agg(l)
+    FROM logs l
+  ) AS logs
 FROM
-	accounts_schema.user_view
+	accounts_schema.user_view u
+  cross join permission_count p
 WHERE
-	user_email = sqlc.arg('search_key')
-		OR user_phone = sqlc.arg('search_key')
-		OR user_id = sqlc.arg('user_id');
+ u.user_id = sqlc.arg(user_id);
 
 -- name: UserList :many
 select 

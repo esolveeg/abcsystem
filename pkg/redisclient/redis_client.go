@@ -16,6 +16,7 @@ type RedisClientInterface interface {
 	GenerateAuthSessionKey(userID int32, tokenID string) string
 	AuthSessionCreate(ctx context.Context, session *AuthSession, refreshTokenID string, ttl time.Duration) error
 	AuthSessionCreateByKey(ctx context.Context, session *AuthSession, key string, ttl time.Duration) error
+	AuthSessionFindByAccessTokenID(ctx context.Context, accessTokenID string) (*AuthSession, error)
 	AuthSessionUpdateTokens(
 		ctx context.Context,
 		userID int32,

@@ -43,7 +43,7 @@ type AccountsUsecaseInterface interface {
 	RoleFindForUpdate(ctx context.Context, req *connect.Request[devkitv1.RoleFindForUpdateRequest]) (*devkitv1.RoleFindForUpdateResponse, error)
 	RoleListInput(ctx context.Context) (*devkitv1.RoleListInputResponse, error)
 	RoleList(ctx context.Context, req *connect.Request[devkitv1.RoleListRequest]) (*devkitv1.RoleListResponse, error)
-	UserGenerateTokens(username string, userId int32, tenantId int32, userSecurityLevel int32) (*devkitv1.LoginInfo, string, error)
+	UserGenerateTokens(username string, userId int32, tenantId int32, userSecurityLevel int32) (*devkitv1.LoginInfo, string, string, error)
 	AuthLogout(
 		ctx context.Context,
 		req *connect.Request[devkitv1.AuthLogoutRequest],
