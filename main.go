@@ -11,11 +11,9 @@ import (
 	"time"
 
 	"github.com/bufbuild/protovalidate-go"
-	"github.com/darwishdev/devkit-api/api"
-	"github.com/darwishdev/devkit-api/config"
-	"github.com/darwishdev/devkit-api/db"
-	"github.com/darwishdev/devkit-api/pkg/auth"
-	"github.com/darwishdev/devkit-api/pkg/redisclient"
+	"github.com/esolveeg/abcsystem/api"
+	"github.com/esolveeg/abcsystem/config"
+	"github.com/esolveeg/abcsystem/erpapiclient"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
@@ -74,28 +72,22 @@ func main() {
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	ctx := context.Background()
-
 	state, err := config.LoadState("./config")
 	if err != nil {
 		log.Fatal().Err(err).Msg("cannot load the state config")
 	}
 	config, err := config.LoadConfig("./config", state.State)
-
-	store, connPool, err := db.InitDB(ctx, config.DBSource, config.State == "dev")
-	if err != nil {
-		log.Fatal().Str("DBSource", config.DBSource).Err(err).Msg("db failed to connect")
-	}
-	tokenMaker, err := auth.NewPasetoMaker(config.TokenSymmetricKey)
-	if err != nil {
-		panic("cann't create paset maker in gapi/api.go")
-	}
-
-	redisClient := redisclient.NewRedisClient(config.RedisHost, config.RedisPort, config.RedisPassword, config.RedisDatabase, config.IsCacheDisabled)
 	validator, err := protovalidate.New()
 	if err != nil {
 		log.Fatal().Err(err).Msg("can't get the validator")
 	}
-	server, err := api.NewServer(config, store, tokenMaker, redisClient, validator) // Start the server in a goroutine
+	erp, err := erpapiclient.New(
+		config.ERPAPIUrl,
+		erpapiclient.WithToken(config.ERPAPIToken), // "token key:secret"
+		erpapiclient.WithTimeout(8*time.Second),
+	)
+
+	server, err := api.NewServer(config, erp, validator) // Start the server in a goroutine
 	if err != nil {
 		log.Fatal().Err(err).Msg("server initialization failed")
 	}
@@ -110,13 +102,8 @@ func main() {
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)
 	wait := gracefulShutdown(ctx, 3*time.Second, map[string]operation{
-		"database": func(ctx context.Context) error {
-			connPool.Close()
-			return nil
-		},
 		"http-server": func(ctx context.Context) error {
 			return httpServer.Shutdown(ctx)
-
 		},
 		// Add other cleanup operations here
 	})

@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package abcsystem.v1;
+
+import "buf/validate/validate.proto";
+
+// message yourmessage {
+// }
+// INJECT MESSAGES
+
+// Request for creating or updating a tenant
+message PrintKitchenOrderRequest {
+  string order_id = 1 [
+    (buf.validate.field).string.min_len = 2,
+    (buf.validate.field).string.max_len = 30
+  ];
+}
+message PrintKitchenOrderResponse {
+  string message = 1;
+}
+
+message DiscoverPrintersRequest { string device_id = 1;  string ip = 2; int32 port = 3; }
+message DiscoverPrintersResponse {
+  repeated DiscoveredPrinter printers = 1;
+}
+message DiscoveredPrinter {
+  string id   = 1;   // stable id in your system (or synthesized from ip:port)
+  string name = 2;
+  string ip   = 3;
+  int32  port = 4;
+}
+
+message RegisterDeviceRequest { string device_id = 1; string name = 2; }
+message RegisterDeviceResponse { bool ok = 1; }
+
+message AssignDevicePrinterRequest {
+  string device_id = 1;
+  string printer_id = 2;
+  bool   make_default = 3;
+}
+message AssignDevicePrinterResponse { bool ok = 1; }

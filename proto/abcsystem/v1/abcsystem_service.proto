@@ -1,0 +1,31 @@
+syntax = "proto3";
+package abcsystem.v1;
+
+import "abcsystem/v1/printing_printer.proto";
+
+// The `DevkitService` defines the structure for our gRPC API. It is organized into domains such as `public` and `accounts`,
+// which correspond to folders under `app/` and represent schemas in the database. Each domain operates on its specific schema,
+// ensuring a clear separation of concerns.
+//
+// Naming conventions:
+// - Each endpoint's name starts with the corresponding table name (in singular form) and reflects the feature it implements.
+// - SQL table names are always singular, aligning with endpoint naming.
+// - Endpoints requiring authorization are represented by a record in `accounts_schema.permission` to allow the authorization
+//   interceptor to function properly.
+//
+// Special Options:
+// - `option idempotency_level = NO_SIDE_EFFECTS`: Marks an endpoint as safe for GET requests because it does not modify data
+//   sources; it only reads data.
+// - `option (skip_authentication) = true`: Exempts the endpoint from authentication and authorization checks, allowing it to be
+//   accessed without a token in the header.
+// - `option (skip_authorization) = true`: Skips only the authorization checks, while authentication is still enforced.
+
+service AbcsystemService {
+  // INJECT METHODS
+  rpc PrintKitchenOrder(PrintKitchenOrderRequest) returns (PrintKitchenOrderResponse) {}
+  rpc RegisterDevice(RegisterDeviceRequest) returns (RegisterDeviceResponse) {}
+  rpc AssignDevicePrinter(AssignDevicePrinterRequest) returns (AssignDevicePrinterResponse) {}
+  rpc DiscoverPrinters(DiscoverPrintersRequest) returns (DiscoverPrintersResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+}

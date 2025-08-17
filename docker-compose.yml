@@ -3,11 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: devkit_api
+    container_name: abcsystem_api
     volumes:
       - ./config:/app/config
     image: devkit_api
     ports:
       - 9091:9091
-    command: [ "/app/main" ]
-
+    command: ["/app/main"]

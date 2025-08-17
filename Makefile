@@ -64,9 +64,6 @@ rdbrr:
 	make rdbr seed_super_user seed_accounts  seed_storage seed_public seed_tenants seed_tenants_accounts 
 
 
-SCHEMA_FILE    := weaviate_schema.json
-CLASS_NAME     := $(shell jq -r '.class' $(SCHEMA_FILE))
-.PHONY: init_weaviate_schema
 
 init_weaviate_schema:
 	  curl -s -X POST http://localhost:8080/v1/schema \
@@ -97,7 +94,7 @@ gen:
 	buf generate && sqlc generate
 
 mock:
-	mockgen -package mockdb -destination db/mock/store.go github.com/darwishdev/devkit-api/db Store
+	mockgen -package mockdb -destination db/mock/store.go github.com/esolveeg/abcsystem/db Store
 test:
 	make mock && go test ./... -v --cover
 
