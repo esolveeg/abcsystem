@@ -7,17 +7,37 @@ import (
 )
 
 // callerIDKey is an unexported type to avoid key collisions.
-type contectType string
+type contextType string
+
+var (
+	deviceIDKey             = contextType("X-Device-Id")
+	authTokenKey            = contextType("Authorization") // store raw header value
+	callerIDKey             = contextType("CallerID")
+	tenantIDKey             = contextType("TenantID")
+	permissionFunctionKey   = contextType("PermissionFunction")
+	permissionGroupKey      = contextType("PermissionGroup")
+	RefreshTokenKey         = contextType("RefreshToken")
+	SupabaseTokenKey        = contextType("SupabaseToken")
+	SupabaseRefreshTokenKey = contextType("SupabaseRefreshToken")
+)
+
+// Returns auth token (raw "Authorization" header value) if present.
+// e.g. "token key:secret" or "Bearer <jwt>"
+func AuthToken(ctx context.Context) (string, bool) {
+	v, ok := ctx.Value(authTokenKey).(string)
+	return v, ok && v != ""
+}
+
+// Attach auth token (raw header value).
+func WithAuthToken(ctx context.Context, token string) context.Context {
+	return context.WithValue(ctx, authTokenKey, token)
+}
 
 // callerIDKey is an unexported variable of the unique key type.
-var callerIDKey = contectType("CallerID")
-var tenantIDKey = contectType("TenantID")
-var permissionFunctionKey = contectType("PermissionFunction")
-var permissionGroupKey = contectType("PermissionGroup")
 
-var RefreshTokenKey = contectType("RefreshToken")
-var SupabaseTokenKey = contectType("SupabaseToken")
-var SupabaseRefreshTokenKey = contectType("SupabaseRefreshToken")
+func WithDeviceID(ctx context.Context, deviceId string) context.Context {
+	return context.WithValue(ctx, deviceIDKey, deviceId)
+}
 
 func WithRefreshToken(ctx context.Context, token string) context.Context {
 	return context.WithValue(ctx, RefreshTokenKey, token)
@@ -55,6 +75,11 @@ func WithPermissionFunction(ctx context.Context, permissionFunction string) cont
 
 // CallerID retrieves the caller ID from the context safely.
 // Returns an empty string if the caller ID is not present or the type is incorrect.
+func DeviceID(ctx context.Context) (string, bool) {
+	deviceID, ok := ctx.Value(deviceIDKey).(string)
+	return deviceID, ok
+}
+
 func CallerID(ctx context.Context) (int32, bool) {
 	callerID, ok := ctx.Value(callerIDKey).(int32)
 	return callerID, ok

@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package abcsystem.v1;
+
+import "buf/validate/validate.proto";
+message PosSessionDashboardFindRequest {
+string pos_session = 1 [(buf.validate.field).string = {min_len: 1, max_len: 128}];
+}
+
+message PosSessionDashboardFindResponse {
+  message Snapshot {
+    float total_sales = 1;
+    string session_owner = 2;
+    string session_status = 3;
+    string currency_code = 4;
+  }
+
+  message Chart {
+    string title = 1;
+    repeated string labels = 2;
+    repeated float values = 3;
+  }
+
+  message TableItem {
+    string item_name = 1;
+    float qty = 2;
+    float unit_price = 3;
+    float amount = 4;
+  }
+
+  message Table {
+    repeated TableItem items = 1;
+  }
+
+  message Charts {
+    Chart payments = 1;
+    Chart owners = 2;
+    Chart customers = 3;
+    Chart top_items_amount = 4;
+    Chart top_items_qty = 5;
+  }
+
+  Snapshot snapshot = 1;
+  Charts charts = 2;
+  Table table = 3;
+}
+message PosSessionItemsListRequest {
+  string pos_session = 1;
+}
+
+message PosSessionItem {
+    string item_name = 1;
+    float qty = 2;
+}
+message PosSessionItemsListResponse {
+  repeated PosSessionItem items = 1;
+}

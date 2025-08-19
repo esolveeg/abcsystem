@@ -3,6 +3,8 @@ package erpapiclient
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/rs/zerolog/log"
 )
 
 type ERPError struct {
@@ -41,6 +43,11 @@ func parseERPError(code int, body []byte) error {
 			Type:   x.ExcType,
 		}
 	}
+	log.Debug().
+		Interface("exception", x.Exception).
+		Interface("message", x.ServerMessages).
+		Interface("message", x.Message).
+		Msg("error handler")
 	// Fallback: raw text
 	return &ERPError{Status: code, Detail: string(body)}
 }

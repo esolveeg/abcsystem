@@ -12,6 +12,16 @@ import (
 	"path"
 	"strings"
 	"time"
+
+	"github.com/esolveeg/abcsystem/pkg/contextkeys"
+	"github.com/rs/zerolog/log"
+)
+
+type contextType string
+
+var (
+	deviceIDKey  = contextType("X-Device-Id")
+	authTokenKey = contextType("Authorization") // store raw header value
 )
 
 type Client struct {
@@ -87,18 +97,23 @@ func (c *Client) ResourceDelete(ctx context.Context, doctype, name string) error
 // -----------------------------
 // Internals
 // -----------------------------
-
 func (c *Client) do(ctx context.Context, method, p string, q url.Values, body any, out any) error {
+	method = strings.ToUpper(method)
+
 	u := *c.base
 	u.Path = path.Join(c.base.Path, p)
-	u.RawQuery = q.Encode()
+	if q != nil {
+		u.RawQuery = q.Encode()
+	}
 
 	var rdr io.Reader
+	var bodyBytes []byte
 	if body != nil {
 		b, err := json.Marshal(body)
 		if err != nil {
 			return err
 		}
+		bodyBytes = b
 		rdr = bytes.NewReader(b)
 	}
 
@@ -106,15 +121,30 @@ func (c *Client) do(ctx context.Context, method, p string, q url.Values, body an
 	if err != nil {
 		return err
 	}
+
+	// Device ID
+	if id, ok := contextkeys.DeviceID(ctx); ok {
+		req.Header.Set(string(deviceIDKey), id)
+	}
+	// Authorization
+	if tok, ok := contextkeys.AuthToken(ctx); ok {
+		req.Header.Set(string(authTokenKey), fmt.Sprintf("token %s", tok))
+	}
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
-	if c.token != "" {
-		req.Header.Set("Authorization", c.token) // already "token key:secret"
-	}
+	req.Header.Set("Accept", "application/json")
 	if c.cookie != "" {
 		req.Header.Set("Cookie", c.cookie)
 	}
+
+	// ---- Debug: request info ----
+	log.Debug().
+		Str("method", req.Method).
+		Str("url", req.URL.String()).
+		Interface("headers", req.Header).
+		Interface("body", bodyBytes).
+		Msg("ERP request")
 
 	resp, err := c.http.Do(req)
 	if err != nil {
@@ -122,21 +152,41 @@ func (c *Client) do(ctx context.Context, method, p string, q url.Values, body an
 	}
 	defer resp.Body.Close()
 
-	// ERPNext success still returns 200/201 and {data:...}
-	// Errors are 400/401/403/404/417/500 with body containing details.
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return err
 	}
+
+	// ---- Debug: response info ----
+	log.Debug().
+		Str("url", req.URL.String()).
+		Int("status", resp.StatusCode).
+		Msg("ERP response")
+
 	if resp.StatusCode >= 300 {
 		return parseERPError(resp.StatusCode, b)
 	}
-	if out == nil {
+	if out == nil || len(b) == 0 {
 		return nil
 	}
-	// Some endpoints return {"data":null}; allow that
-	if len(b) == 0 {
-		return nil
+
+	// ---- unwrap "message" or "data" ----
+	var env struct {
+		Message json.RawMessage `json:"message"`
+		Data    json.RawMessage `json:"data"`
 	}
-	return json.Unmarshal(b, out)
+	if err = json.Unmarshal(b, &env); err == nil {
+		if len(env.Message) > 0 && string(env.Message) != "null" {
+			return json.Unmarshal(env.Message, out)
+		}
+		if len(env.Data) > 0 && string(env.Data) != "null" {
+			return json.Unmarshal(env.Data, out)
+		}
+	}
+	err = json.Unmarshal(b, out)
+	if err != nil {
+		return fmt.Errorf("Error Parsing JSON : %2", err)
+	}
+	// fallback: decode whole body into out
+	return nil
 }

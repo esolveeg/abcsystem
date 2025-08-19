@@ -2,6 +2,8 @@ syntax = "proto3";
 package abcsystem.v1;
 
 import "abcsystem/v1/printing_printer.proto";
+import "abcsystem/v1/pos_table.proto";
+import "abcsystem/v1/pos_session.proto";
 
 // The `DevkitService` defines the structure for our gRPC API. It is organized into domains such as `public` and `accounts`,
 // which correspond to folders under `app/` and represent schemas in the database. Each domain operates on its specific schema,
@@ -26,6 +28,19 @@ service AbcsystemService {
   rpc RegisterDevice(RegisterDeviceRequest) returns (RegisterDeviceResponse) {}
   rpc AssignDevicePrinter(AssignDevicePrinterRequest) returns (AssignDevicePrinterResponse) {}
   rpc DiscoverPrinters(DiscoverPrintersRequest) returns (DiscoverPrintersResponse) {
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc TableList(TableListRequest) returns (TableListResponse){
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc TableOrders(TableOrdersRequest) returns (TableOrdersResponse){
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+  rpc PosSessionDashboardFind(PosSessionDashboardFindRequest) returns (PosSessionDashboardFindResponse){
+    option idempotency_level = NO_SIDE_EFFECTS;
+  }
+
+  rpc PosSessionItemsList(PosSessionItemsListRequest) returns (PosSessionItemsListResponse){
     option idempotency_level = NO_SIDE_EFFECTS;
   }
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
+	"github.com/esolveeg/abcsystem/pkg/contextkeys"
 	"github.com/rs/zerolog/log"
 )
 
@@ -58,6 +59,14 @@ func (s *Server) NewLoggerInterceptor() connect.UnaryInterceptorFunc {
 	return connect.UnaryInterceptorFunc(func(next connect.UnaryFunc) connect.UnaryFunc {
 		return connect.UnaryFunc(func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
 			startTime := time.Now()
+			if v := req.Header().Get("X-Device-Id"); v != "" {
+				ctx = contextkeys.WithDeviceID(ctx, v)
+			}
+			if v := req.Header().Get("Authorization"); v != "" {
+				// Store raw Authorization value (e.g. "token key:secret" or "Bearer <jwt>")
+				log.Debug().Interface("token is ", v).Msg("tpo")
+				ctx = contextkeys.WithAuthToken(ctx, strings.Replace(v, "Bearer ", "", 1))
+			}
 			result, err := next(ctx, req)
 			duration := time.Since(startTime)
 			if err != nil {
